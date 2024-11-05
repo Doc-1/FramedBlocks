@@ -11,7 +11,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.model.data.*;
@@ -79,7 +78,7 @@ public final class FramedDoubleBlockModel extends AbstractFramedBlockModel
     private static boolean hasSolidCamo(ModelData data)
     {
         FramedBlockData fbData = data.get(FramedBlockData.PROPERTY);
-        return fbData != null && fbData.getCamoContent().isSolid(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
+        return fbData != null && fbData.getCamoContent().isSolid();
     }
 
     @Override

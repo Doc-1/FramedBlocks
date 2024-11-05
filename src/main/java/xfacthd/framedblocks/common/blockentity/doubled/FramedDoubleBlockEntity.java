@@ -221,13 +221,13 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     @Override
     protected boolean isCamoSolid()
     {
-        return super.isCamoSolid() && camoContainer.getContent().isSolid(level(), worldPosition);
+        return super.isCamoSolid() && camoContainer.getContent().isSolid();
     }
 
     @Override
     protected boolean doesCamoPropagateSkylightDown()
     {
-        if (!camoContainer.getContent().propagatesSkylightDown(level(), worldPosition))
+        if (!camoContainer.getContent().propagatesSkylightDown())
         {
             return false;
         }

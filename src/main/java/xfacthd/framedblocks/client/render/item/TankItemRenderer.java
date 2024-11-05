@@ -6,11 +6,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.EmptyBlockGetter;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import xfacthd.framedblocks.api.camo.CamoContent;
@@ -64,7 +62,7 @@ public final class TankItemRenderer extends BlockEntityWithoutLevelRenderer
         if (!validModel) return;
 
         CamoContent<?> camo = stack.getOrDefault(FBContent.DC_TYPE_CAMO_LIST, CamoList.EMPTY).getCamo(0).getContent();
-        if (camo.isSolid(EmptyBlockGetter.INSTANCE, BlockPos.ZERO)) return;
+        if (camo.isSolid()) return;
 
         SimpleFluidContent content = stack.getOrDefault(FBContent.DC_TYPE_TANK_CONTENTS, SimpleFluidContent.EMPTY);
         if (content.isEmpty()) return;

@@ -34,7 +34,7 @@ public final class FluidCamoContent extends CamoContent<FluidCamoContent>
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockGetter level, BlockPos pos)
+    public boolean propagatesSkylightDown()
     {
         return true;
     }
@@ -148,7 +148,7 @@ public final class FluidCamoContent extends CamoContent<FluidCamoContent>
     }
 
     @Override
-    public boolean isSolid(BlockGetter level, BlockPos pos)
+    public boolean isSolid()
     {
         return false;
     }
@@ -180,7 +180,7 @@ public final class FluidCamoContent extends CamoContent<FluidCamoContent>
     @Override
     public boolean isOccludedBy(CamoContent<?> adjCamo, BlockGetter level, BlockPos pos, BlockPos adjPos)
     {
-        return adjCamo.isSolid(level, pos) || equals(adjCamo);
+        return adjCamo.isSolid() || equals(adjCamo);
     }
 
     @Override

@@ -25,9 +25,8 @@ public abstract class CamoContent<C extends CamoContent<C>> implements QuadCache
     /**
      * {@return whether this camo propagates skylight downwards}
      * @see BlockBehaviour.BlockStateBase#propagatesSkylightDown()
-     * // TODO: remove level/pos context
      */
-    public abstract boolean propagatesSkylightDown(BlockGetter level, BlockPos pos);
+    public abstract boolean propagatesSkylightDown();
 
     /**
      * {@return the explosion resistance of this camo}
@@ -115,12 +114,8 @@ public abstract class CamoContent<C extends CamoContent<C>> implements QuadCache
 
     /**
      * {@return the tint color corresponding to the given tint index for use with {@link ItemColor }}
-     * // TODO 1.21.2: make abstract
      */
-    public int getTintColor(ItemStack stack, int tintIdx)
-    {
-        return getTintColor(EmptyBlockAndTintGetter.INSTANCE, BlockPos.ZERO, tintIdx);
-    }
+    public abstract int getTintColor(ItemStack stack, int tintIdx);
 
     /**
      * {@return the beacon color multiplier of this camo}
@@ -132,9 +127,8 @@ public abstract class CamoContent<C extends CamoContent<C>> implements QuadCache
     /**
      * {@return whether this camo is fully solid}
      * @see BlockBehaviour.BlockStateBase#isSolidRender()
-     * // TODO: remove level/pos context
      */
-    public abstract boolean isSolid(BlockGetter level, BlockPos pos);
+    public abstract boolean isSolid();
 
     /**
      * {@return whether this camo can occlude other blocks}

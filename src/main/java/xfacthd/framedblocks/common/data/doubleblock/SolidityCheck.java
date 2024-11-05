@@ -14,11 +14,11 @@ public enum SolidityCheck
             (be, side, plant) -> TriState.DEFAULT
     ),
     FIRST(
-            be -> be.getCamo().getContent().isSolid(be.getLevel(), be.getBlockPos()),
+            be -> be.getCamo().getContent().isSolid(),
             (be, side, plant) -> be.getCamo().getContent().canSustainPlant(be.getLevel(), be.getBlockPos(), side, plant)
     ),
     SECOND(
-            be -> be.getCamoTwo().getContent().isSolid(be.getLevel(), be.getBlockPos()),
+            be -> be.getCamoTwo().getContent().isSolid(),
             (be, side, plant) -> be.getCamoTwo().getContent().canSustainPlant(be.getLevel(), be.getBlockPos(), side, plant)
     ),
     BOTH(

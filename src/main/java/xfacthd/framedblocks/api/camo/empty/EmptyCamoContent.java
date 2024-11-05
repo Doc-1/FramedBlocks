@@ -23,7 +23,7 @@ public final class EmptyCamoContent extends CamoContent<EmptyCamoContent>
     public static final EmptyCamoContent EMPTY = new EmptyCamoContent();
 
     @Override
-    public boolean propagatesSkylightDown(BlockGetter level, BlockPos pos)
+    public boolean propagatesSkylightDown()
     {
         return false;
     }
@@ -129,7 +129,7 @@ public final class EmptyCamoContent extends CamoContent<EmptyCamoContent>
     }
 
     @Override
-    public boolean isSolid(BlockGetter level, BlockPos pos)
+    public boolean isSolid()
     {
         return false;
     }

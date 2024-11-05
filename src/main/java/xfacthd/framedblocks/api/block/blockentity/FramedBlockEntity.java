@@ -346,7 +346,7 @@ public class FramedBlockEntity extends BlockEntity
         {
             return false;
         }
-        return stateCache.isFullFace(side) && camoContainer.getContent().isSolid(level(), worldPosition);
+        return stateCache.isFullFace(side) && camoContainer.getContent().isSolid();
     }
 
     /**
@@ -408,12 +408,12 @@ public class FramedBlockEntity extends BlockEntity
 
     protected boolean isCamoSolid()
     {
-        return camoContainer.getContent().isSolid(level(), worldPosition);
+        return camoContainer.getContent().isSolid();
     }
 
     protected boolean doesCamoPropagateSkylightDown()
     {
-        return camoContainer.getContent().propagatesSkylightDown(level(), worldPosition);
+        return camoContainer.getContent().propagatesSkylightDown();
     }
 
     public final void checkCamoSolid()
