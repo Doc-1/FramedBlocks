@@ -30,7 +30,7 @@ import xfacthd.framedblocks.common.item.FramedBlueprintItem;
 import java.util.Objects;
 import java.util.Optional;
 
-public interface IFramedDoubleBlock extends IFramedBlock
+public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFramedDoubleBlock
 {
     @Override
     @SuppressWarnings("deprecation")
@@ -101,7 +101,7 @@ public interface IFramedDoubleBlock extends IFramedBlock
     @Override
     default DoubleBlockStateCache getCache(BlockState state)
     {
-        return (DoubleBlockStateCache) IFramedBlock.super.getCache(state);
+        return (DoubleBlockStateCache) xfacthd.framedblocks.api.block.IFramedDoubleBlock.super.getCache(state);
     }
 
     @Override

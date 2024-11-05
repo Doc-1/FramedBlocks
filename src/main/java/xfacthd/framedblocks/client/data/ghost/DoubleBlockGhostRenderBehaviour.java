@@ -21,11 +21,11 @@ public sealed class DoubleBlockGhostRenderBehaviour implements GhostRenderBehavi
     {
         return ModelData.builder()
                 .with(IFramedDoubleBlockEntity.DATA_ONE, ModelData.builder()
-                        .with(FramedBlockData.PROPERTY, new FramedBlockData(camo.getCamo(0).getContent(), false))
+                        .with(FramedBlockData.PROPERTY, new FramedBlockData(camo.getCamo(0), false))
                         .build()
                 )
                 .with(IFramedDoubleBlockEntity.DATA_TWO, ModelData.builder()
-                        .with(FramedBlockData.PROPERTY, new FramedBlockData(camo.getCamo(1).getContent(), true))
+                        .with(FramedBlockData.PROPERTY, new FramedBlockData(camo.getCamo(1), true))
                         .build()
                 )
                 .build();

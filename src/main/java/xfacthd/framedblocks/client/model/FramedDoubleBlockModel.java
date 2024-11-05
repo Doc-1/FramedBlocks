@@ -13,12 +13,12 @@ import net.minecraft.util.Tuple;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.data.*;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.common.util.ConcatenatedListView;
 import net.neoforged.neoforge.common.util.TriState;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
-import xfacthd.framedblocks.api.camo.empty.EmptyCamoContent;
+import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.model.AbstractFramedBlockModel;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
@@ -27,7 +27,9 @@ import xfacthd.framedblocks.api.model.wrapping.itemmodel.ItemModelInfo;
 import xfacthd.framedblocks.common.data.doubleblock.*;
 import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public final class FramedDoubleBlockModel extends AbstractFramedBlockModel
 {
@@ -218,7 +220,7 @@ public final class FramedDoubleBlockModel extends AbstractFramedBlockModel
 
     private static ModelData makeDefaultData(boolean altModel)
     {
-        FramedBlockData data = new FramedBlockData(EmptyCamoContent.EMPTY, altModel);
+        FramedBlockData data = new FramedBlockData(EmptyCamoContainer.EMPTY, altModel);
         return ModelData.builder().with(FramedBlockData.PROPERTY, data).build();
     }
 }

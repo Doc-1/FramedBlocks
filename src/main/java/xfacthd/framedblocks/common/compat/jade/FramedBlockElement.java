@@ -24,6 +24,7 @@ import snownee.jade.api.ui.Element;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.render.Quaternions;
+import xfacthd.framedblocks.api.util.SingleBlockFakeLevel;
 import xfacthd.framedblocks.common.config.ClientConfig;
 
 final class FramedBlockElement extends Element
@@ -50,7 +51,7 @@ final class FramedBlockElement extends Element
     {
         IFramedBlock block = (IFramedBlock) state.getBlock();
         this.state = block.getJadeRenderState(state);
-        this.fakeLevel = new SingleBlockFakeLevel(blockEntity.getBlockPos(), this.state, blockEntity);
+        this.fakeLevel = new SingleBlockFakeLevel(blockEntity.getLevel(), blockEntity.getBlockPos(), this.state, blockEntity, ModelData.EMPTY);
         this.model = Minecraft.getInstance().getBlockRenderer().getBlockModel(this.state);
         boolean renderCamo = ClientConfig.VIEW.shouldRenderCamoInJade();
         this.modelData = renderCamo ? blockEntity.getModelData(false) : ModelData.EMPTY;

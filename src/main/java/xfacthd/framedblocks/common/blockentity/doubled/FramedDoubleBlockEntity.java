@@ -441,7 +441,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     public ModelData getModelData(boolean includeCullInfo)
     {
         boolean[] cullData = includeCullInfo ? culledFaces : FramedBlockData.NO_CULLED_FACES;
-        FramedBlockData modelData = new FramedBlockData(camoContainer.getContent(), cullData, true, isReinforced());
+        FramedBlockData modelData = new FramedBlockData(camoContainer, cullData, true, isReinforced());
         return ModelData.builder()
                 .with(DATA_ONE, super.getModelData(includeCullInfo))
                 .with(DATA_TWO, ModelData.builder().with(FramedBlockData.PROPERTY, modelData).build())

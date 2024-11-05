@@ -24,7 +24,7 @@ public interface ItemModelInfo
      */
     default ModelData buildItemModelData(BlockState state, CamoList camos)
     {
-        FramedBlockData fbData = new FramedBlockData(camos.getCamo(0).getContent(), false);
+        FramedBlockData fbData = new FramedBlockData(camos.getCamo(0), false);
         return ModelData.builder().with(FramedBlockData.PROPERTY, fbData).build();
     }
 

@@ -19,11 +19,11 @@ public class DoubleBlockItemModelInfo implements ItemModelInfo
     @Override
     public final ModelData buildItemModelData(BlockState state, CamoList camos)
     {
-        FramedBlockData fbDataOne = new FramedBlockData(camos.getCamo(0).getContent(), false);
+        FramedBlockData fbDataOne = new FramedBlockData(camos.getCamo(0), false);
         ModelData.Builder builderOne = ModelData.builder().with(FramedBlockData.PROPERTY, fbDataOne);
         appendItemModelPartData(builderOne, state, false);
 
-        FramedBlockData fbDataTwo = new FramedBlockData(camos.getCamo(1).getContent(), true);
+        FramedBlockData fbDataTwo = new FramedBlockData(camos.getCamo(1), true);
         ModelData.Builder builderTwo = ModelData.builder().with(FramedBlockData.PROPERTY, fbDataTwo);
         appendItemModelPartData(builderTwo, state, true);
 

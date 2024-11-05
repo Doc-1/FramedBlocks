@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.common.compat.jade;
+package xfacthd.framedblocks.api.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -9,27 +9,28 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("ConstantConditions")
-public record SingleBlockFakeLevel(BlockPos realPos, BlockState state, BlockEntity blockEntity) implements BlockAndTintGetter
+public record SingleBlockFakeLevel(Level realLevel, BlockPos realPos, BlockState state, @Nullable BlockEntity blockEntity, ModelData modelData) implements BlockAndTintGetter
 {
     @Override
     public float getShade(Direction side, boolean shade)
     {
-        return blockEntity.getLevel().getShade(side, shade);
+        return realLevel.getShade(side, shade);
     }
 
     @Override
     public float getShade(float normalX, float normalY, float normalZ, boolean shade)
     {
-        return blockEntity.getLevel().getShade(normalX, normalY, normalZ, shade);
+        return realLevel.getShade(normalX, normalY, normalZ, shade);
     }
 
     @Override
     public LevelLightEngine getLightEngine()
     {
-        return blockEntity.getLevel().getLightEngine();
+        return realLevel.getLightEngine();
     }
 
     @Override
@@ -41,7 +42,7 @@ public record SingleBlockFakeLevel(BlockPos realPos, BlockState state, BlockEnti
     @Override
     public int getBlockTint(BlockPos pos, ColorResolver resolver)
     {
-        return blockEntity.getLevel().getBlockTint(realPos, resolver);
+        return realLevel.getBlockTint(realPos, resolver);
     }
 
     @Nullable
@@ -72,14 +73,24 @@ public record SingleBlockFakeLevel(BlockPos realPos, BlockState state, BlockEnti
     }
 
     @Override
+    public ModelData getModelData(BlockPos pos)
+    {
+        if (pos == BlockPos.ZERO)
+        {
+            return modelData;
+        }
+        return ModelData.EMPTY;
+    }
+
+    @Override
     public int getHeight()
     {
-        return blockEntity.getLevel().getHeight();
+        return realLevel.getHeight();
     }
 
     @Override
     public int getMinY()
     {
-        return blockEntity.getLevel().getMinY();
+        return realLevel.getMinY();
     }
 }

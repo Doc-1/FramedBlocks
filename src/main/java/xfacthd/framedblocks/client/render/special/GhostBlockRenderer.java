@@ -4,20 +4,29 @@ import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.*;
+import net.minecraft.CrashReport;
+import net.minecraft.CrashReportCategory;
+import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.Profiler;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.client.NeoForgeRenderTypes;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
@@ -25,7 +34,10 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 import xfacthd.framedblocks.api.ghost.GhostRenderBehaviour;
 import xfacthd.framedblocks.api.model.util.ModelUtils;
 import xfacthd.framedblocks.api.ghost.RegisterGhostRenderBehavioursEvent;
-import xfacthd.framedblocks.api.util.*;
+import xfacthd.framedblocks.api.util.CamoList;
+import xfacthd.framedblocks.api.util.FramedConstants;
+import xfacthd.framedblocks.api.util.SingleBlockFakeLevel;
+import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.render.util.GhostVertexConsumer;
 import xfacthd.framedblocks.common.config.ClientConfig;
 
@@ -185,13 +197,17 @@ public final class GhostBlockRenderer
         VertexConsumer builder = new GhostVertexConsumer(buffers.getBuffer(bufferType), opacity);
         profiler.pop(); //buffer
 
+        profiler.push("level");
+        BlockAndTintGetter level = new SingleBlockFakeLevel(mc().level, renderPos, renderState, null, modelData);
+        profiler.pop(); //level
+
         profiler.push("draw");
         BakedModel model = ModelUtils.getModel(renderState);
         poseStack.pushPose();
         poseStack.translate(offset.x, offset.y, offset.z);
         for (RenderType type : model.getRenderTypes(renderState, RANDOM, modelData))
         {
-            doRenderGhostBlockInLayer(poseStack, builder, renderPos, renderState, type, modelData);
+            doRenderGhostBlockInLayer(poseStack, builder, level, renderState, type, modelData);
         }
         poseStack.popPose();
         profiler.pop(); //draw
@@ -205,7 +221,7 @@ public final class GhostBlockRenderer
     private static void doRenderGhostBlockInLayer(
             PoseStack poseStack,
             VertexConsumer builder,
-            BlockPos renderPos,
+            BlockAndTintGetter level,
             BlockState renderState,
             RenderType layer,
             ModelData modelData
@@ -213,8 +229,8 @@ public final class GhostBlockRenderer
     {
         mc().getBlockRenderer().renderBatched(
                 renderState,
-                renderPos,
-                mc().level,
+                BlockPos.ZERO,
+                level,
                 poseStack,
                 builder,
                 false,

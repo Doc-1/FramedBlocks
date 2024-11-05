@@ -212,7 +212,7 @@ public interface GhostRenderBehaviour
             CamoList camo
     )
     {
-        return ModelData.builder().with(FramedBlockData.PROPERTY, new FramedBlockData(camo.getCamo(0).getContent(), false)).build();
+        return ModelData.builder().with(FramedBlockData.PROPERTY, new FramedBlockData(camo.getCamo(0), false)).build();
     }
 
     /**

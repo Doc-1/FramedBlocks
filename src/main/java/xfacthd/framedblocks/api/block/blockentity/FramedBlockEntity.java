@@ -947,7 +947,7 @@ public class FramedBlockEntity extends BlockEntity
     public ModelData getModelData(boolean includeCullInfo)
     {
         boolean[] cullData = includeCullInfo ? culledFaces : FramedBlockData.NO_CULLED_FACES;
-        FramedBlockData modelData = new FramedBlockData(camoContainer.getContent(), cullData, false, isReinforced());
+        FramedBlockData modelData = new FramedBlockData(camoContainer, cullData, false, isReinforced());
         ModelData.Builder builder = ModelData.builder().with(FramedBlockData.PROPERTY, modelData);
         attachAdditionalModelData(builder);
         return builder.build();
