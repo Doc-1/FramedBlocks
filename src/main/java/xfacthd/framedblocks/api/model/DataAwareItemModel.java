@@ -21,15 +21,6 @@ public final class DataAwareItemModel extends BakedModelWrapper<BakedModel>
     private final RenderType renderType;
     private final List<RenderType> renderTypeList;
 
-    /**
-     * @deprecated Use {@link #DataAwareItemModel(BakedModel, ModelData, RenderType)} instead
-     */
-    @Deprecated(forRemoval = true)
-    public DataAwareItemModel(BakedModel baseModel, ModelData itemData, RenderType renderType, @SuppressWarnings("unused") boolean cull)
-    {
-        this(baseModel, itemData, renderType);
-    }
-
     public DataAwareItemModel(BakedModel baseModel, ModelData itemData, RenderType renderType)
     {
         super(baseModel);

@@ -15,14 +15,9 @@ import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtension
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.internal.InternalClientAPI;
 
-import java.util.function.Supplier;
-
 public final class ClientUtils
 {
     public static final ResourceLocation DUMMY_TEXTURE = Utils.rl("neoforge", "white");
-
-    @Deprecated(forRemoval = true)
-    public static final Supplier<Boolean> OPTIFINE_LOADED = () -> false;
 
     public static void enqueueClientTask(Runnable task)
     {

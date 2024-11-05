@@ -194,26 +194,6 @@ public final class CamoContainerHelper
         return camo;
     }
 
-    /**
-     * Handle interactions with the given camo in the provided context. If the interaction changes the camo data,
-     * then a new camo container with the new data will be returned, otherwise the given camo is returned.
-     *
-     * @param level The level the framed block holding the camo is in
-     * @param pos The position of the framed block holding the camo
-     * @param player The player interacting with the framed block
-     * @param camo The camo container the player is interacting with
-     * @param stack The {@link ItemStack} used to interact with the framed block
-     *
-     * @return a new camo container if the camo data changes from this interaction, otherwise the given one
-     *
-     * @deprecated Use {@link #handleCamoInteraction(Level, BlockPos, Player, CamoContainer, ItemStack, InteractionHand)} instead
-     */
-    @Deprecated(forRemoval = true, since = "10.2.1")
-    public static CamoContainer<?, ?> handleCamoInteraction(Level level, BlockPos pos, Player player, CamoContainer<?, ?> camo, ItemStack stack)
-    {
-        return handleCamoInteraction(level, pos, player, camo, stack, InteractionHand.MAIN_HAND);
-    }
-
 
 
     public static final class Client

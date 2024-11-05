@@ -76,11 +76,6 @@ public final class Utils
      * Providing by tools for configuring blocks (respected for camo rotation)
      */
     public static final ItemAbility ACTION_WRENCH_CONFIGURE = ItemAbility.get("wrench_configure");
-    /**
-     * @deprecated Use {@link #ACTION_WRENCH_ROTATE} instead
-     */
-    @Deprecated(forRemoval = true)
-    public static final ItemAbility ACTION_WRENCH = ACTION_WRENCH_ROTATE;
 
     public static final Set<Property<?>> REQUIRED_STATE_PROPERTIES = Set.of(
             FramedProperties.GLOWING,

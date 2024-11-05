@@ -1,7 +1,6 @@
 package xfacthd.framedblocks.api.util;
 
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.item.Item;
 import xfacthd.framedblocks.api.predicate.contex.ConTexMode;
 
 @SuppressWarnings("unused")
@@ -22,16 +21,6 @@ public final class ConfigView
          * If true, certain blocks can be made intangible
          */
         boolean enableIntangibility();
-
-        /**
-         * Get the item used to make blocks intangible
-         * @deprecated No longer configurable, use {@link Utils#PHANTOM_PASTE} instead
-         */
-        @Deprecated(forRemoval = true)
-        default Item getIntangibilityMarkerItem()
-        {
-            return Utils.PHANTOM_PASTE.value();
-        }
 
         /**
          * If true, the One-Way Window is owned by the player who placed it and can only be configured by said player
