@@ -16,9 +16,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedTubeBlock extends FramedBlock
 {
-    public FramedTubeBlock()
+    public FramedTubeBlock(Properties props)
     {
-        super(BlockType.FRAMED_TUBE);
+        super(BlockType.FRAMED_TUBE, props);
     }
 
     @Override

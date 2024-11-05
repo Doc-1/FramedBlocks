@@ -7,9 +7,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.texture.*;
-import net.minecraft.client.resources.model.*;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -18,13 +24,16 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.client.model.*;
+import net.neoforged.neoforge.client.model.SimpleModelState;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.util.Utils;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -128,12 +137,6 @@ public final class FluidModel implements BakedModel
         return particles;
     }
 
-    @Override
-    public ItemOverrides getOverrides()
-    {
-        return ItemOverrides.EMPTY;
-    }
-
 
 
     public static FluidModel create(Fluid fluid)
@@ -153,10 +156,6 @@ public final class FluidModel implements BakedModel
                 fluid
         );
 
-        boolean singleTexture = flowingTexture.equals(stillTexture);
-        UnbakedModel bareModel = modelBakery.getModel(singleTexture ? BARE_MODEL_SINGLE.id() : BARE_MODEL.id());
-        Preconditions.checkNotNull(bareModel, "Bare fluid model not loaded!");
-
         ResourceLocation fluidName = Preconditions.checkNotNull(
                 NeoForgeRegistries.FLUID_TYPES.getKey(fluid.getFluidType()),
                 "Cannot create FluidModel for unregistered FluidType of fluid %s",
@@ -168,6 +167,11 @@ public final class FluidModel implements BakedModel
         );
         Function<Material, TextureAtlasSprite> spriteGetter = matToSprite(stillTexture, flowingTexture);
         ModelBakery.ModelBakerImpl baker = modelBakery.new ModelBakerImpl((modelLoc, material) -> spriteGetter.apply(material), modelName);
+
+        boolean singleTexture = flowingTexture.equals(stillTexture);
+        UnbakedModel bareModel = baker.getTopLevelModel(singleTexture ? BARE_MODEL_SINGLE : BARE_MODEL);
+        Preconditions.checkNotNull(bareModel, "Bare fluid model not loaded!");
+
         BakedModel model = bareModel.bake(baker, spriteGetter, SIMPLE_STATE);
         Preconditions.checkNotNull(model, "Failed to bake fluid model for fluid %s", fluid);
 

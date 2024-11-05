@@ -3,9 +3,7 @@
   "additives": [
     {
       "count": 1,
-      "ingredient": {
-        "item": "minecraft:powered_rail"
-      }
+      "ingredient": "minecraft:powered_rail"
     }
   ],
   "material": 3072,

@@ -15,9 +15,9 @@ import xfacthd.framedblocks.common.data.PropertyHolder;
 
 public class FramedHalfStairsBlock extends FramedBlock
 {
-    public FramedHalfStairsBlock()
+    public FramedHalfStairsBlock(Properties props)
     {
-        super(BlockType.FRAMED_HALF_STAIRS);
+        super(BlockType.FRAMED_HALF_STAIRS, props);
         registerDefaultState(defaultBlockState()
                 .setValue(FramedProperties.TOP, false)
                 .setValue(PropertyHolder.RIGHT, false)

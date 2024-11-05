@@ -25,9 +25,9 @@ import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMod
 
 public class FramedDoublePanelBlock extends AbstractFramedDoubleBlock
 {
-    public FramedDoublePanelBlock()
+    public FramedDoublePanelBlock(Properties props)
     {
-        super(BlockType.FRAMED_DOUBLE_PANEL);
+        super(BlockType.FRAMED_DOUBLE_PANEL, props);
     }
 
     @Override

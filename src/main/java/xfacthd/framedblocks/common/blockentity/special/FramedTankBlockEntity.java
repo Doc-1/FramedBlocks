@@ -5,7 +5,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,13 +25,13 @@ public class FramedTankBlockEntity extends FramedBlockEntity
         super(FBContent.BE_TYPE_FRAMED_TANK.value(), pos, state);
     }
 
-    public ItemInteractionResult handleTankInteraction(Player player, InteractionHand hand)
+    public InteractionResult handleTankInteraction(Player player, InteractionHand hand)
     {
         if (FluidUtil.interactWithFluidHandler(player, hand, fluidHandler))
         {
-            return ItemInteractionResult.sidedSuccess(level().isClientSide());
+            return InteractionResult.SUCCESS;
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     public FluidStack getContents()

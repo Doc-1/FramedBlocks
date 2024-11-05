@@ -1,11 +1,10 @@
 package xfacthd.framedblocks.client.screen.overlay;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -19,7 +18,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.common.util.ConcatenatedListView;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 abstract class BlockInteractOverlay
@@ -189,13 +189,9 @@ abstract class BlockInteractOverlay
         return NO_TARGET;
     }
 
-    @SuppressWarnings("deprecation")
     private static void drawTooltipBackground(GuiGraphics graphics, int x, int y, int width, int height)
     {
-        graphics.drawManaged(() -> TooltipRenderUtil.renderTooltipBackground(
-                graphics,
-                x - 2, y - 2, width + 4, height + 4, 0
-        ));
+        TooltipRenderUtil.renderTooltipBackground(graphics, x - 2, y - 2, width + 4, height + 4, 0, null);
     }
 
     protected record Texture(
@@ -204,12 +200,7 @@ abstract class BlockInteractOverlay
     {
         public void draw(GuiGraphics graphics, int x, int y)
         {
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
-            RenderSystem.disableDepthTest();
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            graphics.blit(location, x, y, 0, xOff, yOff, width, height, texWidth, texHeight);
+            graphics.blit(RenderType::guiTextured, location, x, y, xOff, yOff, width, height, texWidth, texHeight);
         }
     }
 

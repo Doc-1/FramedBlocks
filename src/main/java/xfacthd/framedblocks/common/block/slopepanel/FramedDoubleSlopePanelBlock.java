@@ -30,9 +30,9 @@ public class FramedDoubleSlopePanelBlock extends AbstractFramedDoubleBlock
             state -> state.getValue(PropertyHolder.FRONT)
     );
 
-    public FramedDoubleSlopePanelBlock()
+    public FramedDoubleSlopePanelBlock(Properties props)
     {
-        super(BlockType.FRAMED_DOUBLE_SLOPE_PANEL);
+        super(BlockType.FRAMED_DOUBLE_SLOPE_PANEL, props);
         registerDefaultState(defaultBlockState()
                 .setValue(PropertyHolder.FRONT, false)
                 .setValue(FramedProperties.Y_SLOPE, false)

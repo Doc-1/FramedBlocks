@@ -1,6 +1,7 @@
 package xfacthd.framedblocks.common.datagen.builders.recipe;
 
 import net.minecraft.advancements.Criterion;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.tags.TagKey;
@@ -11,9 +12,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class ExtShapedRecipeBuilder extends ShapedRecipeBuilder implements AutoUnlockNameBuilder<ExtShapedRecipeBuilder>
 {
-    public ExtShapedRecipeBuilder(RecipeCategory category, ItemLike result, int count)
+    public ExtShapedRecipeBuilder(HolderGetter<Item> itemRegistry, RecipeCategory category, ItemLike result, int count)
     {
-        super(category, result, count);
+        super(itemRegistry, category, result, count);
     }
 
     @Override

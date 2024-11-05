@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "C": {
-      "item": "framedblocks:framed_small_inner_corner_slope_panel"
-    },
-    "H": {
-      "item": "framedblocks:framed_hammer"
-    },
-    "S": {
-      "item": "framedblocks:framed_vertical_stairs"
-    }
+    "C": "framedblocks:framed_small_inner_corner_slope_panel",
+    "H": "framedblocks:framed_hammer",
+    "S": "framedblocks:framed_vertical_stairs"
   },
   "pattern": [
     "HCS"

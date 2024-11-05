@@ -3,9 +3,7 @@
   "additives": [
     {
       "count": 1,
-      "ingredient": {
-        "tag": "c:cobblestones"
-      }
+      "ingredient": "#c:cobblestones"
     }
   ],
   "material": 1536,

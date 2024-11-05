@@ -1,19 +1,21 @@
 package xfacthd.framedblocks.common.datagen.builders.recipe;
 
 import net.minecraft.advancements.Criterion;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
 public class ExtShapelessRecipeBuilder extends ShapelessRecipeBuilder implements AutoUnlockNameBuilder<ExtShapelessRecipeBuilder>
 {
-    public ExtShapelessRecipeBuilder(RecipeCategory category, ItemLike result, int count)
+    public ExtShapelessRecipeBuilder(HolderGetter<Item> itemRegistry, RecipeCategory category, ItemLike result, int count)
     {
-        super(category, result, count);
+        super(itemRegistry, category, new ItemStack(result, count));
     }
 
     @Override

@@ -19,9 +19,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedVerticalHalfSlopeBlock extends FramedBlock implements IComplexSlopeSource
 {
-    public FramedVerticalHalfSlopeBlock()
+    public FramedVerticalHalfSlopeBlock(Properties props)
     {
-        super(BlockType.FRAMED_VERTICAL_HALF_SLOPE);
+        super(BlockType.FRAMED_VERTICAL_HALF_SLOPE, props);
         registerDefaultState(defaultBlockState()
                 .setValue(FramedProperties.TOP, false)
                 .setValue(FramedProperties.Y_SLOPE, false)

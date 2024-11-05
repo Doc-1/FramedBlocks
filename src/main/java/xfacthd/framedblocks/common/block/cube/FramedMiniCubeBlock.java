@@ -18,9 +18,9 @@ import java.util.Set;
 
 public class FramedMiniCubeBlock extends FramedBlock
 {
-    public FramedMiniCubeBlock()
+    public FramedMiniCubeBlock(Properties props)
     {
-        super(BlockType.FRAMED_MINI_CUBE);
+        super(BlockType.FRAMED_MINI_CUBE, props);
     }
 
     @Override

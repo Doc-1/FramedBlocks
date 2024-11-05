@@ -5,6 +5,8 @@ import com.mojang.datafixers.util.Pair;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.recipe.advanced.ISimpleRecipeManagerPlugin;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -178,14 +180,14 @@ public final class CamoRecipeManagerPlugin implements ISimpleRecipeManagerPlugin
             List<ItemStack> results
     )
     {
-        Ingredient frameIngredient = frame.map(Ingredient::of, Ingredient::of);
+        Ingredient frameIngredient = frame.map(stack -> Ingredient.of(stack.getItem()), CamoCraftingHelper::makeTagIngredient);
         Ingredient copyTool = camoCraftingHelper.getCopyToolIngredient();
-        Ingredient camoOneIngredient = camoOne.map(Ingredient::of, Ingredient::of);
-        Ingredient secondInputStacks = camoTwo.map(Ingredient::of, Ingredient::of);
+        Ingredient camoOneIngredient = camoOne.map(stack -> Ingredient.of(stack.getItem()), CamoCraftingHelper::makeTagIngredient);
+        Ingredient secondInputStacks = camoTwo.map(stack -> Ingredient.of(stack.getItem()), CamoCraftingHelper::makeTagIngredient);
         JeiCamoApplicationRecipe recipe = new JeiCamoApplicationRecipe(frameIngredient, copyTool, camoOneIngredient, secondInputStacks, results);
 
         ResourceLocation resourceLocation = generateId(frame, camoOne, camoTwo);
-        return new RecipeHolder<>(resourceLocation, recipe);
+        return new RecipeHolder<>(ResourceKey.create(Registries.RECIPE, resourceLocation), recipe);
     }
 
     private static ResourceLocation generateId(

@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -57,7 +57,7 @@ public class FramedWeightedPressurePlateBlock extends WeightedPressurePlateBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(
+    protected InteractionResult useItemOn(
             ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit
     )
     {
@@ -77,7 +77,7 @@ public class FramedWeightedPressurePlateBlock extends WeightedPressurePlateBlock
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos)
+    protected boolean propagatesSkylightDown(BlockState state)
     {
         return state.getValue(FramedProperties.PROPAGATES_SKYLIGHT);
     }
@@ -149,50 +149,50 @@ public class FramedWeightedPressurePlateBlock extends WeightedPressurePlateBlock
 
 
 
-    public static FramedWeightedPressurePlateBlock gold()
+    public static FramedWeightedPressurePlateBlock gold(Properties props)
     {
         return new FramedWeightedPressurePlateBlock(
                 BlockType.FRAMED_GOLD_PRESSURE_PLATE,
                 15,
                 BlockSetType.GOLD,
-                IFramedBlock.createProperties(BlockType.FRAMED_GOLD_PRESSURE_PLATE)
+                IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_GOLD_PRESSURE_PLATE)
                         .noCollission()
                         .strength(0.5F)
         );
     }
 
-    public static FramedWeightedPressurePlateBlock goldWaterloggable()
+    public static FramedWeightedPressurePlateBlock goldWaterloggable(Properties props)
     {
         return new FramedWaterloggableWeightedPressurePlateBlock(
                 BlockType.FRAMED_WATERLOGGABLE_GOLD_PRESSURE_PLATE,
                 15,
                 BlockSetType.GOLD,
-                IFramedBlock.createProperties(BlockType.FRAMED_WATERLOGGABLE_GOLD_PRESSURE_PLATE)
+                IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_WATERLOGGABLE_GOLD_PRESSURE_PLATE)
                         .noCollission()
                         .strength(0.5F)
         );
     }
 
-    public static FramedWeightedPressurePlateBlock iron()
+    public static FramedWeightedPressurePlateBlock iron(Properties props)
     {
         return new FramedWeightedPressurePlateBlock(
                 BlockType.FRAMED_IRON_PRESSURE_PLATE,
                 150,
                 BlockSetType.IRON,
-                IFramedBlock.createProperties(BlockType.FRAMED_IRON_PRESSURE_PLATE)
+                IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_IRON_PRESSURE_PLATE)
                         .requiresCorrectToolForDrops()
                         .noCollission()
                         .strength(0.5F)
         );
     }
 
-    public static FramedWeightedPressurePlateBlock ironWaterloggable()
+    public static FramedWeightedPressurePlateBlock ironWaterloggable(Properties props)
     {
         return new FramedWaterloggableWeightedPressurePlateBlock(
                 BlockType.FRAMED_WATERLOGGABLE_IRON_PRESSURE_PLATE,
                 150,
                 BlockSetType.IRON,
-                IFramedBlock.createProperties(BlockType.FRAMED_WATERLOGGABLE_IRON_PRESSURE_PLATE)
+                IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_WATERLOGGABLE_IRON_PRESSURE_PLATE)
                         .requiresCorrectToolForDrops()
                         .noCollission()
                         .strength(0.5F)

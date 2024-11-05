@@ -3,10 +3,12 @@ package xfacthd.framedblocks.common.crafting;
 import com.google.common.base.Preconditions;
 import net.minecraft.advancements.*;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
@@ -94,12 +96,12 @@ public final class FramingSawRecipeBuilder implements RecipeBuilder
     }
 
     @Override
-    public void save(RecipeOutput output, ResourceLocation recipeId)
+    public void save(RecipeOutput output, ResourceKey<Recipe<?>> recipeId)
     {
         Preconditions.checkState(material > 0, "Material value not set");
         Preconditions.checkState(material / count * count == material, "Material value not divisible by result size");
 
-        recipeId = recipeId.withPrefix("framing_saw/");
+        recipeId = ResourceKey.create(Registries.RECIPE, recipeId.location().withPrefix("framing_saw/"));
         FramingSawRecipe recipe = new FramingSawRecipe(material, additives, new ItemStack(result, count), disabled);
         output.accept(recipeId, recipe, null);
     }

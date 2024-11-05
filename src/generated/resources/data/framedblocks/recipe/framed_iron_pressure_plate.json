@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "F": {
-      "item": "framedblocks:framed_cube"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    }
+    "F": "framedblocks:framed_cube",
+    "I": "#c:ingots/iron"
   },
   "pattern": [
     "FF",

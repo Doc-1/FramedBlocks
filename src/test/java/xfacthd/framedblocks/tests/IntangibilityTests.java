@@ -31,7 +31,7 @@ public final class IntangibilityTests
         return Arrays.stream(BlockType.values())
                 .filter(BlockType::allowMakingIntangible)
                 .map(type -> Utils.rl(type.getName()))
-                .map(BuiltInRegistries.BLOCK::get)
+                .map(BuiltInRegistries.BLOCK::getValue)
                 .filter(b -> b != Blocks.AIR)
                 .map(IntangibilityTests::getTestState)
                 .map(state -> new TestFunction(

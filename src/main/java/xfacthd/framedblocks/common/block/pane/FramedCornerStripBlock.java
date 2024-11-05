@@ -16,9 +16,9 @@ import xfacthd.framedblocks.common.data.property.SlopeType;
 
 public class FramedCornerStripBlock extends FramedBlock
 {
-    public FramedCornerStripBlock()
+    public FramedCornerStripBlock(Properties props)
     {
-        super(BlockType.FRAMED_CORNER_STRIP);
+        super(BlockType.FRAMED_CORNER_STRIP, props);
     }
 
     @Override

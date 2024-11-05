@@ -24,9 +24,9 @@ import xfacthd.framedblocks.common.data.property.SlopeType;
 
 public class FramedElevatedDoubleSlopeEdgeBlock extends AbstractFramedDoubleBlock implements IComplexSlopeSource
 {
-    public FramedElevatedDoubleSlopeEdgeBlock()
+    public FramedElevatedDoubleSlopeEdgeBlock(Properties props)
     {
-        super(BlockType.FRAMED_ELEVATED_DOUBLE_SLOPE_EDGE);
+        super(BlockType.FRAMED_ELEVATED_DOUBLE_SLOPE_EDGE, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, false));
     }
 

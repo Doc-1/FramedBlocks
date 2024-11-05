@@ -73,6 +73,8 @@ public class DoubleBlockPartDebugRenderer implements BlockDebugRenderer<FramedDo
                 modelData,
                 RenderType.solid()
         );
+
+        outlineBuffer.endOutlineBatch();
     }
 
     @Override

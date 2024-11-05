@@ -26,9 +26,9 @@ public class FramedFlatElevatedDoubleSlopeSlabCornerBlock extends AbstractFramed
 {
     private final boolean isInner;
 
-    public FramedFlatElevatedDoubleSlopeSlabCornerBlock(BlockType blockType)
+    public FramedFlatElevatedDoubleSlopeSlabCornerBlock(BlockType blockType, Properties props)
     {
-        super(blockType);
+        super(blockType, props);
         this.isInner = blockType == BlockType.FRAMED_FLAT_ELEV_INNER_DOUBLE_SLOPE_SLAB_CORNER;
         registerDefaultState(defaultBlockState()
                 .setValue(FramedProperties.TOP, false)

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "C": {
-      "item": "framedblocks:framed_prism_corner"
-    },
-    "I": {
-      "item": "framedblocks:framed_inner_prism_corner"
-    }
+    "C": "framedblocks:framed_prism_corner",
+    "I": "framedblocks:framed_inner_prism_corner"
   },
   "pattern": [
     "IC"

@@ -5,7 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -27,9 +27,9 @@ import java.util.List;
 
 public class FramedTorchBlock extends TorchBlock implements IFramedBlock
 {
-    public FramedTorchBlock()
+    public FramedTorchBlock(Properties props)
     {
-        this(ParticleTypes.FLAME, Properties.of()
+        this(ParticleTypes.FLAME, props
                 .pushReaction(PushReaction.DESTROY)
                 .noCollission()
                 .strength(0.5F)
@@ -56,7 +56,7 @@ public class FramedTorchBlock extends TorchBlock implements IFramedBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(
+    protected InteractionResult useItemOn(
             ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit
     )
     {
@@ -76,7 +76,7 @@ public class FramedTorchBlock extends TorchBlock implements IFramedBlock
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos)
+    protected boolean propagatesSkylightDown(BlockState state)
     {
         return state.getValue(FramedProperties.PROPAGATES_SKYLIGHT);
     }
@@ -107,13 +107,13 @@ public class FramedTorchBlock extends TorchBlock implements IFramedBlock
     }
 
     @Override
-    public BlockItem createBlockItem()
+    public BlockItem createBlockItem(Item.Properties props)
     {
         return new StandingAndWallBlockItem(
                 FBContent.BLOCK_FRAMED_TORCH.value(),
                 FBContent.BLOCK_FRAMED_WALL_TORCH.value(),
-                new Item.Properties(),
-                Direction.DOWN
+                Direction.DOWN,
+                props
         );
     }
 

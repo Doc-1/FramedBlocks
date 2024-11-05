@@ -20,9 +20,9 @@ import xfacthd.framedblocks.common.data.property.CornerType;
 
 public class FramedCornerSlopeEdgeBlock extends FramedBlock
 {
-    public FramedCornerSlopeEdgeBlock(BlockType blockType)
+    public FramedCornerSlopeEdgeBlock(BlockType blockType, Properties props)
     {
-        super(blockType);
+        super(blockType, props);
         registerDefaultState(defaultBlockState()
                 .setValue(PropertyHolder.ALT_TYPE, false)
                 .setValue(FramedProperties.Y_SLOPE, false)

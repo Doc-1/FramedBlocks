@@ -111,7 +111,7 @@ public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlock
         RANDOM.setSeed(42);
         for (RenderType type : model.getRenderTypes(state, RANDOM, data))
         {
-            RenderType bufferType = type == RenderType.solid() ? Sheets.solidBlockSheet() : RenderTypeHelper.getEntityRenderType(type, false);
+            RenderType bufferType = type == RenderType.solid() ? Sheets.solidBlockSheet() : RenderTypeHelper.getEntityRenderType(type);
 
             renderer.renderModel(
                     matrix.last(),

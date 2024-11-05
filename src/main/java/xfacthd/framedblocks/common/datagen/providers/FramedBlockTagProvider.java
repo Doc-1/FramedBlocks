@@ -1,9 +1,9 @@
 package xfacthd.framedblocks.common.datagen.providers;
 
-import net.minecraft.core.*;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
-import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.tags.BlockTags;
@@ -126,7 +126,7 @@ public final class FramedBlockTagProvider extends BlockTagsProvider
                 .map(Block::defaultBlockState)
                 .filter(state -> state.hasProperty(FramedProperties.SOLID))
                 .map(state -> state.setValue(FramedProperties.SOLID, true))
-                .filter(state -> state.isSolidRender(EmptyBlockGetter.INSTANCE, BlockPos.ZERO))
+                .filter(BlockBehaviour.BlockStateBase::isSolidRender)
                 .map(BlockBehaviour.BlockStateBase::getBlock)
                 .forEach(fullGroupTag::add);
         // Special cases which are not captured by the checks above

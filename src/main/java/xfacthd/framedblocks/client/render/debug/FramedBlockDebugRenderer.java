@@ -2,32 +2,47 @@ package xfacthd.framedblocks.client.render.debug;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
-import net.minecraft.client.*;
+import net.minecraft.client.Camera;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.render.debug.AttachDebugRenderersEvent;
 import xfacthd.framedblocks.api.render.debug.BlockDebugRenderer;
 import xfacthd.framedblocks.common.config.DevToolsConfig;
 
-import java.util.*;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 public final class FramedBlockDebugRenderer
 {
     private static final Map<BlockEntityType<? extends FramedBlockEntity>, Set<BlockDebugRenderer<? extends FramedBlockEntity>>> RENDERERS_BY_TYPE = new IdentityHashMap<>();
 
     @SuppressWarnings("unchecked")
-    public static void render(DeltaTracker delta, Camera camera, PoseStack poseStack)
+    private static void onRenderLevelStage(final RenderLevelStageEvent event)
     {
+        if (!DevToolsConfig.VIEW.isDoubleBlockPartHitDebugRendererEnabled()) return;
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) return;
+
+        DeltaTracker delta = event.getPartialTick();
+        Camera camera = event.getCamera();
+        PoseStack poseStack = event.getPoseStack();
+
         HitResult hit = Minecraft.getInstance().hitResult;
         if (!(hit instanceof BlockHitResult blockHit)) return;
 
@@ -60,7 +75,8 @@ public final class FramedBlockDebugRenderer
     {
         if (DevToolsConfig.VIEW.isDoubleBlockPartHitDebugRendererEnabled())
         {
-            Minecraft.getInstance().levelRenderer.requestOutlineEffect();
+            // FIXME: needs another event to request outline processing
+            //Minecraft.getInstance().levelRenderer.requestOutlineEffect();
         }
     }
 
@@ -73,6 +89,7 @@ public final class FramedBlockDebugRenderer
         ));
 
         NeoForge.EVENT_BUS.addListener(FramedBlockDebugRenderer::onRenderFramePre);
+        NeoForge.EVENT_BUS.addListener(FramedBlockDebugRenderer::onRenderLevelStage);
     }
 
     private FramedBlockDebugRenderer() { }

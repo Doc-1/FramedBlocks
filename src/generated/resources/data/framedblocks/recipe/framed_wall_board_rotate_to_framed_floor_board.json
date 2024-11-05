@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    {
-      "item": "framedblocks:framed_wall_board"
-    },
-    {
-      "item": "framedblocks:framed_wrench"
-    }
+    "framedblocks:framed_wall_board",
+    "framedblocks:framed_wrench"
   ],
   "result": {
     "count": 1,

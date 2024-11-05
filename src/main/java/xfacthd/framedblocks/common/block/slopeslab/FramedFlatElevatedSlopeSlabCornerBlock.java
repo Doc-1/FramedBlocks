@@ -18,9 +18,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedFlatElevatedSlopeSlabCornerBlock extends FramedBlock
 {
-    public FramedFlatElevatedSlopeSlabCornerBlock(BlockType type)
+    public FramedFlatElevatedSlopeSlabCornerBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
         registerDefaultState(defaultBlockState()
                 .setValue(FramedProperties.TOP, false)
                 .setValue(FramedProperties.Y_SLOPE, true)

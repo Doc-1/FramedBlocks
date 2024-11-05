@@ -8,9 +8,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedInnerThreewayCornerBlock extends FramedThreewayCornerBlock
 {
-    public FramedInnerThreewayCornerBlock(BlockType type)
+    public FramedInnerThreewayCornerBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
     }
 
     @Override

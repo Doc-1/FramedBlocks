@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    {
-      "item": "framedblocks:framed_pillar"
-    }
+    "framedblocks:framed_pillar"
   ],
   "result": {
     "count": 1,

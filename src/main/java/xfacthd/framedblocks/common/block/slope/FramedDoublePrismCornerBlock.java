@@ -15,9 +15,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedDoublePrismCornerBlock extends FramedDoubleThreewayCornerBlock
 {
-    public FramedDoublePrismCornerBlock()
+    public FramedDoublePrismCornerBlock(Properties props)
     {
-        super(BlockType.FRAMED_DOUBLE_PRISM_CORNER);
+        super(BlockType.FRAMED_DOUBLE_PRISM_CORNER, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.OFFSET, false));
     }
 

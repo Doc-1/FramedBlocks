@@ -7,7 +7,9 @@ import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.recipe.*;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -20,11 +22,13 @@ import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.screen.FramingSawScreen;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.special.FramingSawBlock;
-import xfacthd.framedblocks.common.crafting.*;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipeAdditive;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipeCalculation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 public final class FramingSawRecipeCategory implements IRecipeCategory<FramingSawRecipe>
 {
@@ -151,8 +155,9 @@ public final class FramingSawRecipeCategory implements IRecipeCategory<FramingSa
         for (FramingSawRecipeAdditive additive : additives)
         {
             int addCount = additive.count() * (outputCount / recipe.getResult().getCount());
-            List<ItemStack> additiveStacks = Stream.of(additive.ingredient().getItems())
-                    .map(ItemStack::copy)
+            List<ItemStack> additiveStacks = additive.ingredient().items()
+                    .stream()
+                    .map(ItemStack::new)
                     .peek(s -> s.setCount(addCount))
                     .toList();
             flatAdditives.add(additiveStacks);

@@ -12,9 +12,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedFloorBlock extends FramedBlock
 {
-    public FramedFloorBlock()
+    public FramedFloorBlock(Properties props)
     {
-        super(BlockType.FRAMED_FLOOR_BOARD, Properties::forceSolidOn);
+        super(BlockType.FRAMED_FLOOR_BOARD, props.forceSolidOn());
         registerDefaultState(defaultBlockState().setValue(FramedProperties.TOP, false));
     }
 

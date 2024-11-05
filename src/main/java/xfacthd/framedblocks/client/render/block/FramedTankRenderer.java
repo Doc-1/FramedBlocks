@@ -57,7 +57,7 @@ public class FramedTankRenderer implements BlockEntityRenderer<FramedTankBlockEn
         float height = Mth.clamp(fluidAmount / (float) TankFluidHandler.CAPACITY, OFFSET, 1F - OFFSET);
         boolean sameTex = stillTex.equals(flowTex);
 
-        RenderType bufferType = RenderTypeHelper.getEntityRenderType(renderType, true);
+        RenderType bufferType = RenderTypeHelper.getEntityRenderType(renderType);
         VertexConsumer consumer = buffer.getBuffer(bufferType);
         PoseStack.Pose pose = poseStack.last();
 

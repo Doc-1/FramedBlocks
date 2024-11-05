@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -16,6 +16,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
@@ -58,10 +59,9 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
 
     IBlockType getBlockType();
 
-    static Block.Properties createProperties(IBlockType type)
+    static Block.Properties applyDefaultProperties(BlockBehaviour.Properties props, IBlockType type)
     {
-        Block.Properties props = Block.Properties.of()
-                .mapColor(MapColor.WOOD)
+        props.mapColor(MapColor.WOOD)
                 .ignitedByLava()
                 .instrument(NoteBlockInstrument.BASS)
                 .strength(2F)
@@ -88,9 +88,9 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
         return ((IFramedBlock) state.getBlock()).isSuffocating(state, level, pos);
     }
 
-    default BlockItem createBlockItem()
+    default BlockItem createBlockItem(Item.Properties props)
     {
-        return new BlockItem((Block) this, new Item.Properties());
+        return new BlockItem((Block) this, props);
     }
 
     @ApiStatus.OverrideOnly
@@ -144,13 +144,13 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
         }
     }
 
-    default ItemInteractionResult handleUse(
+    default InteractionResult handleUse(
             BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit
     )
     {
         if (getBlockType().canLockState() && hand == InteractionHand.MAIN_HAND && lockState(level, pos, player, player.getItemInHand(hand)))
         {
-            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.SUCCESS;
         }
 
         if (Utils.isWrenchRotationTool(player.getItemInHand(hand)))
@@ -163,17 +163,17 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
                 {
                     level.setBlockAndUpdate(pos, newState);
                 }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide());
+                return InteractionResult.SUCCESS;
             }
 
-            return ItemInteractionResult.FAIL;
+            return InteractionResult.FAIL;
         }
 
         if (level.getBlockEntity(pos) instanceof FramedBlockEntity be)
         {
             return be.handleInteraction(player, hand, hit);
         }
-        return ItemInteractionResult.FAIL;
+        return InteractionResult.FAIL;
     }
 
     @Override
@@ -450,22 +450,11 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
     }
 
     /**
-     * @deprecated Use overload with {@link ShapeProvider} param instead
-     */
-    @Deprecated(forRemoval = true)
-    default VoxelShape getCamoOcclusionShape(BlockState state, BlockGetter level, BlockPos pos)
-    {
-        return getCamoOcclusionShape(state, level, pos, null);
-    }
-
-    /**
      * {@return the shape to use for occlusion checks}
      * @param state This block's state
-     * @param level The level this block is in
-     * @param pos The position of this block in the level
      * @param occlusionShapes The {@link ShapeProvider} to get the shape from if this block uses separate main and occlusion shapes
      */
-    default VoxelShape getCamoOcclusionShape(BlockState state, BlockGetter level, BlockPos pos, @Nullable ShapeProvider occlusionShapes)
+    default VoxelShape getCamoOcclusionShape(BlockState state, @Nullable ShapeProvider occlusionShapes)
     {
         if (getBlockType().canOccludeWithSolidCamo() && !state.getValue(FramedProperties.SOLID))
         {
@@ -475,7 +464,7 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
         {
             return occlusionShapes.get(state);
         }
-        return state.getShape(level, pos);
+        return state.getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
     }
 
     default VoxelShape getCamoVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx)
@@ -572,7 +561,7 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
         return true;
     }
 
-    default BlockState updateShapeLockable(BlockState state, LevelAccessor level, BlockPos pos, Supplier<BlockState> updateShape)
+    default BlockState updateShapeLockable(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Supplier<BlockState> updateShape)
     {
         if (!state.getValue(FramedProperties.STATE_LOCKED))
         {
@@ -581,7 +570,7 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
 
         if (getBlockType().supportsWaterLogging() && state.getValue(BlockStateProperties.WATERLOGGED))
         {
-            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            tickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
         return state;
     }

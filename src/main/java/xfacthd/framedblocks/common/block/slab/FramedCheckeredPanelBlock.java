@@ -22,9 +22,9 @@ import xfacthd.framedblocks.common.data.doubleblock.*;
 
 public class FramedCheckeredPanelBlock extends AbstractFramedDoubleBlock
 {
-    public FramedCheckeredPanelBlock()
+    public FramedCheckeredPanelBlock(Properties props)
     {
-        super(BlockType.FRAMED_CHECKERED_PANEL);
+        super(BlockType.FRAMED_CHECKERED_PANEL, props);
     }
 
     @Override

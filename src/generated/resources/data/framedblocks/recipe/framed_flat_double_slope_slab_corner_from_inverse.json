@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    {
-      "item": "framedblocks:framed_flat_inv_double_slope_slab_corner"
-    }
+    "framedblocks:framed_flat_inv_double_slope_slab_corner"
   ],
   "result": {
     "count": 1,

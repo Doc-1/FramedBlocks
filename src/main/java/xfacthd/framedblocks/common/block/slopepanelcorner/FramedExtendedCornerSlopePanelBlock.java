@@ -23,9 +23,9 @@ import xfacthd.framedblocks.common.item.VerticalAndWallBlockItem;
 
 public class FramedExtendedCornerSlopePanelBlock extends FramedBlock
 {
-    public FramedExtendedCornerSlopePanelBlock(BlockType blockType)
+    public FramedExtendedCornerSlopePanelBlock(BlockType blockType, Properties props)
     {
-        super(blockType);
+        super(blockType, props);
         registerDefaultState(defaultBlockState()
                 .setValue(FramedProperties.TOP, false)
                 .setValue(FramedProperties.Y_SLOPE, false)
@@ -112,7 +112,7 @@ public class FramedExtendedCornerSlopePanelBlock extends FramedBlock
     }
 
     @Override
-    public BlockItem createBlockItem()
+    public BlockItem createBlockItem(Item.Properties props)
     {
         Block other = switch (getBlockType())
         {
@@ -120,7 +120,7 @@ public class FramedExtendedCornerSlopePanelBlock extends FramedBlock
             case FRAMED_EXT_INNER_CORNER_SLOPE_PANEL -> FBContent.BLOCK_FRAMED_EXTENDED_INNER_CORNER_SLOPE_PANEL_WALL.value();
             default -> throw new IllegalStateException("Unexpected type: " + getBlockType());
         };
-        return new VerticalAndWallBlockItem(this, other, new Item.Properties());
+        return new VerticalAndWallBlockItem(this, other, props);
     }
 
     @Override

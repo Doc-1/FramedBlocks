@@ -23,9 +23,9 @@ import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMod
 
 public class FramedDividedSlabBlock extends AbstractFramedDoubleBlock
 {
-    public FramedDividedSlabBlock()
+    public FramedDividedSlabBlock(Properties props)
     {
-        super(BlockType.FRAMED_DIVIDED_SLAB);
+        super(BlockType.FRAMED_DIVIDED_SLAB, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.TOP, false));
     }
 

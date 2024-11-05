@@ -23,7 +23,7 @@ public final class FramingSawRecipeSerializer implements RecipeSerializer<Framin
                     opt -> opt.orElse(false), flag -> flag ? Optional.of(true) : Optional.empty()
             ).forGetter(FramingSawRecipe::isDisabled)
     ).apply(inst, FramingSawRecipe::new));
-    private static final StreamCodec<RegistryFriendlyByteBuf, FramingSawRecipe> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, FramingSawRecipe> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
             FramingSawRecipe::getMaterialAmount,
             FramingSawRecipeAdditive.STREAM_CODEC.apply(ByteBufCodecs.list()),

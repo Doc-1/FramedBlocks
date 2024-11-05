@@ -28,9 +28,9 @@ public class FramedFlatDoubleSlopeSlabCornerBlock extends AbstractFramedDoubleBl
             state -> state.getValue(PropertyHolder.TOP_HALF) != state.getValue(FramedProperties.TOP)
     );
 
-    public FramedFlatDoubleSlopeSlabCornerBlock()
+    public FramedFlatDoubleSlopeSlabCornerBlock(Properties props)
     {
-        super(BlockType.FRAMED_FLAT_DOUBLE_SLOPE_SLAB_CORNER);
+        super(BlockType.FRAMED_FLAT_DOUBLE_SLOPE_SLAB_CORNER, props);
         registerDefaultState(defaultBlockState()
                 .setValue(FramedProperties.TOP, false)
                 .setValue(PropertyHolder.TOP_HALF, false)

@@ -15,9 +15,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedMasonryCornerSegmentBlock extends FramedBlock
 {
-    public FramedMasonryCornerSegmentBlock()
+    public FramedMasonryCornerSegmentBlock(Properties props)
     {
-        super(BlockType.FRAMED_MASONRY_CORNER_SEGMENT);
+        super(BlockType.FRAMED_MASONRY_CORNER_SEGMENT, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.TOP, false));
     }
 

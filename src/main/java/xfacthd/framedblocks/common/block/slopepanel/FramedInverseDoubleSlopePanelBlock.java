@@ -28,9 +28,9 @@ import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMod
 
 public class FramedInverseDoubleSlopePanelBlock extends AbstractFramedDoubleBlock
 {
-    public FramedInverseDoubleSlopePanelBlock()
+    public FramedInverseDoubleSlopePanelBlock(Properties props)
     {
-        super(BlockType.FRAMED_INV_DOUBLE_SLOPE_PANEL);
+        super(BlockType.FRAMED_INV_DOUBLE_SLOPE_PANEL, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, false));
     }
 

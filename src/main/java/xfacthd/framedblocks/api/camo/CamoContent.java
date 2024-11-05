@@ -19,13 +19,13 @@ import net.neoforged.neoforge.common.util.TriState;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContent;
 import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
-import xfacthd.framedblocks.api.util.EmptyBlockAndTintGetter;
 
 public abstract class CamoContent<C extends CamoContent<C>> implements QuadCacheKey
 {
     /**
      * {@return whether this camo propagates skylight downwards}
-     * @see BlockBehaviour.BlockStateBase#propagatesSkylightDown(BlockGetter, BlockPos)
+     * @see BlockBehaviour.BlockStateBase#propagatesSkylightDown()
+     * // TODO: remove level/pos context
      */
     public abstract boolean propagatesSkylightDown(BlockGetter level, BlockPos pos);
 
@@ -131,7 +131,8 @@ public abstract class CamoContent<C extends CamoContent<C>> implements QuadCache
 
     /**
      * {@return whether this camo is fully solid}
-     * @see BlockBehaviour.BlockStateBase#isSolidRender(BlockGetter, BlockPos)
+     * @see BlockBehaviour.BlockStateBase#isSolidRender()
+     * // TODO: remove level/pos context
      */
     public abstract boolean isSolid(BlockGetter level, BlockPos pos);
 

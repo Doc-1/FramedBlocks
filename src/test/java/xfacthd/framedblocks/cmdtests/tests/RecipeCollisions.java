@@ -8,18 +8,23 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import org.apache.commons.lang3.mutable.MutableInt;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.cmdtests.SpecialTestCommand;
 import xfacthd.framedblocks.mixin.AccessorTransientCraftingContainer;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -30,20 +35,20 @@ public final class RecipeCollisions
     private static final String PROGRESS_MSG = MSG_PREFIX + "%,d";
     private static final String RESULT_MSG = MSG_PREFIX + "Tested %,d combinations in %dms. ";
 
+    // FIXME: see whether this is salvageable
     @SuppressWarnings("unchecked")
     public static void checkForRecipeCollisions(CommandContext<CommandSourceStack> ctx, Consumer<Component> msgQueueAppender)
     {
-        Level level = ctx.getSource().getLevel();
+        ServerLevel level = ctx.getSource().getLevel();
         Player player = Objects.requireNonNull(ctx.getSource().getPlayer());
 
         Stopwatch watch = Stopwatch.createStarted();
 
-        RecipeManager recipeManager = level.getRecipeManager();
-        List<RecipeHolder<CraftingRecipe>> recipes = recipeManager.getRecipeIds()
-                .filter(id -> id.getNamespace().equals(FramedConstants.MOD_ID))
-                .map(recipeManager::byKey)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+        List<RecipeHolder<CraftingRecipe>> recipes = level.recipeAccess()
+                .recipeMap()
+                .values()
+                .stream()
+                .filter(holder -> holder.id().location().getNamespace().equals(FramedConstants.MOD_ID))
                 .filter(h -> h.value() instanceof CraftingRecipe)
                 .map(h -> (RecipeHolder<CraftingRecipe>) h)
                 .toList();
@@ -51,9 +56,9 @@ public final class RecipeCollisions
         TransientCraftingContainer container = new TransientCraftingContainer(player.containerMenu, 3, 3);
         NonNullList<ItemStack> items = ((AccessorTransientCraftingContainer) container).framedblocks$getItems();
 
-        Multimap<ResourceLocation, ResourceLocation> collisions = ArrayListMultimap.create();
+        Multimap<ResourceKey<Recipe<?>>, ResourceKey<Recipe<?>>> collisions = ArrayListMultimap.create();
         MutableInt combinations = new MutableInt(0);
-        recipes.forEach(holder ->
+        /*recipes.forEach(holder ->
         {
             CraftingRecipe recipe = holder.value();
             List<Ingredient> ingredients = recipe.getIngredients();
@@ -101,7 +106,7 @@ public final class RecipeCollisions
                             msgQueueAppender.accept(Component.literal(PROGRESS_MSG.formatted(value)));
                         }
                     });
-        });
+        });*/
 
         watch.stop();
         long time = watch.elapsed(TimeUnit.MILLISECONDS);
@@ -113,7 +118,7 @@ public final class RecipeCollisions
         {
             StringBuilder testResult = new StringBuilder("Found the following recipe collisions:");
             collisions.forEach((r1, r2) ->
-                    testResult.append(String.format("\n\t%s collides with %s", r1, r2))
+                    testResult.append(String.format("\n\t%s collides with %s", r1.location(), r2.location()))
             );
 
             Component exportMsg = SpecialTestCommand.writeResultToFile("recipecollisions", testResult.toString());

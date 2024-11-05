@@ -27,7 +27,7 @@ public final class FramingSawDisplay implements Display
     )
     {
         this.recipe = recipe;
-        this.location = Optional.of(recipe.id());
+        this.location = Optional.of(recipe.id().location());
         this.inputs = inputs;
         this.output = List.of(output);
         this.inputWithAdditives = inputWithAdditives;

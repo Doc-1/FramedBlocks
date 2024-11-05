@@ -27,9 +27,9 @@ import java.util.function.BiFunction;
 
 public class FramedFancyRailSlopeBlock extends FramedRailSlopeBlock implements IFramedDoubleBlock, ISlopeBlock.IRailSlopeBlock
 {
-    public FramedFancyRailSlopeBlock(BiFunction<BlockPos, BlockState, FramedBlockEntity> beFactory)
+    public FramedFancyRailSlopeBlock(Properties props, BiFunction<BlockPos, BlockState, FramedBlockEntity> beFactory)
     {
-        super(BlockType.FRAMED_FANCY_RAIL_SLOPE, beFactory);
+        super(BlockType.FRAMED_FANCY_RAIL_SLOPE, props, beFactory);
     }
 
     @Override

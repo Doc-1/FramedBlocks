@@ -14,6 +14,7 @@ import xfacthd.framedblocks.common.FBContent;
 
 import java.util.*;
 
+// TODO: implement recipe displays
 public final class FramingSawRecipe implements Recipe<RecipeInput>
 {
     public static final int CUBE_MATERIAL_VALUE = 6144; // Empirically determined value
@@ -115,12 +116,6 @@ public final class FramingSawRecipe implements Recipe<RecipeInput>
         return result.copy();
     }
 
-    @Override
-    public boolean canCraftInDimensions(int width, int height)
-    {
-        return true;
-    }
-
     public int getMaterialAmount()
     {
         return materialAmount;
@@ -132,12 +127,6 @@ public final class FramingSawRecipe implements Recipe<RecipeInput>
     }
 
     public ItemStack getResult()
-    {
-        return result;
-    }
-
-    @Override
-    public ItemStack getResultItem(HolderLookup.Provider access)
     {
         return result;
     }
@@ -159,19 +148,43 @@ public final class FramingSawRecipe implements Recipe<RecipeInput>
     }
 
     @Override
-    public ItemStack getToastSymbol()
+    public PlacementInfo placementInfo()
     {
-        return TOAST_ICON.get();
+        if (disabled)
+        {
+            return PlacementInfo.NOT_PLACEABLE;
+        }
+
+        // TODO: check whether this makes sense
+        List<Optional<Ingredient>> ingredients = new ArrayList<>(4);
+        for (int i = 0; i < MAX_ADDITIVE_COUNT; i++)
+        {
+            if (i < additives.size())
+            {
+                ingredients.add(Optional.of(additives.get(i).ingredient()));
+            }
+            else
+            {
+                ingredients.add(Optional.empty());
+            }
+        }
+        return PlacementInfo.createFromOptionals(ingredients);
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeBookCategory recipeBookCategory()
+    {
+        return FBContent.RECIPE_BOOK_CATEGORY_FRAMING_SAW.value();
+    }
+
+    @Override
+    public RecipeSerializer<FramingSawRecipe> getSerializer()
     {
         return FBContent.RECIPE_SERIALIZER_FRAMING_SAW_RECIPE.value();
     }
 
     @Override
-    public RecipeType<?> getType()
+    public RecipeType<FramingSawRecipe> getType()
     {
         return FBContent.RECIPE_TYPE_FRAMING_SAW_RECIPE.value();
     }

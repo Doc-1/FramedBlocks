@@ -29,9 +29,9 @@ import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMod
 
 public class FramedStackedSlopePanelBlock extends AbstractFramedDoubleBlock
 {
-    public FramedStackedSlopePanelBlock()
+    public FramedStackedSlopePanelBlock(Properties props)
     {
-        super(BlockType.FRAMED_STACKED_SLOPE_PANEL);
+        super(BlockType.FRAMED_STACKED_SLOPE_PANEL, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, false));
     }
 

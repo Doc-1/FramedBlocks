@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "F": {
-      "item": "framedblocks:framed_slab"
-    },
-    "S": {
-      "item": "framedblocks:framed_slope_slab"
-    }
+    "F": "framedblocks:framed_slab",
+    "S": "framedblocks:framed_slope_slab"
   },
   "pattern": [
     "S",

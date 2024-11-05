@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "F": {
-      "item": "framedblocks:framed_corner_slope"
-    }
+    "F": "framedblocks:framed_corner_slope"
   },
   "pattern": [
     "FF"

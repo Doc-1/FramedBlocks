@@ -32,6 +32,7 @@ public class FramedGlowingCubeGeometry extends FramedCubeGeometry
                     quad.getDirection(),
                     quad.getSprite(),
                     false,
+                    quad.getLightEmission(),
                     false
             );
             FULLBRIGHT_TRANSFORMER.processInPlace(newQuad);

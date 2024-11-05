@@ -8,7 +8,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,10 +16,12 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.neoforged.neoforge.common.util.Lazy;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.mixin.AccessorIngredient;
 import xfacthd.framedblocks.mixin.AccessorStateDefinitionBuilder;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public final class FramedUtils
@@ -110,7 +111,7 @@ public final class FramedUtils
         }
 
         MinecraftServer server = slevel.getServer();
-        server.tell(new TickTask(server.getTickCount() + delay, task));
+        server.schedule(new TickTask(server.getTickCount() + delay, task));
     }
 
     public static void addPlayerInvSlots(Consumer<Slot> slotConsumer, Inventory playerInv, int x, int y)
@@ -134,14 +135,6 @@ public final class FramedUtils
     {
         Map<String, Property<?>> properties = ((AccessorStateDefinitionBuilder) builder).framedblocks$getProperties();
         properties.remove(property.getName());
-    }
-
-    // The cast is considered invalid due to Ingredient being final
-    @SuppressWarnings({ "UnreachableCode", "DataFlowIssue" })
-    public static Ingredient.Value getSingleIngredientValue(Ingredient ing)
-    {
-        Ingredient.Value[] values = ((AccessorIngredient)(Object) ing).framedblocks$getValues();
-        return values.length == 1 ? values[0] : null;
     }
 
 

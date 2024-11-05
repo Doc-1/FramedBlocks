@@ -11,7 +11,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -58,6 +58,10 @@ public class FramedBlockEntity extends BlockEntity
     private static final DeferredBlockEntity<FramedBlockEntity> DEFAULT_TYPE = DeferredBlockEntity.createBlockEntity(
             Utils.rl("framed_tile")
     );
+    /**
+     * {@link InteractionResult} marker instance to consume the interaction and communicate a failed camo interaction
+     */
+    public static final InteractionResult CONSUME_CAMO_FAILED = new InteractionResult.Success(InteractionResult.SwingSource.NONE, new InteractionResult.ItemContext(true, null));
     public static final Component MSG_BLACKLISTED = Utils.translate("msg", "camo.blacklisted");
     public static final Component MSG_BLOCK_ENTITY = Utils.translate("msg", "camo.block_entity");
     public static final Component MSG_NON_SOLID = Utils.translate("msg", "camo.non_solid");
@@ -92,7 +96,7 @@ public class FramedBlockEntity extends BlockEntity
         this.stateCache = ((IFramedBlock) state.getBlock()).getCache(state);
     }
 
-    public final ItemInteractionResult handleInteraction(Player player, InteractionHand hand, BlockHitResult hit)
+    public final InteractionResult handleInteraction(Player player, InteractionHand hand, BlockHitResult hit)
     {
         ItemStack stack = player.getItemInHand(hand);
         boolean secondary = hitSecondary(hit, player);
@@ -139,10 +143,10 @@ public class FramedBlockEntity extends BlockEntity
             {
                 setCamo(newCamo, secondary);
             }
-            return ItemInteractionResult.sidedSuccess(level().isClientSide());
+            return InteractionResult.SUCCESS;
         }
 
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     private boolean canMakeIntangible(ItemStack stack)
@@ -163,11 +167,11 @@ public class FramedBlockEntity extends BlockEntity
         return false;
     }
 
-    private ItemInteractionResult setCamo(Player player, ItemStack stack, CamoContainerFactory<?> factory, boolean secondary)
+    private InteractionResult setCamo(Player player, ItemStack stack, CamoContainerFactory<?> factory, boolean secondary)
     {
         if (stack.getItem() instanceof BlockItem item && item.getBlock() instanceof IFramedBlock)
         {
-            return ItemInteractionResult.FAIL;
+            return InteractionResult.FAIL;
         }
 
         CamoContainer<?, ?> camo = factory.applyCamo(level(), worldPosition, player, stack);
@@ -177,13 +181,13 @@ public class FramedBlockEntity extends BlockEntity
             {
                 setCamo(camo, secondary);
             }
-            return ItemInteractionResult.sidedSuccess(level().isClientSide());
+            return InteractionResult.SUCCESS;
         }
-        // Abuse CONSUME_PARTIAL to communicate failed camo application to the caller
-        return ItemInteractionResult.CONSUME_PARTIAL;
+        // Abuse a specific InteractionResult instance to communicate failed camo removal to the caller
+        return CONSUME_CAMO_FAILED;
     }
 
-    private ItemInteractionResult clearCamo(Player player, ItemStack stack, CamoContainer<?, ?> camo, boolean secondary)
+    private InteractionResult clearCamo(Player player, ItemStack stack, CamoContainer<?, ?> camo, boolean secondary)
     {
         if (CamoContainerHelper.removeCamo(camo, level(), worldPosition, player, stack))
         {
@@ -191,13 +195,13 @@ public class FramedBlockEntity extends BlockEntity
             {
                 setCamo(EmptyCamoContainer.EMPTY, secondary);
             }
-            return ItemInteractionResult.sidedSuccess(level().isClientSide());
+            return InteractionResult.SUCCESS;
         }
-        // Abuse CONSUME_PARTIAL to communicate failed camo removal to the caller
-        return ItemInteractionResult.CONSUME_PARTIAL;
+        // Abuse a specific InteractionResult instance to communicate failed camo removal to the caller
+        return CONSUME_CAMO_FAILED;
     }
 
-    private ItemInteractionResult applyGlowstone(Player player, ItemStack stack)
+    private InteractionResult applyGlowstone(Player player, ItemStack stack)
     {
         if (!level().isClientSide())
         {
@@ -208,10 +212,10 @@ public class FramedBlockEntity extends BlockEntity
 
             setGlowing(true);
         }
-        return ItemInteractionResult.sidedSuccess(level().isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
-    private ItemInteractionResult rotateCamo(CamoContainer<?, ?> camo, boolean secondary)
+    private InteractionResult rotateCamo(CamoContainer<?, ?> camo, boolean secondary)
     {
         if (camo.canRotateCamo())
         {
@@ -223,12 +227,12 @@ public class FramedBlockEntity extends BlockEntity
                 setChangedWithoutSignalUpdate();
                 level().sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
             }
-            return ItemInteractionResult.sidedSuccess(level().isClientSide());
+            return InteractionResult.SUCCESS;
         }
-        return ItemInteractionResult.FAIL;
+        return InteractionResult.FAIL;
     }
 
-    private ItemInteractionResult applyIntangibility(Player player, ItemStack stack)
+    private InteractionResult applyIntangibility(Player player, ItemStack stack)
     {
         if (!level().isClientSide())
         {
@@ -239,10 +243,10 @@ public class FramedBlockEntity extends BlockEntity
 
             setIntangible(true);
         }
-        return ItemInteractionResult.sidedSuccess(level().isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
-    private ItemInteractionResult removeIntangibility(Player player)
+    private InteractionResult removeIntangibility(Player player)
     {
         if (!level().isClientSide())
         {
@@ -250,10 +254,10 @@ public class FramedBlockEntity extends BlockEntity
 
             Utils.giveToPlayer(player, new ItemStack(Utils.PHANTOM_PASTE), true);
         }
-        return ItemInteractionResult.sidedSuccess(level().isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
-    private ItemInteractionResult applyReinforcement(Player player, ItemStack stack)
+    private InteractionResult applyReinforcement(Player player, ItemStack stack)
     {
         if (!level().isClientSide())
         {
@@ -264,10 +268,10 @@ public class FramedBlockEntity extends BlockEntity
 
             setReinforced(true);
         }
-        return ItemInteractionResult.sidedSuccess(level().isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
-    private ItemInteractionResult removeReinforcement(Player player, ItemStack stack, InteractionHand hand)
+    private InteractionResult removeReinforcement(Player player, ItemStack stack, InteractionHand hand)
     {
         if (!level().isClientSide())
         {
@@ -280,7 +284,7 @@ public class FramedBlockEntity extends BlockEntity
 
             Utils.giveToPlayer(player, new ItemStack(Utils.FRAMED_REINFORCEMENT.value()), true);
         }
-        return ItemInteractionResult.sidedSuccess(level().isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
     /**

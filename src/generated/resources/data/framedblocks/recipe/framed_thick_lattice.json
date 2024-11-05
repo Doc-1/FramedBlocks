@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "F": {
-      "item": "framedblocks:framed_cube"
-    },
-    "H": {
-      "item": "framedblocks:framed_hammer"
-    }
+    "F": "framedblocks:framed_cube",
+    "H": "framedblocks:framed_hammer"
   },
   "pattern": [
     "HF ",

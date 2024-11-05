@@ -19,9 +19,9 @@ import xfacthd.framedblocks.common.data.property.HorizontalRotation;
 
 public class FramedVerticalSlopedStairsBlock extends FramedBlock
 {
-    public FramedVerticalSlopedStairsBlock()
+    public FramedVerticalSlopedStairsBlock(Properties props)
     {
-        super(BlockType.FRAMED_VERTICAL_SLOPED_STAIRS);
+        super(BlockType.FRAMED_VERTICAL_SLOPED_STAIRS, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, false));
     }
 

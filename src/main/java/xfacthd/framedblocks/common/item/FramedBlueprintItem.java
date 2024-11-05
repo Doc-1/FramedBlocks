@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.*;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -48,9 +49,9 @@ public class FramedBlueprintItem extends FramedToolItem
     private static final Map<Block, BlueprintCopyBehaviour> COPY_BEHAVIOURS = new IdentityHashMap<>();
     private static final BlueprintCopyBehaviour NO_OP_BEHAVIOUR = new BlueprintCopyBehaviour(){};
 
-    public FramedBlueprintItem(FramedToolType type)
+    public FramedBlueprintItem(FramedToolType type, Properties props)
     {
-        super(type, new Properties().component(FBContent.DC_TYPE_BLUEPRINT_DATA, BlueprintData.EMPTY));
+        super(type, props.component(FBContent.DC_TYPE_BLUEPRINT_DATA, BlueprintData.EMPTY));
     }
 
     @Override
@@ -60,7 +61,7 @@ public class FramedBlueprintItem extends FramedToolItem
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
+    public InteractionResult use(Level level, Player player, InteractionHand hand)
     {
         ItemStack stack = player.getItemInHand(hand);
         if (player.isShiftKeyDown())
@@ -69,7 +70,7 @@ public class FramedBlueprintItem extends FramedToolItem
             {
                 stack.set(FBContent.DC_TYPE_BLUEPRINT_DATA, BlueprintData.EMPTY);
             }
-            return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
+            return InteractionResult.SUCCESS;
         }
         return super.use(level, player, hand);
     }
@@ -111,7 +112,7 @@ public class FramedBlueprintItem extends FramedToolItem
             BlueprintData data = getBehaviour(state.getBlock()).writeToBlueprint(level, pos, state, be);
             stack.set(FBContent.DC_TYPE_BLUEPRINT_DATA, data);
         }
-        return InteractionResult.sidedSuccess(level.isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
     private static InteractionResult readBlueprint(UseOnContext context, Player player, BlueprintData data)
@@ -148,9 +149,9 @@ public class FramedBlueprintItem extends FramedToolItem
 
         if (!canCopyAllCamos(camos))
         {
-            if (player.level().isClientSide())
+            if (player instanceof ServerPlayer serverPlayer)
             {
-                player.sendSystemMessage(CANT_PLACE_FLUID_CAMO);
+                serverPlayer.sendSystemMessage(CANT_PLACE_FLUID_CAMO);
             }
             return true;
         }
@@ -197,13 +198,13 @@ public class FramedBlueprintItem extends FramedToolItem
 
         if (!missingMaterials.isEmpty())
         {
-            if (player.level().isClientSide())
+            if (player instanceof ServerPlayer serverPlayer)
             {
                 List<String> names = missingMaterials.stream()
                         .map(s -> s.getHoverName().getString())
                         .toList();
                 String list = MATERIAL_LIST_PREFIX + String.join(MATERIAL_LIST_PREFIX, names);
-                player.sendSystemMessage(Component.translatable(MISSING_MATERIALS).append(list));
+                serverPlayer.sendSystemMessage(Component.translatable(MISSING_MATERIALS).append(list));
             }
             return true;
         }

@@ -18,9 +18,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedWallHangingSignBlock extends AbstractFramedHangingSignBlock
 {
-    public FramedWallHangingSignBlock()
+    public FramedWallHangingSignBlock(Properties props)
     {
-        super(BlockType.FRAMED_WALL_HANGING_SIGN, Properties::noCollission);
+        super(BlockType.FRAMED_WALL_HANGING_SIGN, props.noCollission());
     }
 
     @Override
@@ -84,7 +84,7 @@ public class FramedWallHangingSignBlock extends AbstractFramedHangingSignBlock
     }
 
     @Override
-    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos)
+    protected VoxelShape getOcclusionShape(BlockState state)
     {
         return Shapes.empty();
     }

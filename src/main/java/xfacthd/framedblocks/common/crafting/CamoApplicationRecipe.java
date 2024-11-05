@@ -133,19 +133,13 @@ public final class CamoApplicationRecipe extends CustomRecipe
         return remaining;
     }
 
-    @Override
-    public boolean canCraftInDimensions(int width, int height)
-    {
-        return width >= 2 && height >= 2;
-    }
-
     public Ingredient getCopyTool()
     {
         return copyTool;
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<CamoApplicationRecipe> getSerializer()
     {
         return FBContent.RECIPE_SERIALIZER_APPLY_CAMO.value();
     }

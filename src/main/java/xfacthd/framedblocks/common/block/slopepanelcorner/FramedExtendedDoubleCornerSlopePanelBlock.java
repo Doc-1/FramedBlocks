@@ -28,9 +28,9 @@ import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMod
 
 public class FramedExtendedDoubleCornerSlopePanelBlock extends AbstractFramedDoubleBlock
 {
-    public FramedExtendedDoubleCornerSlopePanelBlock(BlockType blockType)
+    public FramedExtendedDoubleCornerSlopePanelBlock(BlockType blockType, Properties props)
     {
-        super(blockType);
+        super(blockType, props);
         registerDefaultState(defaultBlockState()
                 .setValue(FramedProperties.TOP, false)
                 .setValue(FramedProperties.Y_SLOPE, false)
@@ -269,7 +269,7 @@ public class FramedExtendedDoubleCornerSlopePanelBlock extends AbstractFramedDou
     }
 
     @Override
-    public BlockItem createBlockItem()
+    public BlockItem createBlockItem(Item.Properties props)
     {
         Block other = switch (getBlockType())
         {
@@ -277,7 +277,7 @@ public class FramedExtendedDoubleCornerSlopePanelBlock extends AbstractFramedDou
             case FRAMED_EXT_INNER_DOUBLE_CORNER_SLOPE_PANEL -> FBContent.BLOCK_FRAMED_EXTENDED_INNER_DOUBLE_CORNER_SLOPE_PANEL_WALL.value();
             default -> throw new IllegalStateException("Unexpected type: " + getBlockType());
         };
-        return new VerticalAndWallBlockItem(this, other, new Item.Properties());
+        return new VerticalAndWallBlockItem(this, other, props);
     }
 
     @Override

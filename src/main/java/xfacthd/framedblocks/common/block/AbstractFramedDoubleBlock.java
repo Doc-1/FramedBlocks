@@ -8,9 +8,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public abstract class AbstractFramedDoubleBlock extends FramedBlock implements IFramedDoubleBlock
 {
-    public AbstractFramedDoubleBlock(BlockType blockType)
+    public AbstractFramedDoubleBlock(BlockType blockType, Properties props)
     {
-        super(blockType);
+        super(blockType, props);
     }
 
     @Override

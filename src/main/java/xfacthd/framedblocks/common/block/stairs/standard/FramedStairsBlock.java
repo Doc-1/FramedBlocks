@@ -2,8 +2,9 @@ package xfacthd.framedblocks.common.block.stairs.standard;
 
 import net.minecraft.core.*;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -14,6 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.StairsShape;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.*;
@@ -32,9 +34,9 @@ public class FramedStairsBlock extends StairBlock implements IFramedBlock
 {
     private final BlockType type;
 
-    public FramedStairsBlock(BlockType type)
+    public FramedStairsBlock(BlockType type, Properties props)
     {
-        super(FBContent.BLOCK_FRAMED_CUBE.value().defaultBlockState(), IFramedBlock.createProperties(type));
+        super(FBContent.BLOCK_FRAMED_CUBE.value().defaultBlockState(), IFramedBlock.applyDefaultProperties(props, type));
         this.type = type;
         registerDefaultState(defaultBlockState()
                 .setValue(FramedProperties.SOLID, false)
@@ -55,7 +57,7 @@ public class FramedStairsBlock extends StairBlock implements IFramedBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(
+    protected InteractionResult useItemOn(
             ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit
     )
     {
@@ -71,27 +73,29 @@ public class FramedStairsBlock extends StairBlock implements IFramedBlock
     @Override
     protected BlockState updateShape(
             BlockState state,
-            Direction facing,
-            BlockState facingState,
-            LevelAccessor level,
-            BlockPos currentPos,
-            BlockPos facingPos
+            LevelReader level,
+            ScheduledTickAccess tickAccess,
+            BlockPos pos,
+            Direction side,
+            BlockPos adjPos,
+            BlockState adjState,
+            RandomSource random
     )
     {
         BlockState newState = updateShapeLockable(
-                state, level, currentPos,
-                () -> super.updateShape(state, facing, facingState, level, currentPos, facingPos)
+                state, level, tickAccess, pos,
+                () -> super.updateShape(state, level, tickAccess, pos, side, adjPos, adjState, random)
         );
 
         if (newState == state)
         {
-            updateCulling(level, currentPos);
+            updateCulling(level, pos);
         }
         return newState;
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving)
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, @Nullable Orientation orientation, boolean isMoving)
     {
         updateCulling(level, pos);
     }
@@ -103,9 +107,9 @@ public class FramedStairsBlock extends StairBlock implements IFramedBlock
     }
 
     @Override
-    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos)
+    protected VoxelShape getOcclusionShape(BlockState state)
     {
-        return getCamoOcclusionShape(state, level, pos, null);
+        return getCamoOcclusionShape(state, null);
     }
 
     @Override
@@ -121,7 +125,7 @@ public class FramedStairsBlock extends StairBlock implements IFramedBlock
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos)
+    protected boolean propagatesSkylightDown(BlockState state)
     {
         return state.getValue(FramedProperties.PROPAGATES_SKYLIGHT);
     }

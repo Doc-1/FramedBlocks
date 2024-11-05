@@ -3,6 +3,7 @@ package xfacthd.framedblocks.common.crafting;
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -13,14 +14,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.common.util.FramedUtils;
 
 import java.util.Optional;
 
 public record FramingSawRecipeAdditive(Ingredient ingredient, int count, @Nullable TagKey<Item> srcTag)
 {
     public static final Codec<FramingSawRecipeAdditive> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(FramingSawRecipeAdditive::ingredient),
+            Ingredient.CODEC.fieldOf("ingredient").forGetter(FramingSawRecipeAdditive::ingredient),
             Codec.intRange(0, Integer.MAX_VALUE).fieldOf("count").forGetter(FramingSawRecipeAdditive::count)
     ).apply(inst, FramingSawRecipeAdditive::of));
     public static final StreamCodec<RegistryFriendlyByteBuf, FramingSawRecipeAdditive> STREAM_CODEC = StreamCodec.composite(
@@ -47,24 +47,19 @@ public record FramingSawRecipeAdditive(Ingredient ingredient, int count, @Nullab
         return srcTag != null;
     }
 
+    public static FramingSawRecipeAdditive of(Ingredient ingredient)
+    {
+        return of(ingredient, 1);
+    }
+
     public static FramingSawRecipeAdditive of(Ingredient ingredient, int count)
     {
         TagKey<Item> srcTag = null;
-        if (FramedUtils.getSingleIngredientValue(ingredient) instanceof Ingredient.TagValue value)
+        if (!ingredient.isCustom() && ingredient.getValues() instanceof HolderSet.Named<Item> named)
         {
-            srcTag = value.tag();
+            srcTag = named.key();
         }
         return new FramingSawRecipeAdditive(ingredient, count, srcTag);
-    }
-
-    public static FramingSawRecipeAdditive of(TagKey<Item> tag)
-    {
-        return of(tag, 1);
-    }
-
-    public static FramingSawRecipeAdditive of(TagKey<Item> tag, int count)
-    {
-        return of(Ingredient.of(tag), count);
     }
 
     public static FramingSawRecipeAdditive of(ItemLike item)

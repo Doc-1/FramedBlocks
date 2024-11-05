@@ -20,9 +20,9 @@ import xfacthd.framedblocks.common.data.doubleblock.*;
 
 public class FramedDoubleThreewayCornerPillarBlock extends AbstractFramedDoubleBlock
 {
-    public FramedDoubleThreewayCornerPillarBlock()
+    public FramedDoubleThreewayCornerPillarBlock(Properties props)
     {
-        super(BlockType.FRAMED_DOUBLE_THREEWAY_CORNER_PILLAR);
+        super(BlockType.FRAMED_DOUBLE_THREEWAY_CORNER_PILLAR, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.TOP, false));
     }
 

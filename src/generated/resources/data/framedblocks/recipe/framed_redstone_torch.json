@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "F": {
-      "item": "framedblocks:framed_cube"
-    },
-    "R": {
-      "tag": "c:dusts/redstone"
-    }
+    "F": "framedblocks:framed_cube",
+    "R": "#c:dusts/redstone"
   },
   "pattern": [
     "R",

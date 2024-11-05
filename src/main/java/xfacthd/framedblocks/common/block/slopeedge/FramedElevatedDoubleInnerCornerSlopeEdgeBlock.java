@@ -25,9 +25,9 @@ import xfacthd.framedblocks.common.data.property.CornerType;
 
 public class FramedElevatedDoubleInnerCornerSlopeEdgeBlock extends AbstractFramedDoubleBlock
 {
-    public FramedElevatedDoubleInnerCornerSlopeEdgeBlock()
+    public FramedElevatedDoubleInnerCornerSlopeEdgeBlock(Properties props)
     {
-        super(BlockType.FRAMED_ELEV_DOUBLE_INNER_CORNER_SLOPE_EDGE);
+        super(BlockType.FRAMED_ELEV_DOUBLE_INNER_CORNER_SLOPE_EDGE, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, false));
     }
 

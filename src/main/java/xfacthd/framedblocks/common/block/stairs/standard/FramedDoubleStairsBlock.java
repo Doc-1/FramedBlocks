@@ -2,12 +2,15 @@ package xfacthd.framedblocks.common.block.stairs.standard;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,9 +30,9 @@ import xfacthd.framedblocks.common.util.FramedUtils;
 
 public class FramedDoubleStairsBlock extends FramedStairsBlock implements IFramedDoubleBlock
 {
-    public FramedDoubleStairsBlock()
+    public FramedDoubleStairsBlock(Properties props)
     {
-        super(BlockType.FRAMED_DOUBLE_STAIRS);
+        super(BlockType.FRAMED_DOUBLE_STAIRS, props);
     }
 
     @Override
@@ -57,10 +60,19 @@ public class FramedDoubleStairsBlock extends FramedStairsBlock implements IFrame
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction side, BlockState adjState, LevelAccessor level, BlockPos pos, BlockPos adjPos)
+    protected BlockState updateShape(
+            BlockState state,
+            LevelReader level,
+            ScheduledTickAccess tickAccess,
+            BlockPos pos,
+            Direction side,
+            BlockPos adjPos,
+            BlockState adjState,
+            RandomSource random
+    )
     {
         BlockState newState = updateShapeLockable(
-                state, level, pos,
+                state, level, tickAccess, pos,
                 () -> !Utils.isY(side) ? state.setValue(SHAPE, getStairsShape(state, level, pos)) : state
         );
         if (newState == state)

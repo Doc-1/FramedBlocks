@@ -16,9 +16,9 @@ import xfacthd.framedblocks.common.data.*;
 
 public class FramedThreewayCornerBlock extends FramedBlock
 {
-    public FramedThreewayCornerBlock(BlockType type)
+    public FramedThreewayCornerBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
         registerDefaultState(defaultBlockState()
                 .setValue(FramedProperties.TOP, false)
                 .setValue(FramedProperties.Y_SLOPE, false)

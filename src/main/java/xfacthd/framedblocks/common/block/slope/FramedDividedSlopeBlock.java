@@ -27,9 +27,9 @@ import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMod
 
 public class FramedDividedSlopeBlock extends AbstractFramedDoubleBlock implements ISlopeBlock, IComplexSlopeSource
 {
-    public FramedDividedSlopeBlock()
+    public FramedDividedSlopeBlock(Properties props)
     {
-        super(BlockType.FRAMED_DIVIDED_SLOPE);
+        super(BlockType.FRAMED_DIVIDED_SLOPE, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, false));
     }
 

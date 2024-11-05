@@ -23,9 +23,9 @@ import xfacthd.framedblocks.common.item.VerticalAndWallBlockItem;
 
 public class FramedHalfSlopeBlock extends FramedBlock
 {
-    public FramedHalfSlopeBlock()
+    public FramedHalfSlopeBlock(Properties props)
     {
-        super(BlockType.FRAMED_HALF_SLOPE);
+        super(BlockType.FRAMED_HALF_SLOPE, props);
         registerDefaultState(defaultBlockState()
                 .setValue(FramedProperties.TOP, false)
                 .setValue(PropertyHolder.RIGHT, false)
@@ -100,12 +100,12 @@ public class FramedHalfSlopeBlock extends FramedBlock
     }
 
     @Override
-    public BlockItem createBlockItem()
+    public BlockItem createBlockItem(Item.Properties props)
     {
         return new VerticalAndWallBlockItem(
                 this,
                 FBContent.BLOCK_FRAMED_VERTICAL_HALF_SLOPE.value(),
-                new Item.Properties()
+                props
         );
     }
 

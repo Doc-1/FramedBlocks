@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "R": {
-      "item": "framedblocks:framed_fancy_rail"
-    },
-    "S": {
-      "item": "framedblocks:framed_slope"
-    }
+    "R": "framedblocks:framed_fancy_rail",
+    "S": "framedblocks:framed_slope"
   },
   "pattern": [
     "R",

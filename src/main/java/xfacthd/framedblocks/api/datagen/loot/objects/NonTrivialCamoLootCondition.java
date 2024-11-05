@@ -25,7 +25,7 @@ public final class NonTrivialCamoLootCondition implements LootItemCondition
     @Override
     public boolean test(LootContext ctx)
     {
-        if (ctx.getParamOrNull(LootContextParams.BLOCK_ENTITY) instanceof FramedBlockEntity be)
+        if (ctx.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof FramedBlockEntity be)
         {
             return !be.canTriviallyDropAllCamos();
         }

@@ -3,9 +3,7 @@
   "additives": [
     {
       "count": 1,
-      "ingredient": {
-        "item": "framedblocks:framed_fancy_detector_rail"
-      }
+      "ingredient": "framedblocks:framed_fancy_detector_rail"
     }
   ],
   "material": 3072,

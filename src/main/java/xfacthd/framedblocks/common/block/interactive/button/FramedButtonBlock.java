@@ -3,7 +3,7 @@ package xfacthd.framedblocks.common.block.interactive.button;
 import net.minecraft.core.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -34,9 +34,9 @@ public class FramedButtonBlock extends ButtonBlock implements IFramedBlock
     private final BlockType type;
     private final float jadeScale;
 
-    protected FramedButtonBlock(BlockType type, BlockSetType blockSet, int pressTime)
+    protected FramedButtonBlock(BlockType type, Properties props, BlockSetType blockSet, int pressTime)
     {
-        super(blockSet, pressTime, Properties.of()
+        super(blockSet, pressTime, props
                 .pushReaction(PushReaction.DESTROY)
                 .noCollission()
                 .strength(0.5F)
@@ -59,15 +59,15 @@ public class FramedButtonBlock extends ButtonBlock implements IFramedBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(
+    protected InteractionResult useItemOn(
             ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit
     )
     {
-        ItemInteractionResult result = handleUse(state, level, pos, player, hand, hit);
-        if (result == ItemInteractionResult.FAIL)
+        InteractionResult result = handleUse(state, level, pos, player, hand, hit);
+        if (result == InteractionResult.FAIL)
         {
             // Allow interacting with the block while holding a framed block
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
         return result;
     }
@@ -85,7 +85,7 @@ public class FramedButtonBlock extends ButtonBlock implements IFramedBlock
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos)
+    protected boolean propagatesSkylightDown(BlockState state)
     {
         return state.getValue(FramedProperties.PROPAGATES_SKYLIGHT);
     }
@@ -144,19 +144,21 @@ public class FramedButtonBlock extends ButtonBlock implements IFramedBlock
 
 
 
-    public static FramedButtonBlock wood()
+    public static FramedButtonBlock wood(Properties props)
     {
         return new FramedButtonBlock(
                 BlockType.FRAMED_BUTTON,
+                props,
                 BlockSetType.OAK,
                 30
         );
     }
 
-    public static FramedButtonBlock stone()
+    public static FramedButtonBlock stone(Properties props)
     {
         return new FramedButtonBlock(
                 BlockType.FRAMED_STONE_BUTTON,
+                props,
                 BlockSetType.STONE,
                 20
         );

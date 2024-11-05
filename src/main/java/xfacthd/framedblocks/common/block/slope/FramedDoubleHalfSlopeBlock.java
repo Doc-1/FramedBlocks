@@ -30,9 +30,9 @@ import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMod
 
 public class FramedDoubleHalfSlopeBlock extends AbstractFramedDoubleBlock
 {
-    public FramedDoubleHalfSlopeBlock()
+    public FramedDoubleHalfSlopeBlock(Properties props)
     {
-        super(BlockType.FRAMED_DOUBLE_HALF_SLOPE);
+        super(BlockType.FRAMED_DOUBLE_HALF_SLOPE, props);
         registerDefaultState(defaultBlockState()
                 .setValue(PropertyHolder.RIGHT, false)
                 .setValue(FramedProperties.Y_SLOPE, false)
@@ -102,12 +102,12 @@ public class FramedDoubleHalfSlopeBlock extends AbstractFramedDoubleBlock
     }
 
     @Override
-    public BlockItem createBlockItem()
+    public BlockItem createBlockItem(Item.Properties props)
     {
         return new VerticalAndWallBlockItem(
                 this,
                 FBContent.BLOCK_FRAMED_VERTICAL_DOUBLE_HALF_SLOPE.value(),
-                new Item.Properties()
+                props
         );
     }
 

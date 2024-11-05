@@ -9,9 +9,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedGlowingCubeBlock extends FramedBlock
 {
-    public FramedGlowingCubeBlock()
+    public FramedGlowingCubeBlock(Properties props)
     {
-        super(BlockType.FRAMED_GLOWING_CUBE);
+        super(BlockType.FRAMED_GLOWING_CUBE, props);
     }
 
     @Override

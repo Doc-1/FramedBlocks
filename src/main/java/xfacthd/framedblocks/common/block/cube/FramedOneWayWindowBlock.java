@@ -32,9 +32,9 @@ public class FramedOneWayWindowBlock extends FramedBlock
 {
     public static final BlockCamoContent GLASS_DUMMY_CAMO = new BlockCamoContent(Blocks.TINTED_GLASS.defaultBlockState());
 
-    public FramedOneWayWindowBlock()
+    public FramedOneWayWindowBlock(Properties props)
     {
-        super(BlockType.FRAMED_ONE_WAY_WINDOW);
+        super(BlockType.FRAMED_ONE_WAY_WINDOW, props);
     }
 
     @Override
@@ -83,13 +83,13 @@ public class FramedOneWayWindowBlock extends FramedBlock
     }
 
     @Override
-    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos)
+    protected VoxelShape getOcclusionShape(BlockState state)
     {
         if (state.getValue(PropertyHolder.NULLABLE_FACE) != NullableDirection.NONE)
         {
             return Shapes.empty();
         }
-        return super.getOcclusionShape(state, level, pos);
+        return super.getOcclusionShape(state);
     }
 
     @Override

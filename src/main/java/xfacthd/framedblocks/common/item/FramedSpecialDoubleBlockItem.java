@@ -59,7 +59,7 @@ public abstract class FramedSpecialDoubleBlockItem extends BlockItem
                     SoundType sound = camo.getContent().getSoundType();
                     level.playSound(null, pos, sound.getPlaceSound(), SoundSource.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
                 }
-                return InteractionResult.sidedSuccess(level.isClientSide());
+                return InteractionResult.SUCCESS;
             }
         }
         return super.place(ctx);

@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.profiling.Profiler;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.*;
@@ -46,7 +47,7 @@ public final class GhostBlockRenderer
             return;
         }
 
-        ProfilerFiller profiler = mc().getProfiler();
+        ProfilerFiller profiler = Profiler.get();
         profiler.push(PROFILER_KEY);
         try
         {
@@ -175,7 +176,7 @@ public final class GhostBlockRenderer
     )
     {
         RenderType bufferType = ClientConfig.VIEW.useAltGhostRenderer() ?
-                Sheets.translucentCullBlockSheet() :
+                Sheets.translucentItemSheet() :
                 NeoForgeRenderTypes.TRANSLUCENT_ON_PARTICLES_TARGET.get();
         int opacity = ClientConfig.VIEW.getGhostRenderOpacity();
 

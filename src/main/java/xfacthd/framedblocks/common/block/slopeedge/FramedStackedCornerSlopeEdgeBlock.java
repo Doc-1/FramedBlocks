@@ -27,9 +27,9 @@ import xfacthd.framedblocks.common.data.property.StairsType;
 
 public class FramedStackedCornerSlopeEdgeBlock extends AbstractFramedDoubleBlock
 {
-    public FramedStackedCornerSlopeEdgeBlock()
+    public FramedStackedCornerSlopeEdgeBlock(Properties props)
     {
-        super(BlockType.FRAMED_STACKED_CORNER_SLOPE_EDGE);
+        super(BlockType.FRAMED_STACKED_CORNER_SLOPE_EDGE, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, false));
     }
 

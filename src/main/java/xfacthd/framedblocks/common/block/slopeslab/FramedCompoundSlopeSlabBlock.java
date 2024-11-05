@@ -16,9 +16,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedCompoundSlopeSlabBlock extends FramedBlock
 {
-    public FramedCompoundSlopeSlabBlock()
+    public FramedCompoundSlopeSlabBlock(Properties props)
     {
-        super(BlockType.FRAMED_COMPOUND_SLOPE_SLAB);
+        super(BlockType.FRAMED_COMPOUND_SLOPE_SLAB, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, true));
     }
 

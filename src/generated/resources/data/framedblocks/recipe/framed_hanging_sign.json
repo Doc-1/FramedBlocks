@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "C": {
-      "item": "minecraft:chain"
-    },
-    "F": {
-      "item": "framedblocks:framed_cube"
-    }
+    "C": "minecraft:chain",
+    "F": "framedblocks:framed_cube"
   },
   "pattern": [
     "C C",

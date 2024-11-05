@@ -3,9 +3,7 @@
   "additives": [
     {
       "count": 1,
-      "ingredient": {
-        "item": "minecraft:bucket"
-      }
+      "ingredient": "minecraft:bucket"
     }
   ],
   "material": 24576,

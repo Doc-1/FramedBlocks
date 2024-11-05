@@ -5,8 +5,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.block.FramedBlock;
 import xfacthd.framedblocks.common.blockentity.special.FramedFlowerPotBlockEntity;
@@ -32,9 +34,9 @@ import java.util.function.Supplier;
 
 public class FramedFlowerPotBlock extends FramedBlock
 {
-    public FramedFlowerPotBlock()
+    public FramedFlowerPotBlock(Properties props)
     {
-        super(BlockType.FRAMED_FLOWER_POT);
+        super(BlockType.FRAMED_FLOWER_POT, props);
         registerDefaultState(defaultBlockState().setValue(PropertyHolder.HANGING, false));
     }
 
@@ -62,18 +64,19 @@ public class FramedFlowerPotBlock extends FramedBlock
     @Override
     protected BlockState updateShape(
             BlockState state,
-            Direction side,
-            BlockState sideState,
-            LevelAccessor level,
-            BlockPos pos,
-            BlockPos sidePos
+            LevelReader level,
+            ScheduledTickAccess tickAccess,
+            BlockPos pos, Direction side,
+            BlockPos adjPos,
+            BlockState adjState,
+            RandomSource random
     )
     {
         if (state.getValue(PropertyHolder.HANGING) && side == Direction.UP && !state.canSurvive(level, pos))
         {
             return Blocks.AIR.defaultBlockState();
         }
-        return super.updateShape(state, side, sideState, level, pos, sidePos);
+        return super.updateShape(state, level, tickAccess, pos, side, adjPos, adjState, random);
     }
 
     @Override
@@ -87,12 +90,12 @@ public class FramedFlowerPotBlock extends FramedBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(
+    protected InteractionResult useItemOn(
             ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit
     )
     {
-        ItemInteractionResult result = super.useItemOn(stack, state, level, pos, player, hand, hit);
-        if (result.consumesAction() && result != ItemInteractionResult.CONSUME_PARTIAL)
+        InteractionResult result = super.useItemOn(stack, state, level, pos, player, hand, hit);
+        if (result.consumesAction() && result != FramedBlockEntity.CONSUME_CAMO_FAILED)
         {
             return result;
         }
@@ -125,15 +128,15 @@ public class FramedFlowerPotBlock extends FramedBlock
                 }
 
                 level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-                return ItemInteractionResult.sidedSuccess(level.isClientSide());
+                return InteractionResult.SUCCESS;
             }
             else
             {
-                return ItemInteractionResult.CONSUME;
+                return InteractionResult.CONSUME;
             }
         }
 
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override

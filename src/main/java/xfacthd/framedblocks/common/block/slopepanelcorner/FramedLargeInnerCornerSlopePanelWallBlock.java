@@ -8,9 +8,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedLargeInnerCornerSlopePanelWallBlock extends FramedCornerSlopePanelWallBlock
 {
-    public FramedLargeInnerCornerSlopePanelWallBlock(BlockType type)
+    public FramedLargeInnerCornerSlopePanelWallBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
     }
 
     @Override

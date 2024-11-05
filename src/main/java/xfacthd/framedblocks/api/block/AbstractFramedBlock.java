@@ -6,27 +6,39 @@ import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
-import net.minecraft.world.level.*;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.*;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.*;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.shapes.ShapeProvider;
 import xfacthd.framedblocks.api.shapes.ShapeUtils;
 import xfacthd.framedblocks.api.type.IBlockType;
 
 import java.util.List;
-import java.util.function.UnaryOperator;
 
 public abstract class AbstractFramedBlock extends Block implements IFramedBlock, SimpleWaterloggedBlock
 {
@@ -35,11 +47,6 @@ public abstract class AbstractFramedBlock extends Block implements IFramedBlock,
     private final ShapeProvider shapes;
     private final ShapeProvider occlusionShapes;
     private final Reference2BooleanMap<BlockState> beaconBeamOcclusion;
-
-    public AbstractFramedBlock(IBlockType blockType, UnaryOperator<Properties> propertyModifier)
-    {
-        this(blockType, propertyModifier.apply(IFramedBlock.createProperties(blockType)));
-    }
 
     public AbstractFramedBlock(IBlockType blockType, Properties props)
     {
@@ -73,7 +80,7 @@ public abstract class AbstractFramedBlock extends Block implements IFramedBlock,
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(
+    protected InteractionResult useItemOn(
             ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit
     )
     {
@@ -89,24 +96,26 @@ public abstract class AbstractFramedBlock extends Block implements IFramedBlock,
     @Override
     protected BlockState updateShape(
             BlockState state,
-            Direction facing,
-            BlockState facingState,
-            LevelAccessor level,
+            LevelReader level,
+            ScheduledTickAccess tickAccess,
             BlockPos pos,
-            BlockPos facingPos
+            Direction side,
+            BlockPos adjPos,
+            BlockState adjState,
+            RandomSource random
     )
     {
         updateCulling(level, pos);
         if (isWaterLoggable() && state.getValue(BlockStateProperties.WATERLOGGED))
         {
-            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            tickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
 
-        return super.updateShape(state, facing, facingState, level, pos, facingPos);
+        return super.updateShape(state, level, tickAccess, pos, side, adjPos, adjState, random);
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving)
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, @Nullable Orientation orientation, boolean isMoving)
     {
         updateCulling(level, pos);
     }
@@ -128,9 +137,9 @@ public abstract class AbstractFramedBlock extends Block implements IFramedBlock,
     }
 
     @Override
-    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos)
+    protected VoxelShape getOcclusionShape(BlockState state)
     {
-        return getCamoOcclusionShape(state, level, pos, occlusionShapes);
+        return getCamoOcclusionShape(state, occlusionShapes);
     }
 
     @Override
@@ -146,7 +155,7 @@ public abstract class AbstractFramedBlock extends Block implements IFramedBlock,
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos)
+    protected boolean propagatesSkylightDown(BlockState state)
     {
         return state.getValue(FramedProperties.PROPAGATES_SKYLIGHT);
     }

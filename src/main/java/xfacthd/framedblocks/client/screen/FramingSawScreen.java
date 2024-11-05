@@ -7,11 +7,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -19,6 +21,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -29,11 +32,19 @@ import xfacthd.framedblocks.client.screen.widget.BlockPreviewTooltipComponent;
 import xfacthd.framedblocks.client.screen.widget.SearchEditBox;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.compat.ae2.AppliedEnergisticsCompat;
-import xfacthd.framedblocks.common.crafting.*;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipeAdditive;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipeCalculation;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipeMatchResult;
 import xfacthd.framedblocks.common.menu.FramingSawMenu;
 import xfacthd.framedblocks.common.net.payload.ServerboundSelectFramingSawRecipePayload;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
 
 public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> implements IFramingSawScreen
 {
@@ -115,18 +126,15 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY)
     {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-
-        graphics.blit(getBackground(), leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        graphics.blit(RenderType::guiTextured, getBackground(), leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
         int offset = (int) ((SCROLL_BAR_HEIGHT - SCROLL_BTN_HEIGHT) * scrollOffset);
         int scrollU = SCROLL_BTN_TEX_X + (isScrollBarActive() ? 0 : SCROLL_BTN_WIDTH);
-        graphics.blit(BACKGROUND, leftPos + SCROLL_BAR_X, topPos + SCROLL_BAR_Y + offset, scrollU, imageHeight, SCROLL_BTN_WIDTH, SCROLL_BTN_HEIGHT);
+        graphics.blit(RenderType::guiTextured, BACKGROUND, leftPos + SCROLL_BAR_X, topPos + SCROLL_BAR_Y + offset, scrollU, imageHeight, SCROLL_BTN_WIDTH, SCROLL_BTN_HEIGHT, 256, 256);
 
         ItemStack input = getInputStack();
         if (!input.isEmpty() && cache.containsAdditive(input.getItem()))
         {
-            graphics.blit(WARNING_ICON, leftPos + WARNING_X, topPos + WARNING_Y, 8, 8, 24, 24, 32, 32);
+            graphics.blit(RenderType::guiTextured, WARNING_ICON, leftPos + WARNING_X, topPos + WARNING_Y, 8, 8, 24, 24, 32, 32);
         }
 
         int idx = menu.getSelectedRecipeIndex();
@@ -199,9 +207,9 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
     {
         if (additive.isEmpty())
         {
-            ItemStack[] items = additives.get(index).ingredient().getItems();
-            int t = (int) (System.currentTimeMillis() / 1700) % items.length;
-            ClientUtils.renderTransparentFakeItem(graphics, items[t], leftPos + 20, y);
+            List<Holder<Item>> items = additives.get(index).ingredient().items();
+            int t = (int) (System.currentTimeMillis() / 1700) % items.size();
+            ClientUtils.renderTransparentFakeItem(graphics, items.get(t).value().getDefaultInstance(), leftPos + 20, y);
             return true;
         }
         return false;
@@ -404,16 +412,17 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
     private static void appendAdditiveItemOptions(List<Component> components, FramingSawRecipe recipe, int additiveSlot)
     {
         FramingSawRecipeAdditive additive = recipe.getAdditives().get(additiveSlot);
-        if (!additive.isTagBased() && additive.ingredient().getItems().length <= 1)
+        if (!additive.isTagBased() && additive.ingredient().items().size() <= 1)
         {
             return;
         }
 
         if (hasShiftDown())
         {
-            for (ItemStack option : additive.ingredient().getItems())
+            for (Holder<Item> option : additive.ingredient().items())
             {
-                components.add(Component.literal("- ").append(option.getItem().getDescription()).withStyle(ChatFormatting.GOLD));
+                Component name = option.value().getDefaultInstance().getItemName();
+                components.add(Component.literal("- ").append(name).withStyle(ChatFormatting.GOLD));
             }
         }
         else
@@ -437,11 +446,11 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
             );
         }
 
-        ItemStack[] options = additive.ingredient().getItems();
+        List<Holder<Item>> options = additive.ingredient().items();
         return Component.translatable(
-                options.length > 1 ? TOOLTIP_HAVE_X_BUT_NEED_Y_ITEM_MULTI : TOOLTIP_HAVE_X_BUT_NEED_Y_ITEM,
+                options.size() > 1 ? TOOLTIP_HAVE_X_BUT_NEED_Y_ITEM_MULTI : TOOLTIP_HAVE_X_BUT_NEED_Y_ITEM,
                 present,
-                Component.translatable(options[0].getItem().getDescriptionId()).withStyle(ChatFormatting.GOLD)
+                options.getFirst().value().getDefaultInstance().getItemName().copy().withStyle(ChatFormatting.GOLD)
         );
     }
 
@@ -473,16 +482,12 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
                 hovered = true;
             }
 
+            int color = 0xFFFFFFFF;
             if (!hovered && displayRecipeErrors() && !filteredRecipes.get(idx).getMatchResult().success())
             {
-                RenderSystem.setShaderColor(.9F, .3F, .3F, 1F);
+                color = 0xFFE54C4C;
             }
-            else
-            {
-                RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-            }
-
-            graphics.blit(BACKGROUND, recX, recY, u, imageHeight, RECIPE_WIDTH, RECIPE_HEIGHT);
+            graphics.blit(RenderType::guiTextured, BACKGROUND, recX, recY, u, imageHeight, RECIPE_WIDTH, RECIPE_HEIGHT, 256, 256, color);
         }
     }
 
@@ -643,7 +648,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
         query = query.toLowerCase(Locale.ROOT);
         for (FramingSawMenu.FramedRecipeHolder recipe : menu.getRecipes())
         {
-            Component name = recipe.getRecipe().getResult().getItem().getDescription();
+            Component name = recipe.getRecipe().getResult().getItemName();
             if (name.getString().toLowerCase(Locale.ROOT).contains(query))
             {
                 filteredRecipes.add(recipe);
@@ -683,7 +688,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
         return new FramingSawScreen(menu, inv, title);
     }
 
-    public record PointedRecipe(ResourceLocation id, FramingSawRecipe recipe, Rect2i area)
+    public record PointedRecipe(ResourceKey<Recipe<?>> id, FramingSawRecipe recipe, Rect2i area)
     {
         private PointedRecipe(RecipeHolder<FramingSawRecipe> recipe, int x, int y)
         {

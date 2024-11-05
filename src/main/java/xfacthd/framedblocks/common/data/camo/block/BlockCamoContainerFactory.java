@@ -36,7 +36,7 @@ public final class BlockCamoContainerFactory extends SimpleBlockCamoContainerFac
             displayValidationMessage(player, MSG_BLOCK_ENTITY, CamoMessageVerbosity.DEFAULT);
             return false;
         }
-        if (!camoState.isSolidRender(level, pos) && !camoState.is(Utils.FRAMEABLE))
+        if (!camoState.isSolidRender() && !camoState.is(Utils.FRAMEABLE))
         {
             displayValidationMessage(player, MSG_NON_SOLID, CamoMessageVerbosity.DETAILED);
             return false;

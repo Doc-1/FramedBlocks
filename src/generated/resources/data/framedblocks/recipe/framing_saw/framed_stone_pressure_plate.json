@@ -3,9 +3,7 @@
   "additives": [
     {
       "count": 1,
-      "ingredient": {
-        "tag": "c:stones"
-      }
+      "ingredient": "#c:stones"
     }
   ],
   "material": 1536,

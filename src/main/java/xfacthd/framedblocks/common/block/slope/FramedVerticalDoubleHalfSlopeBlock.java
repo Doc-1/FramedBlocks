@@ -25,9 +25,9 @@ import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMod
 
 public class FramedVerticalDoubleHalfSlopeBlock extends AbstractFramedDoubleBlock implements IComplexSlopeSource
 {
-    public FramedVerticalDoubleHalfSlopeBlock()
+    public FramedVerticalDoubleHalfSlopeBlock(Properties props)
     {
-        super(BlockType.FRAMED_VERTICAL_DOUBLE_HALF_SLOPE);
+        super(BlockType.FRAMED_VERTICAL_DOUBLE_HALF_SLOPE, props);
         registerDefaultState(defaultBlockState()
                 .setValue(FramedProperties.TOP, false)
                 .setValue(FramedProperties.Y_SLOPE, false)

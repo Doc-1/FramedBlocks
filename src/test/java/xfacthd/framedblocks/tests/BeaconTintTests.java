@@ -100,7 +100,7 @@ public final class BeaconTintTests
         return Arrays.stream(BlockType.values())
                 .filter(type -> !NON_TINTING.contains(type))
                 .map(type -> Utils.rl(type.getName()))
-                .map(BuiltInRegistries.BLOCK::get)
+                .map(BuiltInRegistries.BLOCK::getValue)
                 .filter(b -> b != Blocks.AIR)
                 .map(BeaconTintTests::getTestState)
                 .map(state -> new TestFunction(

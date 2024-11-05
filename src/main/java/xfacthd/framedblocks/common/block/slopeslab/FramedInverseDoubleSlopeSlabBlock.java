@@ -25,9 +25,9 @@ import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMod
 
 public class FramedInverseDoubleSlopeSlabBlock extends AbstractFramedDoubleBlock
 {
-    public FramedInverseDoubleSlopeSlabBlock()
+    public FramedInverseDoubleSlopeSlabBlock(Properties props)
     {
-        super(BlockType.FRAMED_INV_DOUBLE_SLOPE_SLAB);
+        super(BlockType.FRAMED_INV_DOUBLE_SLOPE_SLAB, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, true));
     }
 

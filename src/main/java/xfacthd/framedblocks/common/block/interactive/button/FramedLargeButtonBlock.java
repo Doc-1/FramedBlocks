@@ -25,9 +25,9 @@ public class FramedLargeButtonBlock extends FramedButtonBlock
     private static final VoxelShape SHAPE_TOP_PRESSED = box(1, 15, 1, 15, 16, 15);
     private static final VoxelShape[] SHAPES_HORIZONTAL = makeHorizontalShapes();
 
-    private FramedLargeButtonBlock(BlockType type, BlockSetType blockSet, int pressTime)
+    private FramedLargeButtonBlock(BlockType type, Properties props, BlockSetType blockSet, int pressTime)
     {
-        super(type, blockSet, pressTime);
+        super(type, props, blockSet, pressTime);
     }
 
     @Override
@@ -67,19 +67,21 @@ public class FramedLargeButtonBlock extends FramedButtonBlock
         return ShapeUtils.makeHorizontalRotationsWithFlag(shape, shapePressed, Direction.SOUTH);
     }
 
-    public static FramedLargeButtonBlock wood()
+    public static FramedLargeButtonBlock largeWood(Properties props)
     {
         return new FramedLargeButtonBlock(
                 BlockType.FRAMED_LARGE_BUTTON,
+                props,
                 BlockSetType.OAK,
                 30
         );
     }
 
-    public static FramedLargeButtonBlock stone()
+    public static FramedLargeButtonBlock largeStone(Properties props)
     {
         return new FramedLargeButtonBlock(
                 BlockType.FRAMED_LARGE_STONE_BUTTON,
+                props,
                 BlockSetType.STONE,
                 20
         );

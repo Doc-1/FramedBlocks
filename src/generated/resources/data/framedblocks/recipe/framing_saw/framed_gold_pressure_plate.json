@@ -3,9 +3,7 @@
   "additives": [
     {
       "count": 1,
-      "ingredient": {
-        "tag": "c:ingots/gold"
-      }
+      "ingredient": "#c:ingots/gold"
     }
   ],
   "material": 1536,

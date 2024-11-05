@@ -3,21 +3,15 @@
   "additives": [
     {
       "count": 6,
-      "ingredient": {
-        "tag": "c:ingots/iron"
-      }
+      "ingredient": "#c:ingots/iron"
     },
     {
       "count": 1,
-      "ingredient": {
-        "tag": "c:dusts/redstone"
-      }
+      "ingredient": "#c:dusts/redstone"
     },
     {
       "count": 1,
-      "ingredient": {
-        "item": "minecraft:stone_pressure_plate"
-      }
+      "ingredient": "minecraft:stone_pressure_plate"
     }
   ],
   "material": 6144,

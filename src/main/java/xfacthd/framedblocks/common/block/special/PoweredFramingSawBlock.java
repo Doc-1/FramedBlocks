@@ -24,8 +24,9 @@ public class PoweredFramingSawBlock extends FramingSawBlock implements EntityBlo
 {
     public static final Component POWERED_SAW_MENU_TITLE = Utils.translate("title", "powered_framing_saw");
 
-    public PoweredFramingSawBlock()
+    public PoweredFramingSawBlock(Properties props)
     {
+        super(props);
         registerDefaultState(defaultBlockState().setValue(PropertyHolder.ACTIVE, false));
     }
 
@@ -42,7 +43,7 @@ public class PoweredFramingSawBlock extends FramingSawBlock implements EntityBlo
     }
 
     @Override
-    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos)
+    protected VoxelShape getOcclusionShape(BlockState state)
     {
         return FramingSawBlock.SHAPE;
     }

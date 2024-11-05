@@ -52,6 +52,7 @@ public final class FramedBlocks
         forgeBus.addListener(CullingUpdateTracker::onServerLevelTick);
         forgeBus.addListener(CullingUpdateTracker::onServerShutdown);
         forgeBus.addListener(FramingSawRecipeCache::onAddReloadListener);
+        forgeBus.addListener(FramingSawRecipeCache::onDataPackSync);
 
         if (!FMLEnvironment.production)
         {

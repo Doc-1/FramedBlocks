@@ -82,7 +82,7 @@ public final class SpecialTestCommand
 
     public static void runGuardedOffThread(String testName, Consumer<Component> msgQueueAppender, Runnable test)
     {
-        Util.backgroundExecutor().submit(() ->
+        Util.backgroundExecutor().execute(() ->
         {
             try
             {

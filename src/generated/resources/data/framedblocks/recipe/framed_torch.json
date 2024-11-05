@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "C": {
-      "tag": "minecraft:coals"
-    },
-    "F": {
-      "item": "framedblocks:framed_cube"
-    }
+    "C": "#minecraft:coals",
+    "F": "framedblocks:framed_cube"
   },
   "pattern": [
     "C",

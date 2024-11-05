@@ -2,6 +2,7 @@ package xfacthd.framedblocks.common.block.interactive.pressureplate;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -42,17 +43,19 @@ public class FramedWaterloggablePressurePlateBlock extends FramedPressurePlateBl
     @Override
     protected BlockState updateShape(
             BlockState state,
-            Direction facing,
-            BlockState facingState,
-            LevelAccessor level,
+            LevelReader level,
+            ScheduledTickAccess tickAccess,
             BlockPos pos,
-            BlockPos facingPos
+            Direction side,
+            BlockPos adjPos,
+            BlockState adjState,
+            RandomSource random
     )
     {
-        BlockState newState = super.updateShape(state, facing, facingState, level, pos, facingPos);
+        BlockState newState = super.updateShape(state, level, tickAccess, pos, side, adjPos, adjState, random);
         if (!newState.isAir() && state.getValue(BlockStateProperties.WATERLOGGED))
         {
-            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            tickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
         return newState;
     }

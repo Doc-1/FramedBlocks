@@ -2,7 +2,9 @@ package xfacthd.framedblocks.api.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BakedOverrides;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ItemModel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractFramedBlockModel extends BakedModelWrapper<BakedModel>
 {
-    private final List<BakedModel> defaultItemRenderPass = List.of(this);
+    private final List<BakedModel> defaultItemRenderPass = List.of(new ItemModel.BakedModelWithOverrides(this, BakedOverrides.EMPTY));
     private final BlockState state;
     private final ItemModelInfo itemModelInfo;
     private final boolean dataRequired;
@@ -46,7 +48,7 @@ public abstract class AbstractFramedBlockModel extends BakedModelWrapper<BakedMo
     }
 
     @Override
-    public List<BakedModel> getRenderPasses(ItemStack stack, boolean cull)
+    public List<BakedModel> getRenderPasses(ItemStack stack)
     {
         boolean showCamo = ConfigView.Client.INSTANCE.shouldRenderItemModelsWithCamo();
         if (itemModelInfo == null || (!dataRequired && !showCamo))

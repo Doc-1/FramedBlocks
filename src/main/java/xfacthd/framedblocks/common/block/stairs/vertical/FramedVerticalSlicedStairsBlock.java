@@ -26,9 +26,9 @@ import xfacthd.framedblocks.common.data.property.StairsType;
 
 public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock implements IFramedDoubleBlock
 {
-    public FramedVerticalSlicedStairsBlock(BlockType type)
+    public FramedVerticalSlicedStairsBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
         registerDefaultState(defaultBlockState().setValue(PropertyHolder.RIGHT, false));
     }
 

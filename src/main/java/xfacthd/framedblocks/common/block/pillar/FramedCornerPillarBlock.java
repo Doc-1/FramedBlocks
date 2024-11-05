@@ -14,9 +14,9 @@ import xfacthd.framedblocks.api.util.Utils;
 
 public class FramedCornerPillarBlock extends FramedBlock
 {
-    public FramedCornerPillarBlock()
+    public FramedCornerPillarBlock(Properties props)
     {
-        super(BlockType.FRAMED_CORNER_PILLAR);
+        super(BlockType.FRAMED_CORNER_PILLAR, props);
     }
 
     @Override

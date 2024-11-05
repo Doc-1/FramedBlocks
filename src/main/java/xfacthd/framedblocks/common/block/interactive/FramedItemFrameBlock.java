@@ -4,8 +4,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -39,10 +40,9 @@ public class FramedItemFrameBlock extends FramedBlock
             1F, 1F, SoundEvents.GLOW_ITEM_FRAME_BREAK, SoundEvents.EMPTY, SoundEvents.GLOW_ITEM_FRAME_PLACE, SoundEvents.SCAFFOLDING_HIT, SoundEvents.EMPTY
     );
 
-    public FramedItemFrameBlock(BlockType type)
+    public FramedItemFrameBlock(BlockType type, Properties props)
     {
-        super(type, props -> props
-                .instabreak()
+        super(type, props, modProps -> modProps.instabreak()
                 .noCollission()
                 .isSuffocating((s, l, p) -> false)
                 .isViewBlocking((s, l, p) -> false)
@@ -73,18 +73,20 @@ public class FramedItemFrameBlock extends FramedBlock
     @Override
     protected BlockState updateShape(
             BlockState state,
-            Direction direction,
-            BlockState neighborState,
-            LevelAccessor level,
-            BlockPos currentPos,
-            BlockPos neighborPos
+            LevelReader level,
+            ScheduledTickAccess tickAccess,
+            BlockPos pos,
+            Direction side,
+            BlockPos adjPos,
+            BlockState adjState,
+            RandomSource random
     )
     {
-        if (!canSurvive(state, level, currentPos))
+        if (!canSurvive(state, level, pos))
         {
             return Blocks.AIR.defaultBlockState();
         }
-        return super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
+        return super.updateShape(state, level, tickAccess, pos, side, adjPos, adjState, random);
     }
 
     @Override
@@ -95,18 +97,18 @@ public class FramedItemFrameBlock extends FramedBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(
+    protected InteractionResult useItemOn(
             ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit
     )
     {
-        ItemInteractionResult result = super.useItemOn(stack, state, level, pos, player, hand, hit);
+        InteractionResult result = super.useItemOn(stack, state, level, pos, player, hand, hit);
         if (result.consumesAction()) { return result; }
 
         if (level.getBlockEntity(pos) instanceof FramedItemFrameBlockEntity be)
         {
             return be.handleFrameInteraction(player, hand);
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override

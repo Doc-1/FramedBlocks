@@ -3,15 +3,19 @@ package xfacthd.framedblocks.common.block.sign;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.api.block.*;
+import xfacthd.framedblocks.api.block.FramedProperties;
+import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedWallSignBlock extends AbstractFramedSignBlock
@@ -24,9 +28,9 @@ public class FramedWallSignBlock extends AbstractFramedSignBlock
         arr[Direction.WEST.get2DDataValue()] = new Vec3(15D/16D, .5, .5);
     });
 
-    public FramedWallSignBlock()
+    public FramedWallSignBlock(Properties props)
     {
-        super(BlockType.FRAMED_WALL_SIGN, Properties::noCollission);
+        super(BlockType.FRAMED_WALL_SIGN, props.noCollission());
     }
 
     @Override
@@ -68,18 +72,20 @@ public class FramedWallSignBlock extends AbstractFramedSignBlock
     @Override
     protected BlockState updateShape(
             BlockState state,
-            Direction dir,
-            BlockState facingState,
-            LevelAccessor level,
+            LevelReader level,
+            ScheduledTickAccess tickAccess,
             BlockPos pos,
-            BlockPos facingPos
+            Direction side,
+            BlockPos adjPos,
+            BlockState adjState,
+            RandomSource random
     )
     {
-        if (dir.getOpposite() == state.getValue(FramedProperties.FACING_HOR) && !state.canSurvive(level, pos))
+        if (side.getOpposite() == state.getValue(FramedProperties.FACING_HOR) && !state.canSurvive(level, pos))
         {
             return Blocks.AIR.defaultBlockState();
         }
-        return super.updateShape(state, dir, facingState, level, pos, facingPos);
+        return super.updateShape(state, level, tickAccess, pos, side, adjPos, adjState, random);
     }
 
     @Override

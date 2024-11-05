@@ -3,7 +3,7 @@ package xfacthd.framedblocks.common.block.slope;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
@@ -27,9 +27,9 @@ import xfacthd.framedblocks.common.util.FramedUtils;
 
 public class FramedSlopeBlock extends FramedBlock implements ISlopeBlock, IComplexSlopeSource
 {
-    public FramedSlopeBlock()
+    public FramedSlopeBlock(Properties props)
     {
-        super(BlockType.FRAMED_SLOPE);
+        super(BlockType.FRAMED_SLOPE, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, false));
     }
 
@@ -53,7 +53,7 @@ public class FramedSlopeBlock extends FramedBlock implements ISlopeBlock, ICompl
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(
+    protected InteractionResult useItemOn(
             ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit
     )
     {
@@ -70,7 +70,7 @@ public class FramedSlopeBlock extends FramedBlock implements ISlopeBlock, ICompl
                         .setValue(PropertyHolder.ASCENDING_RAIL_SHAPE, FramedUtils.getAscendingRailShapeFromDirection(dir))
                         .setValue(BlockStateProperties.WATERLOGGED, state.getValue(BlockStateProperties.WATERLOGGED));
 
-                if (!newState.canSurvive(level, pos)) { return ItemInteractionResult.FAIL; }
+                if (!newState.canSurvive(level, pos)) { return InteractionResult.FAIL; }
 
                 if (!level.isClientSide())
                 {
@@ -92,7 +92,7 @@ public class FramedSlopeBlock extends FramedBlock implements ISlopeBlock, ICompl
                     level.playSound(null, pos, sound.getPlaceSound(), SoundSource.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
                 }
 
-                return ItemInteractionResult.sidedSuccess(level.isClientSide());
+                return InteractionResult.SUCCESS;
             }
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hit);

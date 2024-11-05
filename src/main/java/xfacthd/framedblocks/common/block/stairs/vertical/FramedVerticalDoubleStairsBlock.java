@@ -21,9 +21,9 @@ import xfacthd.framedblocks.common.util.FramedUtils;
 
 public class FramedVerticalDoubleStairsBlock extends FramedVerticalStairsBlock implements IFramedDoubleBlock
 {
-    public FramedVerticalDoubleStairsBlock()
+    public FramedVerticalDoubleStairsBlock(Properties props)
     {
-        super(BlockType.FRAMED_VERTICAL_DOUBLE_STAIRS);
+        super(BlockType.FRAMED_VERTICAL_DOUBLE_STAIRS, props);
     }
 
     @Override

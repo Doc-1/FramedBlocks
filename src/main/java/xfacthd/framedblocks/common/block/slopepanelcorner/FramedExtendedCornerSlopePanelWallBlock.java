@@ -24,9 +24,9 @@ public class FramedExtendedCornerSlopePanelWallBlock extends FramedBlock
 {
     private final Holder<Block> nonWallBlock;
 
-    public FramedExtendedCornerSlopePanelWallBlock(BlockType type)
+    public FramedExtendedCornerSlopePanelWallBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, true));
         this.nonWallBlock = switch (type)
         {

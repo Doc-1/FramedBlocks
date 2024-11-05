@@ -5,15 +5,23 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.*;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.DoubleBlockCombiner;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -126,9 +134,9 @@ public class FramedChestBlock extends FramedStorageBlock
         }
     };
 
-    public FramedChestBlock()
+    public FramedChestBlock(Properties props)
     {
-        super(BlockType.FRAMED_CHEST);
+        super(BlockType.FRAMED_CHEST, props);
     }
 
     @Override
@@ -201,7 +209,7 @@ public class FramedChestBlock extends FramedStorageBlock
                 player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
             }
         }
-        return InteractionResult.sidedSuccess(level.isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -221,10 +229,10 @@ public class FramedChestBlock extends FramedStorageBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction dir, BlockState adjState, LevelAccessor level, BlockPos pos, BlockPos adjPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction side, BlockPos adjPos, BlockState adjState, RandomSource random)
     {
-        BlockState newState = super.updateShape(state, dir, adjState, level, pos, adjPos);
-        if (adjState.is(this) && dir.getAxis().isHorizontal())
+        BlockState newState = super.updateShape(state, level, tickAccess, pos, side, adjPos, adjState, random);
+        if (adjState.is(this) && side.getAxis().isHorizontal())
         {
             ChestType type = state.getValue(BlockStateProperties.CHEST_TYPE);
             ChestType adjType = adjState.getValue(BlockStateProperties.CHEST_TYPE);
@@ -235,12 +243,12 @@ public class FramedChestBlock extends FramedStorageBlock
 
             Direction facing = state.getValue(FramedProperties.FACING_HOR);
             Direction adjFacing = adjState.getValue(FramedProperties.FACING_HOR);
-            if (facing == adjFacing && getConnectionDirection(adjState) == dir.getOpposite())
+            if (facing == adjFacing && getConnectionDirection(adjState) == side.getOpposite())
             {
                 return newState.setValue(BlockStateProperties.CHEST_TYPE, adjType.getOpposite());
             }
         }
-        else if (getConnectionDirection(state) == dir)
+        else if (getConnectionDirection(state) == side)
         {
             return newState.setValue(BlockStateProperties.CHEST_TYPE, ChestType.SINGLE);
         }

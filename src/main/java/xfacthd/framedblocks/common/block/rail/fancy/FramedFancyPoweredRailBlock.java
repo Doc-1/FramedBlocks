@@ -3,8 +3,9 @@ package xfacthd.framedblocks.common.block.rail.fancy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PoweredRailBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -29,9 +31,9 @@ public class FramedFancyPoweredRailBlock extends PoweredRailBlock implements IFr
 {
     private final BlockType type;
 
-    private FramedFancyPoweredRailBlock(BlockType type, boolean isPoweredRail)
+    private FramedFancyPoweredRailBlock(BlockType type, Properties props, boolean isPoweredRail)
     {
-        super(IFramedBlock.createProperties(type)
+        super(IFramedBlock.applyDefaultProperties(props, type)
                 .noCollission(),
                 isPoweredRail
         );
@@ -52,30 +54,32 @@ public class FramedFancyPoweredRailBlock extends PoweredRailBlock implements IFr
     @Override
     protected BlockState updateShape(
             BlockState state,
-            Direction direction,
-            BlockState neighborState,
-            LevelAccessor level,
-            BlockPos currentPos,
-            BlockPos neighborPos
+            LevelReader level,
+            ScheduledTickAccess tickAccess,
+            BlockPos pos,
+            Direction side,
+            BlockPos adjPos,
+            BlockState adjState,
+            RandomSource random
     )
     {
-        BlockState newState = super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
+        BlockState newState = super.updateShape(state, level, tickAccess, pos, side, adjPos, adjState, random);
         if (newState == state)
         {
-            updateCulling(level, currentPos);
+            updateCulling(level, pos);
         }
         return newState;
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving)
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, @Nullable Orientation orientation, boolean isMoving)
     {
-        super.neighborChanged(state, level, pos, block, fromPos, isMoving);
+        super.neighborChanged(state, level, pos, block, orientation, isMoving);
         updateCulling(level, pos);
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(
+    protected InteractionResult useItemOn(
             ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit
     )
     {
@@ -95,9 +99,9 @@ public class FramedFancyPoweredRailBlock extends PoweredRailBlock implements IFr
     }
 
     @Override
-    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos)
+    protected VoxelShape getOcclusionShape(BlockState state)
     {
-        return getCamoOcclusionShape(state, level, pos, null);
+        return getCamoOcclusionShape(state, null);
     }
 
     @Override
@@ -113,7 +117,7 @@ public class FramedFancyPoweredRailBlock extends PoweredRailBlock implements IFr
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos)
+    protected boolean propagatesSkylightDown(BlockState state)
     {
         return state.getValue(FramedProperties.PROPAGATES_SKYLIGHT);
     }
@@ -150,13 +154,13 @@ public class FramedFancyPoweredRailBlock extends PoweredRailBlock implements IFr
 
 
 
-    public static FramedFancyPoweredRailBlock powered()
+    public static FramedFancyPoweredRailBlock powered(Properties props)
     {
-        return new FramedFancyPoweredRailBlock(BlockType.FRAMED_FANCY_POWERED_RAIL, true);
+        return new FramedFancyPoweredRailBlock(BlockType.FRAMED_FANCY_POWERED_RAIL, props, true);
     }
 
-    public static FramedFancyPoweredRailBlock activator()
+    public static FramedFancyPoweredRailBlock activator(Properties props)
     {
-        return new FramedFancyPoweredRailBlock(BlockType.FRAMED_FANCY_ACTIVATOR_RAIL, false);
+        return new FramedFancyPoweredRailBlock(BlockType.FRAMED_FANCY_ACTIVATOR_RAIL, props, false);
     }
 }

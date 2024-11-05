@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "B": {
-      "item": "framedblocks:framed_stone_button"
-    }
+    "B": "framedblocks:framed_stone_button"
   },
   "pattern": [
     "BB",

@@ -3,9 +3,7 @@
   "additives": [
     {
       "count": 3,
-      "ingredient": {
-        "item": "minecraft:book"
-      }
+      "ingredient": "minecraft:book"
     }
   ],
   "material": 12288,

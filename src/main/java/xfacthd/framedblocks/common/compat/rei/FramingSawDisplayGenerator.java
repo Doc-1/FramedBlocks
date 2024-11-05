@@ -10,10 +10,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.crafting.*;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipeAdditive;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipeCalculation;
 
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public final class FramingSawDisplayGenerator implements DynamicDisplayGenerator<FramingSawDisplay>
 {
@@ -100,8 +104,9 @@ public final class FramingSawDisplayGenerator implements DynamicDisplayGenerator
         for (FramingSawRecipeAdditive additive : additives)
         {
             int addCount = additive.count() * (outputCount / recipe.getResult().getCount());
-            List<EntryStack<ItemStack>> additiveStacks = Stream.of(additive.ingredient().getItems())
-                    .map(ItemStack::copy)
+            List<EntryStack<ItemStack>> additiveStacks = additive.ingredient().items()
+                    .stream()
+                    .map(ItemStack::new)
                     .peek(s -> s.setCount(addCount))
                     .map(EntryStacks::of)
                     .toList();

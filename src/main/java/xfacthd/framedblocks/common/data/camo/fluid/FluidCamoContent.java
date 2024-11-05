@@ -174,7 +174,7 @@ public final class FluidCamoContent extends CamoContent<FluidCamoContent>
     @Override
     public boolean isOccludedBy(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos)
     {
-        return adjState.isSolidRender(level, pos);
+        return adjState.isSolidRender();
     }
 
     @Override

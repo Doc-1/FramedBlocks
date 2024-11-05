@@ -16,9 +16,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedPyramidBlock extends FramedBlock
 {
-    public FramedPyramidBlock(BlockType type)
+    public FramedPyramidBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
         registerDefaultState(defaultBlockState()
                 .setValue(BlockStateProperties.FACING, Direction.UP)
                 .setValue(FramedProperties.Y_SLOPE, false)

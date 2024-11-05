@@ -3,9 +3,7 @@
   "additives": [
     {
       "count": 1,
-      "ingredient": {
-        "item": "minecraft:tinted_glass"
-      }
+      "ingredient": "minecraft:tinted_glass"
     }
   ],
   "material": 6144,

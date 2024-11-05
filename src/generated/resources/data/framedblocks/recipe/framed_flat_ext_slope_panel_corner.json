@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "C": {
-      "item": "framedblocks:framed_flat_slope_panel_corner"
-    },
-    "P": {
-      "item": "framedblocks:framed_panel"
-    }
+    "C": "framedblocks:framed_flat_slope_panel_corner",
+    "P": "framedblocks:framed_panel"
   },
   "pattern": [
     "PC"

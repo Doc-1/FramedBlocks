@@ -6,16 +6,26 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.net.payload.ClientboundFramingSawRecipesPayload;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public final class FramingSawRecipeCache
 {
@@ -30,9 +40,14 @@ public final class FramingSawRecipeCache
 
     public void update(RecipeManager recipeManager)
     {
+        update(recipeManager.recipeMap().byType(FBContent.RECIPE_TYPE_FRAMING_SAW_RECIPE.value()));
+    }
+
+    public void update(Collection<RecipeHolder<FramingSawRecipe>> recipeList)
+    {
         clear();
 
-        recipes.addAll(recipeManager.getAllRecipesFor(FBContent.RECIPE_TYPE_FRAMING_SAW_RECIPE.value()));
+        recipes.addAll(recipeList);
         recipes.sort(FramingSawRecipeCache::sortRecipes);
 
         recipes.forEach(holder ->
@@ -116,6 +131,12 @@ public final class FramingSawRecipeCache
     public static void onAddReloadListener(final AddReloadListenerEvent event)
     {
         event.addListener(new Reloader(event.getServerResources()));
+    }
+
+    public static void onDataPackSync(final OnDatapackSyncEvent event)
+    {
+        ClientboundFramingSawRecipesPayload payload = new ClientboundFramingSawRecipesPayload(SERVER_INSTANCE.recipes);
+        event.getRelevantPlayers().forEach(player -> PacketDistributor.sendToPlayer(player, payload));
     }
 
     private static int sortRecipes(RecipeHolder<FramingSawRecipe> holder1, RecipeHolder<FramingSawRecipe> holder2)

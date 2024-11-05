@@ -3,9 +3,7 @@
   "additives": [
     {
       "count": 1,
-      "ingredient": {
-        "tag": "c:obsidians"
-      }
+      "ingredient": "#c:obsidians"
     }
   ],
   "material": 1536,

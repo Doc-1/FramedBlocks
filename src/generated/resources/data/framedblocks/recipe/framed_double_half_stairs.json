@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "C": {
-      "item": "framedblocks:framed_slab_corner"
-    },
-    "S": {
-      "item": "framedblocks:framed_half_stairs"
-    }
+    "C": "framedblocks:framed_slab_corner",
+    "S": "framedblocks:framed_half_stairs"
   },
   "pattern": [
     "SC"

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "E": {
-      "item": "framedblocks:framed_extended_slope_panel"
-    },
-    "S": {
-      "item": "framedblocks:framed_slope_panel"
-    }
+    "E": "framedblocks:framed_extended_slope_panel",
+    "S": "framedblocks:framed_slope_panel"
   },
   "pattern": [
     "ES"

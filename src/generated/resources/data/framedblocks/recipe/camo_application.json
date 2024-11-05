@@ -1,7 +1,5 @@
 {
   "type": "framedblocks:apply_camo",
   "category": "misc",
-  "copy_tool": {
-    "item": "minecraft:brush"
-  }
+  "copy_tool": "minecraft:brush"
 }

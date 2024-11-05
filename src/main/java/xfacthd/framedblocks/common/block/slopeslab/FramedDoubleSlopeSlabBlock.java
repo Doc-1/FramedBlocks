@@ -28,9 +28,9 @@ public class FramedDoubleSlopeSlabBlock extends AbstractFramedDoubleBlock
             state -> state.getValue(PropertyHolder.TOP_HALF)
     );
 
-    public FramedDoubleSlopeSlabBlock()
+    public FramedDoubleSlopeSlabBlock(Properties props)
     {
-        super(BlockType.FRAMED_DOUBLE_SLOPE_SLAB);
+        super(BlockType.FRAMED_DOUBLE_SLOPE_SLAB, props);
         registerDefaultState(defaultBlockState()
                 .setValue(PropertyHolder.TOP_HALF, false)
                 .setValue(FramedProperties.Y_SLOPE, true)

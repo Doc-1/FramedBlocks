@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "M": {
-      "item": "minecraft:phantom_membrane"
-    },
-    "S": {
-      "tag": "c:slime_balls"
-    }
+    "M": "minecraft:phantom_membrane",
+    "S": "#c:slime_balls"
   },
   "pattern": [
     "SSS",

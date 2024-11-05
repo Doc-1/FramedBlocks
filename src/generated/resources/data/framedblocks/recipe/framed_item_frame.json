@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "F": {
-      "item": "framedblocks:framed_cube"
-    },
-    "L": {
-      "tag": "c:leathers"
-    }
+    "F": "framedblocks:framed_cube",
+    "L": "#c:leathers"
   },
   "pattern": [
     "FFF",

@@ -33,7 +33,7 @@ public final class LightSourceTests
         return Arrays.stream(BlockType.values())
                 .filter(LightSourceTests::isNotSelfEmitting)
                 .map(type -> Utils.rl(type.getName()))
-                .map(BuiltInRegistries.BLOCK::get)
+                .map(BuiltInRegistries.BLOCK::getValue)
                 .filter(b -> b != Blocks.AIR)
                 .map(LightSourceTests::getTestState)
                 .map(state -> new TestFunction(

@@ -14,9 +14,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedCenteredPanelBlock extends FramedBlock
 {
-    public FramedCenteredPanelBlock()
+    public FramedCenteredPanelBlock(Properties props)
     {
-        super(BlockType.FRAMED_CENTERED_PANEL);
+        super(BlockType.FRAMED_CENTERED_PANEL, props);
     }
 
     @Override

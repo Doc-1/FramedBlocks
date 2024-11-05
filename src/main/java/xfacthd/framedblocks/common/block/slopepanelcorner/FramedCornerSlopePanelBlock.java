@@ -25,9 +25,9 @@ public class FramedCornerSlopePanelBlock extends FramedBlock
     private final boolean inner;
     private final boolean frontEdge;
 
-    public FramedCornerSlopePanelBlock(BlockType type)
+    public FramedCornerSlopePanelBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
         registerDefaultState(defaultBlockState()
                 .setValue(FramedProperties.TOP, false)
                 .setValue(FramedProperties.Y_SLOPE, false)
@@ -144,7 +144,7 @@ public class FramedCornerSlopePanelBlock extends FramedBlock
     }
 
     @Override
-    public BlockItem createBlockItem()
+    public BlockItem createBlockItem(Item.Properties props)
     {
         Block other = switch (getBlockType())
         {
@@ -154,7 +154,7 @@ public class FramedCornerSlopePanelBlock extends FramedBlock
             case FRAMED_LARGE_INNER_CORNER_SLOPE_PANEL -> FBContent.BLOCK_FRAMED_LARGE_INNER_CORNER_SLOPE_PANEL_WALL.value();
             default -> throw new IllegalStateException("Unexpected type: " + getBlockType());
         };
-        return new VerticalAndWallBlockItem(this, other, new Item.Properties());
+        return new VerticalAndWallBlockItem(this, other, props);
     }
 
     @Override

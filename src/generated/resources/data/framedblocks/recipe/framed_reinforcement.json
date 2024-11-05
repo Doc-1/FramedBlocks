@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "F": {
-      "item": "framedblocks:framed_cube"
-    },
-    "O": {
-      "tag": "c:obsidians"
-    },
-    "S": {
-      "item": "minecraft:stick"
-    }
+    "F": "framedblocks:framed_cube",
+    "O": "#c:obsidians",
+    "S": "minecraft:stick"
   },
   "pattern": [
     "OSO",

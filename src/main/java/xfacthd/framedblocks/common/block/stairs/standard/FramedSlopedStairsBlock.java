@@ -14,9 +14,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedSlopedStairsBlock extends FramedBlock
 {
-    public FramedSlopedStairsBlock()
+    public FramedSlopedStairsBlock(Properties props)
     {
-        super(BlockType.FRAMED_SLOPED_STAIRS);
+        super(BlockType.FRAMED_SLOPED_STAIRS, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.TOP, false));
     }
 

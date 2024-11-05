@@ -24,4 +24,10 @@ public final class NoEffectsClientBlockExtensions extends FramedBlockRenderPrope
     {
         return true;
     }
+
+    @Override
+    public boolean playBreakSound(BlockState state, Level level, BlockPos pos)
+    {
+        return false;
+    }
 }

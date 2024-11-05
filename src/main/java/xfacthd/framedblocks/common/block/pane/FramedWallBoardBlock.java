@@ -14,9 +14,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedWallBoardBlock extends FramedBlock
 {
-    public FramedWallBoardBlock()
+    public FramedWallBoardBlock(Properties props)
     {
-        super(BlockType.FRAMED_WALL_BOARD);
+        super(BlockType.FRAMED_WALL_BOARD, props);
     }
 
     @Override

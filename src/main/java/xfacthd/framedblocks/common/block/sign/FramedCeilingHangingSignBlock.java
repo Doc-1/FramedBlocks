@@ -2,13 +2,24 @@ package xfacthd.framedblocks.common.block.sign;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.*;
-import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SupportType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -17,7 +28,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.api.block.*;
+import xfacthd.framedblocks.api.block.FramedProperties;
+import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.blockentity.special.FramedSignBlockEntity;
@@ -28,9 +40,9 @@ import java.util.Optional;
 
 public class FramedCeilingHangingSignBlock extends AbstractFramedHangingSignBlock
 {
-    public FramedCeilingHangingSignBlock()
+    public FramedCeilingHangingSignBlock(Properties props)
     {
-        super(BlockType.FRAMED_HANGING_SIGN, Properties::noCollission);
+        super(BlockType.FRAMED_HANGING_SIGN, props.noCollission());
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.ATTACHED, false));
     }
 
@@ -105,18 +117,20 @@ public class FramedCeilingHangingSignBlock extends AbstractFramedHangingSignBloc
     @Override
     protected BlockState updateShape(
             BlockState state,
-            Direction dir,
-            BlockState facingState,
-            LevelAccessor level,
+            LevelReader level,
+            ScheduledTickAccess tickAccess,
             BlockPos pos,
-            BlockPos facingPos
+            Direction side,
+            BlockPos adjPos,
+            BlockState adjState,
+            RandomSource random
     )
     {
-        if (dir == Direction.UP && !canSurvive(state, level, pos))
+        if (side == Direction.UP && !canSurvive(state, level, pos))
         {
             return Blocks.AIR.defaultBlockState();
         }
-        return super.updateShape(state, dir, facingState, level, pos, facingPos);
+        return super.updateShape(state, level, tickAccess, pos, side, adjPos, adjState, random);
     }
 
     @Override
@@ -174,9 +188,9 @@ public class FramedCeilingHangingSignBlock extends AbstractFramedHangingSignBloc
     }
 
     @Override
-    public BlockItem createBlockItem()
+    public BlockItem createBlockItem(Item.Properties props)
     {
-        return new FramedHangingSignItem();
+        return new FramedHangingSignItem(props);
     }
 
     @Override

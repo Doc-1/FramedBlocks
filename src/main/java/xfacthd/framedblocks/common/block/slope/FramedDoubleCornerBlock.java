@@ -27,9 +27,9 @@ import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMod
 
 public class FramedDoubleCornerBlock extends AbstractFramedDoubleBlock
 {
-    public FramedDoubleCornerBlock()
+    public FramedDoubleCornerBlock(Properties props)
     {
-        super(BlockType.FRAMED_DOUBLE_CORNER);
+        super(BlockType.FRAMED_DOUBLE_CORNER, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, false));
     }
 

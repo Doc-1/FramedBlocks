@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "F": {
-      "item": "framedblocks:framed_cube"
-    },
-    "S": {
-      "item": "minecraft:stick"
-    }
+    "F": "framedblocks:framed_cube",
+    "S": "minecraft:stick"
   },
   "pattern": [
     " F ",

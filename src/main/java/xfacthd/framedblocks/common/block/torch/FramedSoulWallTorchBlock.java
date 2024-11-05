@@ -10,9 +10,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedSoulWallTorchBlock extends FramedWallTorchBlock
 {
-    public FramedSoulWallTorchBlock()
+    public FramedSoulWallTorchBlock(Properties props)
     {
-        super(ParticleTypes.SOUL_FIRE_FLAME, Properties.of()
+        super(ParticleTypes.SOUL_FIRE_FLAME, props
                 .pushReaction(PushReaction.DESTROY)
                 .noCollission()
                 .strength(0.5F)

@@ -25,9 +25,9 @@ import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMod
 
 public class FramedElevatedDoublePrismBlock extends AbstractFramedDoubleBlock implements IFramedPrismBlock
 {
-    public FramedElevatedDoublePrismBlock(BlockType type)
+    public FramedElevatedDoublePrismBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, false));
     }
 

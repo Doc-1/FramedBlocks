@@ -22,9 +22,9 @@ import xfacthd.framedblocks.common.data.doubleblock.*;
 
 public class FramedCheckeredSlabBlock extends AbstractFramedDoubleBlock
 {
-    public FramedCheckeredSlabBlock()
+    public FramedCheckeredSlabBlock(Properties props)
     {
-        super(BlockType.FRAMED_CHECKERED_SLAB);
+        super(BlockType.FRAMED_CHECKERED_SLAB, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.TOP, false));
     }
 

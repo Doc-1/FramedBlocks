@@ -14,14 +14,14 @@ import xfacthd.framedblocks.common.blockentity.special.FramedSignBlockEntity;
 
 public class FramedSignItem extends StandingAndWallBlockItem
 {
-    public FramedSignItem()
+    public FramedSignItem(Properties props)
     {
-        this(FBContent.BLOCK_FRAMED_SIGN, FBContent.BLOCK_FRAMED_WALL_SIGN, Direction.DOWN);
+        this(FBContent.BLOCK_FRAMED_SIGN, FBContent.BLOCK_FRAMED_WALL_SIGN, Direction.DOWN, props);
     }
 
-    protected FramedSignItem(Holder<Block> standing, Holder<Block> wall, Direction attachFace)
+    protected FramedSignItem(Holder<Block> standing, Holder<Block> wall, Direction attachFace, Properties props)
     {
-        super(standing.value(), wall.value(), new Properties(), attachFace);
+        super(standing.value(), wall.value(), attachFace, props);
     }
 
     @Override

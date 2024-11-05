@@ -5,9 +5,11 @@ import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.client.screen.FramingSawScreen;
 import xfacthd.framedblocks.common.FBContent;
@@ -36,10 +38,10 @@ public final class FramingSawEmiRecipe extends BasicEmiRecipe
     private final boolean inputWithAdditives;
 
     private FramingSawEmiRecipe(
-            RecipeHolder<FramingSawRecipe> recipe, ResourceLocation id, EmiStack input, List<EmiIngredient> additives, EmiStack output
+            RecipeHolder<FramingSawRecipe> recipe, @Nullable ResourceKey<Recipe<?>> id, EmiStack input, List<EmiIngredient> additives, EmiStack output
     )
     {
-        super(FramedEmiPlugin.SAW_CATEGORY.get(), id, WIDTH, HEIGHT);
+        super(FramedEmiPlugin.SAW_CATEGORY.get(), id != null ? id.location() : null, WIDTH, HEIGHT);
         this.recipe = recipe;
         this.showOnRecipeRequest = input.getItemStack().is(FBContent.BLOCK_FRAMED_CUBE.value().asItem());
         this.inputWithAdditives = FramingSawRecipeCache.get(true).containsAdditive(input.getItemStack().getItem());
@@ -106,7 +108,7 @@ public final class FramingSawEmiRecipe extends BasicEmiRecipe
     public static FramingSawEmiRecipe make(RecipeHolder<FramingSawRecipe> recipe, EmiStack input, List<EmiIngredient> additives, EmiStack output)
     {
         boolean showOnRecipeRequest = input.getItemStack().is(FBContent.BLOCK_FRAMED_CUBE.value().asItem());
-        ResourceLocation id = showOnRecipeRequest ? recipe.id() : null;
+        ResourceKey<Recipe<?>> id = showOnRecipeRequest ? recipe.id() : null;
         return new FramingSawEmiRecipe(recipe, id, input, additives, output);
     }
 }

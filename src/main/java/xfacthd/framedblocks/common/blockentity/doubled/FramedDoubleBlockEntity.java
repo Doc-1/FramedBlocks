@@ -3,7 +3,7 @@ package xfacthd.framedblocks.common.blockentity.doubled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -19,7 +19,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.client.model.data.*;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.util.TriState;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
@@ -30,8 +29,7 @@ import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.util.*;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.block.*;
-import xfacthd.framedblocks.common.config.DevToolsConfig;
+import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockStateCache;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockSoundType;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
@@ -177,7 +175,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
         {
             return superMult;
         }
-        return FastColor.ARGB32.multiply(superMult, localMult);
+        return ARGB.multiply(superMult, localMult);
     }
 
     @Override
@@ -368,12 +366,6 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     /*
      * Debug rendering
      */
-
-    @Override
-    public boolean hasCustomOutlineRendering(Player player)
-    {
-        return !FMLEnvironment.production && DevToolsConfig.VIEW.isDoubleBlockPartHitDebugRendererEnabled();
-    }
 
     public final Tuple<BlockState, BlockState> getBlockPair()
     {

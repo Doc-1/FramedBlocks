@@ -89,7 +89,7 @@ final class FramedBlockElement extends Element
             MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
             for (RenderType renderType : model.getRenderTypes(state, RANDOM, modelData))
             {
-                VertexConsumer consumer = buffer.getBuffer(RenderTypeHelper.getEntityRenderType(renderType, true));
+                VertexConsumer consumer = buffer.getBuffer(RenderTypeHelper.getEntityRenderType(renderType));
                 Minecraft.getInstance().getBlockRenderer().getModelRenderer().tesselateBlock(
                         fakeLevel,
                         model,

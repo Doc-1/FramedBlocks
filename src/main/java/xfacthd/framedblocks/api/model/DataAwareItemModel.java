@@ -35,7 +35,7 @@ public final class DataAwareItemModel extends BakedModelWrapper<BakedModel>
         super(baseModel);
         this.itemData = itemData;
         this.renderType = renderType;
-        this.renderTypeList = List.of(RenderTypeHelper.getEntityRenderType(renderType, true));
+        this.renderTypeList = List.of(RenderTypeHelper.getEntityRenderType(renderType));
     }
 
     @Override
@@ -62,7 +62,7 @@ public final class DataAwareItemModel extends BakedModelWrapper<BakedModel>
     }
 
     @Override
-    public List<RenderType> getRenderTypes(ItemStack stack, boolean fabulous)
+    public List<RenderType> getRenderTypes(ItemStack stack)
     {
         return renderTypeList;
     }

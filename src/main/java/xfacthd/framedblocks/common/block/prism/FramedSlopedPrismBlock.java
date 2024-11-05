@@ -19,9 +19,9 @@ import xfacthd.framedblocks.common.data.property.CompoundDirection;
 
 public class FramedSlopedPrismBlock extends FramedBlock implements IFramedPrismBlock
 {
-    public FramedSlopedPrismBlock(BlockType type)
+    public FramedSlopedPrismBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
         registerDefaultState(defaultBlockState()
                 .setValue(PropertyHolder.FACING_DIR, CompoundDirection.NORTH_UP)
                 .setValue(FramedProperties.Y_SLOPE, false)

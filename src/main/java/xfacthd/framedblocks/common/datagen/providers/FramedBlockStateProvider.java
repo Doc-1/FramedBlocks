@@ -805,7 +805,7 @@ public final class FramedBlockStateProvider extends BlockStateProvider
 
             ModelFile model;
             int rotY = (int) FramedFancyRailGeometry.getDirectionFromRailShape(shape).toYRot();
-            if (shape.isAscending())
+            if (shape.isSlope())
             {
                 model = ascendingRail.apply(state);
                 rotY = (rotY + 180) % 360;

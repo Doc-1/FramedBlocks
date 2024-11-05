@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "H": {
-      "item": "framedblocks:framed_half_slope"
-    },
-    "S": {
-      "item": "framedblocks:framed_slab"
-    }
+    "H": "framedblocks:framed_half_slope",
+    "S": "framedblocks:framed_slab"
   },
   "pattern": [
     "H",

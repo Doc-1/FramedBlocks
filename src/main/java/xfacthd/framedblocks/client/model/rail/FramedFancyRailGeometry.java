@@ -60,7 +60,7 @@ public class FramedFancyRailGeometry extends Geometry
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
         Pair<List<BakedQuad>, Direction> result;
-        if (shape.isAscending())
+        if (shape.isSlope())
         {
             result = makeAscendingRailSleepers(quad, mainDir);
         }

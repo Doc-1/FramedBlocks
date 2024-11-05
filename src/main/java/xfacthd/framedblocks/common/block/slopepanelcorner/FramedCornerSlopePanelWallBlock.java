@@ -26,9 +26,9 @@ public class FramedCornerSlopePanelWallBlock extends FramedBlock
     private final boolean large;
     private final Holder<Block> nonWallBlock;
 
-    public FramedCornerSlopePanelWallBlock(BlockType type)
+    public FramedCornerSlopePanelWallBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, true));
         this.large = type == BlockType.FRAMED_LARGE_CORNER_SLOPE_PANEL_W ||
                      type == BlockType.FRAMED_LARGE_INNER_CORNER_SLOPE_PANEL_W;

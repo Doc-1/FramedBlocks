@@ -16,7 +16,7 @@ public final class FramingSawStackProvider implements EmiStackProvider<FramingSa
         {
             return new EmiStackInteraction(
                     EmiStack.of(recipe.recipe().getResult()),
-                    EmiApi.getRecipeManager().getRecipe(recipe.id()),
+                    EmiApi.getRecipeManager().getRecipe(recipe.id().location()),
                     false
             );
         }

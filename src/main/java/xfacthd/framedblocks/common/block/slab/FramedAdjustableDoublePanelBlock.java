@@ -20,11 +20,12 @@ public class FramedAdjustableDoublePanelBlock extends FramedAdjustableDoubleBloc
 {
     private FramedAdjustableDoublePanelBlock(
             BlockType type,
+            Properties props,
             Function<BlockState, Tuple<BlockState, BlockState>> statePairBuilder,
             BlockEntityType.BlockEntitySupplier<FramedAdjustableDoubleBlockEntity> beSupplier
     )
     {
-        super(type, state -> state.getValue(FramedProperties.FACING_HOR), statePairBuilder, beSupplier);
+        super(type, props, state -> state.getValue(FramedProperties.FACING_HOR), statePairBuilder, beSupplier);
     }
 
     @Override
@@ -88,19 +89,21 @@ public class FramedAdjustableDoublePanelBlock extends FramedAdjustableDoubleBloc
 
 
 
-    public static FramedAdjustableDoublePanelBlock standard()
+    public static FramedAdjustableDoublePanelBlock standard(Properties props)
     {
         return new FramedAdjustableDoublePanelBlock(
                 BlockType.FRAMED_ADJ_DOUBLE_PANEL,
+                props,
                 FramedAdjustableDoubleBlock::makeStandardStatePair,
                 FramedAdjustableDoubleBlockEntity::standard
         );
     }
 
-    public static FramedAdjustableDoublePanelBlock copycat()
+    public static FramedAdjustableDoublePanelBlock copycat(Properties props)
     {
         return new FramedAdjustableDoublePanelBlock(
                 BlockType.FRAMED_ADJ_DOUBLE_COPYCAT_PANEL,
+                props,
                 FramedAdjustableDoubleBlock::makeCopycatStatePair,
                 FramedAdjustableDoubleBlockEntity::copycat
         );

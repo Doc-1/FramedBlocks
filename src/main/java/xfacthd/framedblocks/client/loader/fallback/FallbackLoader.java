@@ -5,6 +5,7 @@ import com.mojang.serialization.JsonOps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.util.GsonHelper;
@@ -19,6 +20,7 @@ import java.util.List;
 public final class FallbackLoader implements IGeometryLoader<FallbackGeometry>
 {
     public static final ResourceLocation ID = Utils.rl("fallback");
+    private static final FileToIdConverter MODEL_LISTER = FileToIdConverter.json("models");
 
     @Override
     public FallbackGeometry read(JsonObject json, JsonDeserializationContext ctx) throws JsonParseException
@@ -35,7 +37,7 @@ public final class FallbackLoader implements IGeometryLoader<FallbackGeometry>
         }
 
         ResourceLocation fallback = ResourceLocation.parse(GsonHelper.getAsString(json, "fallback"));
-        fallback = ModelBakery.MODEL_LISTER.idToFile(fallback);
+        fallback = MODEL_LISTER.idToFile(fallback);
         try
         {
             Resource resource = Minecraft.getInstance().getResourceManager().getResourceOrThrow(fallback);

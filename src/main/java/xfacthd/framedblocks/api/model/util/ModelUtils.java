@@ -19,7 +19,7 @@ import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.model.quad.QuadData;
 import xfacthd.framedblocks.api.util.ConfigView;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.mixin.client.AccessorWeightedBakedModel;
+import xfacthd.framedblocks.mixin.client.AccessorDelegateBakedModel;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -50,7 +50,7 @@ public final class ModelUtils
             data.normal(vert, v2);
         }
 
-        return Direction.getNearest(v2.x, v2.y, v2.z);
+        return Direction.getApproximateNearest(v2.x, v2.y, v2.z);
     }
 
     /**
@@ -190,7 +190,9 @@ public final class ModelUtils
                 encodeSecondaryTintIndex(quad.getTintIndex()),
                 quad.getDirection(),
                 quad.getSprite(),
-                quad.isShade()
+                quad.isShade(),
+                quad.getLightEmission(),
+                quad.hasAmbientOcclusion()
         );
     }
 
@@ -231,7 +233,7 @@ public final class ModelUtils
     {
         if (model instanceof WeightedBakedModel weighted)
         {
-            model = ((AccessorWeightedBakedModel) weighted).framedblocks$getWrappedModel();
+            model = ((AccessorDelegateBakedModel) weighted).framedblocks$getParentModel();
         }
 
         ArrayList<BakedQuad> quads = new ArrayList<>();

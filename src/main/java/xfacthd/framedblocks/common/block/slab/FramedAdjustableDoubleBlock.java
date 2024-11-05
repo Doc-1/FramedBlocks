@@ -26,12 +26,13 @@ public abstract class FramedAdjustableDoubleBlock extends AbstractFramedDoubleBl
 
     protected FramedAdjustableDoubleBlock(
             BlockType type,
+            Properties props,
             Function<BlockState, Direction> facingGetter,
             Function<BlockState, Tuple<BlockState, BlockState>> statePairBuilder,
             BlockEntityType.BlockEntitySupplier<FramedAdjustableDoubleBlockEntity> beSupplier
     )
     {
-        super(type);
+        super(type, props);
         this.facingGetter = facingGetter;
         this.statePairBuilder = statePairBuilder;
         this.beSupplier = beSupplier;

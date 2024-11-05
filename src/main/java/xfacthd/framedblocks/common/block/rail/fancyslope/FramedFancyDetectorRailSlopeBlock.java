@@ -28,9 +28,9 @@ import java.util.function.BiFunction;
 
 public class FramedFancyDetectorRailSlopeBlock extends FramedDetectorRailSlopeBlock implements IFramedDoubleBlock, ISlopeBlock.IRailSlopeBlock
 {
-    public FramedFancyDetectorRailSlopeBlock(BiFunction<BlockPos, BlockState, FramedBlockEntity> beFactory)
+    public FramedFancyDetectorRailSlopeBlock(Properties props, BiFunction<BlockPos, BlockState, FramedBlockEntity> beFactory)
     {
-        super(BlockType.FRAMED_FANCY_DETECTOR_RAIL_SLOPE, beFactory);
+        super(BlockType.FRAMED_FANCY_DETECTOR_RAIL_SLOPE, props, beFactory);
     }
 
     @Override

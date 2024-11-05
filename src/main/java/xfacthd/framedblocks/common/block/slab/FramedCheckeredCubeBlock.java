@@ -15,9 +15,9 @@ import xfacthd.framedblocks.common.data.doubleblock.*;
 
 public class FramedCheckeredCubeBlock extends AbstractFramedDoubleBlock
 {
-    public FramedCheckeredCubeBlock()
+    public FramedCheckeredCubeBlock(Properties props)
     {
-        super(BlockType.FRAMED_CHECKERED_CUBE);
+        super(BlockType.FRAMED_CHECKERED_CUBE, props);
     }
 
     @Override

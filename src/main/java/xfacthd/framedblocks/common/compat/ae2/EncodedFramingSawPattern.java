@@ -2,7 +2,9 @@ package xfacthd.framedblocks.common.compat.ae2;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 
@@ -18,7 +20,7 @@ record EncodedFramingSawPattern(ItemStack input, List<ItemStack> additives, Item
     public static final StreamCodec<RegistryFriendlyByteBuf, EncodedFramingSawPattern> STREAM_CODEC = StreamCodec.composite(
             ItemStack.STREAM_CODEC,
             EncodedFramingSawPattern::input,
-            ItemStack.LIST_STREAM_CODEC,
+            ItemStack.STREAM_CODEC.apply(ByteBufCodecs.collection(NonNullList::createWithCapacity)),
             EncodedFramingSawPattern::additives,
             ItemStack.STREAM_CODEC,
             EncodedFramingSawPattern::output,

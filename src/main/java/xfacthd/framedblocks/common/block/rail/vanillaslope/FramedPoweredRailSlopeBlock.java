@@ -3,8 +3,9 @@ package xfacthd.framedblocks.common.block.rail.vanillaslope;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.*;
@@ -41,9 +43,9 @@ public class FramedPoweredRailSlopeBlock extends PoweredRailBlock implements IFr
     private final ShapeProvider occlusionShapes;
     private final BiFunction<BlockPos, BlockState, FramedBlockEntity> beFactory;
 
-    protected FramedPoweredRailSlopeBlock(BlockType type, boolean isPoweredRail, BiFunction<BlockPos, BlockState, FramedBlockEntity> beFactory)
+    protected FramedPoweredRailSlopeBlock(BlockType type, Properties props, boolean isPoweredRail, BiFunction<BlockPos, BlockState, FramedBlockEntity> beFactory)
     {
-        super(IFramedBlock.createProperties(type), isPoweredRail);
+        super(IFramedBlock.applyDefaultProperties(props, type), isPoweredRail);
         this.type = type;
         this.shapes = type.generateShapes(getStateDefinition().getPossibleStates());
         this.occlusionShapes = type.generateOcclusionShapes(getStateDefinition().getPossibleStates(), shapes);
@@ -86,17 +88,19 @@ public class FramedPoweredRailSlopeBlock extends PoweredRailBlock implements IFr
     @Override
     protected BlockState updateShape(
             BlockState state,
-            Direction direction,
-            BlockState neighborState,
-            LevelAccessor level,
-            BlockPos currentPos,
-            BlockPos neighborPos
+            LevelReader level,
+            ScheduledTickAccess tickAccess,
+            BlockPos pos,
+            Direction side,
+            BlockPos adjPos,
+            BlockState adjState,
+            RandomSource random
     )
     {
-        BlockState newState = super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
+        BlockState newState = super.updateShape(state, level, tickAccess, pos, side, adjPos, adjState, random);
         if (newState == state)
         {
-            updateCulling(level, currentPos);
+            updateCulling(level, pos);
         }
         return newState;
     }
@@ -109,7 +113,7 @@ public class FramedPoweredRailSlopeBlock extends PoweredRailBlock implements IFr
 
     @Override //Copy of AbstractRailBlock#neighborChanged() to disable removal
     protected void neighborChanged(
-            BlockState state, Level level, BlockPos pos, Block block, BlockPos pFromPos, boolean isMoving
+            BlockState state, Level level, BlockPos pos, Block block, @Nullable Orientation orientation, boolean isMoving
     )
     {
         updateCulling(level, pos);
@@ -143,11 +147,11 @@ public class FramedPoweredRailSlopeBlock extends PoweredRailBlock implements IFr
     @Override
     public boolean isValidRailShape(RailShape shape)
     {
-        return shape.isAscending();
+        return shape.isSlope();
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(
+    protected InteractionResult useItemOn(
             ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit
     )
     {
@@ -167,9 +171,9 @@ public class FramedPoweredRailSlopeBlock extends PoweredRailBlock implements IFr
     }
 
     @Override
-    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos)
+    protected VoxelShape getOcclusionShape(BlockState state)
     {
-        return getCamoOcclusionShape(state, level, pos, occlusionShapes);
+        return getCamoOcclusionShape(state, occlusionShapes);
     }
 
     @Override
@@ -185,7 +189,7 @@ public class FramedPoweredRailSlopeBlock extends PoweredRailBlock implements IFr
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos)
+    protected boolean propagatesSkylightDown(BlockState state)
     {
         return state.getValue(FramedProperties.PROPAGATES_SKYLIGHT);
     }
@@ -285,37 +289,41 @@ public class FramedPoweredRailSlopeBlock extends PoweredRailBlock implements IFr
 
 
 
-    public static FramedPoweredRailSlopeBlock powered()
+    public static FramedPoweredRailSlopeBlock powered(Properties props)
     {
         return new FramedPoweredRailSlopeBlock(
                 BlockType.FRAMED_POWERED_RAIL_SLOPE,
+                props,
                 true,
                 FramedBlockEntity::new
         );
     }
 
-    public static FramedPoweredRailSlopeBlock poweredFancy()
+    public static FramedPoweredRailSlopeBlock poweredFancy(Properties props)
     {
         return new FramedFancyPoweredRailSlopeBlock(
                 BlockType.FRAMED_FANCY_POWERED_RAIL_SLOPE,
+                props,
                 true,
                 FramedFancyRailSlopeBlockEntity::new
         );
     }
 
-    public static FramedPoweredRailSlopeBlock activator()
+    public static FramedPoweredRailSlopeBlock activator(Properties props)
     {
         return new FramedPoweredRailSlopeBlock(
                 BlockType.FRAMED_ACTIVATOR_RAIL_SLOPE,
+                props,
                 false,
                 FramedBlockEntity::new
         );
     }
 
-    public static FramedPoweredRailSlopeBlock activatorFancy()
+    public static FramedPoweredRailSlopeBlock activatorFancy(Properties props)
     {
         return new FramedFancyPoweredRailSlopeBlock(
                 BlockType.FRAMED_FANCY_ACTIVATOR_RAIL_SLOPE,
+                props,
                 false,
                 FramedFancyRailSlopeBlockEntity::new
         );

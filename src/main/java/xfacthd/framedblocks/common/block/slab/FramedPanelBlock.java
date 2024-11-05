@@ -17,9 +17,9 @@ import xfacthd.framedblocks.common.item.FramedSpecialDoubleBlockItem;
 
 public class FramedPanelBlock extends FramedBlock
 {
-    public FramedPanelBlock()
+    public FramedPanelBlock(Properties props)
     {
-        super(BlockType.FRAMED_PANEL);
+        super(BlockType.FRAMED_PANEL, props);
     }
 
     @Override
@@ -55,9 +55,9 @@ public class FramedPanelBlock extends FramedBlock
     }
 
     @Override
-    public BlockItem createBlockItem()
+    public BlockItem createBlockItem(Item.Properties props)
     {
-        return new FramedSpecialDoubleBlockItem(this, new Item.Properties())
+        return new FramedSpecialDoubleBlockItem(this, props)
         {
             @Override
             protected BlockState getReplacementState(BlockPlaceContext ctx, BlockState originalState)

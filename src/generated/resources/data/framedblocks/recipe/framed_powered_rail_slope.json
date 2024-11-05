@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    {
-      "item": "framedblocks:framed_slope"
-    },
-    {
-      "item": "minecraft:powered_rail"
-    }
+    "framedblocks:framed_slope",
+    "minecraft:powered_rail"
   ],
   "result": {
     "count": 1,

@@ -14,22 +14,22 @@ import xfacthd.framedblocks.api.util.Utils;
 public interface AutoUnlockNameBuilder<T extends RecipeBuilder> extends RecipeBuilder
 {
     @SuppressWarnings("unchecked")
-    default T unlockedBy(Holder<? extends ItemLike> triggerItem)
+    default T unlockedBy(RecipeProvider provider, Holder<? extends ItemLike> triggerItem)
     {
         String name = buildCriterionName(Utils.getKeyOrThrow(triggerItem).location());
-        return (T) unlockedBy(name, RecipeProvider.has(triggerItem.value()));
+        return (T) unlockedBy(name, provider.has(triggerItem.value()));
     }
 
-    default T unlockedBy(Item triggerItem)
+    default T unlockedBy(RecipeProvider provider, Item triggerItem)
     {
-        return unlockedBy(BuiltInRegistries.ITEM.wrapAsHolder(triggerItem));
+        return unlockedBy(provider, BuiltInRegistries.ITEM.wrapAsHolder(triggerItem));
     }
 
     @SuppressWarnings("unchecked")
-    default T unlockedBy(TagKey<Item> triggerTag)
+    default T unlockedBy(RecipeProvider provider, TagKey<Item> triggerTag)
     {
         String name = buildCriterionName(triggerTag.location());
-        return (T) unlockedBy(name, RecipeProvider.has(triggerTag));
+        return (T) unlockedBy(name, provider.has(triggerTag));
     }
 
     private static String buildCriterionName(ResourceLocation triggerName)

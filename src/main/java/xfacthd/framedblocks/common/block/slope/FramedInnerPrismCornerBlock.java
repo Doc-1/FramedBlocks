@@ -8,9 +8,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedInnerPrismCornerBlock extends FramedPrismCornerBlock
 {
-    public FramedInnerPrismCornerBlock(BlockType type)
+    public FramedInnerPrismCornerBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
     }
 
     @Override

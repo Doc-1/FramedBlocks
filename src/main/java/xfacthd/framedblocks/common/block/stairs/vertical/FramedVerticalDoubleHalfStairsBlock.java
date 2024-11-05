@@ -21,9 +21,9 @@ import xfacthd.framedblocks.common.data.doubleblock.*;
 
 public class FramedVerticalDoubleHalfStairsBlock extends AbstractFramedDoubleBlock
 {
-    public FramedVerticalDoubleHalfStairsBlock()
+    public FramedVerticalDoubleHalfStairsBlock(Properties props)
     {
-        super(BlockType.FRAMED_VERTICAL_DOUBLE_HALF_STAIRS);
+        super(BlockType.FRAMED_VERTICAL_DOUBLE_HALF_STAIRS, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.TOP, false));
     }
 

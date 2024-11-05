@@ -26,7 +26,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
@@ -183,14 +183,13 @@ public class FramedSignScreen extends Screen
         renderTransparentBackground(graphics);
     }
 
-    @SuppressWarnings("deprecation")
     private void drawSign(GuiGraphics graphics)
     {
         graphics.pose().pushPose();
         graphics.pose().translate(width / 2F, signConfig.baseYOff, 150F);
         graphics.pose().pushPose();
         Lighting.setupLevel();
-        RenderSystem.runAsFancy(() -> drawSignBlock(graphics));
+        drawSignBlock(graphics);
         Lighting.setupForFlatItems();
         graphics.pose().popPose();
         drawText(graphics);
@@ -210,33 +209,34 @@ public class FramedSignScreen extends Screen
 
         //noinspection ConstantConditions
         BlockRenderDispatcher renderer = minecraft.getBlockRenderer();
-        MultiBufferSource.BufferSource buffer = graphics.bufferSource();
-        PoseStack.Pose pose = poseStack.last();
-        BakedModel model = renderer.getBlockModel(state);
-        ModelData modelData = sign.getModelData();
-
-        int color = minecraft.getBlockColors().getColor(state, minecraft.level, sign.getBlockPos(), 0);
-        float red = FastColor.ARGB32.red(color) / 255F;
-        float green = FastColor.ARGB32.green(color) / 255F;
-        float blue = FastColor.ARGB32.blue(color) / 255F;
-
-        for (RenderType renderType : model.getRenderTypes(state, RandomSource.create(42), modelData))
+        graphics.drawSpecial(buffer ->
         {
-            VertexConsumer consumer = buffer.getBuffer(RenderTypeHelper.getEntityRenderType(renderType, false));
-            renderer.getModelRenderer().renderModel(
-                    pose,
-                    consumer,
-                    state,
-                    model,
-                    red, green, blue,
-                    LightTexture.FULL_BRIGHT,
-                    OverlayTexture.NO_OVERLAY,
-                    modelData,
-                    renderType
-            );
-        }
+            PoseStack.Pose pose = poseStack.last();
+            BakedModel model = renderer.getBlockModel(state);
+            ModelData modelData = sign.getModelData();
 
-        buffer.endBatch();
+            int color = minecraft.getBlockColors().getColor(state, minecraft.level, sign.getBlockPos(), 0);
+            float red = ARGB.red(color) / 255F;
+            float green = ARGB.green(color) / 255F;
+            float blue = ARGB.blue(color) / 255F;
+
+            for (RenderType renderType : model.getRenderTypes(state, RandomSource.create(42), modelData))
+            {
+                VertexConsumer consumer = buffer.getBuffer(RenderTypeHelper.getEntityRenderType(renderType));
+                renderer.getModelRenderer().renderModel(
+                        pose,
+                        consumer,
+                        state,
+                        model,
+                        red, green, blue,
+                        LightTexture.FULL_BRIGHT,
+                        OverlayTexture.NO_OVERLAY,
+                        modelData,
+                        renderType
+                );
+            }
+
+        });
     }
 
     private void drawText(GuiGraphics graphics)

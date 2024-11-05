@@ -17,6 +17,7 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.neoforged.bus.api.IEventBus;
@@ -66,6 +67,7 @@ import xfacthd.framedblocks.common.blockentity.doubled.slopepanel.*;
 import xfacthd.framedblocks.common.blockentity.doubled.slopepanelcorner.*;
 import xfacthd.framedblocks.common.blockentity.doubled.slopeslab.*;
 import xfacthd.framedblocks.common.blockentity.special.*;
+import xfacthd.framedblocks.common.compat.jei.camo.JeiCamoApplicationRecipe;
 import xfacthd.framedblocks.common.compat.jei.camo.JeiCamoApplicationRecipeSerializer;
 import xfacthd.framedblocks.common.crafting.*;
 import xfacthd.framedblocks.common.data.*;
@@ -97,6 +99,7 @@ public final class FBContent
     private static final DeferredRegister<MenuType<?>> CONTAINER_TYPES = DeferredRegister.create(BuiltInRegistries.MENU, FramedConstants.MOD_ID);
     private static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, FramedConstants.MOD_ID);
     private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, FramedConstants.MOD_ID);
+    private static final DeferredRegister<RecipeBookCategory> RECIPE_BOOK_CATEGORIES = DeferredRegister.create(Registries.RECIPE_BOOK_CATEGORY, FramedConstants.MOD_ID);
     private static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, FramedConstants.MOD_ID);
     private static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(Registries.PARTICLE_TYPE, FramedConstants.MOD_ID);
     private static final DeferredRegister<LootItemConditionType> LOOT_CONDITIONS = DeferredRegister.create(Registries.LOOT_CONDITION_TYPE, FramedConstants.MOD_ID);
@@ -203,8 +206,8 @@ public final class FBContent
     public static final Holder<Block> BLOCK_FRAMED_LADDER = registerBlock(FramedLadderBlock::new, BlockType.FRAMED_LADDER);
     public static final Holder<Block> BLOCK_FRAMED_BUTTON = registerBlock(FramedButtonBlock::wood, BlockType.FRAMED_BUTTON);
     public static final Holder<Block> BLOCK_FRAMED_STONE_BUTTON = registerBlock(FramedButtonBlock::stone, BlockType.FRAMED_STONE_BUTTON);
-    public static final Holder<Block> BLOCK_FRAMED_LARGE_BUTTON = registerBlock(FramedLargeButtonBlock::wood, BlockType.FRAMED_LARGE_BUTTON);
-    public static final Holder<Block> BLOCK_FRAMED_LARGE_STONE_BUTTON = registerBlock(FramedLargeButtonBlock::stone, BlockType.FRAMED_LARGE_STONE_BUTTON);
+    public static final Holder<Block> BLOCK_FRAMED_LARGE_BUTTON = registerBlock(FramedLargeButtonBlock::largeWood, BlockType.FRAMED_LARGE_BUTTON);
+    public static final Holder<Block> BLOCK_FRAMED_LARGE_STONE_BUTTON = registerBlock(FramedLargeButtonBlock::largeStone, BlockType.FRAMED_LARGE_STONE_BUTTON);
     public static final Holder<Block> BLOCK_FRAMED_LEVER = registerBlock(FramedLeverBlock::new, BlockType.FRAMED_LEVER);
     public static final Holder<Block> BLOCK_FRAMED_SIGN = registerBlock(FramedStandingSignBlock::new, BlockType.FRAMED_SIGN);
     public static final Holder<Block> BLOCK_FRAMED_WALL_SIGN = registerBlock(FramedWallSignBlock::new, BlockType.FRAMED_WALL_SIGN);
@@ -393,9 +396,7 @@ public final class FBContent
     public static final Holder<Item> ITEM_FRAMED_BLUEPRINT = registerToolItem(FramedBlueprintItem::new, FramedToolType.BLUEPRINT);
     public static final Holder<Item> ITEM_FRAMED_KEY = registerToolItem(FramedToolItem::new, FramedToolType.KEY);
     public static final Holder<Item> ITEM_FRAMED_SCREWDRIVER = registerToolItem(FramedToolItem::new, FramedToolType.SCREWDRIVER);
-    public static final Holder<Item> ITEM_FRAMED_REINFORCEMENT = ITEMS.register("framed_reinforcement", () ->
-            new Item(new Item.Properties())
-    );
+    public static final Holder<Item> ITEM_FRAMED_REINFORCEMENT = ITEMS.registerSimpleItem("framed_reinforcement");
     public static final Holder<Item> ITEM_PHANTOM_PASTE = ITEMS.registerItem("phantom_paste", PhantomPasteItem::new);
     // endregion
 
@@ -618,17 +619,23 @@ public final class FBContent
     // endregion
 
     // region RecipeSerializers
-    public static final Holder<RecipeSerializer<?>> RECIPE_SERIALIZER_FRAMING_SAW_RECIPE = RECIPE_SERIALIZERS.register(
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<FramingSawRecipe>> RECIPE_SERIALIZER_FRAMING_SAW_RECIPE = RECIPE_SERIALIZERS.register(
             "frame",
             FramingSawRecipeSerializer::new
     );
-    public static final Holder<RecipeSerializer<?>> RECIPE_SERIALIZER_APPLY_CAMO = RECIPE_SERIALIZERS.register(
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<CamoApplicationRecipe>> RECIPE_SERIALIZER_APPLY_CAMO = RECIPE_SERIALIZERS.register(
             "apply_camo",
             CamoApplicationRecipeSerializer::new
     );
-    public static final Holder<RecipeSerializer<?>> RECIPE_SERIALIZER_JEI_CAMO = RECIPE_SERIALIZERS.register(
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<JeiCamoApplicationRecipe>> RECIPE_SERIALIZER_JEI_CAMO = RECIPE_SERIALIZERS.register(
             "jei_camo",
             JeiCamoApplicationRecipeSerializer::new
+    );
+    // endregion
+
+    // region RecipeBookCategories
+    public static final Holder<RecipeBookCategory> RECIPE_BOOK_CATEGORY_FRAMING_SAW = RECIPE_BOOK_CATEGORIES.register(
+            "framing_saw", RecipeBookCategory::new
     );
     // endregion
 
@@ -703,6 +710,7 @@ public final class FBContent
         CONTAINER_TYPES.register(modBus);
         RECIPE_TYPES.register(modBus);
         RECIPE_SERIALIZERS.register(modBus);
+        RECIPE_BOOK_CATEGORIES.register(modBus);
         CREATIVE_TABS.register(modBus);
         PARTICLE_TYPES.register(modBus);
         LOOT_CONDITIONS.register(modBus);
@@ -770,28 +778,28 @@ public final class FBContent
     }
 
     private static <T extends Block & IFramedBlock> Holder<Block> registerBlock(
-            Function<BlockType, T> blockFactory, BlockType type
+            FramedBlockFactory<T> blockFactory, BlockType type
     )
     {
-        return registerBlock(() -> blockFactory.apply(type), type);
+        return registerBlock(props -> blockFactory.create(type, props), type);
     }
 
     private static <T extends Block & IFramedBlock> Holder<Block> registerBlock(
-            Supplier<T> blockFactory, BlockType type
+            Function<BlockBehaviour.Properties, T> blockFactory, BlockType type
     )
     {
-        Holder<Block> result = BLOCKS.register(type.getName(), () ->
+        Holder<Block> result = BLOCKS.registerBlock(type.getName(), props ->
         {
-            T block = blockFactory.get();
+            T block = blockFactory.apply(props);
             Preconditions.checkArgument(block.getBlockType() == type);
             return block;
-        });
+        }, BlockBehaviour.Properties.of());
         BLOCKS_BY_TYPE.put(type, result);
 
         if (type.hasBlockItem())
         {
-            ITEMS.register(type.getName(), () ->
-                    ((IFramedBlock) result.value()).createBlockItem()
+            ITEMS.registerItem(type.getName(), props ->
+                    ((IFramedBlock) result.value()).createBlockItem(props.useBlockDescriptionPrefix())
             );
         }
 
@@ -799,16 +807,16 @@ public final class FBContent
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static Holder<Block> registerBlock(String name, Supplier<? extends Block> blockFactory)
+    private static Holder<Block> registerBlock(String name, Function<BlockBehaviour.Properties, ? extends Block> blockFactory)
     {
-        Holder<Block> result = BLOCKS.register(name, blockFactory);
-        ITEMS.register(name, () -> new BlockItem(result.value(), new Item.Properties()));
+        Holder<Block> result = BLOCKS.registerBlock(name, blockFactory, BlockBehaviour.Properties.of());
+        ITEMS.registerSimpleBlockItem(result);
         return result;
     }
 
-    private static Holder<Item> registerToolItem(Function<FramedToolType, Item> itemFactory, FramedToolType type)
+    private static Holder<Item> registerToolItem(ToolItemFactory itemFactory, FramedToolType type)
     {
-        Holder<Item> result = ITEMS.register(type.getName(), () -> itemFactory.apply(type));
+        Holder<Item> result = ITEMS.registerItem(type.getName(), props -> itemFactory.create(type, props));
         TOOLS_BY_TYPE.put(type, result);
         return result;
     }
@@ -870,6 +878,18 @@ public final class FBContent
     )
     {
         return PARTICLE_TYPES.register(name, () -> new BasicParticleType<>(overrideLimiter, codec, streamCodec));
+    }
+
+    @FunctionalInterface
+    private interface FramedBlockFactory<T extends Block & IFramedBlock>
+    {
+        T create(BlockType type, BlockBehaviour.Properties properties);
+    }
+
+    @FunctionalInterface
+    private interface ToolItemFactory
+    {
+        Item create(FramedToolType type, Item.Properties properties);
     }
 
 

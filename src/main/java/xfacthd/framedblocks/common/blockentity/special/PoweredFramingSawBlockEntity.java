@@ -2,10 +2,14 @@ package xfacthd.framedblocks.common.blockentity.special;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -60,7 +64,7 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
     private final int energyConsumption;
     private final int craftingDuration;
     private FramingSawRecipeCache cache = null;
-    private ResourceLocation selectedRecipeId = null;
+    private ResourceKey<Recipe<?>> selectedRecipeId = null;
     private RecipeHolder<FramingSawRecipe> selectedRecipe = null;
     private boolean active = false;
     private long lastActive = 0;
@@ -220,7 +224,7 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
 
     public void selectRecipe(RecipeHolder<FramingSawRecipe> recipe)
     {
-        ResourceLocation lastId = selectedRecipeId;
+        ResourceKey<Recipe<?>> lastId = selectedRecipeId;
         selectedRecipe = recipe;
         selectedRecipeId = recipe == null ? null : recipe.id();
         checkRecipeSatisfied();
@@ -304,9 +308,9 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
     {
         super.onLoad();
         cache = FramingSawRecipeCache.get(level().isClientSide());
-        if (selectedRecipeId != null && !level().isClientSide())
+        if (selectedRecipeId != null && level() instanceof ServerLevel serverLevel)
         {
-            RecipeHolder<FramingSawRecipe> recipe = (RecipeHolder<FramingSawRecipe>) level().getRecipeManager()
+            RecipeHolder<FramingSawRecipe> recipe = (RecipeHolder<FramingSawRecipe>) serverLevel.recipeAccess()
                     .byKey(selectedRecipeId)
                     .filter(h -> h.value() instanceof FramingSawRecipe)
                     .orElse(null);
@@ -346,7 +350,8 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
         super.loadAdditional(tag, provider);
         if (tag.contains("recipe"))
         {
-            selectedRecipeId = ResourceLocation.tryParse(tag.getString("recipe"));
+            ResourceLocation recipe = ResourceLocation.tryParse(tag.getString("recipe"));
+            selectedRecipeId = recipe != null ? ResourceKey.create(Registries.RECIPE, recipe) : null;
         }
         itemHandler.deserializeNBT(provider, tag.getCompound("inventory"));
         energyStorage.deserializeNBT(provider, tag.getCompound("energy"));

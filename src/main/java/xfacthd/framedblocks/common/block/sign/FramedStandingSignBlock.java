@@ -2,15 +2,24 @@ package xfacthd.framedblocks.common.block.sign;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.*;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.RotationSegment;
-import net.minecraft.world.phys.shapes.*;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.common.data.BlockType;
@@ -20,9 +29,9 @@ public class FramedStandingSignBlock extends AbstractFramedSignBlock
 {
     private static final VoxelShape SHAPE = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D);
 
-    public FramedStandingSignBlock()
+    public FramedStandingSignBlock(Properties props)
     {
-        super(BlockType.FRAMED_SIGN, Properties::noCollission);
+        super(BlockType.FRAMED_SIGN, props.noCollission());
     }
 
     @Override
@@ -52,7 +61,7 @@ public class FramedStandingSignBlock extends AbstractFramedSignBlock
     }
 
     @Override
-    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos)
+    protected VoxelShape getOcclusionShape(BlockState state)
     {
         return Shapes.empty();
     }
@@ -60,18 +69,20 @@ public class FramedStandingSignBlock extends AbstractFramedSignBlock
     @Override
     protected BlockState updateShape(
             BlockState state,
-            Direction dir,
-            BlockState facingState,
-            LevelAccessor level,
+            LevelReader level,
+            ScheduledTickAccess tickAccess,
             BlockPos pos,
-            BlockPos facingPos
+            Direction side,
+            BlockPos adjPos,
+            BlockState adjState,
+            RandomSource random
     )
     {
-        if (dir == Direction.DOWN && !canSurvive(state, level, pos))
+        if (side == Direction.DOWN && !canSurvive(state, level, pos))
         {
             return Blocks.AIR.defaultBlockState();
         }
-        return super.updateShape(state, dir, facingState, level, pos, facingPos);
+        return super.updateShape(state, level, tickAccess, pos, side, adjPos, adjState, random);
     }
 
     @Override
@@ -123,9 +134,9 @@ public class FramedStandingSignBlock extends AbstractFramedSignBlock
     }
 
     @Override
-    public BlockItem createBlockItem()
+    public BlockItem createBlockItem(Item.Properties props)
     {
-        return new FramedSignItem();
+        return new FramedSignItem(props);
     }
 
     @Override

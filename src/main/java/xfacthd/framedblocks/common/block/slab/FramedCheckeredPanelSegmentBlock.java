@@ -16,9 +16,9 @@ import xfacthd.framedblocks.common.data.PropertyHolder;
 
 public class FramedCheckeredPanelSegmentBlock extends FramedBlock
 {
-    public FramedCheckeredPanelSegmentBlock()
+    public FramedCheckeredPanelSegmentBlock(Properties props)
     {
-        super(BlockType.FRAMED_CHECKERED_PANEL_SEGMENT);
+        super(BlockType.FRAMED_CHECKERED_PANEL_SEGMENT, props);
         registerDefaultState(defaultBlockState().setValue(PropertyHolder.SECOND, false));
     }
 

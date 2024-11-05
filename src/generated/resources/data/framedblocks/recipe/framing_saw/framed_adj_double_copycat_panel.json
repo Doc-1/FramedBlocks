@@ -3,9 +3,7 @@
   "additives": [
     {
       "count": 1,
-      "ingredient": {
-        "tag": "c:ingots/copper"
-      }
+      "ingredient": "#c:ingots/copper"
     }
   ],
   "material": 6144,

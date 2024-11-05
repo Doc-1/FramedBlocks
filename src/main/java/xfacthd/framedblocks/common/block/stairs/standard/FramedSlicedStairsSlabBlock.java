@@ -18,9 +18,9 @@ import xfacthd.framedblocks.common.data.doubleblock.*;
 
 public class FramedSlicedStairsSlabBlock extends FramedStairsBlock implements IFramedDoubleBlock
 {
-    public FramedSlicedStairsSlabBlock()
+    public FramedSlicedStairsSlabBlock(Properties props)
     {
-        super(BlockType.FRAMED_SLICED_STAIRS_SLAB);
+        super(BlockType.FRAMED_SLICED_STAIRS_SLAB, props);
     }
 
     @Override

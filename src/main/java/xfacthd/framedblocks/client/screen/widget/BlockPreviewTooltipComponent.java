@@ -1,5 +1,6 @@
 package xfacthd.framedblocks.client.screen.widget;
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -30,7 +31,7 @@ public final class BlockPreviewTooltipComponent implements ClientTooltipComponen
     }
 
     @Override
-    public void renderImage(Font font, int x, int y, GuiGraphics graphics)
+    public void renderImage(Font font, int x, int y, int width, int height, GuiGraphics graphics)
     {
         graphics.pose().pushPose();
 
@@ -43,16 +44,18 @@ public final class BlockPreviewTooltipComponent implements ClientTooltipComponen
                 .rotate(Axis.YP.rotationDegrees(rotY))
         );
 
-        Minecraft.getInstance().getItemRenderer().renderStatic(
+        graphics.flush();
+        Lighting.setupForEntityInInventory();
+        graphics.drawSpecial(buffer -> Minecraft.getInstance().getItemRenderer().renderStatic(
                 stack,
                 ItemDisplayContext.FIXED,
                 LightTexture.FULL_BRIGHT,
                 OverlayTexture.NO_OVERLAY,
                 graphics.pose(),
-                graphics.bufferSource(),
+                buffer,
                 null,
                 0
-        );
+        ));
 
         graphics.pose().popPose();
     }
@@ -64,7 +67,7 @@ public final class BlockPreviewTooltipComponent implements ClientTooltipComponen
     }
 
     @Override
-    public int getHeight()
+    public int getHeight(Font font)
     {
         return SIZE;
     }

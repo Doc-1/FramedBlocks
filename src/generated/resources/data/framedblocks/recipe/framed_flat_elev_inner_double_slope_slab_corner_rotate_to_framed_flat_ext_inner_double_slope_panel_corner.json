@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    {
-      "item": "framedblocks:framed_flat_elev_inner_double_slope_slab_corner"
-    },
-    {
-      "item": "framedblocks:framed_wrench"
-    }
+    "framedblocks:framed_flat_elev_inner_double_slope_slab_corner",
+    "framedblocks:framed_wrench"
   ],
   "result": {
     "count": 1,

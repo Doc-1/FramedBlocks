@@ -8,7 +8,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.*;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.GameType;
@@ -86,7 +86,7 @@ public final class TestUtils
                 case 1 -> Vec3.atCenterOf(absPos).add(.1, .1, .1);
                 default -> Vec3.atCenterOf(absPos);
             };
-            ItemInteractionResult result = helper.getBlockState(pos).useItemOn(
+            InteractionResult result = helper.getBlockState(pos).useItemOn(
                     stack,
                     helper.getLevel(),
                     player,
@@ -129,7 +129,7 @@ public final class TestUtils
         ItemStack stack = new ItemStack(item);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(item));
 
-        ItemInteractionResult result = helper.getBlockState(pos).useItemOn(
+        InteractionResult result = helper.getBlockState(pos).useItemOn(
                 stack,
                 helper.getLevel(),
                 player,
@@ -137,7 +137,7 @@ public final class TestUtils
                 new BlockHitResult(Vec3.atCenterOf(absPos), side, absPos, true)
         );
 
-        if (result != ItemInteractionResult.SUCCESS)
+        if (result != InteractionResult.SUCCESS)
         {
             helper.fail(String.format("Interaction with block %s failed", helper.getBlockState(pos)), pos);
         }
@@ -440,7 +440,7 @@ public final class TestUtils
 
                     Player player = helper.makeMockPlayer(GameType.SURVIVAL);
                     CollisionContext ctx = CollisionContext.of(player);
-                    BuiltInRegistries.ITEM.getTag(Utils.DISABLE_INTANGIBLE)
+                    BuiltInRegistries.ITEM.get(Utils.DISABLE_INTANGIBLE)
                             .stream()
                             .flatMap(HolderSet::stream)
                             .forEach(item ->

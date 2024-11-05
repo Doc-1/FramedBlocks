@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "H": {
-      "item": "framedblocks:framed_hammer"
-    },
-    "P": {
-      "item": "framedblocks:framed_slope_panel"
-    }
+    "H": "framedblocks:framed_hammer",
+    "P": "framedblocks:framed_slope_panel"
   },
   "pattern": [
     "HP",

@@ -1,13 +1,17 @@
 package xfacthd.framedblocks.client.loader.fallback;
 
 import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.UnbakedModel;
 import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
 import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry;
 
+import java.util.List;
 import java.util.function.Function;
 
 final class FallbackGeometry implements IUnbakedGeometry<FallbackGeometry>
@@ -20,20 +24,14 @@ final class FallbackGeometry implements IUnbakedGeometry<FallbackGeometry>
     }
 
     @Override
-    public BakedModel bake(
-            IGeometryBakingContext ctx,
-            ModelBaker baker,
-            Function<Material, TextureAtlasSprite> spriteGetter,
-            ModelState modelState,
-            ItemOverrides overrides
-    )
+    public BakedModel bake(IGeometryBakingContext ctx, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, List<ItemOverride> overrides)
     {
-        return model.bake(baker, model, spriteGetter, modelState, true);
+        return model.bake(spriteGetter, modelState, true);
     }
 
     @Override
-    public void resolveParents(Function<ResourceLocation, UnbakedModel> modelGetter, IGeometryBakingContext context)
+    public void resolveDependencies(UnbakedModel.Resolver modelGetter, IGeometryBakingContext context)
     {
-        model.resolveParents(modelGetter);
+        model.resolveDependencies(modelGetter);
     }
 }

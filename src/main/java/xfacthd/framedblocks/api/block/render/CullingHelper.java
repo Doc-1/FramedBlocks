@@ -44,7 +44,7 @@ public final class CullingHelper
             adjFramed = true;
             adjBlock = block;
         }
-        else if (adjState.isSolidRender(level, adjPos))
+        else if (adjState.isSolidRender())
         {
             // Let the game handle culling against fully solid cubes automatically,
             // prevents xray issues with block tool modifications like farmland tilling

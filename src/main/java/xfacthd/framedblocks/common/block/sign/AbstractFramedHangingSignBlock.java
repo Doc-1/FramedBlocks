@@ -8,13 +8,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import xfacthd.framedblocks.common.blockentity.special.FramedSignBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 
-import java.util.function.UnaryOperator;
-
 public abstract class AbstractFramedHangingSignBlock extends AbstractFramedSignBlock
 {
-    protected AbstractFramedHangingSignBlock(BlockType type, UnaryOperator<Properties> propertyModifier)
+    protected AbstractFramedHangingSignBlock(BlockType type, Properties props)
     {
-        super(type, propertyModifier);
+        super(type, props);
     }
 
     @Override

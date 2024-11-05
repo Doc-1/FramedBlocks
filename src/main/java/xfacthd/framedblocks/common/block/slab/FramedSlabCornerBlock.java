@@ -16,9 +16,9 @@ import xfacthd.framedblocks.api.util.Utils;
 
 public class FramedSlabCornerBlock extends FramedBlock
 {
-    public FramedSlabCornerBlock()
+    public FramedSlabCornerBlock(Properties props)
     {
-        super(BlockType.FRAMED_SLAB_CORNER);
+        super(BlockType.FRAMED_SLAB_CORNER, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.TOP, false));
     }
 

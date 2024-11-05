@@ -12,9 +12,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedCenteredSlabBlock extends FramedBlock
 {
-    public FramedCenteredSlabBlock()
+    public FramedCenteredSlabBlock(Properties props)
     {
-        super(BlockType.FRAMED_CENTERED_SLAB);
+        super(BlockType.FRAMED_CENTERED_SLAB, props);
     }
 
     @Override

@@ -10,9 +10,9 @@ import xfacthd.framedblocks.common.data.PropertyHolder;
 
 public class FramedCubeBlock extends FramedBlock
 {
-    public FramedCubeBlock()
+    public FramedCubeBlock(Properties props)
     {
-        super(BlockType.FRAMED_CUBE);
+        super(BlockType.FRAMED_CUBE, props);
         registerDefaultState(defaultBlockState()
                 .setValue(PropertyHolder.ALT, false)
                 .setValue(PropertyHolder.REINFORCED, false)

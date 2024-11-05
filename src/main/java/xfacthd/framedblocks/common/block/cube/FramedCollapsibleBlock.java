@@ -33,9 +33,9 @@ public class FramedCollapsibleBlock extends FramedBlock
     private static final Map<Integer, VoxelShape> SHAPE_CACHE = new ConcurrentHashMap<>();
     private static final double MIN_DEPTH = Mth.EPSILON * 2D;
 
-    public FramedCollapsibleBlock(BlockType blockType)
+    public FramedCollapsibleBlock(BlockType blockType, Properties props)
     {
-        super(blockType, Properties::dynamicShape);
+        super(blockType, props.dynamicShape());
         registerDefaultState(defaultBlockState()
                 .setValue(BlockStateProperties.WATERLOGGED, false)
                 .setValue(PropertyHolder.ROTATE_SPLIT_LINE, false)
@@ -101,9 +101,9 @@ public class FramedCollapsibleBlock extends FramedBlock
     }
 
     @Override
-    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos)
+    protected VoxelShape getOcclusionShape(BlockState state)
     {
-        return getCamoOcclusionShape(state, level, pos, null);
+        return getCamoOcclusionShape(state, null);
     }
 
     @Override

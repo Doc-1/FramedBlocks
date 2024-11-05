@@ -11,9 +11,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedSoulTorchBlock extends FramedTorchBlock
 {
-    public FramedSoulTorchBlock()
+    public FramedSoulTorchBlock(Properties props)
     {
-        super(ParticleTypes.SOUL_FIRE_FLAME, Properties.of()
+        super(ParticleTypes.SOUL_FIRE_FLAME, props
                 .pushReaction(PushReaction.DESTROY)
                 .noCollission()
                 .strength(0.5F)
@@ -30,13 +30,13 @@ public class FramedSoulTorchBlock extends FramedTorchBlock
     }
 
     @Override
-    public BlockItem createBlockItem()
+    public BlockItem createBlockItem(Item.Properties props)
     {
         return new StandingAndWallBlockItem(
                 FBContent.BLOCK_FRAMED_SOUL_TORCH.value(),
                 FBContent.BLOCK_FRAMED_SOUL_WALL_TORCH.value(),
-                new Item.Properties(),
-                Direction.DOWN
+                Direction.DOWN,
+                props
         );
     }
 

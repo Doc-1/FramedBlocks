@@ -10,7 +10,7 @@ public final class CamoApplicationRecipeSerializer implements RecipeSerializer<C
 {
     private static final MapCodec<CamoApplicationRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(CamoApplicationRecipe::category),
-            Ingredient.CODEC_NONEMPTY.fieldOf("copy_tool").forGetter(CamoApplicationRecipe::getCopyTool)
+            Ingredient.CODEC.fieldOf("copy_tool").forGetter(CamoApplicationRecipe::getCopyTool)
     ).apply(inst, CamoApplicationRecipe::new));
     private static final StreamCodec<RegistryFriendlyByteBuf, CamoApplicationRecipe> STREAM_CODEC = StreamCodec.composite(
             CraftingBookCategory.STREAM_CODEC,

@@ -12,9 +12,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedHorizontalPaneBlock extends FramedBlock
 {
-    public FramedHorizontalPaneBlock()
+    public FramedHorizontalPaneBlock(Properties props)
     {
-        super(BlockType.FRAMED_HORIZONTAL_PANE, Properties::forceSolidOn);
+        super(BlockType.FRAMED_HORIZONTAL_PANE, props.forceSolidOn());
     }
 
     @Override

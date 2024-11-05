@@ -20,9 +20,9 @@ import xfacthd.framedblocks.common.data.doubleblock.*;
 
 public class FramedMasonryCornerBlock extends AbstractFramedDoubleBlock
 {
-    public FramedMasonryCornerBlock()
+    public FramedMasonryCornerBlock(Properties props)
     {
-        super(BlockType.FRAMED_MASONRY_CORNER);
+        super(BlockType.FRAMED_MASONRY_CORNER, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.TOP, false));
     }
 

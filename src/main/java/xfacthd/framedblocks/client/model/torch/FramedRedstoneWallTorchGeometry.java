@@ -55,7 +55,8 @@ public class FramedRedstoneWallTorchGeometry extends Geometry
         {
             if (!ClientUtils.isDummyTexture(quad))
             {
-                quadMap.get(null).add(quad);
+                // Ensure glowing torch parts have no AO even if the rest doesn't
+                QuadModifier.of(quad).ambientOcclusion(false).export(quadMap.get(null));
             }
         }
     }

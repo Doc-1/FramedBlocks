@@ -36,7 +36,7 @@ public final class BlockCamoContent extends CamoContent<BlockCamoContent>
     @Override
     public boolean propagatesSkylightDown(BlockGetter level, BlockPos pos)
     {
-        return state.propagatesSkylightDown(level, pos);
+        return state.propagatesSkylightDown();
     }
 
     @Override
@@ -150,7 +150,7 @@ public final class BlockCamoContent extends CamoContent<BlockCamoContent>
     @Override
     public boolean isSolid(BlockGetter level, BlockPos pos)
     {
-        return state.isSolidRender(level, pos);
+        return state.isSolidRender();
     }
 
     @Override
@@ -174,7 +174,7 @@ public final class BlockCamoContent extends CamoContent<BlockCamoContent>
     @Override
     public boolean isOccludedBy(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos)
     {
-        if (adjState.isSolidRender(level, adjPos))
+        if (adjState.isSolidRender())
         {
             return true;
         }
@@ -198,7 +198,7 @@ public final class BlockCamoContent extends CamoContent<BlockCamoContent>
     @Override
     public boolean occludes(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos)
     {
-        if (state.isSolidRender(level, pos))
+        if (state.isSolidRender())
         {
             return true;
         }

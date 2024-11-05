@@ -15,11 +15,12 @@ public class FramedAdjustableDoubleSlabBlock extends FramedAdjustableDoubleBlock
 {
     private FramedAdjustableDoubleSlabBlock(
             BlockType type,
+            Properties props,
             Function<BlockState, Tuple<BlockState, BlockState>> statePairBuilder,
             BlockEntityType.BlockEntitySupplier<FramedAdjustableDoubleBlockEntity> beSupplier
     )
     {
-        super(type, state -> Direction.UP, statePairBuilder, beSupplier);
+        super(type, props, state -> Direction.UP, statePairBuilder, beSupplier);
     }
 
     @Override
@@ -57,19 +58,21 @@ public class FramedAdjustableDoubleSlabBlock extends FramedAdjustableDoubleBlock
 
 
 
-    public static FramedAdjustableDoubleSlabBlock standard()
+    public static FramedAdjustableDoubleSlabBlock standard(Properties props)
     {
         return new FramedAdjustableDoubleSlabBlock(
                 BlockType.FRAMED_ADJ_DOUBLE_SLAB,
+                props,
                 FramedAdjustableDoubleBlock::makeStandardStatePair,
                 FramedAdjustableDoubleBlockEntity::standard
         );
     }
 
-    public static FramedAdjustableDoubleSlabBlock copycat()
+    public static FramedAdjustableDoubleSlabBlock copycat(Properties props)
     {
         return new FramedAdjustableDoubleSlabBlock(
                 BlockType.FRAMED_ADJ_DOUBLE_COPYCAT_SLAB,
+                props,
                 FramedAdjustableDoubleBlock::makeCopycatStatePair,
                 FramedAdjustableDoubleBlockEntity::copycat
         );

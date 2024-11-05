@@ -105,7 +105,7 @@ public final class DiagonalBlocksCompat
         {
             ResourceLocation srcName = Utils.getKeyOrThrow(srcBlock).location();
             ResourceLocation destName = type.id(srcName.getNamespace() + "/" + srcName.getPath());
-            return BuiltInRegistries.BLOCK.getHolder(ResourceKey.create(Registries.BLOCK, destName));
+            return BuiltInRegistries.BLOCK.get(ResourceKey.create(Registries.BLOCK, destName));
         }
 
 

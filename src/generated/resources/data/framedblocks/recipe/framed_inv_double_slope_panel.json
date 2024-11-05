@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    {
-      "item": "framedblocks:framed_double_slope_panel"
-    }
+    "framedblocks:framed_double_slope_panel"
   ],
   "result": {
     "count": 1,

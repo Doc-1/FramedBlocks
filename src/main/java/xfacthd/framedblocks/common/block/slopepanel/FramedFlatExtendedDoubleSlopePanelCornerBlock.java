@@ -28,9 +28,9 @@ public class FramedFlatExtendedDoubleSlopePanelCornerBlock extends AbstractFrame
 {
     private final boolean isInner;
 
-    public FramedFlatExtendedDoubleSlopePanelCornerBlock(BlockType blockType)
+    public FramedFlatExtendedDoubleSlopePanelCornerBlock(BlockType blockType, Properties props)
     {
-        super(blockType);
+        super(blockType, props);
         this.isInner = blockType == BlockType.FRAMED_FLAT_EXT_INNER_DOUBLE_SLOPE_PANEL_CORNER;
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, false));
     }

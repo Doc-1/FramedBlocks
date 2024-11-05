@@ -10,7 +10,11 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
@@ -41,9 +45,9 @@ public final class CamoCraftingHelper
             FramedBlocks.LOGGER.warn("Failed to retrieve canonical CamoApplicationRecipe, using dummy");
             return new CamoApplicationRecipe(CraftingBookCategory.MISC, Ingredient.of(Items.BRUSH));
         });
-        this.camoExamplesIngredient = Ingredient.of(JeiConstants.CAMO_BLOCK_EXAMPLES_TAG);
-        this.emptyFramesIngredient = Ingredient.of(JeiConstants.ALL_FRAMES_TAG);
-        this.emptyDoubleFramesIngredient = Ingredient.of(JeiConstants.DOUBLE_FRAMES_TAG);
+        this.camoExamplesIngredient = makeTagIngredient(JeiConstants.CAMO_BLOCK_EXAMPLES_TAG);
+        this.emptyFramesIngredient = makeTagIngredient(JeiConstants.ALL_FRAMES_TAG);
+        this.emptyDoubleFramesIngredient = makeTagIngredient(JeiConstants.DOUBLE_FRAMES_TAG);
     }
 
     @Nullable
@@ -52,14 +56,16 @@ public final class CamoCraftingHelper
         ClientLevel level = Minecraft.getInstance().level;
         if (level == null) { return null; }
 
-        return level.getRecipeManager()
-                .getAllRecipesFor(RecipeType.CRAFTING)
-                .stream()
-                .map(RecipeHolder::value)
-                .filter(CamoApplicationRecipe.class::isInstance)
-                .map(CamoApplicationRecipe.class::cast)
-                .findFirst()
-                .orElse(null);
+        //return level.getRecipeManager()
+        //        .getAllRecipesFor(RecipeType.CRAFTING)
+        //        .stream()
+        //        .map(RecipeHolder::value)
+        //        .filter(CamoApplicationRecipe.class::isInstance)
+        //        .map(CamoApplicationRecipe.class::cast)
+        //        .findFirst()
+        //        .orElse(null);
+        // TODO: find a different way to get this data
+        return null;
     }
 
     public Ingredient getCopyToolIngredient()
@@ -113,7 +119,7 @@ public final class CamoCraftingHelper
         RegistryAccess registryAccess = level.registryAccess();
 
         Ingredient copyTool = helperRecipe.getCopyTool();
-        ItemStack copyToolItem = copyTool.getItems()[0];
+        ItemStack copyToolItem = copyTool.items().getFirst().value().getDefaultInstance();
         List<ItemStack> inputs = List.of(frame, copyToolItem, inputOne, inputTwo);
         CraftingInput craftingInput = CraftingInput.of(2, 2, inputs);
         return helperRecipe.assemble(craftingInput, registryAccess);
@@ -131,7 +137,7 @@ public final class CamoCraftingHelper
             return new ArrayList<>(this.camoExamples);
         }
 
-        return Arrays.asList(ingredient.getItems());
+        return asStackList(ingredient);
     }
 
     private List<ItemStack> getDoubleCamoExampleStacks(Ingredient ingredient, int count)
@@ -155,7 +161,7 @@ public final class CamoCraftingHelper
             return results;
         }
 
-        return Arrays.asList(ingredient.getItems());
+        return asStackList(ingredient);
     }
 
     private List<ItemStack> getEmptyFrameStacks(Ingredient ingredient)
@@ -169,14 +175,14 @@ public final class CamoCraftingHelper
             return emptyDoubleFramedBlocks;
         }
 
-        return Arrays.asList(ingredient.getItems());
+        return asStackList(ingredient);
     }
 
     public void setRecipe(JeiCamoApplicationRecipe recipe, IRecipeLayoutBuilder builder, ICraftingGridHelper craftingGridHelper)
     {
         List<Pair<String, List<ItemStack>>> namedInputs = List.of(
                 Pair.of("frames", getEmptyFrameStacks(recipe.getFrame())),
-                Pair.of("copyTool", Arrays.asList(recipe.getCopyTool().getItems())),
+                Pair.of("copyTool", asStackList(recipe.getCopyTool())),
                 // pick a prime number count so that more combinations are shown over time
                 Pair.of("camoOne", getCamoExampleStacks(recipe.getCamoOne(), 97)),
                 // pick a lower number so that the blank ingredient is shown more often
@@ -207,6 +213,16 @@ public final class CamoCraftingHelper
             results = List.of(firstOutput);
         }
         craftingGridHelper.createAndSetOutputs(builder, results);
+    }
+
+    private static List<ItemStack> asStackList(Ingredient ingredient)
+    {
+        return ingredient.items().stream().map(Holder::value).map(Item::getDefaultInstance).toList();
+    }
+
+    public static Ingredient makeTagIngredient(TagKey<Item> tagKey)
+    {
+        return Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(tagKey));
     }
 
     private static class InputSlotTooltipCallback implements IRecipeSlotRichTooltipCallback

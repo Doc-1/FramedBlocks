@@ -4,7 +4,10 @@ import com.google.common.base.Preconditions;
 import net.minecraft.Optionull;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.*;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -19,13 +22,19 @@ import org.lwjgl.glfw.GLFW;
 import xfacthd.framedblocks.api.util.ClientUtils;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.compat.ae2.AppliedEnergisticsCompat;
-import xfacthd.framedblocks.common.crafting.*;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipeAdditive;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipeCalculation;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipeMatchResult;
 import xfacthd.framedblocks.common.menu.FramingSawMenu;
 import xfacthd.framedblocks.common.menu.FramingSawWithEncoderMenu;
 import xfacthd.framedblocks.common.net.payload.ServerboundEncodeFramingSawPatternPayload;
 import xfacthd.framedblocks.common.util.ArrayBackedRecipeInput;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 public class FramingSawWithEncoderScreen extends FramingSawScreen
 {
@@ -96,11 +105,11 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
         super.renderBg(graphics, partialTick, mouseX, mouseY);
 
         ResourceLocation rlTop = encoding ? TAB_ICON : TAB_SELECTED_ICON;
-        graphics.blitSprite(rlTop, leftPos + TAB_X, topPos + TAB_TOP_Y, TAB_WIDTH, TAB_HEIGHT);
+        graphics.blitSprite(RenderType::guiTextured, rlTop, leftPos + TAB_X, topPos + TAB_TOP_Y, TAB_WIDTH, TAB_HEIGHT);
         graphics.renderFakeItem(tableStack, leftPos + TAB_ICON_X, topPos + TAB_ICON_TOP_Y);
 
         ResourceLocation rlBot = encoding ? TAB_SELECTED_ICON : TAB_ICON;
-        graphics.blitSprite(rlBot, leftPos + TAB_X, topPos + TAB_BOT_Y, TAB_WIDTH, TAB_HEIGHT);
+        graphics.blitSprite(RenderType::guiTextured, rlBot, leftPos + TAB_X, topPos + TAB_BOT_Y, TAB_WIDTH, TAB_HEIGHT);
         graphics.renderFakeItem(sawPatternStack, leftPos + TAB_ICON_X, topPos + TAB_ICON_BOT_Y);
 
         if (encoding)
@@ -328,7 +337,7 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
             List<FramingSawRecipeAdditive> additives = cache.getRecipes().get(menu.getSelectedRecipeIndex()).value().getAdditives();
             for (int i = 0; i < additives.size(); i++)
             {
-                encodingInputs[i + 1] = additives.get(i).ingredient().getItems()[0].copyWithCount(1);
+                encodingInputs[i + 1] = new ItemStack(additives.get(i).ingredient().items().getFirst());
             }
         }
     }

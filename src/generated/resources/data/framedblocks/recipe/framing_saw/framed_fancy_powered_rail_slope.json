@@ -3,9 +3,7 @@
   "additives": [
     {
       "count": 1,
-      "ingredient": {
-        "item": "framedblocks:framed_fancy_powered_rail"
-      }
+      "ingredient": "framedblocks:framed_fancy_powered_rail"
     }
   ],
   "material": 3072,

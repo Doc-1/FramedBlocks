@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "F": {
-      "item": "framedblocks:framed_cube"
-    },
-    "G": {
-      "item": "minecraft:tinted_glass"
-    }
+    "F": "framedblocks:framed_cube",
+    "G": "minecraft:tinted_glass"
   },
   "pattern": [
     "GFG",

@@ -21,7 +21,7 @@ final class FramingSawCraftingMachine implements ICraftingMachine
 {
     private static final Lazy<PatternContainerGroup> GROUP = Lazy.of(() -> new PatternContainerGroup(
             AEItemKey.of(FBContent.BLOCK_POWERED_FRAMING_SAW.value()),
-            FBContent.BLOCK_POWERED_FRAMING_SAW.value().asItem().getDescription(),
+            FBContent.BLOCK_POWERED_FRAMING_SAW.value().asItem().getDefaultInstance().getItemName(),
             List.of()
     ));
 

@@ -3,15 +3,11 @@
   "additives": [
     {
       "count": 6,
-      "ingredient": {
-        "tag": "c:ingots/iron"
-      }
+      "ingredient": "#c:ingots/iron"
     },
     {
       "count": 1,
-      "ingredient": {
-        "item": "minecraft:redstone_torch"
-      }
+      "ingredient": "minecraft:redstone_torch"
     }
   ],
   "material": 6144,

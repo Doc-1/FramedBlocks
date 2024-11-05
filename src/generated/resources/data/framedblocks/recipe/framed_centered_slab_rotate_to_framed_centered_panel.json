@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    {
-      "item": "framedblocks:framed_centered_slab"
-    },
-    {
-      "item": "framedblocks:framed_wrench"
-    }
+    "framedblocks:framed_centered_slab",
+    "framedblocks:framed_wrench"
   ],
   "result": {
     "count": 1,

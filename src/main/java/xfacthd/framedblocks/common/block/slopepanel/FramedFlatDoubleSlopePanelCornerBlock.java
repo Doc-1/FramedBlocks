@@ -27,9 +27,9 @@ import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMod
 
 public class FramedFlatDoubleSlopePanelCornerBlock extends AbstractFramedDoubleBlock
 {
-    public FramedFlatDoubleSlopePanelCornerBlock()
+    public FramedFlatDoubleSlopePanelCornerBlock(Properties props)
     {
-        super(BlockType.FRAMED_FLAT_DOUBLE_SLOPE_PANEL_CORNER);
+        super(BlockType.FRAMED_FLAT_DOUBLE_SLOPE_PANEL_CORNER, props);
         registerDefaultState(defaultBlockState()
                 .setValue(PropertyHolder.FRONT, false)
                 .setValue(FramedProperties.Y_SLOPE, false)

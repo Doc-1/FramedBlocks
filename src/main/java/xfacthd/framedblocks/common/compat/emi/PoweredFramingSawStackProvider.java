@@ -18,7 +18,7 @@ public final class PoweredFramingSawStackProvider implements EmiStackProvider<Po
         {
             return new EmiStackInteraction(
                     EmiStack.of(recipe.value().getResult()),
-                    EmiApi.getRecipeManager().getRecipe(recipe.id()),
+                    EmiApi.getRecipeManager().getRecipe(recipe.id().location()),
                     false
             );
         }

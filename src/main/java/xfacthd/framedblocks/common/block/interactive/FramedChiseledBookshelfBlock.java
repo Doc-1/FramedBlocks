@@ -32,9 +32,9 @@ import java.util.OptionalInt;
 
 public class FramedChiseledBookshelfBlock extends FramedBlock
 {
-    public FramedChiseledBookshelfBlock()
+    public FramedChiseledBookshelfBlock(Properties props)
     {
-        super(BlockType.FRAMED_CHISELED_BOOKSHELF);
+        super(BlockType.FRAMED_CHISELED_BOOKSHELF, props);
         BlockState state = defaultBlockState();
         for (BooleanProperty prop : ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES)
         {
@@ -75,32 +75,32 @@ public class FramedChiseledBookshelfBlock extends FramedBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit)
     {
-        ItemInteractionResult result = super.useItemOn(stack, state, level, pos, player, hand, hit);
+        InteractionResult result = super.useItemOn(stack, state, level, pos, player, hand, hit);
         if (result.consumesAction()) return result;
 
         if (level.getBlockEntity(pos) instanceof FramedChiseledBookshelfBlockEntity be)
         {
             if (!stack.is(ItemTags.BOOKSHELF_BOOKS))
             {
-                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                return InteractionResult.TRY_WITH_EMPTY_HAND;
             }
 
             OptionalInt slot = ((ChiseledBookShelfBlock) Blocks.CHISELED_BOOKSHELF).getHitSlot(hit, state);
             if (slot.isEmpty())
             {
-                return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+                return InteractionResult.PASS;
             }
             if (state.getValue(ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.get(slot.getAsInt())))
             {
-                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                return InteractionResult.TRY_WITH_EMPTY_HAND;
             }
 
             placeBook(level, pos, player, be, stack, slot.getAsInt());
-            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.SUCCESS;
         }
-        return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -119,7 +119,7 @@ public class FramedChiseledBookshelfBlock extends FramedBlock
             }
 
             takeBook(level, pos, player, be, slot.getAsInt());
-            return InteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
     }

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "C": {
-      "item": "framedblocks:framed_flat_slope_slab_corner"
-    },
-    "I": {
-      "item": "framedblocks:framed_flat_inner_slope_slab_corner"
-    }
+    "C": "framedblocks:framed_flat_slope_slab_corner",
+    "I": "framedblocks:framed_flat_inner_slope_slab_corner"
   },
   "pattern": [
     "C",

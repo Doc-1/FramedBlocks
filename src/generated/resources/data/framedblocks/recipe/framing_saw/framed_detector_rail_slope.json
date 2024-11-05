@@ -3,9 +3,7 @@
   "additives": [
     {
       "count": 1,
-      "ingredient": {
-        "item": "minecraft:detector_rail"
-      }
+      "ingredient": "minecraft:detector_rail"
     }
   ],
   "material": 3072,

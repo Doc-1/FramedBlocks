@@ -36,9 +36,9 @@ public class FramedCollapsibleCopycatBlock extends FramedBlock
     private static final Map<Integer, VoxelShape> SHAPE_CACHE = new ConcurrentHashMap<>();
     public static final int ALL_SOLID = 0b00111111;
 
-    public FramedCollapsibleCopycatBlock()
+    public FramedCollapsibleCopycatBlock(Properties props)
     {
-        super(BlockType.FRAMED_COLLAPSIBLE_COPYCAT_BLOCK, Properties::dynamicShape);
+        super(BlockType.FRAMED_COLLAPSIBLE_COPYCAT_BLOCK, props.dynamicShape());
         registerDefaultState(defaultBlockState().setValue(PropertyHolder.SOLID_FACES, ALL_SOLID));
     }
 
@@ -100,9 +100,9 @@ public class FramedCollapsibleCopycatBlock extends FramedBlock
     }
 
     @Override
-    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos)
+    protected VoxelShape getOcclusionShape(BlockState state)
     {
-        return getCamoOcclusionShape(state, level, pos, null);
+        return getCamoOcclusionShape(state, null);
     }
 
     @Override

@@ -9,7 +9,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.*;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
@@ -72,7 +72,7 @@ public class FramedItemFrameBlockEntity extends FramedBlockEntity
         mapTickCount++;
     }
 
-    public ItemInteractionResult handleFrameInteraction(Player player, InteractionHand hand)
+    public InteractionResult handleFrameInteraction(Player player, InteractionHand hand)
     {
         ItemStack stack = player.getItemInHand(hand);
         if (hasItem())
@@ -86,7 +86,7 @@ public class FramedItemFrameBlockEntity extends FramedBlockEntity
                 setChangedWithoutSignalUpdate();
                 level().sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
             }
-            return ItemInteractionResult.sidedSuccess(level().isClientSide());
+            return InteractionResult.SUCCESS;
         }
         else if (!stack.isEmpty() && !hasItem())
         {
@@ -101,9 +101,9 @@ public class FramedItemFrameBlockEntity extends FramedBlockEntity
 
                 playSound(glowing ? SoundEvents.GLOW_ITEM_FRAME_ADD_ITEM : SoundEvents.ITEM_FRAME_ADD_ITEM);
             }
-            return ItemInteractionResult.sidedSuccess(level().isClientSide());
+            return InteractionResult.SUCCESS;
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     public void removeItem(Player player)

@@ -118,7 +118,7 @@ public final class ChunkBanTest
         }
 
         ChunkPos chunk = new ChunkPos(new BlockPos((int) player.getX(), (int) player.getY(), (int) player.getZ()));
-        int minY = player.level().getMinBuildHeight();
+        int minY = player.level().getMinY();
         startPos = placePos = SectionPos.of(chunk, SectionPos.blockToSectionCoord(minY)).origin().above();
         dimension = player.level().dimension();
         resultMsgConsumer = msg -> ctx.getSource().sendSuccess(() -> msg, true);
@@ -155,7 +155,7 @@ public final class ChunkBanTest
             if (placePos.getZ() > startPos.getZ() + 15)
             {
                 placePos = placePos.north(16).above();
-                if (placePos.getY() >= level.getMaxBuildHeight())
+                if (placePos.getY() >= level.getMaxY())
                 {
                     resultMsgConsumer.accept(Component.literal(
                             "Chunkban test preparation completed, placed " + blocksPlaced + " blocks"

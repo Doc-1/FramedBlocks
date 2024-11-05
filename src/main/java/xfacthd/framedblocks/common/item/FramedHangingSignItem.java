@@ -9,9 +9,9 @@ import xfacthd.framedblocks.common.block.sign.FramedWallHangingSignBlock;
 
 public class FramedHangingSignItem extends FramedSignItem
 {
-    public FramedHangingSignItem()
+    public FramedHangingSignItem(Properties props)
     {
-        super(FBContent.BLOCK_FRAMED_HANGING_SIGN, FBContent.BLOCK_FRAMED_WALL_HANGING_SIGN, Direction.UP);
+        super(FBContent.BLOCK_FRAMED_HANGING_SIGN, FBContent.BLOCK_FRAMED_WALL_HANGING_SIGN, Direction.UP, props);
     }
 
     @Override

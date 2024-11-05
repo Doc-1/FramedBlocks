@@ -3,15 +3,11 @@
   "additives": [
     {
       "count": 1,
-      "ingredient": {
-        "tag": "minecraft:coals"
-      }
+      "ingredient": "#minecraft:coals"
     },
     {
       "count": 1,
-      "ingredient": {
-        "item": "minecraft:soul_sand"
-      }
+      "ingredient": "minecraft:soul_sand"
     }
   ],
   "material": 1536,

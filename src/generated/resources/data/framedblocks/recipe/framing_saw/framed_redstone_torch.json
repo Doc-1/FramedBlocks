@@ -3,9 +3,7 @@
   "additives": [
     {
       "count": 1,
-      "ingredient": {
-        "tag": "c:dusts/redstone"
-      }
+      "ingredient": "#c:dusts/redstone"
     }
   ],
   "material": 1536,

@@ -3,9 +3,11 @@ package xfacthd.framedblocks.common.block.pillar;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,9 +27,9 @@ public class FramedLatticeBlock extends FramedBlock
 {
     private final BiPredicate<Direction, BlockState> connectionTest;
 
-    public FramedLatticeBlock(BlockType type)
+    public FramedLatticeBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
         registerDefaultState(defaultBlockState()
                 .setValue(FramedProperties.X_AXIS, false)
                 .setValue(FramedProperties.Y_AXIS, false)
@@ -83,26 +85,28 @@ public class FramedLatticeBlock extends FramedBlock
     @Override
     protected BlockState updateShape(
             BlockState state,
-            Direction facing,
-            BlockState facingState,
-            LevelAccessor level,
+            LevelReader level,
+            ScheduledTickAccess tickAccess,
             BlockPos pos,
-            BlockPos facingPos
+            Direction side,
+            BlockPos adjPos,
+            BlockState adjState,
+            RandomSource random
     )
     {
         if (!state.getValue(FramedProperties.STATE_LOCKED))
         {
-            Direction opposite = facing.getOpposite();
+            Direction opposite = side.getOpposite();
             state = state.setValue(
-                    getPropFromAxis(facing),
-                    canConnectTo(facingState, facing) || canConnectTo(level, pos, opposite)
+                    getPropFromAxis(side),
+                    canConnectTo(adjState, side) || canConnectTo(level, pos, opposite)
             );
         }
 
-        return super.updateShape(state, facing, facingState, level, pos, facingPos);
+        return super.updateShape(state, level, tickAccess, pos, side, adjPos, adjState, random);
     }
 
-    private boolean canConnectTo(LevelAccessor level, BlockPos pos, Direction side)
+    private boolean canConnectTo(LevelReader level, BlockPos pos, Direction side)
     {
         BlockState state = level.getBlockState(pos.relative(side));
         return canConnectTo(state, side);

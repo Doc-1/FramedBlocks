@@ -21,9 +21,9 @@ import xfacthd.framedblocks.common.data.property.HorizontalRotation;
 
 public class FramedCompoundSlopePanelBlock extends FramedBlock
 {
-    public FramedCompoundSlopePanelBlock()
+    public FramedCompoundSlopePanelBlock(Properties props)
     {
-        super(BlockType.FRAMED_COMPOUND_SLOPE_PANEL);
+        super(BlockType.FRAMED_COMPOUND_SLOPE_PANEL, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, false));
     }
 

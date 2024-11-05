@@ -22,9 +22,9 @@ import xfacthd.framedblocks.common.data.property.HorizontalRotation;
 
 public class FramedFlatSlopePanelCornerBlock extends FramedBlock
 {
-    public FramedFlatSlopePanelCornerBlock(BlockType type)
+    public FramedFlatSlopePanelCornerBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
         registerDefaultState(defaultBlockState()
                 .setValue(PropertyHolder.FRONT, false)
                 .setValue(FramedProperties.Y_SLOPE, false)

@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.28-beta'
+    id 'net.neoforged.moddev' version '2.0.42-beta'
 }
 
 version = mod_version
@@ -175,7 +175,7 @@ dependencies {
 
     compileOnly("mezz.jei:jei-${jei_mc_version}-common-api:${jei_version}")
     compileOnly("mezz.jei:jei-${jei_mc_version}-neoforge-api:${jei_version}")
-    runtimeOnly("mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}")
+    //runtimeOnly("mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}")
 
     // Switch Arch, Cloth and REI-neoforge to impl for runtime testing
     compileOnly("dev.architectury:architectury-neoforge:${arch_version}")
@@ -258,4 +258,5 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    options.compilerArgs << "-Xmaxerrs" << "10000"
 }

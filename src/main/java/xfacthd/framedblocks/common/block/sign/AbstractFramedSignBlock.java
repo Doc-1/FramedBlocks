@@ -1,20 +1,35 @@
 package xfacthd.framedblocks.common.block.sign;
 
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.*;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.world.*;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
-import net.minecraft.world.level.*;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.GlowInkSacItem;
+import net.minecraft.world.item.HoneycombItem;
+import net.minecraft.world.item.InkSacItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LevelEvent;
-import net.minecraft.world.level.block.entity.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -35,16 +50,17 @@ import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.blockentity.special.FramedSignBlockEntity;
 import xfacthd.framedblocks.common.net.payload.ClientboundOpenSignScreenPayload;
 
-import java.util.*;
-import java.util.function.UnaryOperator;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.UUID;
 
 public abstract class AbstractFramedSignBlock extends FramedBlock
 {
     private static final Vec3 HITBOX_CENTER = new Vec3(.5, .5, .5);
 
-    protected AbstractFramedSignBlock(BlockType type, UnaryOperator<Properties> propertyModifier)
+    protected AbstractFramedSignBlock(BlockType type, Properties props)
     {
-        super(type, propertyModifier);
+        super(type, props);
     }
 
     @Override
@@ -55,12 +71,12 @@ public abstract class AbstractFramedSignBlock extends FramedBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(
+    protected InteractionResult useItemOn(
             ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit
     )
     {
         //Makes sure the block can have a camo applied, even when the sign can execute a command
-        ItemInteractionResult result = super.useItemOn(stack, state, level, pos, player, hand, hit);
+        InteractionResult result = super.useItemOn(stack, state, level, pos, player, hand, hit);
         if (result.consumesAction() || preventUse(state, level, pos, player, stack, hit))
         {
             return result;
@@ -73,12 +89,12 @@ public abstract class AbstractFramedSignBlock extends FramedBlock
         {
             if (level.isClientSide())
             {
-                return canInteract || sign.isWaxed() ? ItemInteractionResult.SUCCESS : ItemInteractionResult.CONSUME;
+                return canInteract || sign.isWaxed() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
             }
 
             if (!canInteract || sign.isWaxed() || isBlockedByOtherPlayer(player, sign))
             {
-                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                return InteractionResult.TRY_WITH_EMPTY_HAND;
             }
 
             boolean front = sign.isFacingFrontText(player);
@@ -91,13 +107,13 @@ public abstract class AbstractFramedSignBlock extends FramedBlock
                     stack.shrink(1);
                 }
 
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
 
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
 
-        return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -130,13 +146,21 @@ public abstract class AbstractFramedSignBlock extends FramedBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction dir, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos facingPos)
+    protected BlockState updateShape(
+            BlockState state,
+            LevelReader level,
+            ScheduledTickAccess tickAccess,
+            BlockPos pos, Direction side,
+            BlockPos adjPos,
+            BlockState adjState,
+            RandomSource random
+    )
     {
         if (state.getValue(BlockStateProperties.WATERLOGGED))
         {
-            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            tickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-        return super.updateShape(state, dir, facingState, level, pos, facingPos);
+        return super.updateShape(state, level, tickAccess, pos, side, adjPos, adjState, random);
     }
 
     @Override

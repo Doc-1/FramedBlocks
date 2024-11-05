@@ -19,9 +19,9 @@ import xfacthd.framedblocks.common.data.property.DirectionAxis;
 
 public class FramedPrismBlock extends FramedBlock implements IFramedPrismBlock
 {
-    public FramedPrismBlock(BlockType type)
+    public FramedPrismBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, false));
     }
 

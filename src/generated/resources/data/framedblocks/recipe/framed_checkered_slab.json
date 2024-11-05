@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "C": {
-      "item": "framedblocks:framed_checkered_cube"
-    }
+    "C": "framedblocks:framed_checkered_cube"
   },
   "pattern": [
     "CCC"

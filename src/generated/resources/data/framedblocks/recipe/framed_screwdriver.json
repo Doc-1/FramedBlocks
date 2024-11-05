@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "F": {
-      "item": "framedblocks:framed_cube"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    }
+    "F": "framedblocks:framed_cube",
+    "S": "#c:rods/wooden"
   },
   "pattern": [
     "S ",

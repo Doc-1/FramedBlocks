@@ -2,6 +2,7 @@ package xfacthd.framedblocks.common.block.stairs.vertical;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
@@ -19,9 +20,9 @@ import xfacthd.framedblocks.common.data.property.StairsType;
 
 public class FramedVerticalStairsBlock extends FramedBlock
 {
-    public FramedVerticalStairsBlock(BlockType type)
+    public FramedVerticalStairsBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.STATE_LOCKED, false));
     }
 
@@ -46,17 +47,26 @@ public class FramedVerticalStairsBlock extends FramedBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos facingPos)
+    protected BlockState updateShape(
+            BlockState state,
+            LevelReader level,
+            ScheduledTickAccess tickAccess,
+            BlockPos pos,
+            Direction side,
+            BlockPos adjPos,
+            BlockState adjState,
+            RandomSource random
+    )
     {
         Direction dir = state.getValue(FramedProperties.FACING_HOR);
-        if (facing != dir.getOpposite() && facing != dir.getClockWise())
+        if (side != dir.getOpposite() && side != dir.getClockWise())
         {
             state = getStateFromContext(state, level, pos);
         }
-        return super.updateShape(state, facing, facingState, level, pos, facingPos);
+        return super.updateShape(state, level, tickAccess, pos, side, adjPos, adjState, random);
     }
 
-    private static BlockState getStateFromContext(BlockState state, LevelAccessor level, BlockPos pos)
+    private static BlockState getStateFromContext(BlockState state, LevelReader level, BlockPos pos)
     {
         if (state.getValue(FramedProperties.STATE_LOCKED))
         {

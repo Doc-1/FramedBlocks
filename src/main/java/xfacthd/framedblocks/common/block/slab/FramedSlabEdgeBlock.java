@@ -16,9 +16,9 @@ import xfacthd.framedblocks.api.util.Utils;
 
 public class FramedSlabEdgeBlock extends FramedBlock
 {
-    public FramedSlabEdgeBlock()
+    public FramedSlabEdgeBlock(Properties props)
     {
-        super(BlockType.FRAMED_SLAB_EDGE);
+        super(BlockType.FRAMED_SLAB_EDGE, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.TOP, false));
     }
 

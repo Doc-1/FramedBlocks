@@ -14,9 +14,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedPillarBlock extends FramedBlock
 {
-    public FramedPillarBlock(BlockType blockType)
+    public FramedPillarBlock(BlockType blockType, Properties props)
     {
-        super(blockType);
+        super(blockType, props);
     }
 
     @Override

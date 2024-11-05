@@ -31,9 +31,9 @@ public class FramedStackedCornerSlopePanelWallBlock extends AbstractFramedDouble
 {
     private final Holder<Block> nonWallBlock;
 
-    public FramedStackedCornerSlopePanelWallBlock(BlockType type)
+    public FramedStackedCornerSlopePanelWallBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, true));
         this.nonWallBlock = switch (type)
         {

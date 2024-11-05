@@ -21,9 +21,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedStorageBlock extends FramedBlock
 {
-    public FramedStorageBlock(BlockType type)
+    public FramedStorageBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class FramedStorageBlock extends FramedBlock
                 be.open((ServerPlayer) player);
             }
         }
-        return InteractionResult.sidedSuccess(level.isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
     @Override

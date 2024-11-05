@@ -45,7 +45,7 @@ public final class CamoCraftingRecipeExtension implements ICraftingCategoryExten
     @Override
     public Optional<ResourceLocation> getRegistryName(RecipeHolder<JeiCamoApplicationRecipe> recipeHolder)
     {
-        return Optional.of(recipeHolder.id());
+        return Optional.of(recipeHolder.id().location());
     }
 
     @Override

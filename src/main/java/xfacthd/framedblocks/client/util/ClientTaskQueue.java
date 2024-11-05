@@ -16,7 +16,7 @@ public final class ClientTaskQueue
     {
         if (delay == 0)
         {
-            Minecraft.getInstance().tell(task);
+            Minecraft.getInstance().schedule(task);
             return;
         }
 

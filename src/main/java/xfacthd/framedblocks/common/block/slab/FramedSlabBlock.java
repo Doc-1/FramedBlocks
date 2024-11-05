@@ -19,9 +19,9 @@ import xfacthd.framedblocks.common.item.FramedSpecialDoubleBlockItem;
 
 public class FramedSlabBlock extends FramedBlock
 {
-    public FramedSlabBlock()
+    public FramedSlabBlock(Properties props)
     {
-        super(BlockType.FRAMED_SLAB);
+        super(BlockType.FRAMED_SLAB, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.TOP, false));
     }
 
@@ -63,9 +63,9 @@ public class FramedSlabBlock extends FramedBlock
     }
 
     @Override
-    public BlockItem createBlockItem()
+    public BlockItem createBlockItem(Item.Properties props)
     {
-        return new FramedSpecialDoubleBlockItem(this, new Item.Properties())
+        return new FramedSpecialDoubleBlockItem(this, props)
         {
             @Override
             protected BlockState getReplacementState(BlockPlaceContext ctx, BlockState originalState)

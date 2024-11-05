@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.*;
 import net.minecraft.world.phys.*;
@@ -103,7 +103,7 @@ public final class Utils
 
     private static final Long2ObjectMap<Direction> DIRECTION_BY_NORMAL = Arrays.stream(Direction.values())
             .collect(Collectors.toMap(
-                    side -> new BlockPos(side.getNormal()).asLong(),
+                    side -> new BlockPos(side.getUnitVec3i()).asLong(),
                     Function.identity(),
                     (sideA, sideB) -> { throw new IllegalArgumentException("Duplicate keys"); },
                     Long2ObjectOpenHashMap::new
@@ -301,11 +301,11 @@ public final class Utils
     /**
      * Mirrors a block that is oriented towards a face of the block space
      * @param state The {@link BlockState} to mirror
-     * @param property The {@link DirectionProperty} that should be mirrored on the given state
+     * @param property The {@link EnumProperty<Direction>} that should be mirrored on the given state
      * @param mirror The {@link Mirror} to apply to the state
      * @apiNote The given property must support at least all four cardinal directions
      */
-    public static BlockState mirrorFaceBlock(BlockState state, DirectionProperty property, Mirror mirror)
+    public static BlockState mirrorFaceBlock(BlockState state, EnumProperty<Direction> property, Mirror mirror)
     {
         if (mirror == Mirror.NONE)
         {
@@ -335,11 +335,11 @@ public final class Utils
     /**
      * Mirrors a block that is oriented into a corner of the block space
      * @param state The {@link BlockState} to mirror
-     * @param property The {@link DirectionProperty} that should be mirrored on the given state
+     * @param property The {@link EnumProperty<Direction>} that should be mirrored on the given state
      * @param mirror The {@link Mirror} to apply to the state
      * @apiNote The given property must support at least all four cardinal directions
      */
-    public static BlockState mirrorCornerBlock(BlockState state, DirectionProperty property, Mirror mirror)
+    public static BlockState mirrorCornerBlock(BlockState state, EnumProperty<Direction> property, Mirror mirror)
     {
         if (mirror == Mirror.NONE)
         {
@@ -447,7 +447,7 @@ public final class Utils
             {
                 return prop;
             }
-            else if (prop instanceof DirectionProperty)
+            else if (prop instanceof EnumProperty<?> && prop.getValueClass() == Dictionary.class)
             {
                 return prop;
             }

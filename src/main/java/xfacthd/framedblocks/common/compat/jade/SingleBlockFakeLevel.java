@@ -78,8 +78,8 @@ public record SingleBlockFakeLevel(BlockPos realPos, BlockState state, BlockEnti
     }
 
     @Override
-    public int getMinBuildHeight()
+    public int getMinY()
     {
-        return blockEntity.getLevel().getMinBuildHeight();
+        return blockEntity.getLevel().getMinY();
     }
 }

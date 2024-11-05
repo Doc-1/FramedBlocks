@@ -4,14 +4,19 @@ import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShapeRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.client.event.RenderHighlightEvent;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import xfacthd.framedblocks.FramedBlocks;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.render.RegisterOutlineRenderersEvent;
@@ -26,6 +31,7 @@ public final class BlockOutlineRenderer
 {
     private static final Map<IBlockType, OutlineRenderer> OUTLINE_RENDERERS = new IdentityHashMap<>();
     private static final Set<IBlockType> ERRORED_TYPES = new HashSet<>();
+    private static final RandomSource RANDOM = RandomSource.create();
 
     public static void onRenderBlockHighlight(final RenderHighlightEvent.Block event)
     {
@@ -35,8 +41,8 @@ public final class BlockOutlineRenderer
         }
 
         BlockHitResult result = event.getTarget();
-        //noinspection ConstantConditions
-        BlockState state = Minecraft.getInstance().level.getBlockState(result.getBlockPos());
+        ClientLevel level = Objects.requireNonNull(Minecraft.getInstance().level);
+        BlockState state = level.getBlockState(result.getBlockPos());
         if (!(state.getBlock() instanceof IFramedBlock block))
         {
             return;
@@ -44,10 +50,19 @@ public final class BlockOutlineRenderer
 
         if (DevToolsConfig.VIEW.isOcclusionShapeDebugRenderingEnabled())
         {
-            VertexConsumer builder = event.getMultiBufferSource().getBuffer(RenderType.lines());
-            VoxelShape shape = state.getOcclusionShape(Minecraft.getInstance().level, result.getBlockPos());
+            VoxelShape shape = state.getOcclusionShape();
+            boolean highContrast = Minecraft.getInstance().options.highContrastBlockOutline().get();
             Vec3 offset = Vec3.atLowerCornerOf(result.getBlockPos()).subtract(event.getCamera().getPosition());
-            LevelRenderer.renderShape(event.getPoseStack(), builder, shape, offset.x, offset.y, offset.z, 0F, 0F, 0F, .4F);
+
+            if (highContrast)
+            {
+                VertexConsumer builder = event.getMultiBufferSource().getBuffer(RenderType.lines());
+                ShapeRenderer.renderShape(event.getPoseStack(), builder, shape, offset.x, offset.y, offset.z, 0xFF000000);
+            }
+            VertexConsumer builder = event.getMultiBufferSource().getBuffer(RenderType.lines());
+            int lineColor = highContrast ? 0xFF57FFE1 : ARGB.color(0x66, 0xFF000000);
+            ShapeRenderer.renderShape(event.getPoseStack(), builder, shape, offset.x, offset.y, offset.z, lineColor);
+
             event.setCanceled(true);
             return;
         }
@@ -65,20 +80,27 @@ public final class BlockOutlineRenderer
                 return;
             }
 
-            PoseStack mstack = event.getPoseStack();
-            Vec3 offset = Vec3.atLowerCornerOf(result.getBlockPos()).subtract(event.getCamera().getPosition());
-            VertexConsumer builder = event.getMultiBufferSource().getBuffer(RenderType.lines());
+            BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(state);
+            ModelData modelData = level.getModelData(result.getBlockPos());
+            RANDOM.setSeed(42);
+            boolean hasTranslucent = model.getRenderTypes(state, RANDOM, modelData).contains(RenderType.translucent());
+            if (hasTranslucent == event.isForTranslucentBlocks())
+            {
+                PoseStack mstack = event.getPoseStack();
+                Vec3 offset = Vec3.atLowerCornerOf(result.getBlockPos()).subtract(event.getCamera().getPosition());
+                VertexConsumer builder = event.getMultiBufferSource().getBuffer(RenderType.lines());
 
-            mstack.pushPose();
-            mstack.translate(offset.x, offset.y, offset.z);
-            mstack.translate(.5, .5, .5);
-            renderer.rotateMatrix(mstack, state);
-            mstack.translate(-.5, -.5, -.5);
+                mstack.pushPose();
+                mstack.translate(offset.x, offset.y, offset.z);
+                mstack.translate(.5, .5, .5);
+                renderer.rotateMatrix(mstack, state);
+                mstack.translate(-.5, -.5, -.5);
 
-            renderer.draw(state, Minecraft.getInstance().level, result.getBlockPos(), mstack, builder);
+                // TODO: handle high-contrast outline setting
+                renderer.draw(state, level, result.getBlockPos(), mstack, builder);
 
-            mstack.popPose();
-
+                mstack.popPose();
+            }
             event.setCanceled(true);
         }
     }

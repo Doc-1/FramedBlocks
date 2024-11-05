@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -73,7 +73,7 @@ public class FramedPressurePlateBlock extends PressurePlateBlock implements IFra
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(
+    protected InteractionResult useItemOn(
             ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit
     )
     {
@@ -111,7 +111,7 @@ public class FramedPressurePlateBlock extends PressurePlateBlock implements IFra
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos)
+    protected boolean propagatesSkylightDown(BlockState state)
     {
         return state.getValue(FramedProperties.PROPAGATES_SKYLIGHT);
     }
@@ -175,70 +175,70 @@ public class FramedPressurePlateBlock extends PressurePlateBlock implements IFra
 
 
 
-    public static FramedPressurePlateBlock wood()
+    public static FramedPressurePlateBlock wood(Properties props)
     {
         return new FramedPressurePlateBlock(
                 BlockType.FRAMED_PRESSURE_PLATE,
                 BlockSetType.OAK,
-                IFramedBlock.createProperties(BlockType.FRAMED_PRESSURE_PLATE)
+                IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_PRESSURE_PLATE)
                         .noCollission()
                         .strength(0.5F)
         );
     }
 
-    public static FramedPressurePlateBlock woodWaterloggable()
+    public static FramedPressurePlateBlock woodWaterloggable(Properties props)
     {
         return new FramedWaterloggablePressurePlateBlock(
                 BlockType.FRAMED_WATERLOGGABLE_PRESSURE_PLATE,
                 BlockSetType.OAK,
-                IFramedBlock.createProperties(BlockType.FRAMED_WATERLOGGABLE_PRESSURE_PLATE)
+                IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_WATERLOGGABLE_PRESSURE_PLATE)
                         .noCollission()
                         .strength(0.5F)
         );
     }
 
-    public static FramedPressurePlateBlock stone()
+    public static FramedPressurePlateBlock stone(Properties props)
     {
         return new FramedPressurePlateBlock(
                 BlockType.FRAMED_STONE_PRESSURE_PLATE,
                 BlockSetType.STONE,
-                IFramedBlock.createProperties(BlockType.FRAMED_STONE_PRESSURE_PLATE)
+                IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_STONE_PRESSURE_PLATE)
                         .requiresCorrectToolForDrops()
                         .noCollission()
                         .strength(0.5F)
         );
     }
 
-    public static FramedPressurePlateBlock stoneWaterloggable()
+    public static FramedPressurePlateBlock stoneWaterloggable(Properties props)
     {
         return new FramedWaterloggablePressurePlateBlock(
                 BlockType.FRAMED_WATERLOGGABLE_STONE_PRESSURE_PLATE,
                 BlockSetType.STONE,
-                IFramedBlock.createProperties(BlockType.FRAMED_WATERLOGGABLE_STONE_PRESSURE_PLATE)
+                IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_WATERLOGGABLE_STONE_PRESSURE_PLATE)
                         .requiresCorrectToolForDrops()
                         .noCollission()
                         .strength(0.5F)
         );
     }
 
-    public static FramedPressurePlateBlock obsidian() // Player-only
+    public static FramedPressurePlateBlock obsidian(Properties props) // Player-only
     {
         return new FramedPressurePlateBlock(
                 BlockType.FRAMED_OBSIDIAN_PRESSURE_PLATE,
                 OBSIDIAN,
-                IFramedBlock.createProperties(BlockType.FRAMED_OBSIDIAN_PRESSURE_PLATE)
+                IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_OBSIDIAN_PRESSURE_PLATE)
                         .requiresCorrectToolForDrops()
                         .noCollission()
                         .strength(0.5F)
         );
     }
 
-    public static FramedPressurePlateBlock obsidianWaterloggable() // Player-only
+    public static FramedPressurePlateBlock obsidianWaterloggable(Properties props) // Player-only
     {
         return new FramedWaterloggablePressurePlateBlock(
                 BlockType.FRAMED_WATERLOGGABLE_OBSIDIAN_PRESSURE_PLATE,
                 OBSIDIAN,
-                IFramedBlock.createProperties(BlockType.FRAMED_WATERLOGGABLE_OBSIDIAN_PRESSURE_PLATE)
+                IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_WATERLOGGABLE_OBSIDIAN_PRESSURE_PLATE)
                         .requiresCorrectToolForDrops()
                         .noCollission()
                         .strength(0.5F)

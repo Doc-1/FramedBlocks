@@ -32,9 +32,9 @@ public class FramedLadderBlock extends FramedBlock
             ShapeUtils.makeHorizontalRotations(COLLISION_SHAPE_NORTH, Direction.NORTH, map)
     );
 
-    public FramedLadderBlock()
+    public FramedLadderBlock(Properties props)
     {
-        super(BlockType.FRAMED_LADDER);
+        super(BlockType.FRAMED_LADDER, props);
     }
 
     @Override
@@ -66,9 +66,9 @@ public class FramedLadderBlock extends FramedBlock
     }
 
     @Override
-    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos)
+    protected VoxelShape getOcclusionShape(BlockState state)
     {
-        return getCamoOcclusionShape(state, level, pos, null);
+        return getCamoOcclusionShape(state, null);
     }
 
     @Override

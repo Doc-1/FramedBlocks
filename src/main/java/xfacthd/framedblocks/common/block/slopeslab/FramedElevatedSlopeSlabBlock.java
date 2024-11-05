@@ -17,9 +17,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedElevatedSlopeSlabBlock extends FramedBlock
 {
-    public FramedElevatedSlopeSlabBlock()
+    public FramedElevatedSlopeSlabBlock(Properties props)
     {
-        super(BlockType.FRAMED_ELEVATED_SLOPE_SLAB);
+        super(BlockType.FRAMED_ELEVATED_SLOPE_SLAB, props);
         registerDefaultState(defaultBlockState()
                 .setValue(FramedProperties.TOP, false)
                 .setValue(FramedProperties.Y_SLOPE, true)

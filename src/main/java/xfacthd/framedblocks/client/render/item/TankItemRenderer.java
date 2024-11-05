@@ -52,11 +52,11 @@ public final class TankItemRenderer extends BlockEntityWithoutLevelRenderer
         poseStack.translate(-.5, -.5, -.5); // Replicate ItemRenderer's translation
 
         boolean glint = stack.hasFoil();
-        for (BakedModel pass : model.getRenderPasses(stack, true))
+        for (BakedModel pass : model.getRenderPasses(stack))
         {
-            for (RenderType type : pass.getRenderTypes(stack, true))
+            for (RenderType type : pass.getRenderTypes(stack))
             {
-                VertexConsumer consumer = ItemRenderer.getFoilBufferDirect(buffer, type, true, glint);
+                VertexConsumer consumer = ItemRenderer.getFoilBuffer(buffer, type, true, glint);
                 renderer.renderModelLists(pass, stack, light, overlay, poseStack, consumer);
             }
         }

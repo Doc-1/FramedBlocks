@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "B": {
-      "item": "minecraft:book"
-    },
-    "F": {
-      "item": "framedblocks:framed_cube"
-    }
+    "B": "minecraft:book",
+    "F": "framedblocks:framed_cube"
   },
   "pattern": [
     "FFF",

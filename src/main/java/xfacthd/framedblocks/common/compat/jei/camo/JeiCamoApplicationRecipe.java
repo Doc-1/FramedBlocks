@@ -75,19 +75,13 @@ public final class JeiCamoApplicationRecipe implements CraftingRecipe
     }
 
     @Override
-    public boolean canCraftInDimensions(int i, int i1)
+    public PlacementInfo placementInfo()
     {
-        return false;
+        return PlacementInfo.NOT_PLACEABLE;
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider provider)
-    {
-        return results.isEmpty() ? ItemStack.EMPTY : results.getFirst();
-    }
-
-    @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<JeiCamoApplicationRecipe> getSerializer()
     {
         return FBContent.RECIPE_SERIALIZER_JEI_CAMO.value();
     }

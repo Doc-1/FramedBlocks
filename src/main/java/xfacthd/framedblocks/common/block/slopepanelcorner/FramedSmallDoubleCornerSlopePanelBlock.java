@@ -9,9 +9,9 @@ import xfacthd.framedblocks.common.util.FramedUtils;
 
 public class FramedSmallDoubleCornerSlopePanelBlock extends FramedDoubleCornerSlopePanelBlock
 {
-    public FramedSmallDoubleCornerSlopePanelBlock(BlockType blockType)
+    public FramedSmallDoubleCornerSlopePanelBlock(BlockType blockType, Properties props)
     {
-        super(blockType);
+        super(blockType, props);
     }
 
     @Override

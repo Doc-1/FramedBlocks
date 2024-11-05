@@ -31,9 +31,9 @@ public class FramedFlatStackedSlopePanelCornerBlock extends AbstractFramedDouble
 {
     private final boolean corner;
 
-    public FramedFlatStackedSlopePanelCornerBlock(BlockType type)
+    public FramedFlatStackedSlopePanelCornerBlock(BlockType type, Properties props)
     {
-        super(type);
+        super(type, props);
         this.corner = type == BlockType.FRAMED_FLAT_STACKED_SLOPE_PANEL_CORNER;
         registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, false));
     }
