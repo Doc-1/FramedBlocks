@@ -1,7 +1,6 @@
 package xfacthd.framedblocks.client.data.outline;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,19 +21,19 @@ public final class PyramidOutlineRenderer implements OutlineRenderer
     }
 
     @Override
-    public void draw(BlockState state, PoseStack pstack, VertexConsumer builder)
+    public void draw(BlockState state, LineDrawer drawer)
     {
         // Base edges
-        OutlineRenderer.drawLine(builder, pstack, 0, 0, 0, 1, 0, 0);
-        OutlineRenderer.drawLine(builder, pstack, 0, 0, 1, 1, 0, 1);
-        OutlineRenderer.drawLine(builder, pstack, 0, 0, 0, 0, 0, 1);
-        OutlineRenderer.drawLine(builder, pstack, 1, 0, 0, 1, 0, 1);
+        drawer.drawLine(0, 0, 0, 1, 0, 0);
+        drawer.drawLine(0, 0, 1, 1, 0, 1);
+        drawer.drawLine(0, 0, 0, 0, 0, 1);
+        drawer.drawLine(1, 0, 0, 1, 0, 1);
 
         // Slopes
-        OutlineRenderer.drawLine(builder, pstack, 0, 0, 0, .5F, height, .5F);
-        OutlineRenderer.drawLine(builder, pstack, 1, 0, 0, .5F, height, .5F);
-        OutlineRenderer.drawLine(builder, pstack, 0, 0, 1, .5F, height, .5F);
-        OutlineRenderer.drawLine(builder, pstack, 1, 0, 1, .5F, height, .5F);
+        drawer.drawLine(0, 0, 0, .5F, height, .5F);
+        drawer.drawLine(1, 0, 0, .5F, height, .5F);
+        drawer.drawLine(0, 0, 1, .5F, height, .5F);
+        drawer.drawLine(1, 0, 1, .5F, height, .5F);
     }
 
     @Override

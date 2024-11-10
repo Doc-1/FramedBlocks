@@ -1,7 +1,6 @@
 package xfacthd.framedblocks.client.data.outline;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Quaternionf;
 import xfacthd.framedblocks.api.render.Quaternions;
@@ -19,24 +18,24 @@ public final class SlopePanelOutlineRenderer implements OutlineRenderer
     };
 
     @Override
-    public void draw(BlockState state, PoseStack poseStack, VertexConsumer builder)
+    public void draw(BlockState state, LineDrawer drawer)
     {
         // Bottom edges
-        OutlineRenderer.drawLine(builder, poseStack, 0, 0,   0, 1, 0,   0);
-        OutlineRenderer.drawLine(builder, poseStack, 0, 0, .5F, 1, 0, .5F);
-        OutlineRenderer.drawLine(builder, poseStack, 0, 0,   0, 0, 0, .5F);
-        OutlineRenderer.drawLine(builder, poseStack, 1, 0,   0, 1, 0, .5F);
+        drawer.drawLine(0, 0,   0, 1, 0,   0);
+        drawer.drawLine(0, 0, .5F, 1, 0, .5F);
+        drawer.drawLine(0, 0,   0, 0, 0, .5F);
+        drawer.drawLine(1, 0,   0, 1, 0, .5F);
 
         // Back edges
-        OutlineRenderer.drawLine(builder, poseStack, 0, 0, .5F, 0, 1, .5F);
-        OutlineRenderer.drawLine(builder, poseStack, 1, 0, .5F, 1, 1, .5F);
+        drawer.drawLine(0, 0, .5F, 0, 1, .5F);
+        drawer.drawLine(1, 0, .5F, 1, 1, .5F);
 
         // Top edge
-        OutlineRenderer.drawLine(builder, poseStack, 0, 1, .5F, 1, 1, .5F);
+        drawer.drawLine(0, 1, .5F, 1, 1, .5F);
 
         // Slopes
-        OutlineRenderer.drawLine(builder, poseStack, 0, 0,  0, 0, 1, .5F);
-        OutlineRenderer.drawLine(builder, poseStack, 1, 0,  0, 1, 1, .5F);
+        drawer.drawLine(0, 0,  0, 0, 1, .5F);
+        drawer.drawLine(1, 0,  0, 1, 1, .5F);
     }
 
     @Override

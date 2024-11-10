@@ -1,7 +1,6 @@
 package xfacthd.framedblocks.client.data.outline;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.world.level.block.state.BlockState;
 import xfacthd.framedblocks.api.render.OutlineRenderer;
 import xfacthd.framedblocks.api.render.Quaternions;
@@ -15,32 +14,32 @@ public final class ElevatedInnerCornerSlopeEdgeOutlineRenderer implements Outlin
     private ElevatedInnerCornerSlopeEdgeOutlineRenderer() { }
 
     @Override
-    public void draw(BlockState state, PoseStack poseStack, VertexConsumer builder)
+    public void draw(BlockState state, LineDrawer drawer)
     {
         //Top face
-        OutlineRenderer.drawLine(builder, poseStack,   0,   1,   1,   1,   1,   1);
-        OutlineRenderer.drawLine(builder, poseStack,   1,   1,   0,   1,   1,   1);
-        OutlineRenderer.drawLine(builder, poseStack,   0,   1, .5F, .5F,   1, .5F);
-        OutlineRenderer.drawLine(builder, poseStack, .5F,   1,   0, .5F,   1, .5F);
-        OutlineRenderer.drawLine(builder, poseStack, .5F,   1,   0,   1,   1,   0);
-        OutlineRenderer.drawLine(builder, poseStack,   0,   1, .5F,   0,   1,   1);
+        drawer.drawLine(  0,   1,   1,   1,   1,   1);
+        drawer.drawLine(  1,   1,   0,   1,   1,   1);
+        drawer.drawLine(  0,   1, .5F, .5F,   1, .5F);
+        drawer.drawLine(.5F,   1,   0, .5F,   1, .5F);
+        drawer.drawLine(.5F,   1,   0,   1,   1,   0);
+        drawer.drawLine(  0,   1, .5F,   0,   1,   1);
 
         //Bottom face
-        OutlineRenderer.drawLine(builder, poseStack, 0, 0, 1, 1, 0, 1);
-        OutlineRenderer.drawLine(builder, poseStack, 1, 0, 0, 1, 0, 1);
-        OutlineRenderer.drawLine(builder, poseStack, 0, 0, 0, 1, 0, 0);
-        OutlineRenderer.drawLine(builder, poseStack, 0, 0, 0, 0, 0, 1);
+        drawer.drawLine(0, 0, 1, 1, 0, 1);
+        drawer.drawLine(1, 0, 0, 1, 0, 1);
+        drawer.drawLine(0, 0, 0, 1, 0, 0);
+        drawer.drawLine(0, 0, 0, 0, 0, 1);
 
         //Vertical edges
-        OutlineRenderer.drawLine(builder, poseStack, 1, 0, 1, 1,   1, 1);
-        OutlineRenderer.drawLine(builder, poseStack, 1, 0, 0, 1,   1, 0);
-        OutlineRenderer.drawLine(builder, poseStack, 0, 0, 1, 0,   1, 1);
-        OutlineRenderer.drawLine(builder, poseStack, 0, 0, 0, 0, .5F, 0);
+        drawer.drawLine(1, 0, 1, 1,   1, 1);
+        drawer.drawLine(1, 0, 0, 1,   1, 0);
+        drawer.drawLine(0, 0, 1, 0,   1, 1);
+        drawer.drawLine(0, 0, 0, 0, .5F, 0);
 
         //Slope edges
-        OutlineRenderer.drawLine(builder, poseStack, 0, .5F, 0,   0, 1, .5F);
-        OutlineRenderer.drawLine(builder, poseStack, 0, .5F, 0, .5F, 1,   0);
-        OutlineRenderer.drawLine(builder, poseStack, 0, .5F, 0, .5F, 1, .5F);
+        drawer.drawLine(0, .5F, 0,   0, 1, .5F);
+        drawer.drawLine(0, .5F, 0, .5F, 1,   0);
+        drawer.drawLine(0, .5F, 0, .5F, 1, .5F);
     }
 
     @Override

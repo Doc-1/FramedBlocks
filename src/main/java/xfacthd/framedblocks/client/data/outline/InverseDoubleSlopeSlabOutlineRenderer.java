@@ -1,7 +1,5 @@
 package xfacthd.framedblocks.client.data.outline;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.world.level.block.state.BlockState;
 import xfacthd.framedblocks.api.render.OutlineRenderer;
 
@@ -12,32 +10,32 @@ public final class InverseDoubleSlopeSlabOutlineRenderer implements OutlineRende
     private InverseDoubleSlopeSlabOutlineRenderer() { }
 
     @Override
-    public void draw(BlockState state, PoseStack poseStack, VertexConsumer builder)
+    public void draw(BlockState state, LineDrawer drawer)
     {
         //Back vertical edges
-        OutlineRenderer.drawLine(builder, poseStack, 0, .5F, 1, 0, 1, 1);
-        OutlineRenderer.drawLine(builder, poseStack, 1, .5F, 1, 1, 1, 1);
+        drawer.drawLine(0, .5F, 1, 0, 1, 1);
+        drawer.drawLine(1, .5F, 1, 1, 1, 1);
 
         //Center horizontal edges
-        OutlineRenderer.drawLine(builder, poseStack, 0, .5F, 0, 1, .5F, 0);
-        OutlineRenderer.drawLine(builder, poseStack, 0, .5F, 1, 1, .5F, 1);
+        drawer.drawLine(0, .5F, 0, 1, .5F, 0);
+        drawer.drawLine(0, .5F, 1, 1, .5F, 1);
 
         //Top edge
-        OutlineRenderer.drawLine(builder, poseStack, 0, 1, 1, 1, 1, 1);
+        drawer.drawLine(0, 1, 1, 1, 1, 1);
 
         //Top slope
-        OutlineRenderer.drawLine(builder, poseStack, 0, .5F, 0, 0, 1, 1);
-        OutlineRenderer.drawLine(builder, poseStack, 1, .5F, 0, 1, 1, 1);
+        drawer.drawLine(0, .5F, 0, 0, 1, 1);
+        drawer.drawLine(1, .5F, 0, 1, 1, 1);
 
         //Bottom edge
-        OutlineRenderer.drawLine(builder, poseStack, 0, 0, 0, 1, 0, 0);
+        drawer.drawLine(0, 0, 0, 1, 0, 0);
 
         //Bottom slope
-        OutlineRenderer.drawLine(builder, poseStack, 0, 0, 0, 0, .5F, 1);
-        OutlineRenderer.drawLine(builder, poseStack, 1, 0, 0, 1, .5F, 1);
+        drawer.drawLine(0, 0, 0, 0, .5F, 1);
+        drawer.drawLine(1, 0, 0, 1, .5F, 1);
 
         //Front vertical edges
-        OutlineRenderer.drawLine(builder, poseStack, 0, 0, 0, 0, .5F, 0);
-        OutlineRenderer.drawLine(builder, poseStack, 1, 0, 0, 1, .5F, 0);
+        drawer.drawLine(0, 0, 0, 0, .5F, 0);
+        drawer.drawLine(1, 0, 0, 1, .5F, 0);
     }
 }

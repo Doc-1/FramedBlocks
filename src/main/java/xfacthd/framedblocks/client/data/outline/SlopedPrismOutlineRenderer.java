@@ -1,7 +1,6 @@
 package xfacthd.framedblocks.client.data.outline;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -9,7 +8,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Quaternionf;
 import xfacthd.framedblocks.api.render.Quaternions;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.api.render.OutlineRenderer;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.property.CompoundDirection;
 
@@ -18,14 +16,14 @@ public class SlopedPrismOutlineRenderer extends PrismOutlineRenderer
     private static final Quaternionf[][] ZP_DIR = makeQuaternionArray();
 
     @Override
-    public void drawCenterAndTriangle(PoseStack pstack, VertexConsumer builder)
+    public void drawCenterAndTriangle(LineDrawer drawer)
     {
         // Center line
-        OutlineRenderer.drawLine(builder, pstack, .5F, .5F, .5F, .5F, .5F, 1);
+        drawer.drawLine(.5F, .5F, .5F, .5F, .5F, 1);
 
         // Front sloped triangle
-        OutlineRenderer.drawLine(builder, pstack, 0, 0, 0, .5F, .5F, .5F);
-        OutlineRenderer.drawLine(builder, pstack, .5F, .5F, .5F, 1, 0, 0);
+        drawer.drawLine(0, 0, 0, .5F, .5F, .5F);
+        drawer.drawLine(.5F, .5F, .5F, 1, 0, 0);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package xfacthd.framedblocks.client.data.outline;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -18,29 +17,29 @@ public class PrismOutlineRenderer implements OutlineRenderer
     protected static final Quaternionf[] YN_DIR = makeQuaternionArray();
 
     @Override
-    public void draw(BlockState state, PoseStack pstack, VertexConsumer builder)
+    public void draw(BlockState state, LineDrawer drawer)
     {
         // Base edges
-        OutlineRenderer.drawLine(builder, pstack, 0, 0, 0, 0, 0, 1);
-        OutlineRenderer.drawLine(builder, pstack, 1, 0, 0, 1, 0, 1);
-        OutlineRenderer.drawLine(builder, pstack, 0, 0, 0, 1, 0, 0);
-        OutlineRenderer.drawLine(builder, pstack, 0, 0, 1, 1, 0, 1);
+        drawer.drawLine(0, 0, 0, 0, 0, 1);
+        drawer.drawLine(1, 0, 0, 1, 0, 1);
+        drawer.drawLine(0, 0, 0, 1, 0, 0);
+        drawer.drawLine(0, 0, 1, 1, 0, 1);
 
         // Back triangle
-        OutlineRenderer.drawLine(builder, pstack, 0, 0, 1, .5F, .5F, 1);
-        OutlineRenderer.drawLine(builder, pstack, .5F, .5F, 1, 1, 0, 1);
+        drawer.drawLine(0, 0, 1, .5F, .5F, 1);
+        drawer.drawLine(.5F, .5F, 1, 1, 0, 1);
 
-        drawCenterAndTriangle(pstack, builder);
+        drawCenterAndTriangle(drawer);
     }
 
-    protected void drawCenterAndTriangle(PoseStack pstack, VertexConsumer builder)
+    protected void drawCenterAndTriangle(LineDrawer drawer)
     {
         // Center line
-        OutlineRenderer.drawLine(builder, pstack, .5F, .5F, 0, .5F, .5F, 1);
+        drawer.drawLine(.5F, .5F, 0, .5F, .5F, 1);
 
         // Front triangle
-        OutlineRenderer.drawLine(builder, pstack, 0, 0, 0, .5F, .5F, 0);
-        OutlineRenderer.drawLine(builder, pstack, .5F, .5F, 0, 1, 0, 0);
+        drawer.drawLine(0, 0, 0, .5F, .5F, 0);
+        drawer.drawLine(.5F, .5F, 0, 1, 0, 0);
     }
 
     @Override
