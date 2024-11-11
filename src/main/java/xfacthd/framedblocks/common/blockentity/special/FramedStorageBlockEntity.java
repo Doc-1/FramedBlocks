@@ -1,11 +1,15 @@
 package xfacthd.framedblocks.common.blockentity.special;
 
-import net.minecraft.core.*;
-import net.minecraft.nbt.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.*;
+import net.minecraft.world.Clearable;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -29,8 +33,6 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
     public static final int SLOTS = 9 * 3;
 
     private final StorageBlockItemStackHandler itemHandler = createItemHandler(this, false);
-    // TODO 1.21.2: remove overflow handling
-    private List<ItemStack> overflow = null;
     private Component customName = null;
 
     public FramedStorageBlockEntity(BlockPos pos, BlockState state)
@@ -68,10 +70,6 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
                 drops.add(stack);
             }
         }
-        if (overflow != null)
-        {
-            drops.addAll(overflow);
-        }
         return drops;
     }
 
@@ -82,7 +80,6 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
         {
             itemHandler.setStackInSlot(i, ItemStack.EMPTY);
         }
-        overflow = null;
     }
 
     public int getAnalogOutputSignal()
@@ -142,7 +139,6 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
         {
             nbt.putString("custom_name", Component.Serializer.toJson(customName, provider));
         }
-        saveOverflow(nbt, provider);
         super.saveAdditional(nbt, provider);
     }
 
@@ -151,65 +147,9 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
     {
         super.loadAdditional(nbt, provider);
         itemHandler.deserializeNBT(provider, nbt.getCompound("inventory"));
-        separateOverflow();
-        loadOverflow(nbt, provider);
         if (nbt.contains("custom_name", Tag.TAG_STRING))
         {
             customName = Component.Serializer.fromJson(nbt.getString("custom_name"), provider);
-        }
-    }
-
-    private void separateOverflow()
-    {
-        if (itemHandler.getSlots() > SLOTS)
-        {
-            List<ItemStack> stacks = itemHandler.getBackingList();
-            overflow = NonNullList.withSize(stacks.size() - SLOTS, ItemStack.EMPTY);
-            for (int i = SLOTS; i < stacks.size(); i++)
-            {
-                overflow.set(i - SLOTS, stacks.get(i));
-            }
-            itemHandler.setSize(SLOTS);
-            for (int i = 0; i < SLOTS; i++)
-            {
-                itemHandler.setStackInSlot(i, stacks.get(i));
-            }
-        }
-    }
-
-    private void loadOverflow(CompoundTag nbt, HolderLookup.Provider provider)
-    {
-        if (nbt.contains("overflow"))
-        {
-            ListTag stackList = nbt.getList("overflow", Tag.TAG_COMPOUND);
-            overflow = NonNullList.withSize(stackList.size(), ItemStack.EMPTY);
-            for (int i = 0; i < stackList.size(); i++)
-            {
-                CompoundTag itemTag = stackList.getCompound(i);
-                int slot = itemTag.getInt("Slot");
-                if (slot >= 0 && slot < overflow.size())
-                {
-                    ItemStack.parse(provider, itemTag).ifPresent(stack -> overflow.set(slot, stack));
-                }
-            }
-        }
-    }
-
-    private void saveOverflow(CompoundTag nbt, HolderLookup.Provider provider)
-    {
-        if (overflow != null)
-        {
-            ListTag stackList = new ListTag();
-            for (int i = 0; i < overflow.size(); i++)
-            {
-                if (!overflow.get(i).isEmpty())
-                {
-                    CompoundTag itemTag = new CompoundTag();
-                    itemTag.putInt("Slot", i);
-                    stackList.add(overflow.get(i).save(provider, itemTag));
-                }
-            }
-            nbt.put("overflow", stackList);
         }
     }
 
