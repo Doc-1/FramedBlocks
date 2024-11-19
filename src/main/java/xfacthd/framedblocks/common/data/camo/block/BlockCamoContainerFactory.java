@@ -1,22 +1,20 @@
 package xfacthd.framedblocks.common.data.camo.block;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.camo.TriggerRegistrar;
-import xfacthd.framedblocks.api.camo.block.*;
-import xfacthd.framedblocks.api.util.*;
+import xfacthd.framedblocks.api.camo.block.SimpleBlockCamoContainerFactory;
+import xfacthd.framedblocks.api.util.CamoMessageVerbosity;
+import xfacthd.framedblocks.api.util.ConfigView;
+import xfacthd.framedblocks.api.util.Utils;
 
 public final class BlockCamoContainerFactory extends SimpleBlockCamoContainerFactory
 {
-    public static final Component MSG_BLOCK_ENTITY = Utils.translate("msg", "camo.block_entity");
-    public static final Component MSG_NON_SOLID = Utils.translate("msg", "camo.non_solid");
-
     @Override
     protected boolean isValidBlock(BlockState camoState, BlockGetter level, BlockPos pos, @Nullable Player player)
     {

@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
@@ -15,6 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import xfacthd.framedblocks.api.util.ConfigView;
+import xfacthd.framedblocks.api.util.Utils;
 
 /**
  * Basic block camo container factory for simple camos based on only a {@link BlockState} which only need minimal
@@ -23,6 +25,9 @@ import xfacthd.framedblocks.api.util.ConfigView;
  */
 public abstract class SimpleBlockCamoContainerFactory extends AbstractBlockCamoContainerFactory<SimpleBlockCamoContainer>
 {
+    public static final Component MSG_BLOCK_ENTITY = Utils.translate("msg", "camo.block_entity");
+    public static final Component MSG_NON_SOLID = Utils.translate("msg", "camo.non_solid");
+
     private final MapCodec<SimpleBlockCamoContainer> codec = BlockState.CODEC
             .xmap(state -> new SimpleBlockCamoContainer(state, this), SimpleBlockCamoContainer::getState).fieldOf("state");
     private final StreamCodec<ByteBuf, SimpleBlockCamoContainer> streamCodec = ByteBufCodecs.idMapper(Block.BLOCK_STATE_REGISTRY)

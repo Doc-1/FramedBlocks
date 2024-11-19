@@ -7,26 +7,39 @@ import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import xfacthd.framedblocks.api.block.IFramedBlock;
+import xfacthd.framedblocks.api.camo.CamoContainerFactory;
+import xfacthd.framedblocks.api.camo.block.SimpleBlockCamoContainerFactory;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.client.screen.*;
-import xfacthd.framedblocks.client.screen.overlay.*;
+import xfacthd.framedblocks.client.screen.FramingSawScreen;
+import xfacthd.framedblocks.client.screen.FramingSawWithEncoderScreen;
+import xfacthd.framedblocks.client.screen.PoweredFramingSawScreen;
+import xfacthd.framedblocks.client.screen.overlay.CamoRotationOverlay;
+import xfacthd.framedblocks.client.screen.overlay.FrameBackgroundOverlay;
+import xfacthd.framedblocks.client.screen.overlay.OneWayWindowOverlay;
+import xfacthd.framedblocks.client.screen.overlay.PrismOffsetOverlay;
+import xfacthd.framedblocks.client.screen.overlay.ReinforcementOverlay;
+import xfacthd.framedblocks.client.screen.overlay.SplitLineOverlay;
+import xfacthd.framedblocks.client.screen.overlay.StateLockOverlay;
+import xfacthd.framedblocks.client.screen.overlay.ToggleWaterloggableOverlay;
+import xfacthd.framedblocks.client.screen.overlay.ToggleYSlopeOverlay;
 import xfacthd.framedblocks.common.block.cube.FramedTankBlock;
 import xfacthd.framedblocks.common.compat.atlasviewer.AtlasViewerCompat;
 import xfacthd.framedblocks.common.compat.jade.JadeCompat;
 import xfacthd.framedblocks.common.compat.jei.JeiConstants;
-import xfacthd.framedblocks.common.config.*;
 import xfacthd.framedblocks.client.util.KeyMappings;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.special.FramingSawBlock;
 import xfacthd.framedblocks.common.block.special.PoweredFramingSawBlock;
 import xfacthd.framedblocks.common.blockentity.special.FramedStorageBlockEntity;
+import xfacthd.framedblocks.common.config.ClientConfig;
+import xfacthd.framedblocks.common.config.DevToolsConfig;
+import xfacthd.framedblocks.common.config.ServerConfig;
 import xfacthd.framedblocks.common.crafting.FramingSawRecipeMatchResult;
 import xfacthd.framedblocks.common.data.property.NullableDirection;
 import xfacthd.framedblocks.common.item.FramedBlueprintItem;
 import xfacthd.framedblocks.common.blockentity.special.FramedChestBlockEntity;
-import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.common.item.PhantomPasteItem;
 
 public final class FramedLanguageProvider extends LanguageProvider
@@ -315,9 +328,9 @@ public final class FramedLanguageProvider extends LanguageProvider
 
     private void addStatusMessageTranslations()
     {
-        add(FramedBlockEntity.MSG_BLACKLISTED, "This block is disallowed as a camo!");
-        add(FramedBlockEntity.MSG_BLOCK_ENTITY, "Blocks with BlockEntities cannot be inserted into framed blocks!");
-        add(FramedBlockEntity.MSG_NON_SOLID, "Untagged non-solid blocks cannot be inserted into framed blocks!");
+        add(CamoContainerFactory.MSG_BLACKLISTED, "This block is disallowed as a camo!");
+        add(SimpleBlockCamoContainerFactory.MSG_BLOCK_ENTITY, "Blocks with BlockEntities cannot be inserted into framed blocks!");
+        add(SimpleBlockCamoContainerFactory.MSG_NON_SOLID, "Untagged non-solid blocks cannot be inserted into framed blocks!");
 
         add(IFramedBlock.LOCK_MESSAGE, "The state of this block is now %s");
     }
