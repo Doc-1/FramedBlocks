@@ -28,20 +28,17 @@ public final class RecipePresence
             FBContent.BLOCK_FRAMED_DOUBLE_PANEL.value().asItem()
     ));
 
-    // FIXME: see whether this is salvageable
     public static void checkRecipePresence(SelfTestReporter reporter, Level level)
     {
         reporter.startTest("recipe presence");
 
-        /*MutableInt craftCount = new MutableInt(0);
+        MutableInt craftCount = new MutableInt(0);
         MutableInt sawCount = new MutableInt(0);
 
         RecipeManager recipeManager = ((ServerLevel) level).recipeAccess();
-        List<? extends Recipe<?>> fbRecipes = recipeManager.getRecipeIds()
-                .filter(id -> id.getNamespace().equals(FramedConstants.MOD_ID))
-                .map(recipeManager::byKey)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+        List<? extends Recipe<?>> fbRecipes = recipeManager.getRecipes()
+                .stream()
+                .filter(holder -> holder.id().location().getNamespace().equals(FramedConstants.MOD_ID))
                 .map(RecipeHolder::value)
                 .toList();
 
@@ -49,7 +46,9 @@ public final class RecipePresence
                 .filter(CraftingRecipe.class::isInstance)
                 .map(CraftingRecipe.class::cast)
                 .peek(r -> craftCount.increment())
-                .map(r -> r.getResultItem(level.registryAccess()))
+                .map(RecipePresence::unpackResult)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .map(ItemStack::getItem)
                 .map(ItemLike.class::cast)
                 .collect(Collectors.toSet());
@@ -82,9 +81,19 @@ public final class RecipePresence
         for (ItemLike item : miscCraftDiff)
         {
             reporter.warn("Item %s is uncraftable", item);
-        }*/
+        }
 
         reporter.endTest();
+    }
+
+    private static Optional<ItemStack> unpackResult(CraftingRecipe recipe)
+    {
+        return switch (recipe)
+        {
+            case ShapedRecipe shaped -> Optional.of(shaped.result);
+            case ShapelessRecipe shapeless -> Optional.of(shapeless.result);
+            default -> Optional.empty();
+        };
     }
 
     private static Set<ItemLike> collectMiscItems()
