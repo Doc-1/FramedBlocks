@@ -7,6 +7,7 @@ import xfacthd.framedblocks.api.FramedBlocksAPI;
 import xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
 import xfacthd.framedblocks.api.camo.CamoContainerFactory;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.data.FramedRegistries;
 
 @SuppressWarnings("unused")
 public final class ApiImpl implements FramedBlocksAPI
@@ -26,12 +27,12 @@ public final class ApiImpl implements FramedBlocksAPI
     @Override
     public Registry<CamoContainerFactory<?>> getCamoContainerFactoryRegistry()
     {
-        return FBContent.CAMO_CONTAINER_FACTORY_REGISTRY;
+        return FramedRegistries.CAMO_CONTAINER_FACTORIES;
     }
 
     @Override
     public Registry<AuxBlueprintData.Type<?>> getAuxBlueprintDataTypeRegistry()
     {
-        return FBContent.AUX_BLUEPRINT_DATA_TYPE_REGISTRY;
+        return FramedRegistries.AUX_BLUEPRINT_DATA_TYPES;
     }
 }

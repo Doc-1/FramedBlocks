@@ -7,6 +7,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.camo.*;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.data.FramedRegistries;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -20,7 +21,7 @@ public final class CamoContainerFactories
 
     public static void registerCamoFactories()
     {
-        FBContent.CAMO_CONTAINER_FACTORY_REGISTRY
+        FramedRegistries.CAMO_CONTAINER_FACTORIES
                 .entrySet()
                 .stream()
                 .map(Map.Entry::getValue)
@@ -103,7 +104,7 @@ public final class CamoContainerFactories
             Set<CamoContainerFactory<?>> factories = REMOVAL_ITEMS.computeIfAbsent(item, $ -> new ReferenceOpenHashSet<>());
             if (factories.contains(factory))
             {
-                String factoryName = Objects.requireNonNull(FBContent.CAMO_CONTAINER_FACTORY_REGISTRY.getKey(factory)).toString();
+                String factoryName = Objects.requireNonNull(FramedRegistries.CAMO_CONTAINER_FACTORIES.getKey(factory)).toString();
                 throw new IllegalArgumentException(String.format("Factory %s is already registered to item %s!", factoryName, item));
             }
             factories.add(factory);

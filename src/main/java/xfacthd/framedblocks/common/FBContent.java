@@ -6,14 +6,20 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.flag.FeatureFlags;
-import net.minecraft.world.inventory.*;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -29,20 +35,22 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.block.IFramedBlock;
-import xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
-import xfacthd.framedblocks.api.camo.*;
+import xfacthd.framedblocks.api.camo.CamoContainerFactory;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainerFactory;
 import xfacthd.framedblocks.api.component.FrameConfig;
-import xfacthd.framedblocks.api.util.*;
-import xfacthd.framedblocks.api.util.registration.*;
+import xfacthd.framedblocks.api.util.CamoList;
+import xfacthd.framedblocks.api.util.FramedConstants;
+import xfacthd.framedblocks.api.util.Utils;
+import xfacthd.framedblocks.api.util.registration.DeferredAuxDataType;
+import xfacthd.framedblocks.api.util.registration.DeferredBlockEntity;
+import xfacthd.framedblocks.api.util.registration.DeferredDataComponentType;
 import xfacthd.framedblocks.common.block.interactive.button.*;
 import xfacthd.framedblocks.common.block.interactive.pressureplate.*;
 import xfacthd.framedblocks.common.block.rail.fancy.*;
 import xfacthd.framedblocks.common.block.rail.vanillaslope.*;
 import xfacthd.framedblocks.common.block.sign.*;
 import xfacthd.framedblocks.common.block.slopeedge.*;
-import xfacthd.framedblocks.common.block.special.FramingSawBlock;
-import xfacthd.framedblocks.common.block.special.PoweredFramingSawBlock;
+import xfacthd.framedblocks.common.block.special.*;
 import xfacthd.framedblocks.common.block.cube.*;
 import xfacthd.framedblocks.common.block.door.*;
 import xfacthd.framedblocks.common.block.interactive.*;
@@ -60,7 +68,7 @@ import xfacthd.framedblocks.common.block.torch.*;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.common.blockentity.doubled.prism.*;
 import xfacthd.framedblocks.common.blockentity.doubled.rail.*;
-import xfacthd.framedblocks.common.blockentity.doubled.slab.FramedAdjustableDoubleBlockEntity;
+import xfacthd.framedblocks.common.blockentity.doubled.slab.*;
 import xfacthd.framedblocks.common.blockentity.doubled.slope.*;
 import xfacthd.framedblocks.common.blockentity.doubled.slopeedge.*;
 import xfacthd.framedblocks.common.blockentity.doubled.slopepanel.*;
@@ -69,23 +77,44 @@ import xfacthd.framedblocks.common.blockentity.doubled.slopeslab.*;
 import xfacthd.framedblocks.common.blockentity.special.*;
 import xfacthd.framedblocks.common.compat.jei.camo.JeiCamoApplicationRecipe;
 import xfacthd.framedblocks.common.compat.jei.camo.JeiCamoApplicationRecipeSerializer;
-import xfacthd.framedblocks.common.crafting.*;
-import xfacthd.framedblocks.common.data.*;
+import xfacthd.framedblocks.common.crafting.CamoApplicationRecipe;
+import xfacthd.framedblocks.common.crafting.CamoApplicationRecipeSerializer;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.FramingSawRecipeSerializer;
+import xfacthd.framedblocks.common.data.BlockType;
+import xfacthd.framedblocks.common.data.FramedRegistries;
+import xfacthd.framedblocks.common.data.FramedToolType;
 import xfacthd.framedblocks.common.data.blueprint.auxdata.DoorAuxBlueprintData;
 import xfacthd.framedblocks.common.data.camo.block.BlockCamoContainerFactory;
 import xfacthd.framedblocks.common.data.camo.fluid.FluidCamoContainerFactory;
 import xfacthd.framedblocks.api.blueprint.BlueprintData;
-import xfacthd.framedblocks.common.data.component.*;
 import xfacthd.framedblocks.api.datagen.loot.objects.NonTrivialCamoLootCondition;
 import xfacthd.framedblocks.api.datagen.loot.objects.SplitCamoLootFunction;
-import xfacthd.framedblocks.common.item.*;
-import xfacthd.framedblocks.common.menu.*;
+import xfacthd.framedblocks.common.data.component.AdjustableDoubleBlockData;
+import xfacthd.framedblocks.common.data.component.CollapsibleBlockData;
+import xfacthd.framedblocks.common.data.component.CollapsibleCopycatBlockData;
+import xfacthd.framedblocks.common.data.component.FramedMap;
+import xfacthd.framedblocks.common.data.component.PottedFlower;
+import xfacthd.framedblocks.common.data.component.TargetColor;
+import xfacthd.framedblocks.common.item.FramedBlueprintItem;
+import xfacthd.framedblocks.common.item.FramedToolItem;
+import xfacthd.framedblocks.common.item.PhantomPasteItem;
+import xfacthd.framedblocks.common.menu.FramedStorageMenu;
+import xfacthd.framedblocks.common.menu.FramingSawMenu;
+import xfacthd.framedblocks.common.menu.PoweredFramingSawMenu;
 import xfacthd.framedblocks.common.particle.BasicParticleType;
 import xfacthd.framedblocks.common.particle.FluidParticleOptions;
 import xfacthd.framedblocks.common.util.FramedCreativeTab;
-import xfacthd.framedblocks.common.util.registration.*;
+import xfacthd.framedblocks.common.util.registration.DeferredAuxDataTypeRegister;
+import xfacthd.framedblocks.common.util.registration.DeferredBlockEntityRegister;
+import xfacthd.framedblocks.common.util.registration.DeferredDataComponentTypeRegister;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -96,27 +125,16 @@ public final class FBContent
     private static final DeferredDataComponentTypeRegister DATA_COMPONENTS = DeferredDataComponentTypeRegister.create(FramedConstants.MOD_ID);
     private static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(FramedConstants.MOD_ID);
     private static final DeferredBlockEntityRegister BE_TYPES = DeferredBlockEntityRegister.create(FramedConstants.MOD_ID);
-    private static final DeferredRegister<MenuType<?>> CONTAINER_TYPES = DeferredRegister.create(BuiltInRegistries.MENU, FramedConstants.MOD_ID);
-    private static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, FramedConstants.MOD_ID);
-    private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, FramedConstants.MOD_ID);
-    private static final DeferredRegister<RecipeBookCategory> RECIPE_BOOK_CATEGORIES = DeferredRegister.create(Registries.RECIPE_BOOK_CATEGORY, FramedConstants.MOD_ID);
-    private static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, FramedConstants.MOD_ID);
-    private static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(Registries.PARTICLE_TYPE, FramedConstants.MOD_ID);
-    private static final DeferredRegister<LootItemConditionType> LOOT_CONDITIONS = DeferredRegister.create(Registries.LOOT_CONDITION_TYPE, FramedConstants.MOD_ID);
-    private static final DeferredRegister<LootItemFunctionType<?>> LOOT_FUNCTIONS = DeferredRegister.create(Registries.LOOT_FUNCTION_TYPE, FramedConstants.MOD_ID);
-
-    private static final DeferredRegister<CamoContainerFactory<?>> CAMO_CONTAINER_FACTORIES = DeferredRegister.create(
-            FramedConstants.CAMO_CONTAINER_FACTORY_REGISTRY_NAME,
-            FramedConstants.MOD_ID
-    );
-    public static final Registry<CamoContainerFactory<?>> CAMO_CONTAINER_FACTORY_REGISTRY = CAMO_CONTAINER_FACTORIES.makeRegistry(
-            builder -> builder.sync(true)
-    );
-
+    private static final DeferredRegister<MenuType<?>> CONTAINER_TYPES = register(Registries.MENU);
+    private static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = register(Registries.RECIPE_TYPE);
+    private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = register(Registries.RECIPE_SERIALIZER);
+    private static final DeferredRegister<RecipeBookCategory> RECIPE_BOOK_CATEGORIES = register(Registries.RECIPE_BOOK_CATEGORY);
+    private static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = register(Registries.CREATIVE_MODE_TAB);
+    private static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = register(Registries.PARTICLE_TYPE);
+    private static final DeferredRegister<LootItemConditionType> LOOT_CONDITIONS = register(Registries.LOOT_CONDITION_TYPE);
+    private static final DeferredRegister<LootItemFunctionType<?>> LOOT_FUNCTIONS = register(Registries.LOOT_FUNCTION_TYPE);
+    private static final DeferredRegister<CamoContainerFactory<?>> CAMO_CONTAINER_FACTORIES = register(FramedConstants.CAMO_CONTAINER_FACTORY_REGISTRY_KEY);
     private static final DeferredAuxDataTypeRegister AUX_BLUEPRINT_DATA_TYPES = DeferredAuxDataTypeRegister.create(FramedConstants.MOD_ID);
-    public static final Registry<AuxBlueprintData.Type<?>> AUX_BLUEPRINT_DATA_TYPE_REGISTRY = AUX_BLUEPRINT_DATA_TYPES.makeRegistry(
-            builder -> builder.sync(true)
-    );
 
     private static final Map<BlockType, Holder<Block>> BLOCKS_BY_TYPE = new EnumMap<>(BlockType.class);
     private static final Map<FramedToolType, Holder<Item>> TOOLS_BY_TYPE = new EnumMap<>(FramedToolType.class);
@@ -703,6 +721,8 @@ public final class FBContent
 
     public static void init(IEventBus modBus)
     {
+        modBus.addListener(FramedRegistries::onRegisterNewRegistries);
+
         BLOCKS.register(modBus);
         DATA_COMPONENTS.register(modBus);
         ITEMS.register(modBus);
@@ -878,6 +898,11 @@ public final class FBContent
     )
     {
         return PARTICLE_TYPES.register(name, () -> new BasicParticleType<>(overrideLimiter, codec, streamCodec));
+    }
+
+    private static <T> DeferredRegister<T> register(ResourceKey<Registry<T>> key)
+    {
+        return DeferredRegister.create(key, FramedConstants.MOD_ID);
     }
 
     @FunctionalInterface
