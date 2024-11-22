@@ -1,5 +1,6 @@
 package xfacthd.framedblocks.common.datagen.providers;
 
+import com.google.common.base.Preconditions;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
@@ -11,6 +12,7 @@ import net.minecraft.world.level.block.state.properties.*;
 import net.neoforged.neoforge.client.model.generators.*;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import xfacthd.framedblocks.api.block.FramedProperties;
+import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.util.*;
 import xfacthd.framedblocks.client.loader.overlay.OverlayLoaderBuilder;
 import xfacthd.framedblocks.client.model.cube.FramedMarkedCubeGeometry;
@@ -48,10 +50,10 @@ public final class FramedBlockStateProvider extends BlockStateProvider
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_SLOPE, cube, "cutout");
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_DOUBLE_SLOPE.value(), cube);
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_HALF_SLOPE, cube, "cutout");
-        simpleBlockWithItem(FBContent.BLOCK_FRAMED_VERTICAL_HALF_SLOPE, cube, "cutout");
+        simpleBlock(FBContent.BLOCK_FRAMED_VERTICAL_HALF_SLOPE.value(), cube);
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_DIVIDED_SLOPE, cube, "cutout");
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_DOUBLE_HALF_SLOPE, cube, "cutout");
-        simpleBlockWithItem(FBContent.BLOCK_FRAMED_VERTICAL_DOUBLE_HALF_SLOPE, cube, "cutout");
+        simpleBlock(FBContent.BLOCK_FRAMED_VERTICAL_DOUBLE_HALF_SLOPE.value(), cube);
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_CORNER_SLOPE, cube, "cutout");
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_INNER_CORNER_SLOPE, cube, "cutout");
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_DOUBLE_CORNER, cube, "cutout");
@@ -167,31 +169,31 @@ public final class FramedBlockStateProvider extends BlockStateProvider
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_FLAT_STACKED_SLOPE_PANEL_CORNER, cube, "cutout");
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_FLAT_STACKED_INNER_SLOPE_PANEL_CORNER, cube, "cutout");
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_SMALL_CORNER_SLOPE_PANEL, cube, "cutout");
-        simpleBlockWithItem(FBContent.BLOCK_FRAMED_SMALL_CORNER_SLOPE_PANEL_WALL, cube, "cutout");
+        simpleBlock(FBContent.BLOCK_FRAMED_SMALL_CORNER_SLOPE_PANEL_WALL.value(), cube);
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_LARGE_CORNER_SLOPE_PANEL, cube, "cutout");
-        simpleBlockWithItem(FBContent.BLOCK_FRAMED_LARGE_CORNER_SLOPE_PANEL_WALL, cube, "cutout");
+        simpleBlock(FBContent.BLOCK_FRAMED_LARGE_CORNER_SLOPE_PANEL_WALL.value(), cube);
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_SMALL_INNER_CORNER_SLOPE_PANEL, cube, "cutout");
-        simpleBlockWithItem(FBContent.BLOCK_FRAMED_SMALL_INNER_CORNER_SLOPE_PANEL_WALL, cube, "cutout");
+        simpleBlock(FBContent.BLOCK_FRAMED_SMALL_INNER_CORNER_SLOPE_PANEL_WALL.value(), cube);
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_LARGE_INNER_CORNER_SLOPE_PANEL, cube, "cutout");
-        simpleBlockWithItem(FBContent.BLOCK_FRAMED_LARGE_INNER_CORNER_SLOPE_PANEL_WALL, cube, "cutout");
+        simpleBlock(FBContent.BLOCK_FRAMED_LARGE_INNER_CORNER_SLOPE_PANEL_WALL.value(), cube);
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_SMALL_DOUBLE_CORNER_SLOPE_PANEL, cube, "cutout");
-        simpleBlockWithItem(FBContent.BLOCK_FRAMED_SMALL_DOUBLE_CORNER_SLOPE_PANEL_WALL, cube, "cutout");
+        simpleBlock(FBContent.BLOCK_FRAMED_SMALL_DOUBLE_CORNER_SLOPE_PANEL_WALL.value(), cube);
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_LARGE_DOUBLE_CORNER_SLOPE_PANEL, cube, "cutout");
-        simpleBlockWithItem(FBContent.BLOCK_FRAMED_LARGE_DOUBLE_CORNER_SLOPE_PANEL_WALL, cube, "cutout");
+        simpleBlock(FBContent.BLOCK_FRAMED_LARGE_DOUBLE_CORNER_SLOPE_PANEL_WALL.value(), cube);
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_INVERSE_DOUBLE_CORNER_SLOPE_PANEL, cube, "cutout");
-        simpleBlockWithItem(FBContent.BLOCK_FRAMED_INVERSE_DOUBLE_CORNER_SLOPE_PANEL_WALL, cube, "cutout");
+        simpleBlock(FBContent.BLOCK_FRAMED_INVERSE_DOUBLE_CORNER_SLOPE_PANEL_WALL.value(), cube);
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_EXTENDED_CORNER_SLOPE_PANEL, cube, "cutout");
-        simpleBlockWithItem(FBContent.BLOCK_FRAMED_EXTENDED_CORNER_SLOPE_PANEL_WALL, cube, "cutout");
+        simpleBlock(FBContent.BLOCK_FRAMED_EXTENDED_CORNER_SLOPE_PANEL_WALL.value(), cube);
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_EXTENDED_INNER_CORNER_SLOPE_PANEL, cube, "cutout");
-        simpleBlockWithItem(FBContent.BLOCK_FRAMED_EXTENDED_INNER_CORNER_SLOPE_PANEL_WALL, cube, "cutout");
+        simpleBlock(FBContent.BLOCK_FRAMED_EXTENDED_INNER_CORNER_SLOPE_PANEL_WALL.value(), cube);
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_EXTENDED_DOUBLE_CORNER_SLOPE_PANEL, cube, "cutout");
-        simpleBlockWithItem(FBContent.BLOCK_FRAMED_EXTENDED_DOUBLE_CORNER_SLOPE_PANEL_WALL, cube, "cutout");
+        simpleBlock(FBContent.BLOCK_FRAMED_EXTENDED_DOUBLE_CORNER_SLOPE_PANEL_WALL.value(), cube);
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_EXTENDED_INNER_DOUBLE_CORNER_SLOPE_PANEL, cube, "cutout");
-        simpleBlockWithItem(FBContent.BLOCK_FRAMED_EXTENDED_INNER_DOUBLE_CORNER_SLOPE_PANEL_WALL, cube, "cutout");
+        simpleBlock(FBContent.BLOCK_FRAMED_EXTENDED_INNER_DOUBLE_CORNER_SLOPE_PANEL_WALL.value(), cube);
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_STACKED_CORNER_SLOPE_PANEL, cube, "cutout");
-        simpleBlockWithItem(FBContent.BLOCK_FRAMED_STACKED_CORNER_SLOPE_PANEL_WALL, cube, "cutout");
+        simpleBlock(FBContent.BLOCK_FRAMED_STACKED_CORNER_SLOPE_PANEL_WALL.value(), cube);
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_STACKED_INNER_CORNER_SLOPE_PANEL, cube, "cutout");
-        simpleBlockWithItem(FBContent.BLOCK_FRAMED_STACKED_INNER_CORNER_SLOPE_PANEL_WALL, cube, "cutout");
+        simpleBlock(FBContent.BLOCK_FRAMED_STACKED_INNER_CORNER_SLOPE_PANEL_WALL.value(), cube);
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_PYRAMID, cube);
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_PYRAMID_SLAB, cube);
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_GATE, cube, "cutout");
@@ -589,7 +591,7 @@ public final class FramedBlockStateProvider extends BlockStateProvider
                 case RIGHT -> chestRight;
             };
             return ConfiguredModel.builder().modelFile(model).rotationY(rotY).build();
-        }, BlockStateProperties.WATERLOGGED, PropertyHolder.LATCH_TYPE, FramedProperties.GLOWING, FramedProperties.PROPAGATES_SKYLIGHT);
+        }, BlockStateProperties.WATERLOGGED, PropertyHolder.CHEST_STATE, PropertyHolder.LATCH_TYPE, FramedProperties.GLOWING, FramedProperties.PROPAGATES_SKYLIGHT);
 
         simpleBlockItem(FBContent.BLOCK_FRAMED_CHEST, chest, "cutout");
     }
@@ -761,7 +763,7 @@ public final class FramedBlockStateProvider extends BlockStateProvider
             Direction dir = state.getValue(BlockStateProperties.FACING);
             if (Utils.isY(dir))
             {
-                xRot = dir == Direction.UP ? 90 : -90;
+                xRot = dir == Direction.UP ? 90 : 270;
             }
             else
             {
@@ -1086,6 +1088,7 @@ public final class FramedBlockStateProvider extends BlockStateProvider
 
     private ItemModelBuilder simpleBlockItem(Holder<Block> block, ModelFile model)
     {
+        assertHasBlockItem(block);
         return itemModels().getBuilder(Utils.getKeyOrThrow(block).location().getPath()).parent(model);
     }
 
@@ -1098,7 +1101,16 @@ public final class FramedBlockStateProvider extends BlockStateProvider
     @SuppressWarnings({ "UnusedReturnValue", "SameParameterValue" })
     private ItemModelBuilder simpleItem(Holder<Block> block, String texture, String renderType)
     {
+        assertHasBlockItem(block);
         return simpleItem(Utils.getKeyOrThrow(block).location().getPath(), texture, renderType);
+    }
+
+    private static void assertHasBlockItem(Holder<Block> block)
+    {
+        if (block.value() instanceof IFramedBlock framedBlock)
+        {
+            Preconditions.checkArgument(framedBlock.getBlockType().hasBlockItem());
+        }
     }
 
     private ItemModelBuilder simpleItem(String name, String renderType)
