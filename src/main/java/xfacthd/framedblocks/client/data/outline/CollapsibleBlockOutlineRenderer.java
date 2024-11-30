@@ -28,7 +28,6 @@ public final class CollapsibleBlockOutlineRenderer implements OutlineRenderer
         {
             Direction faceDir = face.toDirection().getOpposite();
 
-            poseStack.translate(.5, .5, .5);
             if (faceDir == Direction.UP)
             {
                 poseStack.mulPose(Quaternions.XP_180);
@@ -38,7 +37,6 @@ public final class CollapsibleBlockOutlineRenderer implements OutlineRenderer
                 poseStack.mulPose(OutlineRenderer.YN_DIR[faceDir.getOpposite().get2DDataValue()]);
                 poseStack.mulPose(Quaternions.XN_90);
             }
-            poseStack.translate(-.5, -.5, -.5);
         }
     }
 
