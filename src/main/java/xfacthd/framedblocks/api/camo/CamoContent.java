@@ -1,7 +1,7 @@
 package xfacthd.framedblocks.api.camo;
 
 import net.minecraft.client.color.block.BlockColor;
-import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
@@ -113,7 +113,7 @@ public abstract class CamoContent<C extends CamoContent<C>> implements QuadCache
     public abstract int getTintColor(BlockAndTintGetter level, BlockPos pos, int tintIdx);
 
     /**
-     * {@return the tint color corresponding to the given tint index for use with {@link ItemColor }}
+     * {@return the tint color corresponding to the given tint index for use with {@link ItemTintSource}}
      */
     public abstract int getTintColor(ItemStack stack, int tintIdx);
 

@@ -4,11 +4,12 @@ import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.client.model.generators.*;
+import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.client.model.generators.ModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.client.render.item.BlueprintPropertyOverride;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.compat.ae2.AppliedEnergisticsCompat;
 
@@ -39,17 +40,8 @@ public final class FramedItemModelProvider extends ItemModelProvider
         }
         singleTexture("framing_saw_pattern", mcLoc("item/generated"), "layer0", patternTexture);
 
-        ItemModelBuilder modelNormal = simpleItem(FBContent.ITEM_FRAMED_BLUEPRINT, "cutout");
-        ModelFile modelWritten = simpleItem("framed_blueprint_written", "cutout");
-
-        modelNormal.override()
-                    .predicate(BlueprintPropertyOverride.HAS_DATA, 0)
-                    .model(modelNormal)
-                    .end()
-                .override()
-                    .predicate(BlueprintPropertyOverride.HAS_DATA, 1)
-                    .model(modelWritten)
-                    .end();
+        simpleItem(FBContent.ITEM_FRAMED_BLUEPRINT, "cutout");
+        simpleItem("framed_blueprint_written", "cutout");
     }
 
     private ItemModelBuilder handheldItem(Holder<Item> item, String renderType)

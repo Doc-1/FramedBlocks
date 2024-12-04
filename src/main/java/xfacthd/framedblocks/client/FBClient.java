@@ -2,11 +2,8 @@ package xfacthd.framedblocks.client;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Holder;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -38,7 +35,7 @@ import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.data.*;
 import xfacthd.framedblocks.client.data.extensions.block.NoEffectsClientBlockExtensions;
 import xfacthd.framedblocks.client.data.extensions.block.OneWayWindowClientBlockExtensions;
-import xfacthd.framedblocks.client.data.extensions.item.TankClientItemExtensions;
+import xfacthd.framedblocks.client.itemmodel.TankItemModel;
 import xfacthd.framedblocks.client.loader.fallback.FallbackLoader;
 import xfacthd.framedblocks.client.loader.overlay.OverlayLoader;
 import xfacthd.framedblocks.client.model.*;
@@ -65,7 +62,8 @@ import xfacthd.framedblocks.client.render.color.FramedFlowerPotColor;
 import xfacthd.framedblocks.client.render.color.FramedTargetBlockColor;
 import xfacthd.framedblocks.client.render.debug.FramedBlockDebugRenderer;
 import xfacthd.framedblocks.client.render.debug.impl.*;
-import xfacthd.framedblocks.client.render.item.BlueprintPropertyOverride;
+import xfacthd.framedblocks.client.render.item.BlueprintProperty;
+import xfacthd.framedblocks.client.render.item.TankItemRenderer;
 import xfacthd.framedblocks.client.render.particle.FluidSpriteParticle;
 import xfacthd.framedblocks.client.render.special.*;
 import xfacthd.framedblocks.client.render.util.AnimationSplitterSource;
@@ -95,7 +93,6 @@ import xfacthd.framedblocks.common.data.camo.fluid.FluidCamoClientHandler;
 import xfacthd.framedblocks.common.data.doubleblock.FramedDoubleBlockRenderProperties;
 import xfacthd.framedblocks.common.data.doubleblock.NullCullPredicate;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -104,7 +101,9 @@ public final class FBClient
 {
     public FBClient(IEventBus modBus, ModContainer container)
     {
-        modBus.addListener(FBClient::onClientSetup);
+        modBus.addListener(FBClient::onRegisterConditionalItemModelProperties);
+        modBus.addListener(FBClient::onRegisterItemModels);
+        modBus.addListener(FBClient::onRegisterSpecialModelRenderers);
         modBus.addListener(FBClient::onRegisterMenuScreens);
         modBus.addListener(FBClient::onImcMessageReceived);
         modBus.addListener(FBClient::onLoadComplete);
@@ -112,7 +111,7 @@ public final class FBClient
         modBus.addListener(FBClient::onAttachDebugRenderers);
         modBus.addListener(FBClient::onRegisterRenderers);
         modBus.addListener(FBClient::onBlockColors);
-        modBus.addListener(FBClient::onItemColors);
+        //modBus.addListener(FBClient::onItemColors); // FIXME: handle with ItemTintSources
         modBus.addListener(FBClient::onOverlayRegister);
         modBus.addListener(FBClient::onGeometryLoaderRegister);
         modBus.addListener(FBClient::onRegisterModelWrappers);
@@ -139,9 +138,19 @@ public final class FBClient
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 
-    private static void onClientSetup(final FMLClientSetupEvent event)
+    private static void onRegisterConditionalItemModelProperties(final RegisterConditionalItemModelPropertyEvent event)
     {
-        event.enqueueWork(BlueprintPropertyOverride::register);
+        event.register(BlueprintProperty.HAS_DATA, BlueprintProperty.TYPE);
+    }
+
+    private static void onRegisterItemModels(final RegisterItemModelsEvent event)
+    {
+        event.register(TankItemModel.Unbaked.ID, TankItemModel.Unbaked.CODEC);
+    }
+
+    private static void onRegisterSpecialModelRenderers(final RegisterSpecialModelRendererEvent event)
+    {
+        event.register(TankItemRenderer.Unbaked.ID, TankItemRenderer.Unbaked.CODEC);
     }
 
     private static void onRegisterMenuScreens(final RegisterMenuScreensEvent event)
@@ -207,7 +216,8 @@ public final class FBClient
         event.register(FramedTargetBlockColor.INSTANCE, FBContent.BLOCK_FRAMED_TARGET.value());
     }
 
-    private static void onItemColors(final RegisterColorHandlersEvent.Item event)
+    // FIXME: handle with ItemTintSources
+    /*private static void onItemColors(final RegisterColorHandlersEvent.Item event)
     {
         //noinspection SuspiciousToArrayCall
         ItemLike[] blocks = FBContent.getRegisteredBlocks()
@@ -221,14 +231,14 @@ public final class FBClient
         event.register(FramedBlockColor.INSTANCE, blocks);
 
         event.register(FramedTargetBlockColor.INSTANCE, FBContent.BLOCK_FRAMED_TARGET.value());
-    }
+    }*/
 
     private static void onOverlayRegister(final RegisterGuiLayersEvent event)
     {
         event.registerAboveAll(Utils.rl("block_interact"), new BlockInteractOverlayLayer());
     }
 
-    private static void onGeometryLoaderRegister(final ModelEvent.RegisterGeometryLoaders event)
+    private static void onGeometryLoaderRegister(final ModelEvent.RegisterLoaders event)
     {
         event.register(OverlayLoader.ID, new OverlayLoader());
         event.register(FallbackLoader.ID, new FallbackLoader());
@@ -477,21 +487,17 @@ public final class FBClient
     {
         StateCacheBuilder.ensureStateCachesInitialized();
 
-        Map<ModelResourceLocation, BakedModel> registry = event.getModels();
         TextureLookup textureLookup = TextureLookup.bindBlockAtlas(event.getTextureGetter());
-
-        ModelWrappingManager.handleAll(registry, textureLookup);
-
-        FramedTankItemModel.wrap(registry);
+        ModelWrappingManager.handleAll(event.getBakingResult(), textureLookup);
     }
 
     private static void onModelsLoaded(final ModelEvent.BakingCompleted event)
     {
         StateLocationCache.clear();
         FluidCamoClientHandler.clearModelCache();
-        FramedChestRenderer.onModelsLoaded(event.getModels());
-        ReinforcementModel.reload(event.getModels());
-        ErrorModel.reload(event.getModels());
+        FramedChestRenderer.onModelsLoaded(event.getBakingResult());
+        ReinforcementModel.reload(event.getBakingResult().standaloneModels());
+        ErrorModel.reload(event.getBakingResult().standaloneModels());
     }
 
     private static void onRegisterReloadListener(final RegisterClientReloadListenersEvent event)
@@ -538,8 +544,6 @@ public final class FBClient
                     default -> FramedBlockRenderProperties.INSTANCE;
                 }))
                 .forEach(pair -> event.registerBlock(pair.getSecond(), pair.getFirst()));
-
-        event.registerItem(new TankClientItemExtensions(), FBContent.BLOCK_FRAMED_TANK.value().asItem());
     }
 
     private static void onRegisterClientTooltipComponentFactories(RegisterClientTooltipComponentFactoriesEvent event)

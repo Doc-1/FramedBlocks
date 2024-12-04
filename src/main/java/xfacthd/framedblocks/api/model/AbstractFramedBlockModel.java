@@ -2,25 +2,27 @@ package xfacthd.framedblocks.api.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedOverrides;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ItemModel;
+import net.minecraft.client.resources.model.DelegateBakedModel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.BakedModelWrapper;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.model.wrapping.itemmodel.ItemModelInfo;
-import xfacthd.framedblocks.api.util.*;
+import xfacthd.framedblocks.api.util.CamoList;
+import xfacthd.framedblocks.api.util.ConfigView;
+import xfacthd.framedblocks.api.util.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class AbstractFramedBlockModel extends BakedModelWrapper<BakedModel>
+public abstract class AbstractFramedBlockModel extends DelegateBakedModel
 {
-    private final List<BakedModel> defaultItemRenderPass = List.of(new ItemModel.BakedModelWithOverrides(this, BakedOverrides.EMPTY));
+    //private final List<BakedModel> defaultItemRenderPass = List.of(new ItemModel.BakedModelWithOverrides(this, BakedOverrides.EMPTY));
     private final BlockState state;
     private final ItemModelInfo itemModelInfo;
     private final boolean dataRequired;
@@ -47,7 +49,8 @@ public abstract class AbstractFramedBlockModel extends BakedModelWrapper<BakedMo
         return this;
     }
 
-    @Override
+    // TODO: replace with custom ItemModel
+    /*@Override
     public List<BakedModel> getRenderPasses(ItemStack stack)
     {
         boolean showCamo = ConfigView.Client.INSTANCE.shouldRenderItemModelsWithCamo();
@@ -71,7 +74,7 @@ public abstract class AbstractFramedBlockModel extends BakedModelWrapper<BakedMo
             itemModelCache.put(camos, models);
         }
         return models;
-    }
+    }*/
 
     public void clearCache()
     {

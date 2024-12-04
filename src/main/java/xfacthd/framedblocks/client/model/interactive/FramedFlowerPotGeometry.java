@@ -40,7 +40,7 @@ public class FramedFlowerPotGeometry extends Geometry
     public FramedFlowerPotGeometry(GeometryFactory.Context ctx)
     {
         this.hanging = SupplementariesCompat.isLoaded() && ctx.state().getValue(PropertyHolder.HANGING);
-        this.hangingPotModel = hanging ? ctx.modelLookup().get(SupplementariesCompat.Client.HANGING_MODEL_LOCATION) : null;
+        this.hangingPotModel = hanging ? ctx.modelLookup().getStandaloneModel(SupplementariesCompat.Client.HANGING_MODEL_LOCATION) : null;
     }
 
     @Override

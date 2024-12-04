@@ -4,9 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.blockentity.AbstractSignRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.level.block.entity.SignText;
@@ -123,14 +123,14 @@ public class FramedSignRenderer implements BlockEntityRenderer<FramedSignBlockEn
         poseStack.pushPose();
         applyTextTransforms(poseStack, signBlock, front);
 
-        int darkColor = SignRenderer.getDarkColor(text);
+        int darkColor = AbstractSignRenderer.getDarkColor(text);
         int textColor;
         boolean outline;
         int textLight;
         if (text.hasGlowingText())
         {
             textColor = text.getColor().getTextColor();
-            outline = SignRenderer.isOutlineVisible(pos, textColor);
+            outline = AbstractSignRenderer.isOutlineVisible(pos, textColor);
             textLight = LightTexture.FULL_BRIGHT;
         }
         else

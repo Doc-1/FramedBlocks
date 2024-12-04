@@ -3,8 +3,8 @@ package xfacthd.framedblocks.client.model.cube;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
@@ -19,9 +19,7 @@ import java.util.ArrayList;
 
 public class FramedTargetGeometry extends Geometry
 {
-    public static final ModelResourceLocation OVERLAY_LOCATION = ModelResourceLocation.standalone(
-            Utils.rl("block/target_overlay")
-    );
+    public static final ResourceLocation OVERLAY_LOCATION = Utils.rl("block/target_overlay");
     public static final int OVERLAY_TINT_IDX = 1024;
 
     private final BlockState state;
@@ -30,7 +28,7 @@ public class FramedTargetGeometry extends Geometry
     public FramedTargetGeometry(GeometryFactory.Context ctx)
     {
         this.state = ctx.state();
-        this.overlayModel = ctx.modelLookup().get(OVERLAY_LOCATION);
+        this.overlayModel = ctx.modelLookup().getStandaloneModel(OVERLAY_LOCATION);
     }
 
     @Override

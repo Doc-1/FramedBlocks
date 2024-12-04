@@ -138,7 +138,7 @@ public class PoweredFramingSawScreen extends AbstractContainerScreen<PoweredFram
                 }
                 else if (!additiveSlot.hasItem())
                 {
-                    List<Holder<Item>> items = additives.get(i).ingredient().items();
+                    List<Holder<Item>> items = additives.get(i).ingredient().items().toList();
                     int t = (int) (System.currentTimeMillis() / 1700) % items.size();
                     int ax = leftPos + additiveSlot.x;
                     int ay = topPos + additiveSlot.y;

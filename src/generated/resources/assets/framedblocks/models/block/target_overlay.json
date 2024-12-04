@@ -50,7 +50,8 @@
     ],
     "render_type": "minecraft:cutout",
     "textures": {
-      "overlay": "framedblocks:block/target_overlay"
+      "overlay": "framedblocks:block/target_overlay",
+      "particle": "#overlay"
     }
   }
 }

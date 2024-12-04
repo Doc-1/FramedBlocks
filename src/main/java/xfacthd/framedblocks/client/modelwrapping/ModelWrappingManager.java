@@ -2,6 +2,7 @@ package xfacthd.framedblocks.client.modelwrapping;
 
 import com.google.common.base.Stopwatch;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -23,11 +24,12 @@ public final class ModelWrappingManager
     private static final Map<ResourceKey<Block>, ModelWrappingHandler> HANDLERS = new IdentityHashMap<>();
     private static boolean locked = true;
 
-    public static void handleAll(Map<ModelResourceLocation, BakedModel> models, TextureLookup textureLookup)
+    public static void handleAll(ModelBakery.BakingResult bakingResult, TextureLookup textureLookup)
     {
         Stopwatch stopwatch = Stopwatch.createStarted();
 
-        ModelLookup accessor = models::get;
+        Map<ModelResourceLocation, BakedModel> models = bakingResult.blockStateModels();
+        ModelLookup accessor = ModelLookup.bind(bakingResult);
         ModelCounter counter = new ModelCounter();
 
         for (Map.Entry<ResourceKey<Block>, ModelWrappingHandler> entry : HANDLERS.entrySet())
@@ -43,19 +45,12 @@ public final class ModelWrappingManager
                 BakedModel replacement = handler.wrapBlockModel(baseModel, state, accessor, textureLookup, counter);
                 models.put(location, replacement);
             }
-
-            if (handler.handlesItemModel())
-            {
-                ModelResourceLocation itemId = ModelResourceLocation.inventory(blockId);
-                BakedModel itemModel = handler.replaceItemModel(accessor, textureLookup, counter);
-                models.put(itemId, itemModel);
-            }
         }
 
         stopwatch.stop();
         FramedBlocks.LOGGER.debug(
-                "Wrapped {} unique block models ({} total) and {} item models for {} blocks in {}",
-                counter.getDistinctCount(), counter.getTotalCount(), counter.getItemCount(), HANDLERS.size(), stopwatch
+                "Wrapped {} unique block models ({} total) for {} blocks in {}",
+                counter.getDistinctCount(), counter.getTotalCount(), HANDLERS.size(), stopwatch
         );
     }
 
@@ -73,10 +68,6 @@ public final class ModelWrappingManager
             Block block = BuiltInRegistries.BLOCK.getValue(blockId);
             BlockState state = StateLocationCache.getStateFromLocation(blockId.location(), block, id);
             return handler.wrapBlockModel(model, state, modelLookup, textureLookup, null);
-        }
-        else if (handler.handlesItemModel())
-        {
-            return handler.replaceItemModel(modelLookup, textureLookup, null);
         }
         return model;
     }

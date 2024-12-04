@@ -119,7 +119,7 @@ public final class CamoCraftingHelper
         RegistryAccess registryAccess = level.registryAccess();
 
         Ingredient copyTool = helperRecipe.getCopyTool();
-        ItemStack copyToolItem = copyTool.items().getFirst().value().getDefaultInstance();
+        ItemStack copyToolItem = copyTool.items().toList().getFirst().value().getDefaultInstance();
         List<ItemStack> inputs = List.of(frame, copyToolItem, inputOne, inputTwo);
         CraftingInput craftingInput = CraftingInput.of(2, 2, inputs);
         return helperRecipe.assemble(craftingInput, registryAccess);
@@ -217,7 +217,7 @@ public final class CamoCraftingHelper
 
     private static List<ItemStack> asStackList(Ingredient ingredient)
     {
-        return ingredient.items().stream().map(Holder::value).map(Item::getDefaultInstance).toList();
+        return ingredient.items().map(Holder::value).map(Item::getDefaultInstance).toList();
     }
 
     public static Ingredient makeTagIngredient(TagKey<Item> tagKey)

@@ -337,7 +337,7 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
             List<FramingSawRecipeAdditive> additives = cache.getRecipes().get(menu.getSelectedRecipeIndex()).value().getAdditives();
             for (int i = 0; i < additives.size(); i++)
             {
-                encodingInputs[i + 1] = new ItemStack(additives.get(i).ingredient().items().getFirst());
+                encodingInputs[i + 1] = new ItemStack(additives.get(i).ingredient().items().findFirst().orElseThrow());
             }
         }
     }

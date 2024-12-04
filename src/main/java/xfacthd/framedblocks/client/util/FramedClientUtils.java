@@ -11,7 +11,7 @@ public final class FramedClientUtils
         Minecraft.getInstance()
                 .getModelManager()
                 .getModelBakery()
-                .getBakedTopLevelModels()
+                .bakedCache // TODO: this is probably not the correct solution (remove AT when replaced)
                 .values()
                 .stream()
                 .filter(AbstractFramedBlockModel.class::isInstance)

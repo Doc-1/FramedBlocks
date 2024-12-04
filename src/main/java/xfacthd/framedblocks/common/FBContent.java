@@ -38,6 +38,7 @@ import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.camo.CamoContainerFactory;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainerFactory;
 import xfacthd.framedblocks.api.component.FrameConfig;
+import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.util.CamoList;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.Utils;
@@ -115,8 +116,11 @@ import java.util.Collection;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public final class FBContent
@@ -477,10 +481,12 @@ public final class FBContent
     );
     public static final DeferredBlockEntity<FramedSignBlockEntity> BE_TYPE_FRAMED_SIGN = registerBlockEntity(
             FramedSignBlockEntity::normalSign,
+            true,
             BlockType.FRAMED_SIGN, BlockType.FRAMED_WALL_SIGN
     );
     public static final DeferredBlockEntity<FramedSignBlockEntity> BE_TYPE_FRAMED_HANGING_SIGN = registerBlockEntity(
             FramedSignBlockEntity::hangingSign,
+            true,
             BlockType.FRAMED_HANGING_SIGN, BlockType.FRAMED_WALL_HANGING_SIGN
     );
     public static final DeferredBlockEntity<FramedChestBlockEntity> BE_TYPE_FRAMED_CHEST = registerBlockEntity(
@@ -608,7 +614,7 @@ public final class FBContent
     public static final DeferredBlockEntity<PoweredFramingSawBlockEntity> BE_TYPE_POWERED_FRAMING_SAW = registerBlockEntity(
             PoweredFramingSawBlockEntity::new,
             "powered_framing_saw",
-            () -> new Block[] { BLOCK_POWERED_FRAMING_SAW.value() },
+            () -> Set.of(BLOCK_POWERED_FRAMING_SAW.value()),
             false
     );
     // endregion
@@ -771,30 +777,33 @@ public final class FBContent
         return DOUBLE_BLOCK_ENTITIES;
     }
 
-    private static Supplier<Block[]> getDefaultEntityBlocks()
+    private static Supplier<Set<Block>> getDefaultEntityBlocks()
     {
-        //noinspection SuspiciousToArrayCall
         return () -> BLOCKS.getEntries()
                 .stream()
                 .map(Holder::value)
                 .filter(block -> block instanceof IFramedBlock)
-                .map(IFramedBlock.class::cast)
-                .filter(block -> !block.getBlockType().isDoubleBlock())
-                .filter(block -> !block.getBlockType().hasSpecialTile())
-                .toArray(Block[]::new);
+                .filter(makeBlockEntityBlockPredicate(false))
+                .collect(Collectors.toSet());
     }
 
-    private static Supplier<Block[]> getDefaultDoubleEntityBlocks()
+    private static Supplier<Set<Block>> getDefaultDoubleEntityBlocks()
     {
-        //noinspection SuspiciousToArrayCall
         return () -> BLOCKS.getEntries()
                 .stream()
                 .map(Holder::value)
                 .filter(block -> block instanceof IFramedBlock)
-                .map(IFramedBlock.class::cast)
-                .filter(block -> block.getBlockType().isDoubleBlock())
-                .filter(block -> !block.getBlockType().hasSpecialTile())
-                .toArray(Block[]::new);
+                .filter(makeBlockEntityBlockPredicate(true))
+                .collect(Collectors.toSet());
+    }
+
+    private static Predicate<Block> makeBlockEntityBlockPredicate(boolean _double)
+    {
+        return block ->
+        {
+            IBlockType type = ((IFramedBlock) block).getBlockType();
+            return !type.hasSpecialTile() && (type.isDoubleBlock() == _double);
+        };
     }
 
     private static <T extends Block & IFramedBlock> Holder<Block> registerBlock(
@@ -845,12 +854,19 @@ public final class FBContent
             BlockEntityType.BlockEntitySupplier<T> factory, BlockType... types
     )
     {
-        Supplier<Block[]> blocks = () -> Arrays.stream(types)
+        return registerBlockEntity(factory, false, types);
+    }
+
+    private static <T extends BlockEntity> DeferredBlockEntity<T> registerBlockEntity(
+            BlockEntityType.BlockEntitySupplier<T> factory, boolean opOnlyNbt, BlockType... types
+    )
+    {
+        Supplier<Set<Block>> blocks = () -> Arrays.stream(types)
                 .map(BLOCKS_BY_TYPE::get)
                 .map(Holder::value)
-                .toArray(Block[]::new);
+                .collect(Collectors.toSet());
 
-        DeferredBlockEntity<T> result = registerBlockEntity(factory, types[0].getName(), blocks, true);
+        DeferredBlockEntity<T> result = registerBlockEntity(factory, types[0].getName(), blocks, true, opOnlyNbt);
         if (!FMLEnvironment.production && Arrays.stream(types).anyMatch(BlockType::isDoubleBlock))
         {
             //noinspection unchecked
@@ -860,10 +876,17 @@ public final class FBContent
     }
 
     private static <T extends BlockEntity> DeferredBlockEntity<T> registerBlockEntity(
-            BlockEntityType.BlockEntitySupplier<T> factory, String name, Supplier<Block[]> blocks, boolean isFramedBE
+            BlockEntityType.BlockEntitySupplier<T> factory, String name, Supplier<Set<Block>> blocks, boolean isFramedBE
     )
     {
-        DeferredBlockEntity<T> result = BE_TYPES.registerBlockEntity(name, factory, blocks);
+        return registerBlockEntity(factory, name, blocks, isFramedBE, false);
+    }
+
+    private static <T extends BlockEntity> DeferredBlockEntity<T> registerBlockEntity(
+            BlockEntityType.BlockEntitySupplier<T> factory, String name, Supplier<Set<Block>> blocks, boolean isFramedBE, boolean opOnlyNbt
+    )
+    {
+        DeferredBlockEntity<T> result = BE_TYPES.registerBlockEntity(name, factory, blocks, opOnlyNbt);
         if (!FMLEnvironment.production && isFramedBE)
         {
             //noinspection unchecked

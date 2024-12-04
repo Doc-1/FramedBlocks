@@ -38,7 +38,7 @@ public class FramedOneWayWindowGeometry extends Geometry
     public FramedOneWayWindowGeometry(GeometryFactory.Context ctx)
     {
         this.face = ctx.state().getValue(PropertyHolder.NULLABLE_FACE);
-        this.tintedGlassModel = ctx.modelLookup().get(TINTED_GLASS_LOC);
+        this.tintedGlassModel = ctx.modelLookup().getBlockStateModel(TINTED_GLASS_LOC);
     }
 
     @Override

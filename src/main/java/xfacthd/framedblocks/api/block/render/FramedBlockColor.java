@@ -1,7 +1,6 @@
 package xfacthd.framedblocks.api.block.render;
 
 import net.minecraft.client.color.block.BlockColor;
-import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.item.BlockItem;
@@ -19,7 +18,7 @@ import xfacthd.framedblocks.api.util.CamoList;
 import xfacthd.framedblocks.api.util.ConfigView;
 import xfacthd.framedblocks.api.util.Utils;
 
-public class FramedBlockColor implements BlockColor, ItemColor
+public class FramedBlockColor implements BlockColor
 {
     public static final FramedBlockColor INSTANCE = new FramedBlockColor();
 
@@ -66,7 +65,8 @@ public class FramedBlockColor implements BlockColor, ItemColor
         return data.get(FramedBlockData.PROPERTY);
     }
 
-    @Override
+    // FIXME: move to custom ItemTintSource
+    /*@Override
     public int getColor(ItemStack stack, int tintIndex)
     {
         if (!(stack.getItem() instanceof BlockItem item) || !(item.getBlock() instanceof IFramedBlock block))
@@ -89,5 +89,5 @@ public class FramedBlockColor implements BlockColor, ItemColor
             return ARGB.opaque(camos.getCamo(0).getTintColor(stack, tintIndex));
         }
         return -1;
-    }
+    }*/
 }

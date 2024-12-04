@@ -111,7 +111,7 @@ public final class FramedDoubleBlockModel extends AbstractFramedBlockModel
                 }
 
                 //noinspection deprecation
-                yield originalModel.getParticleIcon();
+                yield parent.getParticleIcon();
             }
         };
     }
@@ -190,7 +190,7 @@ public final class FramedDoubleBlockModel extends AbstractFramedBlockModel
     {
         TextureAtlasSprite sprite = getSprite(data, secondary);
         //noinspection deprecation
-        return sprite != null ? sprite : originalModel.getParticleIcon();
+        return sprite != null ? sprite : parent.getParticleIcon();
     }
 
     private TextureAtlasSprite getSprite(ModelData data, boolean secondary)

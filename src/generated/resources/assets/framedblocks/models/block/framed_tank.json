@@ -80,6 +80,7 @@
   ],
   "textures": {
     "frame": "framedblocks:block/framed_block",
-    "glass": "minecraft:block/glass"
+    "glass": "minecraft:block/glass",
+    "particle": "#frame"
   }
 }

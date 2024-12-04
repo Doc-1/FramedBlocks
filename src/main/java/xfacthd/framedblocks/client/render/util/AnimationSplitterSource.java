@@ -67,7 +67,7 @@ public record AnimationSplitterSource(ResourceLocation resource, List<Frame> fra
             try
             {
                 ResourceMetadata srcMeta = resource.metadata();
-                Optional<AnimationMetadataSection> optAnim = srcMeta.getSection(AnimationMetadataSection.SERIALIZER);
+                Optional<AnimationMetadataSection> optAnim = srcMeta.getSection(AnimationMetadataSection.TYPE);
                 if (optAnim.isEmpty())
                 {
                     throw new IllegalArgumentException("Texture '%s' is not an animated texture".formatted(texPath));
@@ -106,19 +106,23 @@ public record AnimationSplitterSource(ResourceLocation resource, List<Frame> fra
                 ResourceLocation texPath, AnimationMetadataSection anim, int frameIdx, int frameCount
         )
         {
-            boolean[] frameFound = new boolean[1];
-            int[] maxIdx = new int[] { -1 };
-            anim.forEachFrame((idx, time) ->
+            boolean frameFound = false;
+            int maxIdx = -1;
+            if (anim.frames().isPresent())
             {
-                maxIdx[0] = Math.max(maxIdx[0], idx);
-                if (idx == frameIdx)
+                for (AnimationFrame frame : anim.frames().get())
                 {
-                    frameFound[0] = true;
+                    maxIdx = Math.max(maxIdx, frame.index());
+                    if (frame.index() == frameIdx)
+                    {
+                        frameFound = true;
+                        break;
+                    }
                 }
-            });
-            if (!frameFound[0] && (maxIdx[0] != -1 || frameIdx >= frameCount))
+            }
+            if (!frameFound && (maxIdx != -1 || frameIdx >= frameCount))
             {
-                int max = maxIdx[0] != -1 ? maxIdx[0] : frameCount;
+                int max = maxIdx != -1 ? maxIdx : frameCount;
                 throw new IllegalArgumentException("Texture '%s' has no frame with index %d, max index is %d".formatted(
                         texPath, frameIdx, max
                 ));

@@ -5,13 +5,13 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.DelegateBakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.BakedModelWrapper;
 import net.neoforged.neoforge.client.model.QuadTransformers;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.common.util.TriState;
@@ -135,7 +135,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         FramedBlockData fbData = data.get(FramedBlockData.PROPERTY);
         if (isBaseCube && (fbData == null || fbData.getCamoContent().isEmpty()))
         {
-            return originalModel.getRenderTypes(state, rand, data);
+            return parent.getRenderTypes(state, rand, data);
         }
         if (fbData == null)
         {
@@ -360,7 +360,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
      * Return the {@link BakedModel} to use as the camo model for the given camoState
      *
      * @param camoContent The {@link CamoContent} used as camo
-     * @param useBaseModel If true, the {@link BakedModelWrapper#originalModel} is requested instead of the model of the given state
+     * @param useBaseModel If true, the {@link DelegateBakedModel#parent} is requested instead of the model of the given state
      * @param useAltModel Whether an alternative base model for the second component of a double model should be used
      *                    (only has an effect if {@code useBaseModel} is true)
      *
@@ -373,7 +373,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
     {
         if (useBaseModel)
         {
-            return geometry.getBaseModel(originalModel, useAltModel);
+            return geometry.getBaseModel(parent, useAltModel);
         }
         return CamoContainerHelper.Client.getOrCreateModel(camoContent);
     }
@@ -441,7 +441,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
                 return getCamoModel(camoState, false, false).getParticleIcon();
             }
         }
-        return originalModel.getParticleIcon();
+        return parent.getParticleIcon();
     }
 
     @Override
@@ -452,7 +452,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
 
     public BakedModel getBaseModel()
     {
-        return originalModel;
+        return parent;
     }
 
     @Override

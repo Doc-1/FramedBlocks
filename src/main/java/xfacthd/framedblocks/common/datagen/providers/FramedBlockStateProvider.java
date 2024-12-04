@@ -629,6 +629,7 @@ public final class FramedBlockStateProvider extends BlockStateProvider
                 .element()
                 .cube("#glass")
                 .end()
+                .texture("particle", "#frame")
                 .texture("frame", TEXTURE)
                 .texture("glass", mcLoc("block/glass"));
 
@@ -682,7 +683,7 @@ public final class FramedBlockStateProvider extends BlockStateProvider
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_BOUNCY_CUBE, block, "cutout");
 
         makeOverlayModel(
-                FramedMarkedCubeGeometry.SLIME_FRAME_LOCATION.id(),
+                FramedMarkedCubeGeometry.SLIME_FRAME_LOCATION,
                 mcLoc("block/cube_all"),
                 "all",
                 modLoc("block/slime_frame")
@@ -696,7 +697,7 @@ public final class FramedBlockStateProvider extends BlockStateProvider
         simpleBlockWithItem(FBContent.BLOCK_FRAMED_REDSTONE_BLOCK, block, "cutout");
 
         makeOverlayModel(
-                FramedMarkedCubeGeometry.REDSTONE_FRAME_LOCATION.id(),
+                FramedMarkedCubeGeometry.REDSTONE_FRAME_LOCATION,
                 mcLoc("block/cube_all"),
                 "all",
                 modLoc("block/redstone_frame")
@@ -725,6 +726,7 @@ public final class FramedBlockStateProvider extends BlockStateProvider
                             .faces((dir, face) -> face.tintindex(FramedTargetGeometry.OVERLAY_TINT_IDX))
                             .end()
                         .texture("overlay", modLoc("block/target_overlay"))
+                        .texture("particle", "#overlay")
                         .renderType("cutout")
                 );
     }
@@ -951,13 +953,17 @@ public final class FramedBlockStateProvider extends BlockStateProvider
         {
             String slot = slots[i];
             modelsEmpty[i] = models().withExistingParent(baseName + "_empty_slot_" + slot, modLoc(template + slot))
+                    .texture("particle", "#texture")
                     .texture("texture", mcLoc("block/chiseled_bookshelf_empty"));
             modelsFilled[i] = models().withExistingParent(baseName + "_occupied_slot_" + slot, modLoc(template + slot))
+                    .texture("particle", "#texture")
                     .texture("texture", "minecraft:block/chiseled_bookshelf_occupied");
         }
+        ModelFile baseModel = models().withExistingParent("block/framed_chiseled_bookshelf", mcLoc("block/block"))
+                .texture("particle", TEXTURE);
 
         MultiPartBlockStateBuilder builder = getMultipartBuilder(FBContent.BLOCK_FRAMED_CHISELED_BOOKSHELF.value());
-        builder.part().modelFile(models().getExistingFile(mcLoc("block/block"))).addModel().end();
+        builder.part().modelFile(baseModel).addModel().end();
         for (Direction dir : Direction.Plane.HORIZONTAL)
         {
             for (int i = 0; i < ChiseledBookShelfBlockEntity.MAX_BOOKS_IN_STORAGE; i++)

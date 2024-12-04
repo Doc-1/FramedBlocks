@@ -176,12 +176,6 @@ public class FramedSignBlockEntity extends FramedBlockEntity
         this.editingPlayer = player;
     }
 
-    @Override
-    public boolean onlyOpCanSetNbt()
-    {
-        return true;
-    }
-
     @SuppressWarnings("unused")
     public static void tick(Level level, BlockPos pos, BlockState state, FramedSignBlockEntity be)
     {

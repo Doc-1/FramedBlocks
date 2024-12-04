@@ -1,15 +1,19 @@
 package xfacthd.framedblocks.client.loader.fallback;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.util.GsonHelper;
-import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
+import net.neoforged.neoforge.client.model.UnbakedModelLoader;
+import net.neoforged.neoforge.client.model.UnbakedModelParser;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import xfacthd.framedblocks.api.util.Utils;
 
@@ -17,13 +21,13 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 
-public final class FallbackLoader implements IGeometryLoader<FallbackGeometry>
+public final class FallbackLoader implements UnbakedModelLoader<UnbakedModel>
 {
     public static final ResourceLocation ID = Utils.rl("fallback");
     private static final FileToIdConverter MODEL_LISTER = FileToIdConverter.json("models");
 
     @Override
-    public FallbackGeometry read(JsonObject json, JsonDeserializationContext ctx) throws JsonParseException
+    public UnbakedModel read(JsonObject json, JsonDeserializationContext ctx) throws JsonParseException
     {
         JsonArray conditionArray = GsonHelper.getAsJsonArray(json, "conditions");
         List<ICondition> conditions = ICondition.LIST_CODEC.decode(JsonOps.INSTANCE, conditionArray).getOrThrow(
@@ -33,7 +37,7 @@ public final class FallbackLoader implements IGeometryLoader<FallbackGeometry>
         if (conditions.stream().allMatch(cond -> cond.test(ICondition.IContext.EMPTY)))
         {
             json.remove("loader");
-            return new FallbackGeometry(ctx.deserialize(json, BlockModel.class));
+            return ctx.deserialize(json, BlockModel.class);
         }
 
         ResourceLocation fallback = ResourceLocation.parse(GsonHelper.getAsString(json, "fallback"));
@@ -43,7 +47,7 @@ public final class FallbackLoader implements IGeometryLoader<FallbackGeometry>
             Resource resource = Minecraft.getInstance().getResourceManager().getResourceOrThrow(fallback);
             try (Reader reader = resource.openAsReader())
             {
-                return new FallbackGeometry(BlockModel.fromStream(reader));
+                return UnbakedModelParser.parse(reader);
             }
         }
         catch (IOException e)

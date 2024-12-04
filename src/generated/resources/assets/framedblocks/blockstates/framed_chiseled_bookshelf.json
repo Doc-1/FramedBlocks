@@ -2,7 +2,7 @@
   "multipart": [
     {
       "apply": {
-        "model": "minecraft:block/block"
+        "model": "framedblocks:block/framed_chiseled_bookshelf"
       }
     },
     {

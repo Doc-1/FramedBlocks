@@ -4,6 +4,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
 
@@ -27,7 +28,7 @@ public final class SearchEditBox extends EditBox
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int btn)
     {
-        if (btn == 1 && this.clicked(mouseX, mouseY))
+        if (btn == GLFW.GLFW_MOUSE_BUTTON_RIGHT && this.isMouseOver(mouseX, mouseY))
         {
             setValue("");
             lastChange = System.currentTimeMillis() - UPDATE_DELAY;

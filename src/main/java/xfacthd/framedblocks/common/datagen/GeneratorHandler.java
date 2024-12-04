@@ -17,23 +17,24 @@ import java.util.concurrent.CompletableFuture;
 public final class GeneratorHandler
 {
     @SubscribeEvent
-    public static void onGatherData(final GatherDataEvent event)
+    public static void onGatherData(final GatherDataEvent.Client event)
     {
         DataGenerator gen = event.getGenerator();
         PackOutput output = gen.getPackOutput();
         ExistingFileHelper fileHelper = event.getExistingFileHelper();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-        gen.addProvider(event.includeClient(), new FramedSpriteSourceProvider(output, lookupProvider, fileHelper));
-        gen.addProvider(event.includeClient(), new FramedBlockStateProvider(output, fileHelper));
-        gen.addProvider(event.includeClient(), new FramedItemModelProvider(output, fileHelper));
-        gen.addProvider(event.includeServer(), new FramedLootTableProvider(output, lookupProvider));
-        gen.addProvider(event.includeServer(), new FramedRecipeProvider.Runner(output, lookupProvider));
-        gen.addProvider(event.includeServer(), new FramingSawRecipeProvider.Runner(output, lookupProvider));
+        gen.addProvider(true, new FramedSpriteSourceProvider(output, lookupProvider, fileHelper));
+        gen.addProvider(true, new FramedBlockStateProvider(output, fileHelper));
+        gen.addProvider(true, new FramedItemModelProvider(output, fileHelper));
+        gen.addProvider(true, new FramedLanguageProvider(output));
+
+        gen.addProvider(true, new FramedLootTableProvider(output, lookupProvider));
+        gen.addProvider(true, new FramedRecipeProvider.Runner(output, lookupProvider));
+        gen.addProvider(true, new FramingSawRecipeProvider.Runner(output, lookupProvider));
         BlockTagsProvider tagProvider = new FramedBlockTagProvider(output, lookupProvider, fileHelper);
-        gen.addProvider(event.includeServer(), tagProvider);
-        gen.addProvider(event.includeServer(), new FramedItemTagProvider(output, lookupProvider, tagProvider.contentsGetter(), fileHelper));
-        gen.addProvider(event.includeClient(), new FramedLanguageProvider(output));
+        gen.addProvider(true, tagProvider);
+        gen.addProvider(true, new FramedItemTagProvider(output, lookupProvider, tagProvider.contentsGetter(), fileHelper));
     }
 
 

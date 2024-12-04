@@ -3,20 +3,20 @@ package xfacthd.framedblocks.client.model;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import xfacthd.framedblocks.api.util.Utils;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public final class ReinforcementModel
 {
-    public static final ModelResourceLocation LOCATION = ModelResourceLocation.standalone(
-            Utils.rl("block/framed_reinforcement")
-    );
+    public static final ResourceLocation LOCATION = Utils.rl("block/framed_reinforcement");
     private static final RandomSource RAND = RandomSource.create();
     private static final BakedQuad[] QUADS_PER_FACE = new BakedQuad[6];
 
@@ -36,7 +36,7 @@ public final class ReinforcementModel
         }
     }
 
-    public static void reload(Map<ModelResourceLocation, BakedModel> models)
+    public static void reload(Map<ResourceLocation, BakedModel> models)
     {
         BakedModel model = Objects.requireNonNull(models.get(LOCATION));
         Utils.forAllDirections(false, dir ->

@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,6 +25,7 @@ import net.neoforged.neoforge.client.RenderTypeHelper;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
+import xfacthd.framedblocks.api.model.wrapping.ModelLookup;
 import xfacthd.framedblocks.api.model.wrapping.TextureLookup;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.model.FramedBlockModel;
@@ -162,8 +164,10 @@ public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlock
 
 
 
-    public static void onModelsLoaded(Map<ModelResourceLocation, BakedModel> registry)
+    public static void onModelsLoaded(ModelBakery.BakingResult bakingResult)
     {
+        Map<ModelResourceLocation, BakedModel> registry = bakingResult.blockStateModels();
+        ModelLookup lookup = ModelLookup.bind(bakingResult);
         for (Direction dir : Direction.Plane.HORIZONTAL)
         {
             for (ChestType type : ChestType.values())
@@ -182,7 +186,7 @@ public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlock
                     {
                         model = fbModel.getBaseModel();
                     }
-                    GeometryFactory.Context ctx = new GeometryFactory.Context(state, model, registry::get, TextureLookup.runtime());
+                    GeometryFactory.Context ctx = new GeometryFactory.Context(state, model, lookup, TextureLookup.runtime());
                     LID_MODELS[makeModelIndex(dir, type, latch)] = new FramedBlockModel(ctx, new FramedChestLidGeometry(ctx));
                 }
             }

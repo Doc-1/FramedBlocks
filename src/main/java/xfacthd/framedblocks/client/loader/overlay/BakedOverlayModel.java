@@ -3,24 +3,27 @@ package xfacthd.framedblocks.client.loader.overlay;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.DelegateBakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.BakedModelWrapper;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
-final class OverlayModel extends BakedModelWrapper<BakedModel>
+final class BakedOverlayModel extends DelegateBakedModel
 {
     private final List<BakedQuad> unculledQuads;
     private final Map<Direction, List<BakedQuad>> culledQuads;
 
-    public OverlayModel(BakedModel model, Vector3f offset, Vector3f scale)
+    public BakedOverlayModel(BakedModel model, Vector3f offset, Vector3f scale)
     {
         super(model);
 

@@ -9,6 +9,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -20,6 +21,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -61,6 +63,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
     public static final Component MSG_HINT_SEARCH = Utils.translate("msg", "framing_saw.search");
     private static final ResourceLocation BACKGROUND = Utils.rl("textures/gui/framing_saw.png");
     public static final ResourceLocation WARNING_ICON = Utils.rl("neoforge", "textures/gui/experimental_warning.png");
+    private static final ItemStackRenderState SCRATCH_RENDER_STATE = new ItemStackRenderState();
     private static final int IMAGE_WIDTH = 256;
     private static final int IMAGE_HEIGHT = 233;
     private static final int RECIPES_X = 48;
@@ -207,7 +210,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
     {
         if (additive.isEmpty())
         {
-            List<Holder<Item>> items = additives.get(index).ingredient().items();
+            List<Holder<Item>> items = additives.get(index).ingredient().items().toList();
             int t = (int) (System.currentTimeMillis() / 1700) % items.size();
             ClientUtils.renderTransparentFakeItem(graphics, items.get(t).value().getDefaultInstance(), leftPos + 20, y);
             return true;
@@ -292,12 +295,21 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
         {
             appendRecipeFailure(components, recipeHolder);
         }
-        if (recipeHolder != null && minecraft.getItemRenderer().getModel(stack, null, null, 0).usesBlockLight())
+        if (recipeHolder != null)
         {
-            tooltip = Optional.of(new BlockPreviewTooltipComponent.Component(stack));
+            minecraft.getItemModelResolver().updateForTopItem(SCRATCH_RENDER_STATE, stack, ItemDisplayContext.FIXED, false, null, null, 0);
+            if (SCRATCH_RENDER_STATE.usesBlockLight())
+            {
+                tooltip = Optional.of(new BlockPreviewTooltipComponent.Component(SCRATCH_RENDER_STATE));
+            }
         }
 
         graphics.renderTooltip(font, components, tooltip, stack, mouseX, mouseY);
+
+        if (recipeHolder != null)
+        {
+            SCRATCH_RENDER_STATE.clear();
+        }
     }
 
     private void appendRecipeFailure(List<Component> components, FramingSawMenu.FramedRecipeHolder recipeHolder)
@@ -412,14 +424,15 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
     private static void appendAdditiveItemOptions(List<Component> components, FramingSawRecipe recipe, int additiveSlot)
     {
         FramingSawRecipeAdditive additive = recipe.getAdditives().get(additiveSlot);
-        if (!additive.isTagBased() && additive.ingredient().items().size() <= 1)
+        List<Holder<Item>> items = additive.ingredient().items().toList();
+        if (!additive.isTagBased() && items.size() <= 1)
         {
             return;
         }
 
         if (hasShiftDown())
         {
-            for (Holder<Item> option : additive.ingredient().items())
+            for (Holder<Item> option : items)
             {
                 Component name = option.value().getDefaultInstance().getItemName();
                 components.add(Component.literal("- ").append(name).withStyle(ChatFormatting.GOLD));
@@ -446,7 +459,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
             );
         }
 
-        List<Holder<Item>> options = additive.ingredient().items();
+        List<Holder<Item>> options = additive.ingredient().items().toList();
         return Component.translatable(
                 options.size() > 1 ? TOOLTIP_HAVE_X_BUT_NEED_Y_ITEM_MULTI : TOOLTIP_HAVE_X_BUT_NEED_Y_ITEM,
                 present,

@@ -29,7 +29,8 @@ public final class FramedTargetBlockColor extends FramedBlockColor
         return super.getColor(state, level, pos, tintIndex);
     }
 
-    @Override
+    // FIXME: move to ItemTintSource
+    /*@Override
     public int getColor(ItemStack stack, int tintIndex)
     {
         if (tintIndex == FramedTargetGeometry.OVERLAY_TINT_IDX)
@@ -37,5 +38,5 @@ public final class FramedTargetBlockColor extends FramedBlockColor
             return DyeColor.RED.getTextColor();
         }
         return super.getColor(stack, tintIndex);
-    }
+    }*/
 }

@@ -2,15 +2,13 @@ package xfacthd.framedblocks.client.screen.widget;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
@@ -23,11 +21,11 @@ public final class BlockPreviewTooltipComponent implements ClientTooltipComponen
     private static final Quaternionf ROT_180_ZP = Axis.ZP.rotationDegrees(180);
     private static final Quaternionf ROT_22_5_XN = Axis.XN.rotationDegrees(22.5F);
 
-    private final ItemStack stack;
+    private final ItemStackRenderState renderState;
 
     public BlockPreviewTooltipComponent(Component component)
     {
-        this.stack = component.stack;
+        this.renderState = component.renderState;
     }
 
     @Override
@@ -46,15 +44,11 @@ public final class BlockPreviewTooltipComponent implements ClientTooltipComponen
 
         graphics.flush();
         Lighting.setupForEntityInInventory();
-        graphics.drawSpecial(buffer -> Minecraft.getInstance().getItemRenderer().renderStatic(
-                stack,
-                ItemDisplayContext.FIXED,
-                LightTexture.FULL_BRIGHT,
-                OverlayTexture.NO_OVERLAY,
+        graphics.drawSpecial(buffer -> renderState.render(
                 graphics.pose(),
                 buffer,
-                null,
-                0
+                LightTexture.FULL_BRIGHT,
+                OverlayTexture.NO_OVERLAY
         ));
 
         graphics.pose().popPose();
@@ -74,5 +68,5 @@ public final class BlockPreviewTooltipComponent implements ClientTooltipComponen
 
 
 
-    public record Component(ItemStack stack) implements TooltipComponent { }
+    public record Component(ItemStackRenderState renderState) implements TooltipComponent { }
 }

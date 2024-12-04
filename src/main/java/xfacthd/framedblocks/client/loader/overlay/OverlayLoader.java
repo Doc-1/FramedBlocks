@@ -1,26 +1,30 @@
 package xfacthd.framedblocks.client.loader.overlay;
 
-import com.google.gson.*;
-import net.minecraft.client.renderer.block.model.BlockModel;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
+import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
-import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
+import net.neoforged.neoforge.client.model.UnbakedModelLoader;
 import org.joml.Vector3f;
 import xfacthd.framedblocks.api.util.Utils;
 
-public final class OverlayLoader implements IGeometryLoader<OverlayGeometry>
+public final class OverlayLoader implements UnbakedModelLoader<UnbakedOverlayModel>
 {
     public static final ResourceLocation ID = Utils.rl("overlay");
     private static final Vector3f CENTER = new Vector3f(.5F, .5F, .5F);
     private static final Vector3f DEFAULT_SCALE = new Vector3f(1.001F, 1.001F, 1.001F);
 
     @Override
-    public OverlayGeometry read(JsonObject obj, JsonDeserializationContext ctx) throws JsonParseException
+    public UnbakedOverlayModel read(JsonObject obj, JsonDeserializationContext ctx) throws JsonParseException
     {
-        BlockModel model = ctx.deserialize(GsonHelper.getAsJsonObject(obj, "model"), BlockModel.class);
+        UnbakedModel model = ctx.deserialize(GsonHelper.getAsJsonObject(obj, "model"), UnbakedModel.class);
 
-        Vector3f offset = OverlayGeometry.VEC_ZERO;
+        Vector3f offset = UnbakedOverlayModel.VEC_ZERO;
         Vector3f scale = new Vector3f(DEFAULT_SCALE);
 
         if (obj.has("center"))
@@ -46,6 +50,6 @@ public final class OverlayLoader implements IGeometryLoader<OverlayGeometry>
             scale.add(scaleAdd);
         }
 
-        return new OverlayGeometry(model, offset, scale);
+        return new UnbakedOverlayModel(model, offset, scale);
     }
 }
