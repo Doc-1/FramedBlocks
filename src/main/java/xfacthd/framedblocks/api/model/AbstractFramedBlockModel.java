@@ -39,14 +39,13 @@ public abstract class AbstractFramedBlockModel extends DelegateBakedModel
     }
 
     @Override
-    public BakedModel applyTransform(ItemDisplayContext ctx, PoseStack poseStack, boolean leftHand)
+    public void applyTransform(ItemDisplayContext ctx, PoseStack poseStack, boolean leftHand)
     {
         super.applyTransform(ctx, poseStack, leftHand);
         if (itemModelInfo != null)
         {
             itemModelInfo.applyItemTransform(poseStack, ctx, leftHand);
         }
-        return this;
     }
 
     // TODO: replace with custom ItemModel
