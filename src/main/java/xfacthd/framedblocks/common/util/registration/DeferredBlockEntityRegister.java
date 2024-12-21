@@ -34,9 +34,7 @@ public final class DeferredBlockEntityRegister extends DeferredRegister<BlockEnt
             String name, BlockEntityType.BlockEntitySupplier<T> factory, Supplier<Set<Block>> blocks, boolean opOnlyNbt
     )
     {
-        // TODO: hook up opOnlyNbt when the PR is merged
-        //noinspection ConstantConditions
-        return (DeferredBlockEntity<T>) register(name, () -> new BlockEntityType<>(factory, blocks.get()));
+        return (DeferredBlockEntity<T>) register(name, () -> new BlockEntityType<>(factory, blocks.get(), opOnlyNbt));
     }
 
 

@@ -16,7 +16,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.event.RenderFrameEvent;
+import net.neoforged.neoforge.client.event.FrameGraphSetupEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
@@ -71,12 +71,11 @@ public final class FramedBlockDebugRenderer
         buffer.endBatch();
     }
 
-    private static void onRenderFramePre(final RenderFrameEvent.Pre event)
+    private static void onFrameGraphSetup(final FrameGraphSetupEvent event)
     {
         if (DevToolsConfig.VIEW.isDoubleBlockPartHitDebugRendererEnabled())
         {
-            // FIXME: needs another event to request outline processing
-            //Minecraft.getInstance().levelRenderer.requestOutlineEffect();
+            event.enableOutlineProcessing();
         }
     }
 
@@ -88,7 +87,7 @@ public final class FramedBlockDebugRenderer
                 RENDERERS_BY_TYPE.computeIfAbsent(type, $ -> new ReferenceOpenHashSet<>()).add(renderer)
         ));
 
-        NeoForge.EVENT_BUS.addListener(FramedBlockDebugRenderer::onRenderFramePre);
+        NeoForge.EVENT_BUS.addListener(FramedBlockDebugRenderer::onFrameGraphSetup);
         NeoForge.EVENT_BUS.addListener(FramedBlockDebugRenderer::onRenderLevelStage);
     }
 
