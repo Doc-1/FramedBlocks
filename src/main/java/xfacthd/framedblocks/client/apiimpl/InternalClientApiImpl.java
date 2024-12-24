@@ -1,15 +1,18 @@
 package xfacthd.framedblocks.client.apiimpl;
 
+import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.Property;
 import xfacthd.framedblocks.FramedBlocks;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.internal.InternalClientAPI;
+import xfacthd.framedblocks.api.model.item.DynamicItemTintProvider;
 import xfacthd.framedblocks.api.model.wrapping.*;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.render.debug.BlockDebugRenderer;
 import xfacthd.framedblocks.api.util.Utils;
+import xfacthd.framedblocks.client.itemmodel.FramedBlockItemModel;
 import xfacthd.framedblocks.client.model.FramedBlockModel;
 import xfacthd.framedblocks.client.modelwrapping.*;
 import xfacthd.framedblocks.client.render.debug.impl.ConnectionPredicateDebugRenderer;
@@ -63,6 +66,12 @@ public final class InternalClientApiImpl implements InternalClientAPI
     public void enqueueClientTask(int delay, Runnable task)
     {
         ClientTaskQueue.enqueueClientTask(delay, task);
+    }
+
+    @Override
+    public ItemModel.Unbaked createFramedBlockItemModel(Block block, DynamicItemTintProvider tintProvider)
+    {
+        return new FramedBlockItemModel.Unbaked(block, tintProvider);
     }
 
 

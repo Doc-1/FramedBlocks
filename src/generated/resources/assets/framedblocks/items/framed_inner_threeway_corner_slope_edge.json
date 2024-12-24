@@ -1,6 +1,6 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "framedblocks:block/framed_cube"
+    "type": "framedblocks:block",
+    "block": "framedblocks:framed_inner_threeway_corner_slope_edge"
   }
 }

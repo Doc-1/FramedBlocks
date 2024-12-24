@@ -1,6 +1,6 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "framedblocks:item/framed_iron_pressure_plate"
+    "type": "framedblocks:block",
+    "block": "framedblocks:framed_iron_pressure_plate"
   }
 }

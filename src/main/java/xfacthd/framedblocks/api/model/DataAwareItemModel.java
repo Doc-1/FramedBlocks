@@ -47,6 +47,7 @@ public final class DataAwareItemModel extends DelegateBakedModel
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand)
     {
         return getQuads(state, side, rand, itemData, blockRenderType);

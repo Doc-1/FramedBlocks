@@ -1,5 +1,6 @@
 package xfacthd.framedblocks.api.datagen.models;
 
+import com.google.common.base.Preconditions;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
@@ -17,10 +18,15 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.client.model.generators.template.ExtendedModelTemplateBuilder;
 import net.neoforged.neoforge.common.util.TransformationHelper;
+import xfacthd.framedblocks.api.block.IFramedBlock;
+import xfacthd.framedblocks.api.internal.InternalClientAPI;
+import xfacthd.framedblocks.api.model.item.DynamicItemTintProvider;
+import xfacthd.framedblocks.api.model.item.FramedBlockItemTintProvider;
 
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -68,7 +74,13 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
     protected static void simpleBlockWithItem(BlockModelGenerators blockModels, Holder<Block> block, ResourceLocation model)
     {
         simpleBlock(blockModels, block, model);
-        blockModels.registerSimpleItemModel(block.value(), model);
+        framedBlockItemModel(blockModels, block);
+    }
+
+    protected static void simpleBlockWithItem(BlockModelGenerators blockModels, Holder<Block> block, ResourceLocation model, DynamicItemTintProvider tintProvider)
+    {
+        simpleBlock(blockModels, block, model);
+        framedBlockItemModel(blockModels, block, tintProvider);
     }
 
     protected static void blockFromTemplate(BlockModelGenerators blockModels, Holder<Block> block, ModelTemplate template, TextureMapping textures)
@@ -80,6 +92,22 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
     {
         ResourceLocation name = ModelLocationUtils.getModelLocation(block.value(), template.suffix.orElse(""));
         return template.create(name, textures, blockModels.modelOutput);
+    }
+
+    protected static void framedBlockItemModel(BlockModelGenerators blockModels, Holder<Block> block)
+    {
+        if (!(block.value() instanceof IFramedBlock framedBlock))
+        {
+            throw new IllegalArgumentException("Expected IFramedBlock, got " + block.value());
+        }
+        framedBlockItemModel(blockModels, block, FramedBlockItemTintProvider.of(framedBlock));
+    }
+
+    protected static void framedBlockItemModel(BlockModelGenerators blockModels, Holder<Block> block, DynamicItemTintProvider tintProvider)
+    {
+        Item item = block.value().asItem();
+        Preconditions.checkArgument(item != Items.AIR, "Cannot generate item model for block %s without item", block.value());
+        blockModels.itemModelOutput.accept(item, InternalClientAPI.INSTANCE.createFramedBlockItemModel(block.value(), tintProvider));
     }
 
     protected static void blockItemFromTemplate(BlockModelGenerators blockModels, Holder<Block> block, ModelTemplate template, TextureMapping textures)

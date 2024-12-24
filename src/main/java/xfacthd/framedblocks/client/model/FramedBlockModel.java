@@ -124,6 +124,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand)
     {
         return getCamoQuads(null, side, rand, ModelData.EMPTY, DEFAULT_DATA, RenderType.cutout());

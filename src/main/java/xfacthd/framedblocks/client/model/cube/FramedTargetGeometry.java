@@ -12,6 +12,7 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
+import xfacthd.framedblocks.api.model.wrapping.itemmodel.ItemModelInfo;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.api.model.util.ModelUtils;
 
@@ -21,6 +22,14 @@ public class FramedTargetGeometry extends Geometry
 {
     public static final ResourceLocation OVERLAY_LOCATION = Utils.rl("block/target_overlay");
     public static final int OVERLAY_TINT_IDX = 1024;
+    private static final ItemModelInfo ITEM_MODEL_INFO = new ItemModelInfo()
+    {
+        @Override
+        public boolean isDataRequired()
+        {
+            return true;
+        }
+    };
 
     private final BlockState state;
     private final BakedModel overlayModel;
@@ -44,5 +53,11 @@ public class FramedTargetGeometry extends Geometry
     public void getAdditionalQuads(ArrayList<BakedQuad> quads, Direction side, RandomSource rand, ModelData data, RenderType renderType)
     {
         Utils.copyAll(overlayModel.getQuads(state, side, rand, data, renderType), quads);
+    }
+
+    @Override
+    public ItemModelInfo getItemModelInfo()
+    {
+        return ITEM_MODEL_INFO;
     }
 }

@@ -1,6 +1,7 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "framedblocks:block/framed_cube"
+    "type": "framedblocks:block",
+    "block": "framedblocks:framed_inv_double_slope_slab",
+    "tint_provider": "framedblocks:double"
   }
 }

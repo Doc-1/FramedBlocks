@@ -1,9 +1,11 @@
 package xfacthd.framedblocks.api.internal;
 
+import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.ApiStatus;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
+import xfacthd.framedblocks.api.model.item.DynamicItemTintProvider;
 import xfacthd.framedblocks.api.model.wrapping.*;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.render.debug.BlockDebugRenderer;
@@ -27,4 +29,6 @@ public interface InternalClientAPI
     BlockDebugRenderer<FramedBlockEntity> getQuadWindingDebugRenderer();
 
     void enqueueClientTask(int delay, Runnable task);
+
+    ItemModel.Unbaked createFramedBlockItemModel(Block block, DynamicItemTintProvider tintProvider);
 }

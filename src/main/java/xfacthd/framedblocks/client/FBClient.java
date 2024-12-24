@@ -25,6 +25,8 @@ import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.render.FramedBlockColor;
 import xfacthd.framedblocks.api.block.render.FramedBlockRenderProperties;
 import xfacthd.framedblocks.api.model.ErrorModel;
+import xfacthd.framedblocks.api.model.item.FramedBlockItemTintProvider;
+import xfacthd.framedblocks.api.model.item.RegisterItemTintProvidersEvent;
 import xfacthd.framedblocks.api.model.wrapping.*;
 import xfacthd.framedblocks.api.model.wrapping.itemmodel.ItemModelInfo;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
@@ -35,7 +37,10 @@ import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.data.*;
 import xfacthd.framedblocks.client.data.extensions.block.NoEffectsClientBlockExtensions;
 import xfacthd.framedblocks.client.data.extensions.block.OneWayWindowClientBlockExtensions;
+import xfacthd.framedblocks.client.itemmodel.DynamicItemTintProviders;
+import xfacthd.framedblocks.client.itemmodel.FramedBlockItemModel;
 import xfacthd.framedblocks.client.itemmodel.TankItemModel;
+import xfacthd.framedblocks.client.itemmodel.tintprovider.FramedTargetItemTintProvider;
 import xfacthd.framedblocks.client.loader.fallback.FallbackLoader;
 import xfacthd.framedblocks.client.model.*;
 import xfacthd.framedblocks.client.model.cube.*;
@@ -109,8 +114,8 @@ public final class FBClient
         modBus.addListener(FBClient::onRegisterKeyMappings);
         modBus.addListener(FBClient::onAttachDebugRenderers);
         modBus.addListener(FBClient::onRegisterRenderers);
-        modBus.addListener(FBClient::onBlockColors);
-        //modBus.addListener(FBClient::onItemColors); // FIXME: handle with ItemTintSources
+        modBus.addListener(FBClient::onRegisterBlockColors);
+        modBus.addListener(FBClient::onRegisterItemTintProviders);
         modBus.addListener(FBClient::onOverlayRegister);
         modBus.addListener(FBClient::onGeometryLoaderRegister);
         modBus.addListener(FBClient::onRegisterModelWrappers);
@@ -144,6 +149,7 @@ public final class FBClient
 
     private static void onRegisterItemModels(final RegisterItemModelsEvent event)
     {
+        event.register(FramedBlockItemModel.Unbaked.ID, FramedBlockItemModel.Unbaked.CODEC);
         event.register(TankItemModel.Unbaked.ID, TankItemModel.Unbaked.CODEC);
     }
 
@@ -198,7 +204,7 @@ public final class FBClient
         event.registerBlockEntityRenderer(FBContent.BE_TYPE_FRAMED_TANK.value(), FramedTankRenderer::new);
     }
 
-    private static void onBlockColors(final RegisterColorHandlersEvent.Block event)
+    private static void onRegisterBlockColors(final RegisterColorHandlersEvent.Block event)
     {
         //noinspection SuspiciousToArrayCall
         Block[] blocks = FBContent.getRegisteredBlocks()
@@ -215,22 +221,12 @@ public final class FBClient
         event.register(FramedTargetBlockColor.INSTANCE, FBContent.BLOCK_FRAMED_TARGET.value());
     }
 
-    // FIXME: handle with ItemTintSources
-    /*private static void onItemColors(final RegisterColorHandlersEvent.Item event)
+    private static void onRegisterItemTintProviders(final RegisterItemTintProvidersEvent event)
     {
-        //noinspection SuspiciousToArrayCall
-        ItemLike[] blocks = FBContent.getRegisteredBlocks()
-                .stream()
-                .map(Holder::value)
-                .filter(IFramedBlock.class::isInstance)
-                .map(IFramedBlock.class::cast)
-                .filter(FBClient::useDefaultColorHandler)
-                .toArray(ItemLike[]::new);
-
-        event.register(FramedBlockColor.INSTANCE, blocks);
-
-        event.register(FramedTargetBlockColor.INSTANCE, FBContent.BLOCK_FRAMED_TARGET.value());
-    }*/
+        event.register(Utils.rl("single"), FramedBlockItemTintProvider.INSTANCE_SINGLE);
+        event.register(Utils.rl("double"), FramedBlockItemTintProvider.INSTANCE_DOUBLE);
+        event.register(Utils.rl("target"), FramedTargetItemTintProvider.INSTANCE);
+    }
 
     private static void onOverlayRegister(final RegisterGuiLayersEvent event)
     {
@@ -507,6 +503,7 @@ public final class FBClient
         FramedBlockDebugRenderer.init();
         BlockOutlineRenderer.init();
         GhostBlockRenderer.init();
+        DynamicItemTintProviders.init();
     }
 
     private static void onRegisterSpriteSources(final RegisterSpriteSourceTypesEvent event)

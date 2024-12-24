@@ -13,7 +13,10 @@
     ],
     "client": [
         "client.AccessorDelegateBakedModel",
+        "client.AccessorModelManager",
         "client.AccessorMultiPlayerGameMode",
+        "client.MixinItemRenderer",
+        "client.MixinItemStackRenderStateLayer",
         "client.MixinLevelRenderer"
     ],
     "injectors": {

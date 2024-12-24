@@ -1,8 +1,6 @@
 package xfacthd.framedblocks.client.render.color;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -28,15 +26,4 @@ public final class FramedTargetBlockColor extends FramedBlockColor
         }
         return super.getColor(state, level, pos, tintIndex);
     }
-
-    // FIXME: move to ItemTintSource
-    /*@Override
-    public int getColor(ItemStack stack, int tintIndex)
-    {
-        if (tintIndex == FramedTargetGeometry.OVERLAY_TINT_IDX)
-        {
-            return DyeColor.RED.getTextColor();
-        }
-        return super.getColor(stack, tintIndex);
-    }*/
 }

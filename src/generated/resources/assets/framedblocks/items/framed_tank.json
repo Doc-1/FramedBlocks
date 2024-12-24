@@ -2,8 +2,8 @@
   "model": {
     "type": "framedblocks:tank",
     "base": {
-      "type": "minecraft:model",
-      "model": "framedblocks:block/framed_tank"
+      "type": "framedblocks:block",
+      "block": "framedblocks:framed_tank"
     },
     "renderer": {
       "type": "framedblocks:tank"

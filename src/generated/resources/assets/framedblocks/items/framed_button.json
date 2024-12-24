@@ -1,6 +1,6 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "framedblocks:item/framed_button_inventory"
+    "type": "framedblocks:block",
+    "block": "framedblocks:framed_button"
   }
 }

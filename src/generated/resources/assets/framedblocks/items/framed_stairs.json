@@ -1,6 +1,6 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "framedblocks:item/framed_stairs"
+    "type": "framedblocks:block",
+    "block": "framedblocks:framed_stairs"
   }
 }
