@@ -18,11 +18,13 @@ import xfacthd.framedblocks.common.util.registration.DeferredDataComponentTypeRe
 
 public final class AppliedEnergisticsCompat
 {
+    public static final String MOD_ID = "ae2";
+    public static final String SAW_PATTERN_ID = "framing_saw_pattern";
     private static boolean loaded = false;
 
     public static void init(IEventBus modBus)
     {
-        if (ModList.get().isLoaded("ae2"))
+        if (ModList.get().isLoaded(MOD_ID))
         {
             GuardedAccess.init(modBus);
             loaded = true;
@@ -78,7 +80,7 @@ public final class AppliedEnergisticsCompat
         private static final DeferredRegister<AttachmentType<?>> ATTACHMENTS = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, FramedConstants.MOD_ID);
         private static final DeferredDataComponentTypeRegister DATA_COMPONENTS = DeferredDataComponentTypeRegister.create(FramedConstants.MOD_ID);
 
-        static final Holder<Item> ITEM_FRAMING_SAW_PATTERN = ITEMS.register("framing_saw_pattern", () ->
+        static final Holder<Item> ITEM_FRAMING_SAW_PATTERN = ITEMS.register(SAW_PATTERN_ID, () ->
                 PatternDetailsHelper.encodedPatternItemBuilder(FramingSawPatternDetails::new)
                         .invalidPatternTooltip(FramingSawPatternDetails::makeInvalidPatternTooltip)
                         .build()
@@ -90,7 +92,7 @@ public final class AppliedEnergisticsCompat
                 "framing_saw_pattern", builder -> builder.persistent(EncodedFramingSawPattern.CODEC).networkSynchronized(EncodedFramingSawPattern.STREAM_CODEC)
         );
 
-        static final Holder<Item> ITEM_BLANK_PATTERN = DeferredItem.createItem(Utils.rl("ae2", "blank_pattern"));
+        static final Holder<Item> ITEM_BLANK_PATTERN = DeferredItem.createItem(Utils.rl(MOD_ID, "blank_pattern"));
 
         public static void init(IEventBus modBus)
         {

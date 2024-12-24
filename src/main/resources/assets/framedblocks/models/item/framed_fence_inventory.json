@@ -15,6 +15,7 @@
     "textures": {
         "particle": "#texture"
     },
+    "render_type": "minecraft:cutout",
     "elements": [
         {
             "from": [ 6, 0, 0 ],

@@ -15,7 +15,8 @@ import xfacthd.framedblocks.common.FBContent;
 public final class BlueprintProperty implements ConditionalItemModelProperty
 {
     public static final ResourceLocation HAS_DATA = Utils.rl("blueprint_has_data");
-    public static final MapCodec<BlueprintProperty> TYPE = MapCodec.unit(new BlueprintProperty());
+    public static final BlueprintProperty INSTANCE = new BlueprintProperty();
+    public static final MapCodec<BlueprintProperty> TYPE = MapCodec.unit(INSTANCE);
 
     private BlueprintProperty() { }
 

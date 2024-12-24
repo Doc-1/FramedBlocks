@@ -3,7 +3,6 @@ package xfacthd.framedblocks.common.datagen.providers;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.client.model.generators.ModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.common.data.SpriteSourceProvider;
 import xfacthd.framedblocks.api.util.FramedConstants;
@@ -27,8 +26,6 @@ public final class FramedSpriteSourceProvider extends SpriteSourceProvider
     @Override
     protected void gather()
     {
-        existingFileHelper.trackGenerated(SPRITE_SAW_STILL, ModelProvider.TEXTURE);
-
         atlas(BLOCKS_ATLAS)
                 .addSource(new AnimationSplitterSource(
                         Utils.rl("minecraft", "block/stonecutter_saw"),

@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "framedblocks:tank",
+    "base": {
+      "type": "minecraft:model",
+      "model": "framedblocks:block/framed_tank"
+    },
+    "renderer": {
+      "type": "framedblocks:tank"
+    }
+  }
+}

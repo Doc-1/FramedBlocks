@@ -1,9 +1,15 @@
 {
-  "loader": "framedblocks:overlay",
-  "model": {
-    "parent": "minecraft:block/cube_all",
-    "textures": {
-      "all": "framedblocks:block/slime_frame"
-    }
+  "parent": "minecraft:block/cube_all",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "all": "framedblocks:block/slime_frame"
+  },
+  "transform": {
+    "origin": "center",
+    "scale": [
+      1.002,
+      1.002,
+      1.002
+    ]
   }
 }

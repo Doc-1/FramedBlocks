@@ -1,67 +1,81 @@
 package xfacthd.framedblocks.common.datagen.providers;
 
+import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.model.ModelTemplate;
+import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
-import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.client.model.generators.ModelProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
+import xfacthd.framedblocks.api.datagen.models.AbstractFramedItemModelProvider;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.Utils;
+import xfacthd.framedblocks.client.loader.fallback.FallbackLoaderBuilder;
+import xfacthd.framedblocks.client.render.item.BlueprintProperty;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.compat.ae2.AppliedEnergisticsCompat;
+import xfacthd.framedblocks.common.datagen.GeneratorHandler;
 
-@SuppressWarnings({ "SameParameterValue", "UnusedReturnValue" })
-public final class FramedItemModelProvider extends ItemModelProvider
+import java.util.Objects;
+import java.util.stream.Stream;
+
+public final class FramedItemModelProvider extends AbstractFramedItemModelProvider
 {
-    public FramedItemModelProvider(PackOutput output, ExistingFileHelper fileHelper)
+    private static final ModelTemplate FLAT_CUTOUT = ModelTemplates.FLAT_ITEM.extend().renderType("cutout").build();
+    private static final ModelTemplate HANDHELD_CUTOUT = ModelTemplates.FLAT_HANDHELD_ITEM.extend().renderType("cutout").build();
+
+    public FramedItemModelProvider(PackOutput output)
     {
-        super(output, FramedConstants.MOD_ID, fileHelper);
+        super(output, FramedConstants.MOD_ID);
     }
 
     @Override
-    protected void registerModels()
+    protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels)
     {
-        handheldItem(FBContent.ITEM_FRAMED_HAMMER, "cutout");
-        handheldItem(FBContent.ITEM_FRAMED_WRENCH, "cutout");
-        handheldItem(FBContent.ITEM_FRAMED_KEY, "cutout");
-        handheldItem(FBContent.ITEM_FRAMED_SCREWDRIVER, "cutout");
+        itemModels.generateFlatItem(FBContent.ITEM_FRAMED_HAMMER.value(), HANDHELD_CUTOUT);
+        itemModels.generateFlatItem(FBContent.ITEM_FRAMED_WRENCH.value(), HANDHELD_CUTOUT);
+        itemModels.generateFlatItem(FBContent.ITEM_FRAMED_KEY.value(), HANDHELD_CUTOUT);
+        itemModels.generateFlatItem(FBContent.ITEM_FRAMED_SCREWDRIVER.value(), HANDHELD_CUTOUT);
 
-        simpleItem(FBContent.ITEM_FRAMED_REINFORCEMENT, "cutout");
-        simpleItem(FBContent.ITEM_PHANTOM_PASTE, "cutout");
+        itemModels.generateFlatItem(FBContent.ITEM_FRAMED_REINFORCEMENT.value(), FLAT_CUTOUT);
+        itemModels.generateFlatItem(FBContent.ITEM_PHANTOM_PASTE.value(), FLAT_CUTOUT);
 
-        ResourceLocation patternTexture = Utils.rl("ae2", "item/crafting_pattern");
-        if (!AppliedEnergisticsCompat.isLoaded())
-        {
-            // Pretend that the texture exists when AE2 is not present so this doesn't crash
-            existingFileHelper.trackGenerated(patternTexture, ModelProvider.TEXTURE);
-        }
-        singleTexture("framing_saw_pattern", mcLoc("item/generated"), "layer0", patternTexture);
+        ResourceLocation patternTexture = Utils.rl(AppliedEnergisticsCompat.MOD_ID, "item/crafting_pattern");
+        Item patternItem = Objects.requireNonNull(GeneratorHandler.framingSawPattern).asItem();
+        itemModels.itemModelOutput.accept(patternItem, ItemModelUtils.plainModel(
+                ModelTemplates.FLAT_ITEM
+                        .extend()
+                        .customLoader(FallbackLoaderBuilder::new, loader ->
+                                loader.addCondition(new ModLoadedCondition(AppliedEnergisticsCompat.MOD_ID))
+                                        // Random fallback to avoid texture reference errors when AE2 is not present
+                                        .setFallback(mcLocation("item/paper"))
+                        )
+                        .build()
+                        .create(patternItem, TextureMapping.layer0(patternTexture), itemModels.modelOutput)
+        ));
 
-        simpleItem(FBContent.ITEM_FRAMED_BLUEPRINT, "cutout");
-        simpleItem("framed_blueprint_written", "cutout");
+        itemModels.itemModelOutput.accept(FBContent.ITEM_FRAMED_BLUEPRINT.value(), ItemModelUtils.conditional(
+                BlueprintProperty.INSTANCE,
+                ItemModelUtils.plainModel(itemModels.createFlatItemModel(FBContent.ITEM_FRAMED_BLUEPRINT.value(), "_written", FLAT_CUTOUT)),
+                ItemModelUtils.plainModel(itemModels.createFlatItemModel(FBContent.ITEM_FRAMED_BLUEPRINT.value(), FLAT_CUTOUT))
+        ));
     }
 
-    private ItemModelBuilder handheldItem(Holder<Item> item, String renderType)
+    @Override
+    protected Stream<? extends Holder<Item>> getKnownItems()
     {
-        String name = Utils.getKeyOrThrow(item).location().getPath();
-        return singleTexture(name, mcLoc("item/handheld"), "layer0", modLoc("item/" + name)).renderType(renderType);
-    }
-
-    private ItemModelBuilder simpleItem(Holder<Item> item, String renderType)
-    {
-        return simpleItem(Utils.getKeyOrThrow(item).location().getPath(), renderType);
-    }
-
-    private ItemModelBuilder simpleItem(String name, String renderType)
-    {
-        return singleTexture(name, mcLoc("item/generated"), "layer0", modLoc("item/" + name)).renderType(renderType);
-    }
-
-    private ItemModelBuilder builder(Holder<Item> item)
-    {
-        return getBuilder(Utils.getKeyOrThrow(item).location().getPath());
+        return Stream.of(
+                FBContent.ITEM_FRAMED_HAMMER,
+                FBContent.ITEM_FRAMED_WRENCH,
+                FBContent.ITEM_FRAMED_KEY,
+                FBContent.ITEM_FRAMED_SCREWDRIVER,
+                FBContent.ITEM_FRAMED_REINFORCEMENT,
+                FBContent.ITEM_PHANTOM_PASTE,
+                FBContent.ITEM_FRAMED_BLUEPRINT
+        );
     }
 }

@@ -1,5 +1,13 @@
 {
   "parent": "minecraft:item/generated",
+  "conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ae2"
+    }
+  ],
+  "fallback": "minecraft:item/paper",
+  "loader": "framedblocks:fallback",
   "textures": {
     "layer0": "ae2:item/crafting_pattern"
   }

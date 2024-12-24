@@ -37,7 +37,6 @@ import xfacthd.framedblocks.client.data.extensions.block.NoEffectsClientBlockExt
 import xfacthd.framedblocks.client.data.extensions.block.OneWayWindowClientBlockExtensions;
 import xfacthd.framedblocks.client.itemmodel.TankItemModel;
 import xfacthd.framedblocks.client.loader.fallback.FallbackLoader;
-import xfacthd.framedblocks.client.loader.overlay.OverlayLoader;
 import xfacthd.framedblocks.client.model.*;
 import xfacthd.framedblocks.client.model.cube.*;
 import xfacthd.framedblocks.client.model.door.*;
@@ -240,7 +239,6 @@ public final class FBClient
 
     private static void onGeometryLoaderRegister(final ModelEvent.RegisterLoaders event)
     {
-        event.register(OverlayLoader.ID, new OverlayLoader());
         event.register(FallbackLoader.ID, new FallbackLoader());
     }
 

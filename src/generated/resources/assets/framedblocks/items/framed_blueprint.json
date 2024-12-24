@@ -1,0 +1,14 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "framedblocks:item/framed_blueprint"
+    },
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "framedblocks:item/framed_blueprint_written"
+    },
+    "property": "framedblocks:blueprint_has_data"
+  }
+}
