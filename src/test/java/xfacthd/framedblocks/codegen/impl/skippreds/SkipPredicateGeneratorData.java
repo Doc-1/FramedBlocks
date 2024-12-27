@@ -1,17 +1,26 @@
 package xfacthd.framedblocks.codegen.impl.skippreds;
 
-import java.util.*;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class SkipPredicateGeneratorData
 {
-    static final Map<String, Type> KNOWN_TYPES = validate(Map.ofEntries(
+    static final Map<String, Type> KNOWN_TYPES = validate(ofEntries(
             entry("FRAMED_SLOPE", "slope", List.of(
                     Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
                     Property.internal("SlopeType", "type", "SLOPE_TYPE", PropType.CUSTOM)
             ), List.of(
                     new TestDir("TriangleDir", "Tri", null, "slope_tri_xz", "slope_tri_y")
-            )),
+            ), "FRAMED_RAIL_SLOPE", "FRAMED_POWERED_RAIL_SLOPE", "FRAMED_DETECTOR_RAIL_SLOPE", "FRAMED_ACTIVATOR_RAIL_SLOPE"),
             entry("FRAMED_HALF_SLOPE", "slope", List.of(
                     Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
                     Property.api("boolean", "top", "TOP", PropType.PRIMITIVE),
@@ -27,27 +36,15 @@ public final class SkipPredicateGeneratorData
                     new TestDir("TriangleDir", "Tri", null, "slope_tri_y"),
                     new TestDir("HalfDir", "Half", null, "half_xz_hor")
             )),
-            entry("FRAMED_CORNER_SLOPE", "slope", List.of(
+            entry("FRAMED_CORNER_SLOPE", "Corner", "slope", List.of(
                     Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
                     Property.internal("CornerType", "type", "CORNER_TYPE", PropType.CUSTOM)
             ), List.of(
                     new TestDir("TriangleDir", "Tri", null, "slope_tri_xz", "slope_tri_y")
             )),
-            entry("FRAMED_INNER_CORNER_SLOPE", "slope", List.of(
+            entry("FRAMED_INNER_CORNER_SLOPE", "InnerCorner", "slope", List.of(
                     Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
                     Property.internal("CornerType", "type", "CORNER_TYPE", PropType.CUSTOM)
-            ), List.of(
-                    new TestDir("TriangleDir", "Tri", null, "slope_tri_xz", "slope_tri_y")
-            )),
-            entry("FRAMED_PRISM_CORNER", "slope", List.of(
-                    Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
-                    Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
-            ), List.of(
-                    new TestDir("TriangleDir", "Tri", null, "slope_tri_xz", "slope_tri_y")
-            )),
-            entry("FRAMED_INNER_PRISM_CORNER", "slope", List.of(
-                    Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
-                    Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
             ), List.of(
                     new TestDir("TriangleDir", "Tri", null, "slope_tri_xz", "slope_tri_y")
             )),
@@ -56,13 +53,13 @@ public final class SkipPredicateGeneratorData
                     Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
             ), List.of(
                     new TestDir("TriangleDir", "Tri", null, "slope_tri_xz", "slope_tri_y")
-            )),
+            ), "FRAMED_PRISM_CORNER"),
             entry("FRAMED_INNER_THREEWAY_CORNER", "slope", List.of(
                     Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
                     Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
             ), List.of(
                     new TestDir("TriangleDir", "Tri", null, "slope_tri_xz", "slope_tri_y")
-            )),
+            ), "FRAMED_INNER_PRISM_CORNER"),
             entry("FRAMED_SLOPE_EDGE", "slopeedge", List.of(
                     Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
                     Property.internal("SlopeType", "type", "SLOPE_TYPE", PropType.CUSTOM),
@@ -443,7 +440,12 @@ public final class SkipPredicateGeneratorData
             ))
     ));
 
-    private static Map.Entry<String, Type> entry(String type, String subPackage, List<Property> properties, List<TestDir> testDirs)
+    private static Map.Entry<String, Type> entry(String type, String subPackage, List<Property> properties, List<TestDir> testDirs, String... altTypes)
+    {
+        return entry(type, null, subPackage, properties, testDirs, altTypes);
+    }
+
+    private static Map.Entry<String, Type> entry(String type, @Nullable String shortName, String subPackage, List<Property> properties, List<TestDir> testDirs, String... altTypes)
     {
         Map<String, Property> propertyMap = properties.stream().collect(Collectors.toMap(Property::name, p -> p));
         List<TestDir> newTestDirs = new ArrayList<>(testDirs.size());
@@ -456,7 +458,18 @@ public final class SkipPredicateGeneratorData
             }
             newTestDirs.add(dir);
         }
-        return Map.entry(type, new Type(type, subPackage, properties, propertyMap, List.copyOf(newTestDirs)));
+        return Map.entry(type, new Type(type, List.of(altTypes), Optional.ofNullable(shortName), subPackage, properties, propertyMap, List.copyOf(newTestDirs)));
+    }
+
+    @SafeVarargs
+    private static Map<String, Type> ofEntries(Map.Entry<String, Type>... entries)
+    {
+        Map<String, Type> types = new LinkedHashMap<>();
+        for (Map.Entry<String, Type> entry : entries)
+        {
+            types.put(entry.getKey(), entry.getValue());
+        }
+        return Collections.unmodifiableMap(types);
     }
 
     private static Map<String, Type> validate(Map<String, Type> map)
@@ -485,7 +498,35 @@ public final class SkipPredicateGeneratorData
 
 
 
-    record Type(String type, String subPackage, List<Property> properties, Map<String, Property> propertyMap, List<TestDir> testDirs) { }
+    record Type(String type, List<String> altTypes, Optional<String> shortName, String subPackage, List<Property> properties, Map<String, Property> propertyMap, List<TestDir> testDirs)
+    {
+        public List<String> allTypes()
+        {
+            List<String> types = new ArrayList<>();
+            types.add(type);
+            types.addAll(altTypes);
+            return types;
+        }
+
+        public String getShortName()
+        {
+            return shortName.orElseGet(() ->
+            {
+                StringBuilder builder = new StringBuilder();
+                for (String part : type.replace("FRAMED_", "").split("_"))
+                {
+                    builder.append(switch (part)
+                    {
+                        case "EXT" -> "Extended";
+                        case "ELEV" -> "Elevated";
+                        case "W" -> "Wall";
+                        default -> SkipPredicateGeneratorImpl.capitalize(part, true);
+                    });
+                }
+                return builder.toString();
+            });
+        }
+    }
 
     record Property(String typeName, String name, String propHolder, String propName, PropType type)
     {

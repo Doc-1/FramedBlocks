@@ -1,11 +1,22 @@
 package xfacthd.framedblocks.codegen.impl.skippreds;
 
+import xfacthd.framedblocks.codegen.impl.skippreds.SkipPredicateGeneratorData.Property;
+import xfacthd.framedblocks.codegen.impl.skippreds.SkipPredicateGeneratorData.TestDir;
+import xfacthd.framedblocks.codegen.impl.skippreds.SkipPredicateGeneratorData.Type;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
-import xfacthd.framedblocks.codegen.impl.skippreds.SkipPredicateGeneratorData.*;
 
 public final class SkipPredicateGeneratorImpl
 {
@@ -35,9 +46,9 @@ public final class SkipPredicateGeneratorImpl
             
             %s
             
-            @CullTest(BlockType.%s)
+            @CullTest(%s)
             public final class %sSkipPredicate implements SideSkipPredicate
-            {
+            {%s
                 @Override
                 public boolean test(BlockGetter level, BlockPos pos, BlockState state, BlockState adjState, Direction side)
                 {
@@ -71,6 +82,7 @@ public final class SkipPredicateGeneratorImpl
             %s
             }
             """;
+    private static final String INST_FIELD_TEMPLATE = "\n    public static final %sSkipPredicate INSTANCE = new %sSkipPredicate();\n";
     private static final String PROP_LOOKUP_TEMPLATE = "            %s %s = state.getValue(%s.%s);";
     private static final String TEST_CASE_TEMPLATE = """
                             case %s -> testAgainst%s(
@@ -78,7 +90,7 @@ public final class SkipPredicateGeneratorImpl
                             );
             """;
     private static final String TEST_MTH_TEMPLATE = """
-                @CullTest.TestTarget(BlockType.%s)
+                @CullTest.TestTarget(%s)
                 private static boolean testAgainst%s(
                         %s, BlockState adjState, Direction side
                 )
@@ -116,12 +128,32 @@ public final class SkipPredicateGeneratorImpl
     private static final String DIR_TEST_TEMPLATE_FIRST = "return get%sDir(%s).isEqualTo(%sget%sDir(%s))";
     private static final String DIR_TEST_TEMPLATE_OTHER = "       get%sDir(%s).isEqualTo(%sget%sDir(%s))";
 
-    public static void generateAndExportClass(String sourceTypeName, List<String> targetTypeNames)
+    public static void generateAndExportClass(String sourceTypeName)
     {
         Type sourceType = resolveType(sourceTypeName);
-        List<Type> targetTypes = targetTypeNames.stream().map(SkipPredicateGeneratorImpl::resolveType).toList();
+        List<Type> targetTypes = SkipPredicateGeneratorData.KNOWN_TYPES.values()
+                .stream()
+                .filter(type -> type != sourceType)
+                .filter(type ->
+                {
+                    for (TestDir srcDir : sourceType.testDirs())
+                    {
+                        for (TestDir dir : type.testDirs())
+                        {
+                            for (String id : srcDir.identifiers())
+                            {
+                                if (dir.identifiers().contains(id))
+                                {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                    return false;
+                })
+                .toList();
 
-        String shortName = getShortTypeName(sourceType);
+        String shortName = sourceType.getShortName();
         String predicateClazz = generateClass(sourceType, targetTypes);
         String counterpartsClazz = generateCounterpartsClass(sourceType, targetTypes);
 
@@ -173,12 +205,19 @@ public final class SkipPredicateGeneratorImpl
         String dirComputeMthList = buildDirComputeMethodList(sourceType, imports);
         String importList = imports.stream().sorted().map(s -> "import " + s + ";").collect(Collectors.joining("\n"));
 
+        String shortName = sourceType.getShortName();
+        String instField = "";
+        if (sourceType.allTypes().size() > 1)
+        {
+            instField = INST_FIELD_TEMPLATE.formatted(shortName, shortName);
+        }
         return CLASS_TEMPLATE.formatted(
                 SKIP_PREDS_ROOT_PKG.substring(0, SKIP_PREDS_ROOT_PKG.length() - 1),
                 sourceType.subPackage(),
                 importList,
-                sourceType.type(),
-                getShortTypeName(sourceType),
+                buildAnnotationTypeList(sourceType, ""),
+                shortName,
+                instField,
                 propertyList,
                 testCaseList,
                 testMthList,
@@ -197,7 +236,7 @@ public final class SkipPredicateGeneratorImpl
                 SKIP_PREDS_ROOT_PKG.substring(0, SKIP_PREDS_ROOT_PKG.length() - 1),
                 sourceType.subPackage(),
                 importList,
-                getShortTypeName(sourceType),
+                sourceType.getShortName(),
                 testMthList
         );
     }
@@ -243,7 +282,11 @@ public final class SkipPredicateGeneratorImpl
 
     private static String buildTestCase(Type type, String propArgsList)
     {
-        return TEST_CASE_TEMPLATE.formatted(type.type(), getShortTypeName(type), propArgsList);
+        return TEST_CASE_TEMPLATE.formatted(
+                String.join(", ", type.allTypes()),
+                type.getShortName(),
+                propArgsList
+        );
     }
 
     private static String buildTestMethodList(Type sourceType, List<Type> targetTypes, Set<String> imports, Map<Type, Set<Property>> propsByTestTarget)
@@ -287,7 +330,7 @@ public final class SkipPredicateGeneratorImpl
             propsByTestTarget.put(type, srcUsedProps);
             if (!type.subPackage().equals(sourceType.subPackage()))
             {
-                imports.add(SKIP_PREDS_ROOT_PKG + type.subPackage() + "." + getShortTypeName(type) + "SkipPredicate");
+                imports.add(SKIP_PREDS_ROOT_PKG + type.subPackage() + "." + type.getShortName() + "SkipPredicate");
             }
         }
         return builder.toString().stripTrailing();
@@ -336,7 +379,7 @@ public final class SkipPredicateGeneratorImpl
             return indent + "// TODO: implement\n" + indent + "return false;";
         }
 
-        String secondTarget = sourceType == type ? "" : (getShortTypeName(type) + "SkipPredicate.");
+        String secondTarget = sourceType == type ? "" : (type.getShortName() + "SkipPredicate.");
 
         StringBuilder builder = new StringBuilder();
 
@@ -423,10 +466,10 @@ public final class SkipPredicateGeneratorImpl
             String propLookupList = buildTestPropertyLookupList(COUNTERPART_TEST_MTH_PROP_LOOKUP_TEMPLATE, srcProperties, imports);
 
             builder.append(COUNTERPART_TEST_MTH_TEMPLATE.formatted(
-                    getShortTypeName(type),
+                    type.getShortName(),
                     buildTestCase(sourceType, propArgsList).stripTrailing(),
                     sourceType.type(),
-                    getShortTypeName(sourceType),
+                    sourceType.getShortName(),
                     propParamsList,
                     propLookupList,
                     testExec
@@ -459,7 +502,13 @@ public final class SkipPredicateGeneratorImpl
 
     private static String buildTestMethod(Type type, String propParamsList, String propLookup, String testExec)
     {
-        return TEST_MTH_TEMPLATE.formatted(type.type(), getShortTypeName(type), propParamsList, propLookup, testExec);
+        return TEST_MTH_TEMPLATE.formatted(
+                buildAnnotationTypeList(type, "    "),
+                type.getShortName(),
+                propParamsList,
+                propLookup,
+                testExec
+        );
     }
 
     private static void collectPropertyImports(Property property, Set<String> imports)
@@ -478,23 +527,7 @@ public final class SkipPredicateGeneratorImpl
         }
     }
 
-    private static String getShortTypeName(Type type)
-    {
-        StringBuilder builder = new StringBuilder();
-        for (String part : type.type().replace("FRAMED_", "").split("_"))
-        {
-            builder.append(switch (part)
-            {
-                case "EXT" -> "Extended";
-                case "ELEV" -> "Elevated";
-                case "W" -> "Wall";
-                default -> capitalize(part, true);
-            });
-        }
-        return builder.toString();
-    }
-
-    private static String capitalize(String text, boolean lowerPartTwo)
+    static String capitalize(String text, boolean lowerPartTwo)
     {
         String partOne = text.substring(0, 1).toUpperCase(Locale.ROOT);
         String partTwo = text.substring(1);
@@ -503,6 +536,22 @@ public final class SkipPredicateGeneratorImpl
             partTwo = partTwo.toLowerCase(Locale.ROOT);
         }
         return partOne + partTwo;
+    }
+
+    private static String buildAnnotationTypeList(Type type, String indent)
+    {
+        List<String> types = type.allTypes();
+        if (types.size() == 1)
+        {
+            return "BlockType." + types.getFirst();
+        }
+        else
+        {
+            String innerIndent = indent + "        ";
+            return types.stream()
+                    .map("BlockType."::concat)
+                    .collect(Collectors.joining(",\n" + innerIndent, "{\n" + innerIndent, "\n" + indent + "}"));
+        }
     }
 
 
