@@ -8,7 +8,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -44,13 +43,12 @@ public final class GeneratorHandler
     {
         DataGenerator gen = event.getGenerator();
         PackOutput output = gen.getPackOutput();
-        ExistingFileHelper fileHelper = event.getExistingFileHelper();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
         // TODO: needs a better solution that works when other mods generate data
         DynamicItemTintProviders.init();
 
-        gen.addProvider(true, new FramedSpriteSourceProvider(output, lookupProvider, fileHelper));
+        gen.addProvider(true, new FramedSpriteSourceProvider(output, lookupProvider));
         gen.addProvider(true, new FramedBlockModelProvider(output));
         gen.addProvider(true, new FramedItemModelProvider(output));
         gen.addProvider(true, new FramedLanguageProvider(output));
@@ -58,8 +56,8 @@ public final class GeneratorHandler
         gen.addProvider(true, new FramedLootTableProvider(output, lookupProvider));
         gen.addProvider(true, new FramedRecipeProvider.Runner(output, lookupProvider));
         gen.addProvider(true, new FramingSawRecipeProvider.Runner(output, lookupProvider));
-        BlockTagsProvider tagProvider = new FramedBlockTagProvider(output, lookupProvider, fileHelper);
+        BlockTagsProvider tagProvider = new FramedBlockTagProvider(output, lookupProvider);
         gen.addProvider(true, tagProvider);
-        gen.addProvider(true, new FramedItemTagProvider(output, lookupProvider, tagProvider.contentsGetter(), fileHelper));
+        gen.addProvider(true, new FramedItemTagProvider(output, lookupProvider, tagProvider.contentsGetter()));
     }
 }

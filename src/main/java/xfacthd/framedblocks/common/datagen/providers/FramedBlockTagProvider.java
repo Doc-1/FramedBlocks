@@ -10,7 +10,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.common.FBContent;
@@ -23,9 +22,9 @@ import java.util.concurrent.CompletableFuture;
 
 public final class FramedBlockTagProvider extends BlockTagsProvider
 {
-    public FramedBlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper fileHelper)
+    public FramedBlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider)
     {
-        super(output, lookupProvider, FramedConstants.MOD_ID, fileHelper);
+        super(output, lookupProvider, FramedConstants.MOD_ID);
     }
 
     @Override

@@ -3,7 +3,6 @@ package xfacthd.framedblocks.common.datagen.providers;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.common.data.SpriteSourceProvider;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.Utils;
@@ -16,11 +15,9 @@ public final class FramedSpriteSourceProvider extends SpriteSourceProvider
 {
     public static final ResourceLocation SPRITE_SAW_STILL = Utils.rl("block/stonecutter_saw_still");
 
-    public FramedSpriteSourceProvider(
-            PackOutput output, CompletableFuture<HolderLookup.Provider> lookup, ExistingFileHelper fileHelper
-    )
+    public FramedSpriteSourceProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookup)
     {
-        super(output, lookup, FramedConstants.MOD_ID, fileHelper);
+        super(output, lookup, FramedConstants.MOD_ID);
     }
 
     @Override

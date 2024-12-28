@@ -6,7 +6,6 @@ import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.api.util.Utils;
@@ -18,11 +17,10 @@ public final class FramedItemTagProvider extends ItemTagsProvider
     public FramedItemTagProvider(
             PackOutput output,
             CompletableFuture<HolderLookup.Provider> lookupProvider,
-            CompletableFuture<TagLookup<Block>> blockTagProvider,
-            ExistingFileHelper fileHelper
+            CompletableFuture<TagLookup<Block>> blockTagProvider
     )
     {
-        super(output, lookupProvider, blockTagProvider, FramedConstants.MOD_ID, fileHelper);
+        super(output, lookupProvider, blockTagProvider, FramedConstants.MOD_ID);
     }
 
     @Override
