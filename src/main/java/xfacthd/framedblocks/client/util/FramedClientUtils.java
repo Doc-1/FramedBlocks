@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import xfacthd.framedblocks.api.model.AbstractFramedBlockModel;
 import xfacthd.framedblocks.api.model.item.AbstractFramedBlockItemModel;
 import xfacthd.framedblocks.client.render.block.FramedChestRenderer;
+import xfacthd.framedblocks.common.data.camo.fluid.FluidCamoClientHandler;
 import xfacthd.framedblocks.mixin.client.AccessorModelManager;
 
 public final class FramedClientUtils
@@ -27,6 +28,8 @@ public final class FramedClientUtils
                 .forEach(AbstractFramedBlockItemModel::clearCache);
 
         FramedChestRenderer.clearModelCaches();
+
+        FluidCamoClientHandler.clearModelCache();
     }
 
 

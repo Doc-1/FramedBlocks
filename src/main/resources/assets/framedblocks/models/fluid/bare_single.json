@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "all": "minecraft:block/water_still",
+    "end": "minecraft:block/water_still",
     "particle": "#end"
   },
   "elements": [

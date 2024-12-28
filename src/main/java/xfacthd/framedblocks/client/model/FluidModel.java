@@ -192,8 +192,9 @@ public final class FluidModel implements BakedModel
         Preconditions.checkNotNull(bareModel, "Bare fluid model not loaded!");
 
         TextureSlots textures = new TextureSlots(Map.of(
-                "still", new Material(BLOCK_ATLAS, stillTexture),
-                "flowing", new Material(BLOCK_ATLAS, flowingTexture)
+                "end", new Material(BLOCK_ATLAS, stillTexture),
+                "side", new Material(BLOCK_ATLAS, flowingTexture),
+                "particle", new Material(BLOCK_ATLAS, stillTexture)
         ));
         BakedModel model = bareModel.bake(textures, baker, SIMPLE_STATE, true, true, ItemTransforms.NO_TRANSFORMS, BAKING_PROPERTIES);
         Preconditions.checkNotNull(model, "Failed to bake fluid model for fluid %s", fluid);
