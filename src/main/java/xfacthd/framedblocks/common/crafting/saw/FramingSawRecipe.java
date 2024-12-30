@@ -4,23 +4,26 @@ import com.google.gson.JsonSyntaxException;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
+import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.util.Lazy;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.util.CamoList;
 import xfacthd.framedblocks.common.FBContent;
 
-import java.util.*;
+import java.util.List;
 
-// TODO: implement recipe displays
 public final class FramingSawRecipe implements Recipe<RecipeInput>
 {
     public static final int CUBE_MATERIAL_VALUE = 6144; // Empirically determined value
     public static final int MAX_ADDITIVE_COUNT = 3;
-    private static final Lazy<ItemStack> TOAST_ICON = Lazy.of(() -> new ItemStack(FBContent.BLOCK_FRAMING_SAW.value()));
 
     private final int materialAmount;
     private final List<FramingSawRecipeAdditive> additives;
@@ -151,7 +154,11 @@ public final class FramingSawRecipe implements Recipe<RecipeInput>
     @Override
     public List<RecipeDisplay> display()
     {
-        return Recipe.super.display();
+        return disabled ? List.of() : List.of(new FramingSawRecipeDisplay(
+                materialAmount,
+                additives.stream().map(FramingSawRecipeAdditive::toDisplay).toList(),
+                new SlotDisplay.ItemStackSlotDisplay(result)
+        ));
     }
 
     @Override

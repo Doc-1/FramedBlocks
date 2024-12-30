@@ -20,6 +20,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -81,6 +82,7 @@ import xfacthd.framedblocks.common.compat.jei.camo.JeiCamoApplicationRecipeSeria
 import xfacthd.framedblocks.common.crafting.camo.CamoApplicationRecipe;
 import xfacthd.framedblocks.common.crafting.camo.CamoApplicationRecipeSerializer;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeDisplay;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeSerializer;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.FramedRegistries;
@@ -133,6 +135,7 @@ public final class FBContent
     private static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = register(Registries.RECIPE_TYPE);
     private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = register(Registries.RECIPE_SERIALIZER);
     private static final DeferredRegister<RecipeBookCategory> RECIPE_BOOK_CATEGORIES = register(Registries.RECIPE_BOOK_CATEGORY);
+    private static final DeferredRegister<RecipeDisplay.Type<?>> RECIPE_DISPLAY_TYPES = register(Registries.RECIPE_DISPLAY);
     private static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = register(Registries.CREATIVE_MODE_TAB);
     private static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = register(Registries.PARTICLE_TYPE);
     private static final DeferredRegister<LootItemConditionType> LOOT_CONDITIONS = register(Registries.LOOT_CONDITION_TYPE);
@@ -663,6 +666,12 @@ public final class FBContent
     );
     // endregion
 
+    // region RecipeDisplay.Types
+    public static final DeferredHolder<RecipeDisplay.Type<?>, RecipeDisplay.Type<FramingSawRecipeDisplay>> RECIPE_DISPLAY_TYPE_FRAMING_SAW = RECIPE_DISPLAY_TYPES.register(
+            "framing_saw", () -> new RecipeDisplay.Type<>(FramingSawRecipeDisplay.CODEC, FramingSawRecipeDisplay.STREAM_CODEC)
+    );
+    // endregion
+
     // region CreativeModeTabs
     public static final Holder<CreativeModeTab> MAIN_TAB = CREATIVE_TABS.register(
             "framed_blocks", FramedCreativeTab::makeTab
@@ -737,6 +746,7 @@ public final class FBContent
         RECIPE_TYPES.register(modBus);
         RECIPE_SERIALIZERS.register(modBus);
         RECIPE_BOOK_CATEGORIES.register(modBus);
+        RECIPE_DISPLAY_TYPES.register(modBus);
         CREATIVE_TABS.register(modBus);
         PARTICLE_TYPES.register(modBus);
         LOOT_CONDITIONS.register(modBus);

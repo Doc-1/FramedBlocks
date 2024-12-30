@@ -47,6 +47,11 @@ public record FramingSawRecipeAdditive(Ingredient ingredient, int count, @Nullab
         return srcTag != null;
     }
 
+    public FramingSawRecipeDisplay.AdditiveDisplay toDisplay()
+    {
+        return new FramingSawRecipeDisplay.AdditiveDisplay(ingredient.display(), count);
+    }
+
     public static FramingSawRecipeAdditive of(Ingredient ingredient)
     {
         return of(ingredient, 1);
