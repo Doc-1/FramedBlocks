@@ -84,13 +84,6 @@ license="LGPL v3"
     side="BOTH"
 
 [[dependencies.framedblocks]]
-    modId="rei"
-    type="optional"
-    versionRange="[${rei_version},)"
-    ordering="NONE"
-    side="BOTH"
-
-[[dependencies.framedblocks]]
     modId="supplementaries"
     type="optional"
     versionRange="[${supplementaries_version},)"
