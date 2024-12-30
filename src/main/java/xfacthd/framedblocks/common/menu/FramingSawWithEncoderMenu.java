@@ -10,7 +10,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import xfacthd.framedblocks.common.compat.ae2.AppliedEnergisticsCompat;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 
 import java.util.Arrays;

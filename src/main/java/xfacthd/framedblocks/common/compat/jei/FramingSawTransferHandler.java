@@ -10,8 +10,8 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipe;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
 import xfacthd.framedblocks.common.menu.*;
 import xfacthd.framedblocks.common.net.payload.ServerboundSelectFramingSawRecipePayload;
 

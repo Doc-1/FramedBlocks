@@ -14,7 +14,7 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.selftest.SelfTestReporter;
 

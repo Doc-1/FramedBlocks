@@ -1,10 +1,11 @@
-package xfacthd.framedblocks.common.crafting;
+package xfacthd.framedblocks.common.crafting.saw;
 
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.Lazy;
 import xfacthd.framedblocks.api.block.IFramedBlock;
@@ -148,27 +149,15 @@ public final class FramingSawRecipe implements Recipe<RecipeInput>
     }
 
     @Override
+    public List<RecipeDisplay> display()
+    {
+        return Recipe.super.display();
+    }
+
+    @Override
     public PlacementInfo placementInfo()
     {
-        if (disabled)
-        {
-            return PlacementInfo.NOT_PLACEABLE;
-        }
-
-        // TODO: check whether this makes sense
-        List<Optional<Ingredient>> ingredients = new ArrayList<>(4);
-        for (int i = 0; i < MAX_ADDITIVE_COUNT; i++)
-        {
-            if (i < additives.size())
-            {
-                ingredients.add(Optional.of(additives.get(i).ingredient()));
-            }
-            else
-            {
-                ingredients.add(Optional.empty());
-            }
-        }
-        return PlacementInfo.createFromOptionals(ingredients);
+        return PlacementInfo.NOT_PLACEABLE;
     }
 
     @Override

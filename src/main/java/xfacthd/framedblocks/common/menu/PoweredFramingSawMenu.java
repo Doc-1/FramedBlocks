@@ -17,7 +17,9 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.blockentity.special.PoweredFramingSawBlockEntity;
 import xfacthd.framedblocks.common.capability.RecipeInputItemStackHandler;
-import xfacthd.framedblocks.common.crafting.*;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeMatchResult;
 import xfacthd.framedblocks.common.util.FramedUtils;
 
 import java.util.List;

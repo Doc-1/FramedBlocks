@@ -1,7 +1,7 @@
 package xfacthd.framedblocks.client.util;
 
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
 
 public final class ClientEventHandler
 {

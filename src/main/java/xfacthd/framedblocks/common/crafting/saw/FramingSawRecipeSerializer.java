@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.common.crafting;
+package xfacthd.framedblocks.common.crafting.saw;
 
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

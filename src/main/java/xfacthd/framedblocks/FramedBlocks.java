@@ -17,7 +17,7 @@ import xfacthd.framedblocks.common.data.shapes.ShapeReloader;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.compat.CompatHandler;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
 import xfacthd.framedblocks.common.data.StateCacheBuilder;
 import xfacthd.framedblocks.common.data.camo.CamoContainerFactories;
 import xfacthd.framedblocks.common.data.conpreds.ConnectionPredicates;

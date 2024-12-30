@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.FramedBlocks;
 import xfacthd.framedblocks.api.camo.CamoContainerFactory;
 import xfacthd.framedblocks.common.compat.jei.JeiConstants;
-import xfacthd.framedblocks.common.crafting.CamoApplicationRecipe;
+import xfacthd.framedblocks.common.crafting.camo.CamoApplicationRecipe;
 
 import java.util.*;
 

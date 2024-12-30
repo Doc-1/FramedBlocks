@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.neoforged.neoforge.network.PacketDistributor;
 import xfacthd.framedblocks.common.compat.jei.JeiConstants;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
 import xfacthd.framedblocks.common.menu.IFramingSawMenu;
 import xfacthd.framedblocks.common.net.payload.ServerboundSelectFramingSawRecipePayload;
 

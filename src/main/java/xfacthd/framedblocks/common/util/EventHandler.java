@@ -10,7 +10,7 @@ import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.client.util.ClientAccess;
 import xfacthd.framedblocks.common.config.ServerConfig;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
 
 public final class EventHandler
 {

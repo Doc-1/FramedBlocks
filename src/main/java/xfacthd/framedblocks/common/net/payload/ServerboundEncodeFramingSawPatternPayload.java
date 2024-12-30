@@ -13,7 +13,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import xfacthd.framedblocks.api.util.FramedByteBufCodecs;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 import xfacthd.framedblocks.common.menu.FramingSawWithEncoderMenu;
 
 public record ServerboundEncodeFramingSawPatternPayload(int containerId, ResourceKey<Recipe<?>> recipeId, ItemStack[] inputs) implements CustomPacketPayload

@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 import xfacthd.framedblocks.client.screen.FramingSawScreen;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.special.FramingSawBlock;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 
 import java.util.ArrayList;
 import java.util.List;

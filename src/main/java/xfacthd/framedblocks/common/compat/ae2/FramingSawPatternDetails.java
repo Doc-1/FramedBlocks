@@ -9,7 +9,10 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.common.crafting.*;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeAdditive;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCalculation;
 
 import java.util.*;
 

@@ -6,7 +6,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.EmiStackInteraction;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import xfacthd.framedblocks.client.screen.PoweredFramingSawScreen;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 
 public final class PoweredFramingSawStackProvider implements EmiStackProvider<PoweredFramingSawScreen>
 {

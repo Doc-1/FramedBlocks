@@ -6,7 +6,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.Item;
 import xfacthd.framedblocks.client.screen.PoweredFramingSawScreen;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
 
 public final class PoweredFramingSawDragDropHandler implements EmiDragDropHandler<PoweredFramingSawScreen>
 {

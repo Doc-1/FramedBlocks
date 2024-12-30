@@ -9,9 +9,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipe;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeCache;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeSerializer;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeSerializer;
 
 import java.util.List;
 

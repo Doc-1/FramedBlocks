@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.common.crafting;
+package xfacthd.framedblocks.common.crafting.camo;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;

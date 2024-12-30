@@ -20,8 +20,8 @@ import xfacthd.framedblocks.common.compat.jei.camo.CamoCraftingHelper;
 import xfacthd.framedblocks.common.compat.jei.camo.CamoCraftingRecipeExtension;
 import xfacthd.framedblocks.common.compat.jei.camo.CamoRecipeManagerPlugin;
 import xfacthd.framedblocks.common.compat.jei.camo.JeiCamoApplicationRecipe;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipe;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
 
 @JeiPlugin
 @REIPluginCompatIgnore

@@ -36,7 +36,7 @@ import xfacthd.framedblocks.common.blockentity.special.FramedStorageBlockEntity;
 import xfacthd.framedblocks.common.config.ClientConfig;
 import xfacthd.framedblocks.common.config.DevToolsConfig;
 import xfacthd.framedblocks.common.config.ServerConfig;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeMatchResult;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeMatchResult;
 import xfacthd.framedblocks.common.data.property.NullableDirection;
 import xfacthd.framedblocks.common.item.FramedBlueprintItem;
 import xfacthd.framedblocks.common.blockentity.special.FramedChestBlockEntity;

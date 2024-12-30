@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.common.crafting;
+package xfacthd.framedblocks.common.crafting.saw;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

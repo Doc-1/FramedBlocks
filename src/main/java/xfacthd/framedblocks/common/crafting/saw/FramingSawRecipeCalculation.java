@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.common.crafting;
+package xfacthd.framedblocks.common.crafting.saw;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;

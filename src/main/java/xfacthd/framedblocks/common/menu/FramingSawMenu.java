@@ -12,7 +12,10 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.compat.ae2.AppliedEnergisticsCompat;
-import xfacthd.framedblocks.common.crafting.*;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCalculation;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeMatchResult;
 import xfacthd.framedblocks.common.util.FramedUtils;
 
 import java.util.Arrays;

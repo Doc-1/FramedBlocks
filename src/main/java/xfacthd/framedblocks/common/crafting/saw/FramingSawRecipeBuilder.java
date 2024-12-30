@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.common.crafting;
+package xfacthd.framedblocks.common.crafting.saw;
 
 import com.google.common.base.Preconditions;
 import net.minecraft.advancements.*;

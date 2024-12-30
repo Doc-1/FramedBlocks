@@ -9,7 +9,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import xfacthd.framedblocks.client.screen.FramingSawScreen;
 import xfacthd.framedblocks.client.screen.PoweredFramingSawScreen;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 
 public final class FramingSawFocusedStackProvider implements FocusedStackProvider
 {

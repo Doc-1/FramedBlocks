@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import xfacthd.framedblocks.client.screen.PoweredFramingSawScreen;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 
 import java.util.*;
 

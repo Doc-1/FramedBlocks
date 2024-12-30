@@ -17,7 +17,9 @@ import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.screen.*;
 import xfacthd.framedblocks.common.config.ClientConfig;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.crafting.*;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCalculation;
 
 import java.util.List;
 import java.util.Set;

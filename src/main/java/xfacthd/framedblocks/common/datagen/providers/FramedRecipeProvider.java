@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.crafting.CamoApplicationRecipe;
+import xfacthd.framedblocks.common.crafting.camo.CamoApplicationRecipe;
 import xfacthd.framedblocks.common.datagen.builders.recipe.ExtShapedRecipeBuilder;
 import xfacthd.framedblocks.common.datagen.builders.recipe.ExtShapelessRecipeBuilder;
 

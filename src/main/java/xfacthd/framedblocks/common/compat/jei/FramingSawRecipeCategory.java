@@ -22,10 +22,10 @@ import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.screen.FramingSawScreen;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.special.FramingSawBlock;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipe;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeAdditive;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeCache;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeCalculation;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeAdditive;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCalculation;
 
 import java.util.ArrayList;
 import java.util.List;

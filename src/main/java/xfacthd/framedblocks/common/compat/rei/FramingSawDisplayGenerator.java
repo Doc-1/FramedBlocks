@@ -10,10 +10,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipe;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeAdditive;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeCache;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeCalculation;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeAdditive;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCalculation;
 
 import java.util.ArrayList;
 import java.util.List;

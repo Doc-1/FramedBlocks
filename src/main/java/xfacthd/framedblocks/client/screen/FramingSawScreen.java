@@ -34,11 +34,11 @@ import xfacthd.framedblocks.client.screen.widget.BlockPreviewTooltipComponent;
 import xfacthd.framedblocks.client.screen.widget.SearchEditBox;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.compat.ae2.AppliedEnergisticsCompat;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipe;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeAdditive;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeCache;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeCalculation;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeMatchResult;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeAdditive;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCalculation;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeMatchResult;
 import xfacthd.framedblocks.common.menu.FramingSawMenu;
 import xfacthd.framedblocks.common.net.payload.ServerboundSelectFramingSawRecipePayload;
 

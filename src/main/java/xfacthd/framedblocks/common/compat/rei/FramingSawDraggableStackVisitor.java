@@ -7,7 +7,9 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import xfacthd.framedblocks.client.screen.FramingSawWithEncoderScreen;
-import xfacthd.framedblocks.common.crafting.*;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeAdditive;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
 import xfacthd.framedblocks.common.menu.FramingSawMenu;
 
 import java.util.List;

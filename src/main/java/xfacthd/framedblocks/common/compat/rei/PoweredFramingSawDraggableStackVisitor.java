@@ -6,7 +6,7 @@ import me.shedaniel.rei.api.client.gui.drag.*;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.item.ItemStack;
 import xfacthd.framedblocks.client.screen.PoweredFramingSawScreen;
-import xfacthd.framedblocks.common.crafting.FramingSawRecipeCache;
+import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
 
 import java.util.stream.Stream;
 
