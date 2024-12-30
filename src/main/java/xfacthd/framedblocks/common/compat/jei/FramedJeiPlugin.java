@@ -1,6 +1,5 @@
 package xfacthd.framedblocks.common.compat.jei;
 
-import me.shedaniel.rei.plugincompatibilities.api.REIPluginCompatIgnore;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -24,7 +23,6 @@ import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
 
 @JeiPlugin
-@REIPluginCompatIgnore
 public final class FramedJeiPlugin implements IModPlugin
 {
     private static final ResourceLocation ID = Utils.rl("jei_plugin");
