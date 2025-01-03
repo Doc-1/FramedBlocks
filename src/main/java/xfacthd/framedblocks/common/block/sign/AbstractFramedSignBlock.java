@@ -128,13 +128,13 @@ public abstract class AbstractFramedSignBlock extends FramedBlock
                 {
                     level.playSound(null, pos, getSignInteractionFailedSoundEvent(), SoundSource.BLOCKS);
                 }
-                return InteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS_SERVER;
             }
 
             if (!isBlockedByOtherPlayer(player, sign) && canEdit(player, sign, front))
             {
                 openEditScreen(player, sign, front);
-                return InteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS_SERVER;
             }
         }
         return InteractionResult.PASS;
