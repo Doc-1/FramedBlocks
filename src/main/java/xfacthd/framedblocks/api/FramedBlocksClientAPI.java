@@ -21,7 +21,7 @@ public interface FramedBlocksClientAPI
      * Add a {@link ModelProperty} for connected textures data to allow FramedBlocks to look up the data for use
      * in the caching of generated quads in the model
      */
-    void addConTexProperty(ModelProperty<?> ctProperty);
+    void addConTexProperty(String modId, ModelProperty<?> ctProperty);
 
     /**
      * Generate overlay quads with the given texture based on all quads on the given side and insert them in the given

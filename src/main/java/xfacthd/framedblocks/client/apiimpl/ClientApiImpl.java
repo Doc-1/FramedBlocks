@@ -20,9 +20,9 @@ import java.util.function.Predicate;
 public final class ClientApiImpl implements FramedBlocksClientAPI
 {
     @Override
-    public void addConTexProperty(ModelProperty<?> ctProperty)
+    public void addConTexProperty(String modId, ModelProperty<?> ctProperty)
     {
-        ConTexDataHandler.addConTexProperty(ctProperty);
+        ConTexDataHandler.addConTexProperty(modId, ctProperty);
     }
 
     @Override

@@ -10,10 +10,10 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.*;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
@@ -27,14 +27,18 @@ import xfacthd.framedblocks.api.block.render.FramedBlockRenderProperties;
 import xfacthd.framedblocks.api.model.ErrorModel;
 import xfacthd.framedblocks.api.model.item.FramedBlockItemTintProvider;
 import xfacthd.framedblocks.api.model.item.RegisterItemTintProvidersEvent;
-import xfacthd.framedblocks.api.model.wrapping.*;
+import xfacthd.framedblocks.api.model.wrapping.RegisterModelWrappersEvent;
+import xfacthd.framedblocks.api.model.wrapping.TextureLookup;
+import xfacthd.framedblocks.api.model.wrapping.WrapHelper;
 import xfacthd.framedblocks.api.model.wrapping.itemmodel.ItemModelInfo;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.render.debug.AttachDebugRenderersEvent;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.client.data.*;
+import xfacthd.framedblocks.client.data.BlockOutlineRenderers;
+import xfacthd.framedblocks.client.data.ConTexDataHandler;
+import xfacthd.framedblocks.client.data.GhostRenderBehaviours;
 import xfacthd.framedblocks.client.data.extensions.block.NoEffectsClientBlockExtensions;
 import xfacthd.framedblocks.client.data.extensions.block.OneWayWindowClientBlockExtensions;
 import xfacthd.framedblocks.client.itemmodel.DynamicItemTintProviders;
@@ -61,20 +65,32 @@ import xfacthd.framedblocks.client.model.torch.*;
 import xfacthd.framedblocks.client.modelwrapping.ModelWrappingManager;
 import xfacthd.framedblocks.client.modelwrapping.StateLocationCache;
 import xfacthd.framedblocks.client.overlaygen.OverlayQuadGenerator;
-import xfacthd.framedblocks.client.render.block.*;
+import xfacthd.framedblocks.client.render.block.FramedChestRenderer;
+import xfacthd.framedblocks.client.render.block.FramedHangingSignRenderer;
+import xfacthd.framedblocks.client.render.block.FramedItemFrameRenderer;
+import xfacthd.framedblocks.client.render.block.FramedSignRenderer;
+import xfacthd.framedblocks.client.render.block.FramedTankRenderer;
 import xfacthd.framedblocks.client.render.color.FramedFlowerPotColor;
 import xfacthd.framedblocks.client.render.color.FramedTargetBlockColor;
 import xfacthd.framedblocks.client.render.debug.FramedBlockDebugRenderer;
-import xfacthd.framedblocks.client.render.debug.impl.*;
+import xfacthd.framedblocks.client.render.debug.impl.ConnectionPredicateDebugRenderer;
+import xfacthd.framedblocks.client.render.debug.impl.DoubleBlockPartDebugRenderer;
+import xfacthd.framedblocks.client.render.debug.impl.QuadWindingDebugRenderer;
 import xfacthd.framedblocks.client.render.item.BlueprintProperty;
 import xfacthd.framedblocks.client.render.item.TankItemRenderer;
 import xfacthd.framedblocks.client.render.particle.FluidSpriteParticle;
-import xfacthd.framedblocks.client.render.special.*;
+import xfacthd.framedblocks.client.render.special.BlockOutlineRenderer;
+import xfacthd.framedblocks.client.render.special.CollapsibleBlockIndicatorRenderer;
+import xfacthd.framedblocks.client.render.special.GhostBlockRenderer;
 import xfacthd.framedblocks.client.render.util.AnimationSplitterSource;
-import xfacthd.framedblocks.client.screen.*;
+import xfacthd.framedblocks.client.screen.FramedStorageScreen;
+import xfacthd.framedblocks.client.screen.FramingSawScreen;
+import xfacthd.framedblocks.client.screen.PoweredFramingSawScreen;
 import xfacthd.framedblocks.client.screen.overlay.BlockInteractOverlayLayer;
 import xfacthd.framedblocks.client.screen.widget.BlockPreviewTooltipComponent;
-import xfacthd.framedblocks.client.util.*;
+import xfacthd.framedblocks.client.util.ClientEventHandler;
+import xfacthd.framedblocks.client.util.ClientTaskQueue;
+import xfacthd.framedblocks.client.util.KeyMappings;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.common.block.cube.FramedMiniCubeBlock;
@@ -98,7 +114,6 @@ import xfacthd.framedblocks.common.data.doubleblock.FramedDoubleBlockRenderPrope
 import xfacthd.framedblocks.common.data.doubleblock.NullCullPredicate;
 
 import java.util.Set;
-import java.util.function.Supplier;
 
 @Mod(value = FramedConstants.MOD_ID, dist = Dist.CLIENT)
 public final class FBClient
@@ -168,13 +183,13 @@ public final class FBClient
 
     private static void onImcMessageReceived(final InterModProcessEvent event)
     {
-        event.getIMCStream()
-                .filter(msg -> msg.method().equals(FramedConstants.IMC_METHOD_ADD_PROPERTY))
-                .map(InterModComms.IMCMessage::messageSupplier)
-                .map(Supplier::get)
-                .filter(ModelProperty.class::isInstance)
-                .map(ModelProperty.class::cast)
-                .forEach(ConTexDataHandler::addConTexProperty);
+        event.getIMCStream(FramedConstants.IMC_METHOD_ADD_PROPERTY::equals).forEach(msg ->
+        {
+            if (msg.messageSupplier().get() instanceof ModelProperty<?> prop)
+            {
+                ConTexDataHandler.addConTexProperty(msg.senderModId(), prop);
+            }
+        });
     }
 
     private static void onLoadComplete(final FMLLoadCompleteEvent event)
