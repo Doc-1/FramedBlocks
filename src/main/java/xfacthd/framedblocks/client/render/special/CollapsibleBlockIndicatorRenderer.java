@@ -1,8 +1,8 @@
 package xfacthd.framedblocks.client.render.special;
 
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -29,7 +29,7 @@ public final class CollapsibleBlockIndicatorRenderer
     {
         //noinspection ConstantConditions
         ItemStack heldItem = Minecraft.getInstance().player.getMainHandItem();
-        if (heldItem.getItem() != FBContent.ITEM_FRAMED_HAMMER.value())
+        if (heldItem.getItem() != FBContent.ITEM_FRAMED_HAMMER.value() || !event.isForTranslucentBlocks())
         {
             return;
         }
@@ -72,8 +72,6 @@ public final class CollapsibleBlockIndicatorRenderer
         drawCornerMarkers(builder, poseStack, faceDir, hit, vY);
 
         poseStack.popPose();
-
-        ((MultiBufferSource.BufferSource) event.getMultiBufferSource()).endBatch(FramedRenderTypes.LINES_NO_DEPTH);
     }
 
     private static float[] getVertexHeights(Level level, BlockPos pos, NullableDirection face)
