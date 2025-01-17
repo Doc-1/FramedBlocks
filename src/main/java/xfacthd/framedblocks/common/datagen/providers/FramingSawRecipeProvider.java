@@ -823,8 +823,18 @@ public final class FramingSawRecipeProvider extends RecipeProvider
         FramingSawRecipeBuilder.builder(FBContent.BLOCK_FRAMED_CHAIN)
                 .material(FramingSawRecipe.CUBE_MATERIAL_VALUE / 16)
                 .save(output);
+
+        FramingSawRecipeBuilder.builder(FBContent.BLOCK_FRAMED_LANTERN)
+                .material(FramingSawRecipe.CUBE_MATERIAL_VALUE)
+                .additive(FramingSawRecipeAdditive.of(Items.TORCH))
+                .save(output);
+
+        FramingSawRecipeBuilder.builder(FBContent.BLOCK_FRAMED_SOUL_LANTERN)
+                .material(FramingSawRecipe.CUBE_MATERIAL_VALUE)
+                .additive(FramingSawRecipeAdditive.of(Items.SOUL_TORCH))
+                .save(output);
     }
-    
+
     public static final class Runner extends RecipeProvider.Runner
     {
         public Runner(PackOutput output, CompletableFuture<HolderLookup.Provider> registries)

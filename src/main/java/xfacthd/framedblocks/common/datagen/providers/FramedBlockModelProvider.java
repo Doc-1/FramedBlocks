@@ -280,6 +280,8 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         registerFramedBookshelf(blockModels);
         registerFramedChiseledBookshelf(blockModels);
         registerFramedChain(blockModels, cube);
+        registerFramedLantern(blockModels);
+        registerFramedSoulLantern(blockModels);
 
         registerFramingSaw(blockModels);
         registerPoweredFramingSaw(blockModels);
@@ -984,6 +986,26 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
     {
         simpleBlock(blockModels, FBContent.BLOCK_FRAMED_CHAIN, cube);
         blockModels.registerSimpleFlatItemModel(FBContent.BLOCK_FRAMED_CHAIN.value().asItem());
+    }
+
+    private void registerFramedLantern(BlockModelGenerators blockModels)
+    {
+        ResourceLocation standing = ModelLocationUtils.getModelLocation(FBContent.BLOCK_FRAMED_LANTERN.value());
+        ResourceLocation hanging = ModelLocationUtils.getModelLocation(FBContent.BLOCK_FRAMED_LANTERN.value(), "_hanging");
+        variant(blockModels, FBContent.BLOCK_FRAMED_LANTERN)
+                .with(BlockModelGenerators.createBooleanModelDispatch(BlockStateProperties.HANGING, hanging, standing));
+
+        blockModels.registerSimpleFlatItemModel(FBContent.BLOCK_FRAMED_LANTERN.value().asItem());
+    }
+
+    private void registerFramedSoulLantern(BlockModelGenerators blockModels)
+    {
+        ResourceLocation standing = ModelLocationUtils.getModelLocation(FBContent.BLOCK_FRAMED_SOUL_LANTERN.value());
+        ResourceLocation hanging = ModelLocationUtils.getModelLocation(FBContent.BLOCK_FRAMED_SOUL_LANTERN.value(), "_hanging");
+        variant(blockModels, FBContent.BLOCK_FRAMED_SOUL_LANTERN)
+                .with(BlockModelGenerators.createBooleanModelDispatch(BlockStateProperties.HANGING, hanging, standing));
+
+        blockModels.registerSimpleFlatItemModel(FBContent.BLOCK_FRAMED_SOUL_LANTERN.value().asItem());
     }
 
 
