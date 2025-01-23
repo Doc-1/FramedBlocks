@@ -30,7 +30,7 @@ import xfacthd.framedblocks.api.model.item.RegisterItemTintProvidersEvent;
 import xfacthd.framedblocks.api.model.wrapping.RegisterModelWrappersEvent;
 import xfacthd.framedblocks.api.model.wrapping.TextureLookup;
 import xfacthd.framedblocks.api.model.wrapping.WrapHelper;
-import xfacthd.framedblocks.api.model.wrapping.itemmodel.ItemModelInfo;
+import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.render.debug.AttachDebugRenderersEvent;
 import xfacthd.framedblocks.api.type.IBlockType;

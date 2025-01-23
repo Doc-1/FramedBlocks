@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.IFramedBlock;
-import xfacthd.framedblocks.api.model.wrapping.itemmodel.ItemModelInfo;
+import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 
 public abstract class AbstractFramedBlockModel extends DelegateBakedModel
 {

@@ -34,7 +34,7 @@ import xfacthd.framedblocks.api.model.AbstractFramedBlockModel;
 import xfacthd.framedblocks.api.model.DataAwareItemModel;
 import xfacthd.framedblocks.api.model.ErrorModel;
 import xfacthd.framedblocks.api.model.item.AbstractFramedBlockItemModel;
-import xfacthd.framedblocks.api.model.wrapping.itemmodel.ItemModelInfo;
+import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.model.item.FramedBlockItemTintProvider;
 import xfacthd.framedblocks.api.util.CamoList;
 import xfacthd.framedblocks.api.util.ConfigView;

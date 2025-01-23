@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.api.model.wrapping.itemmodel;
+package xfacthd.framedblocks.api.model.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.item.ItemDisplayContext;

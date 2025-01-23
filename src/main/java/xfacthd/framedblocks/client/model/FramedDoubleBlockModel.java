@@ -23,7 +23,7 @@ import xfacthd.framedblocks.api.model.AbstractFramedBlockModel;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.util.ModelUtils;
-import xfacthd.framedblocks.api.model.wrapping.itemmodel.ItemModelInfo;
+import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.common.data.doubleblock.*;
 import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 

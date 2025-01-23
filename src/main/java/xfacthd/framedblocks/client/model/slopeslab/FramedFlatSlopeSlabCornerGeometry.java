@@ -8,8 +8,8 @@ import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
 import xfacthd.framedblocks.api.block.FramedProperties;
-import xfacthd.framedblocks.api.model.wrapping.itemmodel.TranslatedItemModelInfo;
-import xfacthd.framedblocks.api.model.wrapping.itemmodel.ItemModelInfo;
+import xfacthd.framedblocks.api.model.item.TranslatedItemModelInfo;
+import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 
 public class FramedFlatSlopeSlabCornerGeometry extends Geometry
