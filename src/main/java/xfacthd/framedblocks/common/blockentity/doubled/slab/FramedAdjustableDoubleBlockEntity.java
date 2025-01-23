@@ -1,6 +1,8 @@
 package xfacthd.framedblocks.common.blockentity.doubled.slab;
 
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tuple;
@@ -8,7 +10,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
 import xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
@@ -16,7 +20,10 @@ import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.slab.FramedAdjustableDoubleBlock;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
-import xfacthd.framedblocks.common.blockentity.special.*;
+import xfacthd.framedblocks.common.blockentity.special.FramedCollapsibleBlockEntity;
+import xfacthd.framedblocks.common.blockentity.special.FramedCollapsibleCopycatBlockEntity;
+import xfacthd.framedblocks.common.blockentity.special.ICollapsibleBlockEntity;
+import xfacthd.framedblocks.common.blockentity.special.ICollapsibleCopycatBlockEntity;
 import xfacthd.framedblocks.common.data.component.AdjustableDoubleBlockData;
 
 import java.util.Objects;
@@ -210,9 +217,9 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
     @Override
     protected void applyAuxDataFromBlueprint(AuxBlueprintData<?> auxData)
     {
-        if (auxData instanceof AdjustableDoubleBlockData blockData)
+        if (auxData instanceof AdjustableDoubleBlockData(int height))
         {
-            firstHeight = blockData.firstHeight();
+            firstHeight = height;
         }
     }
 

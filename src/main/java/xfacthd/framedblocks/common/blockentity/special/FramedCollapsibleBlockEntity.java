@@ -1,13 +1,18 @@
 package xfacthd.framedblocks.common.blockentity.special;
 
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.Nullable;
@@ -293,10 +298,10 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
     @Override
     protected void applyAuxDataFromBlueprint(AuxBlueprintData<?> auxData)
     {
-        if (auxData instanceof CollapsibleBlockData blockData)
+        if (auxData instanceof CollapsibleBlockData(NullableDirection face, int offsets))
         {
-            collapsedFace = blockData.collapsedFace().toNullableDirection();
-            packedOffsets = blockData.offsets();
+            collapsedFace = face.toNullableDirection();
+            packedOffsets = offsets;
         }
     }
 

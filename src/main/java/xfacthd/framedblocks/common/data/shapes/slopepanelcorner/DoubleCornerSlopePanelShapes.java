@@ -23,4 +23,8 @@ public final class DoubleCornerSlopePanelShapes
 
         return ShapeProvider.of(builder.build());
     }
+
+
+
+    private DoubleCornerSlopePanelShapes() { }
 }

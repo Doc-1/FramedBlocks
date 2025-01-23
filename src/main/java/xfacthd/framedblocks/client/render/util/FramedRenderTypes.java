@@ -27,4 +27,8 @@ public final class FramedRenderTypes
                     .setDepthTestState(RenderType.NO_DEPTH_TEST)
                     .createCompositeState(false)
     );
+
+
+
+    private FramedRenderTypes() { }
 }

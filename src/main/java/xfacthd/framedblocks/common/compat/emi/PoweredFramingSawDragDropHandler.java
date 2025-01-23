@@ -33,7 +33,7 @@ public final class PoweredFramingSawDragDropHandler implements EmiDragDropHandle
         int y = screen.getTargetStackY();
         if (dropX >= x && dropX < x + 16 && dropY >= y && dropY < y + 16)
         {
-            screen.selectRecipe(stack.getEmiStacks().get(0).getItemStack());
+            screen.selectRecipe(stack.getEmiStacks().getFirst().getItemStack());
             return true;
         }
         return false;

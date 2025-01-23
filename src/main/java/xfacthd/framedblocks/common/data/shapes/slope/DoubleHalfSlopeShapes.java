@@ -28,4 +28,8 @@ public final class DoubleHalfSlopeShapes
 
         return ShapeProvider.of(builder.build());
     }
+
+
+
+    private DoubleHalfSlopeShapes() { }
 }

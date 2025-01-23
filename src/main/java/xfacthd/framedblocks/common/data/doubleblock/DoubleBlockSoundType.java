@@ -6,6 +6,7 @@ import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 
+@SuppressWarnings("deprecation")
 public final class DoubleBlockSoundType extends SoundType
 {
     private final FramedDoubleBlockEntity be;

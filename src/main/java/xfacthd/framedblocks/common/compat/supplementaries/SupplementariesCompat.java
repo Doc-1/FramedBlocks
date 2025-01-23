@@ -61,9 +61,13 @@ public final class SupplementariesCompat
         }
     }
 
-    public static class Client
+    public static final class Client
     {
         public static final ResourceLocation HANGING_MODEL_LOCATION = Utils.rl("supplementaries", "block/hanging_flower_pot_rope");
+
+
+
+        private Client() { }
     }
 
 

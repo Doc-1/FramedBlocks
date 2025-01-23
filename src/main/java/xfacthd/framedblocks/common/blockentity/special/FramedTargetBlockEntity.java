@@ -97,9 +97,9 @@ public class FramedTargetBlockEntity extends FramedBlockEntity
     @Override
     protected void applyAuxDataFromBlueprint(AuxBlueprintData<?> auxData)
     {
-        if (auxData instanceof TargetColor color)
+        if (auxData instanceof TargetColor(DyeColor color))
         {
-            overlayColor = color.color();
+            overlayColor = color;
         }
     }
 

@@ -3,9 +3,12 @@ package xfacthd.framedblocks.api.camo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.model.item.DynamicItemTintProvider;
 
 /**
  * Base class for camo containers, holding a {@link CamoContent} as well as any additional metadata needed for
@@ -54,7 +57,7 @@ public abstract class CamoContainer<C extends CamoContent<C>, T extends CamoCont
     }
 
     /**
-     * Returns the tint color for use in {@link net.minecraft.client.color.item.ItemColor}
+     * Returns the tint color for use in {@link DynamicItemTintProvider}
      * @param stack The stack whose tint is being requested
      * @param tintIdx The tint index for which the color was requested
      * @return The tint color for the given index
