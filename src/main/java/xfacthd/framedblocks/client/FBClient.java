@@ -344,10 +344,10 @@ public final class FBClient
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_WALL_SIGN, FramedWallSignGeometry::new, WrapHelper.IGNORE_WATERLOGGED);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_HANGING_SIGN, FramedCeilingHangingSignGeometry::new, AbstractFramedSignBlock.RotatingSignStateMerger.INSTANCE);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_WALL_HANGING_SIGN, FramedWallHangingSignGeometry::new, WrapHelper.IGNORE_WATERLOGGED);
-        WrapHelper.wrap(FBContent.BLOCK_FRAMED_TORCH, FramedTorchGeometry::new, WrapHelper.IGNORE_ALWAYS);
-        WrapHelper.wrap(FBContent.BLOCK_FRAMED_WALL_TORCH, FramedWallTorchGeometry::new, WrapHelper.IGNORE_ALWAYS);
-        WrapHelper.wrap(FBContent.BLOCK_FRAMED_SOUL_TORCH, FramedSoulTorchGeometry::new, WrapHelper.IGNORE_ALWAYS);
-        WrapHelper.wrap(FBContent.BLOCK_FRAMED_SOUL_WALL_TORCH, FramedSoulWallTorchGeometry::new, WrapHelper.IGNORE_ALWAYS);
+        WrapHelper.wrap(FBContent.BLOCK_FRAMED_TORCH, FramedTorchGeometry::normal, WrapHelper.IGNORE_ALWAYS);
+        WrapHelper.wrap(FBContent.BLOCK_FRAMED_WALL_TORCH, FramedWallTorchGeometry::normal, WrapHelper.IGNORE_ALWAYS);
+        WrapHelper.wrap(FBContent.BLOCK_FRAMED_SOUL_TORCH, FramedTorchGeometry::soul, WrapHelper.IGNORE_ALWAYS);
+        WrapHelper.wrap(FBContent.BLOCK_FRAMED_SOUL_WALL_TORCH, FramedWallTorchGeometry::soul, WrapHelper.IGNORE_ALWAYS);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_REDSTONE_TORCH, FramedRedstoneTorchGeometry::new, WrapHelper.IGNORE_ALWAYS);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_REDSTONE_WALL_TORCH, FramedRedstoneWallTorchGeometry::new, WrapHelper.IGNORE_ALWAYS);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_FLOOR, FramedFloorBoardGeometry::new, WrapHelper.IGNORE_DEFAULT);

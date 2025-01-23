@@ -33,18 +33,20 @@ public class FramedWallTorchGeometry extends Geometry
     private final BlockState state;
     private final BakedModel baseModel;
     private final float yAngle;
+    private final BlockState sourceTorchState;
 
-    public FramedWallTorchGeometry(GeometryFactory.Context ctx)
+    private FramedWallTorchGeometry(GeometryFactory.Context ctx, BlockState sourceTorchState)
     {
         this.state = ctx.state();
         this.baseModel = ctx.baseModel();
         this.yAngle = 270F - ctx.state().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot();
+        this.sourceTorchState = sourceTorchState;
     }
 
     @Override
     public ChunkRenderTypeSet getAdditionalRenderTypes(RandomSource rand, ModelData extraData)
     {
-        return ModelUtils.getRenderTypes(Blocks.WALL_TORCH.defaultBlockState(), rand, extraData);
+        return ModelUtils.getRenderTypes(sourceTorchState, rand, extraData);
     }
 
     @Override
@@ -105,5 +107,17 @@ public class FramedWallTorchGeometry extends Geometry
         return data ->
                 Modifiers.rotate(Direction.Axis.Z, ROTATION_ORIGIN, -22.5F, false).accept(data) &&
                         Modifiers.rotateCentered(Direction.Axis.Y, yAngle, false).accept(data);
+    }
+
+
+
+    public static FramedWallTorchGeometry normal(GeometryFactory.Context ctx)
+    {
+        return new FramedWallTorchGeometry(ctx, Blocks.WALL_TORCH.defaultBlockState());
+    }
+
+    public static FramedWallTorchGeometry soul(GeometryFactory.Context ctx)
+    {
+        return new FramedWallTorchGeometry(ctx, Blocks.SOUL_WALL_TORCH.defaultBlockState());
     }
 }

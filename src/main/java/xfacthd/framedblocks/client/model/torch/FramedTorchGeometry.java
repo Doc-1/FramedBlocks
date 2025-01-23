@@ -28,17 +28,19 @@ public class FramedTorchGeometry extends Geometry
 
     private final BlockState state;
     private final BakedModel baseModel;
+    private final BlockState sourceTorchState;
 
-    public FramedTorchGeometry(GeometryFactory.Context ctx)
+    private FramedTorchGeometry(GeometryFactory.Context ctx, BlockState sourceTorchState)
     {
         this.state = ctx.state();
         this.baseModel = ctx.baseModel();
+        this.sourceTorchState = sourceTorchState;
     }
 
     @Override
     public ChunkRenderTypeSet getAdditionalRenderTypes(RandomSource rand, ModelData extraData)
     {
-        return ModelUtils.getRenderTypes(Blocks.TORCH.defaultBlockState(), rand, ModelData.EMPTY);
+        return ModelUtils.getRenderTypes(sourceTorchState, rand, ModelData.EMPTY);
     }
 
     @Override
@@ -79,5 +81,17 @@ public class FramedTorchGeometry extends Geometry
     public boolean useSolidNoCamoModel()
     {
         return true;
+    }
+
+
+
+    public static FramedTorchGeometry normal(GeometryFactory.Context ctx)
+    {
+        return new FramedTorchGeometry(ctx, Blocks.TORCH.defaultBlockState());
+    }
+
+    public static FramedTorchGeometry soul(GeometryFactory.Context ctx)
+    {
+        return new FramedTorchGeometry(ctx, Blocks.SOUL_TORCH.defaultBlockState());
     }
 }
