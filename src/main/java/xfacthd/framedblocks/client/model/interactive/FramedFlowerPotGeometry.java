@@ -122,7 +122,12 @@ public class FramedFlowerPotGeometry extends Geometry
     @Override
     public QuadCacheKey makeCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, ModelData data)
     {
-        return new FlowerPotQuadCacheKey(camo, ctCtx, getFlowerBlock(data));
+        Block flower = getFlowerBlock(data);
+        if (flower != Blocks.AIR)
+        {
+            return new FlowerPotQuadCacheKey(camo, ctCtx, flower);
+        }
+        return super.makeCacheKey(camo, ctCtx, data);
     }
 
     @Override

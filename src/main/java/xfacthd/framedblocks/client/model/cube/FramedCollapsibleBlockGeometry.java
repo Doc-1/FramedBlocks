@@ -160,7 +160,11 @@ public class FramedCollapsibleBlockGeometry extends Geometry
     public QuadCacheKey makeCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, ModelData data)
     {
         Integer packedOffsets = data.get(FramedCollapsibleBlockEntity.OFFSETS);
-        return new CollapsibleBlockQuadCacheKey(camo, ctCtx, packedOffsets);
+        if (packedOffsets != null && packedOffsets != 0)
+        {
+            return new CollapsibleBlockQuadCacheKey(camo, ctCtx, packedOffsets);
+        }
+        return super.makeCacheKey(camo, ctCtx, data);
     }
 
     private int getYCollapsedIndexOffset(Direction quadFace)
