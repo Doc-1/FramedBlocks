@@ -9,6 +9,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
@@ -50,7 +51,7 @@ public class FramedTargetGeometry extends Geometry
     }
 
     @Override
-    public void getAdditionalQuads(ArrayList<BakedQuad> quads, Direction side, RandomSource rand, ModelData data, RenderType renderType)
+    public void getAdditionalQuads(ArrayList<BakedQuad> quads, @Nullable Direction side, RandomSource rand, ModelData data, RenderType renderType)
     {
         Utils.copyAll(overlayModel.getQuads(state, side, rand, data, renderType), quads);
     }

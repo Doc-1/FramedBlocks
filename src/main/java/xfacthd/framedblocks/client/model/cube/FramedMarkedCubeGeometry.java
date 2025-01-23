@@ -9,6 +9,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.util.ModelUtils;
@@ -44,7 +45,7 @@ public class FramedMarkedCubeGeometry extends FramedCubeGeometry
     }
 
     @Override
-    public void getAdditionalQuads(ArrayList<BakedQuad> quads, Direction side, RandomSource rand, ModelData data, RenderType renderType)
+    public void getAdditionalQuads(ArrayList<BakedQuad> quads, @Nullable Direction side, RandomSource rand, ModelData data, RenderType renderType)
     {
         FramedBlockData fbData = data.get(FramedBlockData.PROPERTY);
         if (fbData != null && !fbData.getCamoContent().isEmpty())

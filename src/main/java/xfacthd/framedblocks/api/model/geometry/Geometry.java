@@ -121,7 +121,7 @@ public abstract class Geometry
      * Add additional quads to faces that return {@code true} from {@link FullFacePredicate#test(BlockState, Direction)}<br>
      * The result of this method will NOT be cached, execution should therefore be as fast as possible
      */
-    public void getAdditionalQuads(ArrayList<BakedQuad> quads, Direction side, RandomSource rand, ModelData data, RenderType renderType) { }
+    public void getAdditionalQuads(ArrayList<BakedQuad> quads, @Nullable Direction side, RandomSource rand, ModelData data, RenderType renderType) { }
 
     /**
      * Add additional quads to faces that return {@code false} from {@link FullFacePredicate#test(BlockState, Direction)}<br>

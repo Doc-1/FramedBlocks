@@ -40,7 +40,6 @@ import xfacthd.framedblocks.common.data.PropertyHolder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
@@ -106,7 +105,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
             }
 
             camoState = data.getCamoContent();
-            if (camoState != null && !camoState.isEmpty())
+            if (!camoState.isEmpty())
             {
                 return getCamoQuads(camoState, side, rand, extraData, data, renderType);
             }
@@ -116,7 +115,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         {
             data = DEFAULT_DATA;
         }
-        if (camoState == null || camoState.isEmpty())
+        if (camoState.isEmpty())
         {
             return getCamoQuads(null, side, rand, extraData, data, renderType);
         }
@@ -146,9 +145,8 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
 
         CamoContent<?> camoContent = fbData.getCamoContent();
         CamoContent<?> keyContent = camoContent;
-        if (camoContent == null || camoContent.isEmpty())
+        if (camoContent.isEmpty())
         {
-            camoContent = EmptyCamoContent.EMPTY;
             keyContent = getNoCamoModelSourceContent(fbData);
         }
         return getCachedRenderTypes(keyContent, camoContent, rand, data).allTypes;
@@ -220,8 +218,6 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
 
         if (noProcessing)
         {
-            Objects.requireNonNull(side);
-
             boolean camoInRenderType = nullLayer || renderTypes.camoTypes.contains(renderType);
             boolean additionalQuads = !nullLayer && renderTypes.additionalTypes.contains(renderType);
             if (!camoInRenderType && !additionalQuads && !reinforce)
@@ -234,7 +230,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
             if (camoInRenderType)
             {
                 quads = camoModel.getQuads(camoContent.getAppearanceState(), side, rand, camoData, renderType);
-                if (quads.isEmpty())
+                if (quads.isEmpty() && side != null)
                 {
                     // Try extracting useful quads from the list of (supposedly) uncullable quads if querying cullable
                     // ones returned nothing due to the dev forgetting to specify cull-faces in the model
