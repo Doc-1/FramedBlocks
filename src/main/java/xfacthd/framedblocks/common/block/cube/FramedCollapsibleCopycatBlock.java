@@ -54,6 +54,7 @@ public class FramedCollapsibleCopycatBlock extends FramedBlock
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return PlacementStateBuilder.of(this, ctx).withWater().build();

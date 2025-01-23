@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.*;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
@@ -45,6 +46,7 @@ public class FramedFancyRailGeometry extends Geometry
     private final BakedModel baseModel;
     private final RailShape shape;
     private final Direction mainDir;
+    @Nullable
     private final Direction secDir;
 
     private FramedFancyRailGeometry(GeometryFactory.Context ctx, Property<RailShape> shapeProperty)
@@ -70,7 +72,7 @@ public class FramedFancyRailGeometry extends Geometry
         }
         else
         {
-            result = makeCurvedRailSleepers(quad, mainDir, secDir);
+            result = makeCurvedRailSleepers(quad, mainDir, Objects.requireNonNull(secDir));
         }
         quadMap.get(result.getSecond()).addAll(result.getFirst());
     }
@@ -268,6 +270,7 @@ public class FramedFancyRailGeometry extends Geometry
         };
     }
 
+    @Nullable
     private static Direction getSecondaryDirectionFromRailShape(RailShape shape)
     {
         return switch (shape)

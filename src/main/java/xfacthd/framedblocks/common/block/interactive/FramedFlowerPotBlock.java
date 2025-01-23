@@ -50,8 +50,8 @@ public class FramedFlowerPotBlock extends FramedBlock
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context)
     {
-        BlockState state = super.getStateForPlacement(context);
-        if (state != null && SupplementariesCompat.isLoaded())
+        BlockState state = defaultBlockState();
+        if (SupplementariesCompat.isLoaded())
         {
             state = state.setValue(
                     PropertyHolder.HANGING,

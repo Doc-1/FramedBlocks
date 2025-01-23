@@ -5,6 +5,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.TriState;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public enum SolidityCheck
@@ -15,11 +16,11 @@ public enum SolidityCheck
     ),
     FIRST(
             be -> be.getCamo().getContent().isSolid(),
-            (be, side, plant) -> be.getCamo().getContent().canSustainPlant(be.getLevel(), be.getBlockPos(), side, plant)
+            (be, side, plant) -> be.getCamo().getContent().canSustainPlant(Objects.requireNonNull(be.getLevel()), be.getBlockPos(), side, plant)
     ),
     SECOND(
             be -> be.getCamoTwo().getContent().isSolid(),
-            (be, side, plant) -> be.getCamoTwo().getContent().canSustainPlant(be.getLevel(), be.getBlockPos(), side, plant)
+            (be, side, plant) -> be.getCamoTwo().getContent().canSustainPlant(Objects.requireNonNull(be.getLevel()), be.getBlockPos(), side, plant)
     ),
     BOTH(
             be -> FIRST.isSolid(be) && SECOND.isSolid(be),

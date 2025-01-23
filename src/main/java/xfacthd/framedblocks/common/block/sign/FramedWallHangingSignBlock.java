@@ -31,6 +31,7 @@ public class FramedWallHangingSignBlock extends AbstractFramedHangingSignBlock
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return PlacementStateBuilder.of(this, ctx)

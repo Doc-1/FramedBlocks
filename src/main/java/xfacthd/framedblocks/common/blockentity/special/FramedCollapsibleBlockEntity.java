@@ -295,7 +295,7 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
     {
         if (auxData instanceof CollapsibleBlockData blockData)
         {
-            collapsedFace = blockData.collapsedFace().toDirection();
+            collapsedFace = blockData.collapsedFace().toNullableDirection();
             packedOffsets = blockData.offsets();
         }
     }
@@ -312,7 +312,7 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
         CollapsibleBlockData blockData = input.get(FBContent.DC_TYPE_COLLAPSIBLE_BLOCK_DATA);
         if (blockData != null)
         {
-            collapsedFace = blockData.collapsedFace().toDirection();
+            collapsedFace = blockData.collapsedFace().toNullableDirection();
             packedOffsets = blockData.offsets();
         }
     }

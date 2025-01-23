@@ -46,6 +46,7 @@ public abstract class AbstractFramedBlock extends Block implements IFramedBlock,
     private final IBlockType blockType;
     private final ShapeProvider shapes;
     private final ShapeProvider occlusionShapes;
+    @Nullable
     private final Reference2BooleanMap<BlockState> beaconBeamOcclusion;
 
     public AbstractFramedBlock(IBlockType blockType, Properties props)
@@ -232,6 +233,7 @@ public abstract class AbstractFramedBlock extends Block implements IFramedBlock,
 
 
 
+    @Nullable
     private static Reference2BooleanMap<BlockState> computeBeaconBeamOcclusion(ShapeProvider shapes)
     {
         if (shapes.isEmpty())

@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.api.util.Utils;
@@ -30,6 +31,7 @@ public class FramedPanelBlock extends FramedBlock
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return PlacementStateBuilder.of(this, ctx)

@@ -1,6 +1,7 @@
 package xfacthd.framedblocks.common.util;
 
 import net.neoforged.fml.loading.FMLEnvironment;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -19,6 +20,7 @@ public final class FramedMixinConfigPlugin implements IMixinConfigPlugin
     public void onLoad(String mixinPackage) { }
 
     @Override
+    @Nullable
     public String getRefMapperConfig()
     {
         return null;
@@ -38,6 +40,7 @@ public final class FramedMixinConfigPlugin implements IMixinConfigPlugin
     public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) { }
 
     @Override
+    @Nullable
     public List<String> getMixins()
     {
         return null;

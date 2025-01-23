@@ -41,6 +41,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.model.wrapping.WrapHelper;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.util.Utils;
@@ -204,6 +205,7 @@ public abstract class AbstractFramedSignBlock extends FramedBlock
     }
 
     @Override
+    @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type)
     {
         return Utils.createBlockEntityTicker(type, FBContent.BE_TYPE_FRAMED_SIGN.value(), FramedSignBlockEntity::tick);
@@ -291,6 +293,7 @@ public abstract class AbstractFramedSignBlock extends FramedBlock
 
 
 
+        @Nullable
         public static SignInteraction from(ItemStack stack)
         {
             return switch (stack.getItem())

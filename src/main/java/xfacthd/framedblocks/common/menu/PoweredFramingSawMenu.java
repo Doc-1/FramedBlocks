@@ -114,7 +114,7 @@ public class PoweredFramingSawMenu extends AbstractContainerMenu implements IFra
         super.broadcastChanges();
     }
 
-    private void handleRecipeChange(RecipeHolder<FramingSawRecipe> recipe)
+    private void handleRecipeChange(@Nullable RecipeHolder<FramingSawRecipe> recipe)
     {
         lastRecipe = recipe;
         int additiveCount = recipe != null ? recipe.value().getAdditives().size() : FramingSawRecipe.MAX_ADDITIVE_COUNT;
@@ -143,6 +143,7 @@ public class PoweredFramingSawMenu extends AbstractContainerMenu implements IFra
         return super.clickMenuButton(player, id);
     }
 
+    @Nullable
     public RecipeHolder<FramingSawRecipe> getSelectedRecipe()
     {
         return lastRecipe;
@@ -153,6 +154,7 @@ public class PoweredFramingSawMenu extends AbstractContainerMenu implements IFra
         return progressSlot.get();
     }
 
+    @Nullable
     public FramingSawRecipeMatchResult getMatchResult()
     {
         int result = recipeStatusSlot.get();

@@ -50,6 +50,7 @@ public class FramedStackedCornerSlopePanelBlock extends AbstractFramedDoubleBloc
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return FramedCornerSlopePanelBlock.getStateForPlacement(

@@ -8,7 +8,7 @@ import net.minecraft.core.Direction;
  */
 public enum HalfTriangleDir
 {
-    NULL(null, null, false),
+    NULL(Direction.UP, Direction.UP, false),
 
     NORTH_UP_FALSE  (Direction.NORTH, Direction.UP, false),
     NORTH_DOWN_FALSE(Direction.NORTH, Direction.DOWN, false),

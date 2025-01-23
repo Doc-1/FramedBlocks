@@ -39,6 +39,7 @@ public class FramedElevatedDoubleSlopedPrismBlock extends AbstractFramedDoubleBl
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context)
     {
         return FramedSlopedPrismBlock.getStateForPlacement(context, this);

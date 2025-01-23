@@ -9,7 +9,6 @@ import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 /**
  * Cache for constant metadata related to a specific {@link BlockState}.
@@ -23,10 +22,9 @@ public class StateCache
     protected static final int DIR_COUNT_N = DIR_COUNT + 1;
     public static final StateCache EMPTY = new StateCache();
 
-    private final boolean anyFullFace;
-    private final boolean[] fullFace;
-    private final boolean[] conFullEdge;
-    private final boolean[] conDetailed;
+    private final boolean @Nullable[] fullFace;
+    private final boolean @Nullable[] conFullEdge;
+    private final boolean @Nullable[] conDetailed;
 
     public StateCache(BlockState state, IBlockType type)
     {
@@ -74,7 +72,6 @@ public class StateCache
             }
         }
 
-        this.anyFullFace = anyFullFace;
         this.fullFace = anyFullFace ? fullFace : null;
         this.conFullEdge = supportsCt ? conFullEdge : null;
         this.conDetailed = anyConDetailed ? conDetailed : null;
@@ -82,7 +79,6 @@ public class StateCache
 
     private StateCache()
     {
-        this.anyFullFace = false;
         this.fullFace = null;
         this.conFullEdge = null;
         this.conDetailed = null;
@@ -90,12 +86,12 @@ public class StateCache
 
     public final boolean hasAnyFullFace()
     {
-        return anyFullFace;
+        return fullFace != null;
     }
 
     public final boolean isFullFace(@Nullable Direction side)
     {
-        return side != null && anyFullFace && fullFace[side.ordinal()];
+        return side != null && fullFace != null && fullFace[side.ordinal()];
     }
 
     public final boolean canConnectFullEdge(Direction side, @Nullable Direction edge)
@@ -127,8 +123,7 @@ public class StateCache
             return false;
         }
         StateCache that = (StateCache) other;
-        return anyFullFace == that.anyFullFace &&
-                Arrays.equals(fullFace, that.fullFace) &&
+        return Arrays.equals(fullFace, that.fullFace) &&
                 Arrays.equals(conFullEdge, that.conFullEdge) &&
                 Arrays.equals(conDetailed, that.conDetailed);
     }
@@ -136,8 +131,7 @@ public class StateCache
     @Override
     public int hashCode()
     {
-        int result = Objects.hashCode(anyFullFace);
-        result = 31 * result + Arrays.hashCode(fullFace);
+        int result = Arrays.hashCode(fullFace);
         result = 31 * result + Arrays.hashCode(conFullEdge);
         result = 31 * result + Arrays.hashCode(conDetailed);
         return result;

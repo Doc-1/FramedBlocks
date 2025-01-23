@@ -11,7 +11,7 @@ public final class CollapsibleBlockConnectionPredicate implements ConnectionPred
     @Override
     public boolean canConnectFullEdge(BlockState state, Direction side, @Nullable Direction edge)
     {
-        Direction face = state.getValue(PropertyHolder.NULLABLE_FACE).toDirection();
+        Direction face = state.getValue(PropertyHolder.NULLABLE_FACE).toNullableDirection();
         if (face == null || side == face.getOpposite())
         {
             return true;
@@ -27,7 +27,7 @@ public final class CollapsibleBlockConnectionPredicate implements ConnectionPred
     @Override
     public boolean canConnectDetailed(BlockState state, Direction side, Direction edge)
     {
-        Direction face = state.getValue(PropertyHolder.NULLABLE_FACE).toDirection();
+        Direction face = state.getValue(PropertyHolder.NULLABLE_FACE).toNullableDirection();
         if (face != null && (side == face || side.getAxis() != face.getAxis()))
         {
             return edge.getAxis() != face.getAxis();

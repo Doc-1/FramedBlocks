@@ -7,7 +7,7 @@ import net.minecraft.core.Direction;
  */
 public enum HalfDir
 {
-    NULL(null, null),
+    NULL(Direction.UP, Direction.UP),
 
     UP_NORTH(Direction.UP, Direction.NORTH),
     UP_EAST (Direction.UP, Direction.EAST),

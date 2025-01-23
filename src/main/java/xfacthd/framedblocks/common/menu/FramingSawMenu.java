@@ -10,6 +10,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.compat.ae2.AppliedEnergisticsCompat;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
@@ -42,6 +43,7 @@ public class FramingSawMenu extends AbstractContainerMenu implements IFramingSaw
     private final List<FramedRecipeHolder> recipes;
     private final ItemStack[] lastAdditives;
     private ItemStack lastInput = ItemStack.EMPTY;
+    @Nullable
     private FramingSawRecipe selectedRecipe = null;
     private boolean recipeChanged = false;
 
@@ -354,15 +356,18 @@ public class FramingSawMenu extends AbstractContainerMenu implements IFramingSaw
                     menu.additiveSlots[2].getItem()
             ));
 
-            FramingSawRecipeCalculation calc = menu.selectedRecipe.makeCraftingCalculation(
-                    menu.inputContainer, menu.level.isClientSide()
-            );
-            int additiveCount = menu.selectedRecipe.getAdditives().size();
-
-            menu.inputSlot.remove(calc.getInputCount());
-            for (int i = 0; i < additiveCount; i++)
+            if (menu.selectedRecipe != null)
             {
-                menu.additiveSlots[i].remove(calc.getAdditiveCount(i));
+                FramingSawRecipeCalculation calc = menu.selectedRecipe.makeCraftingCalculation(
+                        menu.inputContainer, menu.level.isClientSide()
+                );
+                int additiveCount = menu.selectedRecipe.getAdditives().size();
+
+                menu.inputSlot.remove(calc.getInputCount());
+                for (int i = 0; i < additiveCount; i++)
+                {
+                    menu.additiveSlots[i].remove(calc.getAdditiveCount(i));
+                }
             }
 
             super.onTake(player, stack);

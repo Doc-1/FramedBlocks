@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.blueprint.BlueprintCopyBehaviour;
 import xfacthd.framedblocks.api.blueprint.BlueprintData;
@@ -72,7 +73,7 @@ public final class DoorCopyBehaviour implements BlueprintCopyBehaviour
     }
 
     @Override
-    public void postProcessPaste(Level level, BlockPos pos, Player player, BlueprintData data, ItemStack dummyStack)
+    public void postProcessPaste(Level level, BlockPos pos, @Nullable Player player, BlueprintData data, ItemStack dummyStack)
     {
         BlueprintData secData = getSecondData(data);
         if (secData.isEmpty()) return;
@@ -84,6 +85,7 @@ public final class DoorCopyBehaviour implements BlueprintCopyBehaviour
         }
     }
 
+    @Nullable
     private static BlockEntity getSecondBlockEntity(Level level, BlockPos pos)
     {
         if (level.getBlockState(pos).getBlock() instanceof FramedDoorBlock)

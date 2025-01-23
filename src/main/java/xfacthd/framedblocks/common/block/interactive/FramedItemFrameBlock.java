@@ -61,6 +61,7 @@ public class FramedItemFrameBlock extends FramedBlock
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return PlacementStateBuilder.of(this, ctx)
@@ -134,7 +135,7 @@ public class FramedItemFrameBlock extends FramedBlock
 
     @Override
     @SuppressWarnings("deprecation")
-    public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, Entity entity)
+    public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity)
     {
         //No camo sounds here
         return getSoundType(state);

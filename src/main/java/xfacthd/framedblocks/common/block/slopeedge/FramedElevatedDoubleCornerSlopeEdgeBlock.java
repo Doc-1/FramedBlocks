@@ -39,6 +39,7 @@ public class FramedElevatedDoubleCornerSlopeEdgeBlock extends AbstractFramedDoub
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return ExtPlacementStateBuilder.of(this, ctx)

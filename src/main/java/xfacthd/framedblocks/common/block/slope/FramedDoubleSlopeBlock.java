@@ -40,6 +40,7 @@ public class FramedDoubleSlopeBlock extends AbstractFramedDoubleBlock implements
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return ExtPlacementStateBuilder.of(this, ctx).withHorizontalFacingAndSlopeType().build();
@@ -185,7 +186,7 @@ public class FramedDoubleSlopeBlock extends AbstractFramedDoubleBlock implements
         };
     }
 
-    private static boolean matchesHor(Direction side, Direction facing)
+    private static boolean matchesHor(@Nullable Direction side, Direction facing)
     {
         return side == facing || side == facing.getCounterClockWise();
     }

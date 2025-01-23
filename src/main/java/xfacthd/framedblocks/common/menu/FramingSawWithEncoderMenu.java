@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.common.compat.ae2.AppliedEnergisticsCompat;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 import xfacthd.framedblocks.common.data.PropertyHolder;
@@ -26,6 +27,7 @@ public class FramingSawWithEncoderMenu extends FramingSawMenu
     private final Slot patternOutputSlot;
     private final Container encoderContainer = new SimpleContainer(2);
     private final EncoderModeDataSlot patternEncoderMode = new EncoderModeDataSlot(this);
+    @Nullable
     private BooleanConsumer encoderModeListener;
 
     FramingSawWithEncoderMenu(int containerId, Inventory inv, ContainerLevelAccess levelAccess)

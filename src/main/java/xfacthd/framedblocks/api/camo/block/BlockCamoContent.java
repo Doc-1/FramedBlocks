@@ -114,7 +114,6 @@ public final class BlockCamoContent extends CamoContent<BlockCamoContent>
     }
 
     @Override
-    @Nullable
     public MapColor getMapColor(BlockGetter level, BlockPos pos)
     {
         return state.getMapColor(level, pos);
@@ -182,7 +181,8 @@ public final class BlockCamoContent extends CamoContent<BlockCamoContent>
         {
             return !adjState.is(Utils.NON_OCCLUDEABLE);
         }
-        return state.skipRendering(adjState, Utils.dirByNormal(pos, adjPos));
+        Direction side = Utils.dirByNormal(pos, adjPos);
+        return side != null && state.skipRendering(adjState, side);
     }
 
     @Override
@@ -206,7 +206,8 @@ public final class BlockCamoContent extends CamoContent<BlockCamoContent>
         {
             return !adjState.is(Utils.NON_OCCLUDEABLE);
         }
-        return adjState.skipRendering(state, Utils.dirByNormal(adjPos, pos));
+        Direction side = Utils.dirByNormal(adjPos, pos);
+        return side != null && adjState.skipRendering(state, side);
     }
 
     @Override
@@ -240,7 +241,7 @@ public final class BlockCamoContent extends CamoContent<BlockCamoContent>
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(@Nullable Object obj)
     {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != BlockCamoContent.class) return false;

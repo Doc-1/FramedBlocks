@@ -33,6 +33,7 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
     public static final int SLOTS = 9 * 3;
 
     private final StorageBlockItemStackHandler itemHandler = createItemHandler(this, false);
+    @Nullable
     private Component customName = null;
 
     public FramedStorageBlockEntity(BlockPos pos, BlockState state)
@@ -126,6 +127,7 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
     }
 
     @Override
+    @Nullable
     public Component getCustomName()
     {
         return customName;
@@ -165,6 +167,7 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
     }
 
     @Override
+    @Nullable
     public AbstractContainerMenu createMenu(int windowId, Inventory inv, Player player)
     {
         return FramedStorageMenu.createSingle(windowId, inv, itemHandler);

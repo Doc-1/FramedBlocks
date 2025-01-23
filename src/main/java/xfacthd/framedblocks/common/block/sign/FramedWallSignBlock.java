@@ -41,6 +41,7 @@ public class FramedWallSignBlock extends AbstractFramedSignBlock
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return PlacementStateBuilder.of(this, ctx)

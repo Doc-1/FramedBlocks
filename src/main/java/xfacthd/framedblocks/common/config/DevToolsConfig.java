@@ -10,12 +10,14 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.util.ConfigView;
 import xfacthd.framedblocks.api.util.Utils;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 public final class DevToolsConfig
 {
     public static final ExtConfigView.DevTools VIEW = (ExtConfigView.DevTools) ConfigView.DevTools.INSTANCE;
+    @Nullable
     private static final ModConfigSpec SPEC;
 
     private static final String KEY_DOUBLE_BLOCK_PART_DEBUG = "doubleBlockPartDebug";
@@ -32,17 +34,24 @@ public final class DevToolsConfig
     public static final String TRANSLATION_STATE_MERGER_DEBUG_FILTER = translate(KEY_STATE_MERGER_DEBUG_FILTER);
     public static final String TRANSLATION_OCCLUSION_SHAPE_DEBUG = translate(KEY_OCCLUSION_SHAPE_DEBUG);
 
+    @Nullable
     private static final ModConfigSpec.BooleanValue DOUBLE_BLOCK_PART_DEBUG_VALUE;
+    @Nullable
     private static final ModConfigSpec.BooleanValue CONNECTION_DEBUG_VALUE;
+    @Nullable
     private static final ModConfigSpec.BooleanValue QUAD_WINDING_DEBUG_VALUE;
+    @Nullable
     private static final ModConfigSpec.BooleanValue STATE_MERGER_DEBUG_VALUE;
+    @Nullable
     private static final ModConfigSpec.ConfigValue<String> STATE_MERGER_DEBUG_FILTER_VALUE;
+    @Nullable
     private static final ModConfigSpec.BooleanValue OCCLUSION_SHAPE_DEBUG_VALUE;
 
     private static boolean doubleBlockPartDebug = false;
     private static boolean connectionDebug = false;
     private static boolean quadWindingDebug = false;
     private static boolean stateMergerDebug = false;
+    @Nullable
     private static Pattern stateMergerDebugFilter = null;
     private static boolean occlusionShapeDebug = false;
 
@@ -141,13 +150,13 @@ public final class DevToolsConfig
     {
         if (event.getConfig().getType() == ModConfig.Type.CLIENT && event.getConfig().getSpec() == SPEC)
         {
-            doubleBlockPartDebug = DOUBLE_BLOCK_PART_DEBUG_VALUE.get();
-            connectionDebug = CONNECTION_DEBUG_VALUE.get();
-            quadWindingDebug = QUAD_WINDING_DEBUG_VALUE.get();
-            stateMergerDebug = STATE_MERGER_DEBUG_VALUE.get();
-            String filter = STATE_MERGER_DEBUG_FILTER_VALUE.get();
+            doubleBlockPartDebug = Objects.requireNonNull(DOUBLE_BLOCK_PART_DEBUG_VALUE).get();
+            connectionDebug = Objects.requireNonNull(CONNECTION_DEBUG_VALUE).get();
+            quadWindingDebug = Objects.requireNonNull(QUAD_WINDING_DEBUG_VALUE).get();
+            stateMergerDebug = Objects.requireNonNull(STATE_MERGER_DEBUG_VALUE).get();
+            String filter = Objects.requireNonNull(STATE_MERGER_DEBUG_FILTER_VALUE).get();
             stateMergerDebugFilter = filter.isBlank() ? null : Pattern.compile(filter);
-            occlusionShapeDebug = OCCLUSION_SHAPE_DEBUG_VALUE.get();
+            occlusionShapeDebug = Objects.requireNonNull(OCCLUSION_SHAPE_DEBUG_VALUE).get();
         }
     }
 

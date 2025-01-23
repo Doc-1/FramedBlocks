@@ -143,6 +143,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     }
 
     @Override
+    @Nullable
     public MapColor getMapColor()
     {
         return switch (getStateCache().getTopInteractionMode())
@@ -162,6 +163,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     }
 
     @Override
+    @Nullable
     public Integer getCamoBeaconColorMultiplier(LevelReader level, BlockPos pos, BlockPos beaconPos)
     {
         Integer superMult = super.getCamoBeaconColorMultiplier(level, pos, beaconPos);
@@ -193,11 +195,11 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     {
         return switch (getStateCache().getTopInteractionMode())
         {
-            case FIRST -> getCamo().getContent().getFriction(level, worldPosition, entity, frameFriction);
-            case SECOND -> getCamoTwo().getContent().getFriction(level, worldPosition, entity, frameFriction);
+            case FIRST -> getCamo().getContent().getFriction(level(), worldPosition, entity, frameFriction);
+            case SECOND -> getCamoTwo().getContent().getFriction(level(), worldPosition, entity, frameFriction);
             case EITHER -> Math.max(
-                    getCamo().getContent().getFriction(level, worldPosition, entity, frameFriction),
-                    getCamoTwo().getContent().getFriction(level, worldPosition, entity, frameFriction)
+                    getCamo().getContent().getFriction(level(), worldPosition, entity, frameFriction),
+                    getCamoTwo().getContent().getFriction(level(), worldPosition, entity, frameFriction)
             );
         };
     }

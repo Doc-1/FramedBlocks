@@ -111,7 +111,7 @@ public final class FluidModel implements BakedModel
             @Nullable Direction side,
             RandomSource rand,
             ModelData extraData,
-            RenderType layer
+            @Nullable RenderType layer
     )
     {
         if (side == null || layer != fluidLayer)

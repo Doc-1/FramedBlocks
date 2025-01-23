@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.camo.CamoContent;
 import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
@@ -90,7 +91,7 @@ public class FramedOneWayWindowGeometry extends Geometry
     }
 
     @Override
-    public QuadCacheKey makeCacheKey(CamoContent<?> camo, Object ctCtx, ModelData data)
+    public QuadCacheKey makeCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, ModelData data)
     {
         ModelData auxData = data.get(FramedBlockData.AUX_DATA);
         if (auxData != null)
@@ -112,5 +113,5 @@ public class FramedOneWayWindowGeometry extends Geometry
 
 
 
-    private record OneWayWindowCacheKey(CamoContent<?> camo, Object ctCtx, Object auxCtCtx) implements QuadCacheKey { }
+    private record OneWayWindowCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, Object auxCtCtx) implements QuadCacheKey { }
 }

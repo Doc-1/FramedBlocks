@@ -34,6 +34,7 @@ import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.util.FramedUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiFunction;
 
 public class FramedDetectorRailSlopeBlock extends DetectorRailBlock implements IFramedBlock, ISlopeBlock.IRailSlopeBlock
@@ -76,13 +77,13 @@ public class FramedDetectorRailSlopeBlock extends DetectorRailBlock implements I
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
-        return PlacementStateBuilder.of(this, ctx)
+        return Objects.requireNonNull(PlacementStateBuilder.of(this, ctx)
                 .withCustom((state, modCtx) -> state.setValue(
                         PropertyHolder.ASCENDING_RAIL_SHAPE,
                         FramedUtils.getAscendingRailShapeFromDirection(modCtx.getHorizontalDirection())
                 ))
                 .withWater()
-                .build();
+                .build());
     }
 
     @Override

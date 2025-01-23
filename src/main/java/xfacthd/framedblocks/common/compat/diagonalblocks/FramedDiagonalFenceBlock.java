@@ -108,6 +108,7 @@ public final class FramedDiagonalFenceBlock extends NeoForgeDiagonalFenceBlock i
     }
 
     @Override
+    @Nullable
     public BlockState updateIndirectNeighborDiagonalProperty(BlockState state, LevelAccessor level, BlockPos pos, EightWayDirection dir)
     {
         if (state.getValue(FramedProperties.STATE_LOCKED))

@@ -1,5 +1,6 @@
 package xfacthd.framedblocks.client.screen;
 
+import net.minecraft.Optionull;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.util.ClientUtils;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
@@ -103,18 +105,15 @@ public class PoweredFramingSawScreen extends AbstractContainerScreen<PoweredFram
         int ty = topPos + TITLE_TARGETBLOCK_Y;
         graphics.drawString(font, TITLE_TARGETBLOCK, tx, ty, 0x404040, false);
 
-        RecipeHolder<FramingSawRecipe> recipe = menu.getSelectedRecipe();
-        if (recipe != null)
-        {
-            FramingSawRecipeMatchResult match = menu.getMatchResult();
-            drawRecipeInfo(graphics, recipe.value(), match);
-            drawStatus(graphics, recipe.value(), match);
-        }
+        FramingSawRecipe recipe = Optionull.map(menu.getSelectedRecipe(), RecipeHolder::value);
+        FramingSawRecipeMatchResult match = recipe != null ? menu.getMatchResult() : null;
+        drawRecipeInfo(graphics, recipe, match);
+        drawStatus(graphics, recipe, match);
 
         drawEnergyBar(graphics, mouseX, mouseY);
     }
 
-    private void drawRecipeInfo(GuiGraphics graphics, FramingSawRecipe recipe, FramingSawRecipeMatchResult match)
+    private void drawRecipeInfo(GuiGraphics graphics, @Nullable FramingSawRecipe recipe, @Nullable FramingSawRecipeMatchResult match)
     {
         Slot inputSlot = menu.getSlot(FramingSawMenu.SLOT_INPUT);
         if (!inputSlot.hasItem())
@@ -161,7 +160,7 @@ public class PoweredFramingSawScreen extends AbstractContainerScreen<PoweredFram
         }
     }
 
-    private void drawStatus(GuiGraphics graphics, FramingSawRecipe recipe, FramingSawRecipeMatchResult match)
+    private void drawStatus(GuiGraphics graphics, @Nullable FramingSawRecipe recipe, @Nullable FramingSawRecipeMatchResult match)
     {
         MutableComponent status = MSG_STATUS.copy();
         int width = -1;

@@ -55,6 +55,7 @@ public class FramedCollapsibleBlock extends FramedBlock
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return PlacementStateBuilder.of(this, ctx).withWater().build();
@@ -123,7 +124,7 @@ public class FramedCollapsibleBlock extends FramedBlock
             if (level.getBlockEntity(pos) instanceof FramedCollapsibleBlockEntity be)
             {
                 Direction collapseFace = be.getCollapsedFace();
-                if (state.getValue(PropertyHolder.NULLABLE_FACE).toDirection() != collapseFace)
+                if (state.getValue(PropertyHolder.NULLABLE_FACE).toNullableDirection() != collapseFace)
                 {
                     level.setBlockAndUpdate(pos, state.setValue(PropertyHolder.NULLABLE_FACE, NullableDirection.fromDirection(collapseFace)));
                 }

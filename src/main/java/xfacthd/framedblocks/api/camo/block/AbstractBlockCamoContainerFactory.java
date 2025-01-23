@@ -15,6 +15,7 @@ import xfacthd.framedblocks.api.util.Utils;
 public abstract class AbstractBlockCamoContainerFactory<T extends AbstractBlockCamoContainer<T>> extends CamoContainerFactory<T>
 {
     @Override
+    @Nullable
     public final T applyCamo(Level level, BlockPos pos, Player player, ItemStack stack)
     {
         BlockState state = getStateFromItemStack(level, pos, player, stack);

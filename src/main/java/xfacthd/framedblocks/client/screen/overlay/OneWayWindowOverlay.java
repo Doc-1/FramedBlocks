@@ -37,7 +37,7 @@ public final class OneWayWindowOverlay extends BlockInteractOverlay
 
     public OneWayWindowOverlay()
     {
-        super("one_way_window", LINES, List.of(), null, null, ClientConfig.VIEW::getOneWayWindowMode);
+        super("one_way_window", LINES, List.of(), TEXTURE_BG, TEXTURE_BG, ClientConfig.VIEW::getOneWayWindowMode);
     }
 
     @Override
@@ -61,12 +61,6 @@ public final class OneWayWindowOverlay extends BlockInteractOverlay
     protected boolean getState(Target target)
     {
         return false;
-    }
-
-    @Override
-    protected Texture getTexture(Target target, boolean state, Texture texFalse, Texture texTrue)
-    {
-        return TEXTURE_BG;
     }
 
     @Override

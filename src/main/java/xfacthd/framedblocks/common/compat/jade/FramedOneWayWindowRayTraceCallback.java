@@ -25,7 +25,7 @@ final class FramedOneWayWindowRayTraceCallback implements JadeRayTraceCallback
     {
         if (accessor instanceof BlockAccessor blockAccessor && blockAccessor.getBlockState().is(FBContent.BLOCK_FRAMED_ONE_WAY_WINDOW))
         {
-            Direction face = blockAccessor.getBlockState().getValue(PropertyHolder.NULLABLE_FACE).toDirection();
+            Direction face = blockAccessor.getBlockState().getValue(PropertyHolder.NULLABLE_FACE).toNullableDirection();
             if (face == null || face == blockAccessor.getSide())
             {
                 return accessor;

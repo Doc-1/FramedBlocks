@@ -18,6 +18,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 import org.lwjgl.glfw.GLFW;
 import xfacthd.framedblocks.api.util.ClientUtils;
 import xfacthd.framedblocks.api.util.Utils;
@@ -63,9 +65,12 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
     private final ItemStack sawPatternStack = AppliedEnergisticsCompat.makeSawPatternStack();
     private final ItemStack[] encodingInputs = new ItemStack[1 + FramingSawRecipe.MAX_ADDITIVE_COUNT];
     private final RecipeInput encodingRecipeInput = new ArrayBackedRecipeInput(encodingInputs);
+    @UnknownNullability
     private Button encodeButton = null;
     private boolean encoding = false;
+    @Nullable
     private FramingSawRecipeCalculation encoderCalculation = null;
+    @Nullable
     private FramingSawRecipeMatchResult encoderMatchResult = null;
 
     FramingSawWithEncoderScreen(FramingSawMenu menu, Inventory inv, Component title)

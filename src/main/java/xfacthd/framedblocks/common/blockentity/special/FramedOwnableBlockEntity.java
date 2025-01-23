@@ -7,6 +7,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.common.FBContent;
 
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 public class FramedOwnableBlockEntity extends FramedBlockEntity
 {
+    @Nullable
     private UUID owner;
 
     protected FramedOwnableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state)
@@ -37,6 +39,7 @@ public class FramedOwnableBlockEntity extends FramedBlockEntity
         }
     }
 
+    @Nullable
     public UUID getOwner()
     {
         return owner;

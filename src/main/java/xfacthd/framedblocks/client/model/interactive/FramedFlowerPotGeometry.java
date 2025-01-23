@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.camo.CamoContent;
 import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.QuadMap;
@@ -35,6 +36,7 @@ public class FramedFlowerPotGeometry extends Geometry
     private static final ResourceLocation DIRT_TEXTURE = Utils.rl("minecraft", "block/dirt");
 
     private final boolean hanging;
+    @Nullable
     private final BakedModel hangingPotModel;
 
     public FramedFlowerPotGeometry(GeometryFactory.Context ctx)
@@ -109,7 +111,7 @@ public class FramedFlowerPotGeometry extends Geometry
         }
         addDirtQuads(quadMap, rand, data, layer);
 
-        if (hanging && layer == RenderType.cutout())
+        if (hanging && hangingPotModel != null && layer == RenderType.cutout())
         {
             Utils.forAllDirections(dir ->
                     Utils.copyAll(hangingPotModel.getQuads(null, dir, rand, data, null), quadMap.get(dir))
@@ -118,7 +120,7 @@ public class FramedFlowerPotGeometry extends Geometry
     }
 
     @Override
-    public QuadCacheKey makeCacheKey(CamoContent<?> camo, Object ctCtx, ModelData data)
+    public QuadCacheKey makeCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, ModelData data)
     {
         return new FlowerPotQuadCacheKey(camo, ctCtx, getFlowerBlock(data));
     }
@@ -192,5 +194,5 @@ public class FramedFlowerPotGeometry extends Geometry
         return flower != null ? flower : Blocks.AIR;
     }
 
-    private record FlowerPotQuadCacheKey(CamoContent<?> camo, Object ctCtx, Block flower) implements QuadCacheKey { }
+    private record FlowerPotQuadCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, Block flower) implements QuadCacheKey { }
 }

@@ -65,7 +65,7 @@ public final class ModelWrappingManager
 
         if (!id.getVariant().equals("inventory"))
         {
-            Block block = BuiltInRegistries.BLOCK.getValue(blockId);
+            Block block = Objects.requireNonNull(BuiltInRegistries.BLOCK.getValue(blockId));
             BlockState state = StateLocationCache.getStateFromLocation(blockId.location(), block, id);
             return handler.wrapBlockModel(model, state, modelLookup, textureLookup, null);
         }

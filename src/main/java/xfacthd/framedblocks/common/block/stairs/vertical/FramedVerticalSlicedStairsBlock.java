@@ -40,6 +40,7 @@ public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock i
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         BlockState state = super.getStateForPlacement(ctx);

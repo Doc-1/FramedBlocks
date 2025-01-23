@@ -41,6 +41,7 @@ import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.property.ChestState;
 import xfacthd.framedblocks.common.util.FramedUtils;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalLong;
 
@@ -151,6 +152,7 @@ public class FramedChestBlock extends FramedStorageBlock
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return PlacementStateBuilder.of(this, ctx)
@@ -334,7 +336,7 @@ public class FramedChestBlock extends FramedStorageBlock
 
     public static DoubleBlockCombiner.NeighborCombineResult<? extends FramedChestBlockEntity> combine(FramedChestBlockEntity be, boolean override)
     {
-        return combine(be.getBlockState(), be.getLevel(), be.getBlockPos(), override);
+        return combine(be.getBlockState(), Objects.requireNonNull(be.getLevel()), be.getBlockPos(), override);
     }
 
     public static DoubleBlockCombiner.NeighborCombineResult<? extends FramedChestBlockEntity> combine(

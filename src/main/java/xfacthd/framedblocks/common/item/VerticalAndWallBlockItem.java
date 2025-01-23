@@ -5,6 +5,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.Map;
@@ -20,6 +21,7 @@ public class VerticalAndWallBlockItem extends BlockItem
     }
 
     @Override
+    @Nullable
     protected BlockState getPlacementState(BlockPlaceContext context)
     {
         if (Utils.isY(context.getClickedFace()))

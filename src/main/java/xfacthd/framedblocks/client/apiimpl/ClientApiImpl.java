@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.FramedBlocksClientAPI;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.util.Utils;
@@ -26,19 +27,19 @@ public final class ClientApiImpl implements FramedBlocksClientAPI
     }
 
     @Override
-    public void generateOverlayQuads(QuadMap quadMap, Direction side, TextureAtlasSprite sprite)
+    public void generateOverlayQuads(QuadMap quadMap, @Nullable Direction side, TextureAtlasSprite sprite)
     {
         generateOverlayQuads(quadMap, side, sprite, dir -> true);
     }
 
     @Override
-    public void generateOverlayQuads(QuadMap quadMap, Direction side, TextureAtlasSprite sprite, Predicate<Direction> filter)
+    public void generateOverlayQuads(QuadMap quadMap, @Nullable Direction side, TextureAtlasSprite sprite, Predicate<Direction> filter)
     {
         generateOverlayQuads(quadMap, side, dir -> sprite, filter);
     }
 
     @Override
-    public void generateOverlayQuads(QuadMap quadMap, Direction side, Function<Direction, TextureAtlasSprite> spriteGetter, Predicate<Direction> filter)
+    public void generateOverlayQuads(QuadMap quadMap, @Nullable Direction side, Function<Direction, TextureAtlasSprite> spriteGetter, Predicate<Direction> filter)
     {
         QuadTable quadTable = (QuadTable) quadMap;
 

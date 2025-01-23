@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
@@ -118,6 +119,7 @@ public class FramedChestBlockEntity extends FramedStorageBlockEntity
         return lastChangeTime;
     }
 
+    @Nullable
     public IStorageBlockItemHandler getChestItemHandler(boolean override)
     {
         return FramedChestBlock.combine(this, override).apply(FramedChestBlock.CHEST_COMBINER).orElse(null);
@@ -126,7 +128,8 @@ public class FramedChestBlockEntity extends FramedStorageBlockEntity
     @Override
     public int getAnalogOutputSignal()
     {
-        return getAnalogOutputSignal(getChestItemHandler(false));
+        IStorageBlockItemHandler itemHandler = getChestItemHandler(false);
+        return itemHandler != null ? getAnalogOutputSignal(itemHandler) : 0;
     }
 
     @Override
@@ -136,6 +139,7 @@ public class FramedChestBlockEntity extends FramedStorageBlockEntity
     }
 
     @Override
+    @Nullable
     public AbstractContainerMenu createMenu(int windowId, Inventory inv, Player player)
     {
         IStorageBlockItemHandler handler = getChestItemHandler(false);

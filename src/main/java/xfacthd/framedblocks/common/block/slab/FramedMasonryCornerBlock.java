@@ -34,6 +34,7 @@ public class FramedMasonryCornerBlock extends AbstractFramedDoubleBlock
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return PlacementStateBuilder.of(this, ctx)

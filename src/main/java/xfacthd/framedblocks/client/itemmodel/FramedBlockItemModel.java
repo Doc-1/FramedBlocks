@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
 {
@@ -186,7 +187,8 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
         @Override
         public ItemModel bake(BakingContext context)
         {
-            return new FramedBlockItemModel(((IFramedBlock) block).getItemModelSource(), tintProvider);
+            BlockState state = ((IFramedBlock) block).getItemModelSource();
+            return new FramedBlockItemModel(Objects.requireNonNull(state), tintProvider);
         }
 
         @Override

@@ -46,6 +46,7 @@ public class FramedFlatInverseDoubleSlopePanelCornerBlock extends AbstractFramed
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context)
     {
         return FramedFlatSlopePanelCornerBlock.getStateForPlacement(this, false, context);

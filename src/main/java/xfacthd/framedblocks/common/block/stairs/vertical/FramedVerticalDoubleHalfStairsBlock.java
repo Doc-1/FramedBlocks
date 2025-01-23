@@ -35,6 +35,7 @@ public class FramedVerticalDoubleHalfStairsBlock extends AbstractFramedDoubleBlo
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return PlacementStateBuilder.of(this, ctx)

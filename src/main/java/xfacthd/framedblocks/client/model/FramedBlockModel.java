@@ -40,6 +40,7 @@ import xfacthd.framedblocks.common.data.PropertyHolder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
@@ -219,6 +220,8 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
 
         if (noProcessing)
         {
+            Objects.requireNonNull(side);
+
             boolean camoInRenderType = nullLayer || renderTypes.camoTypes.contains(renderType);
             boolean additionalQuads = !nullLayer && renderTypes.additionalTypes.contains(renderType);
             if (!camoInRenderType && !additionalQuads && !reinforce)

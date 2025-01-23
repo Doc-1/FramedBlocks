@@ -5,7 +5,7 @@ package xfacthd.framedblocks.common.data.skippreds;
  */
 public enum DiagCornerDir
 {
-    NULL(null, null),
+    NULL(CornerDir.UP_NORTH_EAST, CornerDir.UP_NORTH_EAST),
 
     UP_NE_SW(CornerDir.UP_NORTH_EAST, CornerDir.UP_SOUTH_WEST),
     UP_NW_SE(CornerDir.UP_NORTH_WEST, CornerDir.UP_SOUTH_EAST),

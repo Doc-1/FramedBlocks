@@ -2,6 +2,7 @@ package xfacthd.framedblocks.api.model.quad;
 
 import com.google.common.base.Preconditions;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import org.jetbrains.annotations.UnknownNullability;
 import xfacthd.framedblocks.api.model.util.ModelUtils;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public final class QuadModifier
         return new QuadModifier(new QuadData(quad), -1, quad.isShade(), quad.getLightEmission(), quad.hasAmbientOcclusion(), false, false);
     }
 
-    private QuadModifier(QuadData data, int tintIndex, boolean shade, int lightEmission, boolean ao, boolean modified, boolean failed)
+    private QuadModifier(@UnknownNullability QuadData data, int tintIndex, boolean shade, int lightEmission, boolean ao, boolean modified, boolean failed)
     {
         this.data = data;
         this.tintIndex = tintIndex;

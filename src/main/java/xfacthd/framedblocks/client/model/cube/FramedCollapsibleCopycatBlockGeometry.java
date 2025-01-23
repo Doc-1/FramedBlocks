@@ -5,6 +5,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.camo.CamoContent;
 import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.QuadMap;
@@ -193,7 +194,7 @@ public class FramedCollapsibleCopycatBlockGeometry extends Geometry
     }
 
     @Override
-    public QuadCacheKey makeCacheKey(CamoContent<?> camo, Object ctCtx, ModelData data)
+    public QuadCacheKey makeCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, ModelData data)
     {
         Integer packedOffsets = data.get(FramedCollapsibleCopycatBlockEntity.OFFSETS);
         return new CollapsibleCopycatBlockQuadCacheKey(camo, ctCtx, packedOffsets);
@@ -201,5 +202,5 @@ public class FramedCollapsibleCopycatBlockGeometry extends Geometry
 
     private record FloatPair(float valOne, float valTwo) { }
 
-    private record CollapsibleCopycatBlockQuadCacheKey(CamoContent<?> camo, Object ctCtx, Integer packedOffsets) implements QuadCacheKey { }
+    private record CollapsibleCopycatBlockQuadCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, @Nullable Integer packedOffsets) implements QuadCacheKey { }
 }

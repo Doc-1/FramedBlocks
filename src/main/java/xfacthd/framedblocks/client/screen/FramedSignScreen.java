@@ -33,6 +33,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.RenderTypeHelper;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.UnknownNullability;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 import xfacthd.framedblocks.api.render.Quaternions;
@@ -61,6 +62,7 @@ public class FramedSignScreen extends Screen
     private final String[] lines;
     private int blinkCounter = 0;
     private int currLine = 0;
+    @UnknownNullability
     private TextFieldHelper inputUtil;
 
     public FramedSignScreen(FramedSignBlockEntity sign, boolean front)

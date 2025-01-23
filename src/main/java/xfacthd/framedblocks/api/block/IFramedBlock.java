@@ -442,6 +442,7 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
 
     default boolean useCamoOcclusionShapeForLightOcclusion(BlockState state)
     {
+        //noinspection ConstantValue
         if (getBlockType() != null && !getBlockType().canOccludeWithSolidCamo())
         {
             return false;
@@ -601,6 +602,7 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
     }
 
     @Override
+    @Nullable
     default Integer getBeaconColorMultiplier(BlockState state, LevelReader level, BlockPos pos, BlockPos beaconPos)
     {
         if (!doesBlockOccludeBeaconBeam(state, level, pos))

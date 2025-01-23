@@ -7,7 +7,7 @@ import net.minecraft.core.Direction;
  */
 public enum TriangleDir
 {
-    NULL(null, null),
+    NULL(Direction.UP, Direction.UP),
 
     NORTH_EAST(Direction.NORTH, Direction.EAST),
     NORTH_WEST(Direction.NORTH, Direction.WEST),

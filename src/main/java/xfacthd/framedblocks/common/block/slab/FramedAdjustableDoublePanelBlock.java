@@ -36,6 +36,7 @@ public class FramedAdjustableDoublePanelBlock extends FramedAdjustableDoubleBloc
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return PlacementStateBuilder.of(this, ctx)

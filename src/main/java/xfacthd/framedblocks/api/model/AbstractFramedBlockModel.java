@@ -11,6 +11,7 @@ import xfacthd.framedblocks.api.model.wrapping.itemmodel.ItemModelInfo;
 
 public abstract class AbstractFramedBlockModel extends DelegateBakedModel
 {
+    @Nullable
     private final ItemModelInfo itemModelInfo;
 
     protected AbstractFramedBlockModel(BakedModel baseModel, BlockState state, ItemModelInfo itemModelInfo)

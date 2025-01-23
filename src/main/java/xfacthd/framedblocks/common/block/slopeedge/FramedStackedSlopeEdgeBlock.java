@@ -44,6 +44,7 @@ public class FramedStackedSlopeEdgeBlock extends AbstractFramedDoubleBlock imple
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return ExtPlacementStateBuilder.of(this, ctx)

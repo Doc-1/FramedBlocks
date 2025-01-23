@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.util.Utils;
 
@@ -19,13 +20,13 @@ public final class QuadTable implements QuadMap
     private final ArrayList<BakedQuad>[] quads = new ArrayList[LAYER_COUNT * SIDE_COUNT];
     private int boundBaseIdx = -1;
 
-    public List<BakedQuad> getQuads(RenderType renderType, Direction side)
+    public List<BakedQuad> getQuads(RenderType renderType, @Nullable Direction side)
     {
         int idx = renderType.getChunkLayerId() * SIDE_COUNT + Utils.maskNullDirection(side);
         return Objects.requireNonNullElse(quads[idx], EMPTY);
     }
 
-    public List<BakedQuad> getAllQuads(Direction side)
+    public List<BakedQuad> getAllQuads(@Nullable Direction side)
     {
         ArrayList<BakedQuad> allQuads = new ArrayList<>(LAYER_COUNT);
         int sideIdx = Utils.maskNullDirection(side);
@@ -42,14 +43,14 @@ public final class QuadTable implements QuadMap
     }
 
     @Override
-    public ArrayList<BakedQuad> get(Direction side)
+    public ArrayList<BakedQuad> get(@Nullable Direction side)
     {
         Preconditions.checkState(boundBaseIdx > -1, "No RenderType bound");
         return quads[boundBaseIdx + Utils.maskNullDirection(side)];
     }
 
     @Override
-    public ArrayList<BakedQuad> put(Direction side, ArrayList<BakedQuad> quadList)
+    public ArrayList<BakedQuad> put(@Nullable Direction side, ArrayList<BakedQuad> quadList)
     {
         Preconditions.checkState(boundBaseIdx > -1, "No RenderType bound");
         int idx = boundBaseIdx + Utils.maskNullDirection(side);
@@ -72,7 +73,7 @@ public final class QuadTable implements QuadMap
         }
     }
 
-    public void bindRenderType(RenderType renderType)
+    public void bindRenderType(@Nullable RenderType renderType)
     {
         boundBaseIdx = renderType != null ? (renderType.getChunkLayerId() * SIDE_COUNT) : -1;
     }

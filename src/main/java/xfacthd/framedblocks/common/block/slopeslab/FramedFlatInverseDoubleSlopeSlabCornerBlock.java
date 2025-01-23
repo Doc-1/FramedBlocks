@@ -47,6 +47,7 @@ public class FramedFlatInverseDoubleSlopeSlabCornerBlock extends AbstractFramedD
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return PlacementStateBuilder.of(this, ctx)

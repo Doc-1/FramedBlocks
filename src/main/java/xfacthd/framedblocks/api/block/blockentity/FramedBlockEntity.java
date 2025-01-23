@@ -733,11 +733,13 @@ public class FramedBlockEntity extends BlockEntity
         }
     }
 
+    @Nullable
     public MapColor getMapColor()
     {
         return camoContainer.getMapColor(level(), worldPosition);
     }
 
+    @Nullable
     public Integer getCamoBeaconColorMultiplier(LevelReader level, BlockPos pos, BlockPos beaconPos)
     {
         return camoContainer.getBeaconColorMultiplier(level, pos, beaconPos);

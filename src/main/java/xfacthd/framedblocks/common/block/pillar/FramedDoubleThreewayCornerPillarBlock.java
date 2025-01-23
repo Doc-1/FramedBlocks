@@ -34,6 +34,7 @@ public class FramedDoubleThreewayCornerPillarBlock extends AbstractFramedDoubleB
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return PlacementStateBuilder.of(this, ctx)

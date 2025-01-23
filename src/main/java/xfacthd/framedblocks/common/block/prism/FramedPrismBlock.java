@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.*;
 import xfacthd.framedblocks.api.util.*;
 import xfacthd.framedblocks.common.block.FramedBlock;
@@ -36,11 +37,13 @@ public class FramedPrismBlock extends FramedBlock implements IFramedPrismBlock
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context)
     {
         return getStateForPlacement(context, this);
     }
 
+    @Nullable
     public static BlockState getStateForPlacement(BlockPlaceContext ctx, Block block)
     {
         return PlacementStateBuilder.of(block, ctx)

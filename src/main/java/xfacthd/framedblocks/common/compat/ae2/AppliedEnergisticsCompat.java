@@ -10,6 +10,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.registries.*;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.api.util.registration.DeferredDataComponentType;
@@ -63,6 +64,7 @@ public final class AppliedEnergisticsCompat
         return false;
     }
 
+    @Nullable
     public static ItemStack tryEncodePattern(ItemStack input, ItemStack[] additives, ItemStack output)
     {
         if (loaded)

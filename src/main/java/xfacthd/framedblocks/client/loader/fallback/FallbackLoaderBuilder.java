@@ -6,6 +6,7 @@ import com.mojang.serialization.JsonOps;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.model.generators.template.CustomLoaderBuilder;
 import net.neoforged.neoforge.common.conditions.ICondition;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 public final class FallbackLoaderBuilder extends CustomLoaderBuilder
 {
     private final List<ICondition> conditions = new ArrayList<>();
+    @Nullable
     private ResourceLocation fallback;
 
     public FallbackLoaderBuilder()

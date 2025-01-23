@@ -80,7 +80,7 @@ public final class BlueprintGhostRenderBehaviour implements GhostRenderBehaviour
     {
         if (proxiedStack == null)
         {
-            return null;
+            return defaultPos;
         }
         return proxyBehaviour(proxiedStack).getRenderPos(proxiedStack, null, hit, ctx, hitState, defaultPos, renderPass);
     }
@@ -134,7 +134,7 @@ public final class BlueprintGhostRenderBehaviour implements GhostRenderBehaviour
     }
 
     @Override
-    public ModelData buildModelData(ItemStack stack, ItemStack proxiedStack, BlockPlaceContext ctx, BlockState renderState, int renderPass, CamoList camo)
+    public ModelData buildModelData(ItemStack stack, @Nullable ItemStack proxiedStack, BlockPlaceContext ctx, BlockState renderState, int renderPass, CamoList camo)
     {
         if (proxiedStack == null)
         {

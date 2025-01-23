@@ -28,7 +28,7 @@ public final class FrameBackgroundOverlay extends BlockInteractOverlay
 
     public FrameBackgroundOverlay()
     {
-        super("frame_background", LINES_FALSE, LINES_TRUE, null, null, ClientConfig.VIEW::getFrameBackgroundMode);
+        super("frame_background", LINES_FALSE, LINES_TRUE, TEXTURE_BG, TEXTURE_BG, ClientConfig.VIEW::getFrameBackgroundMode);
     }
 
     @Override
@@ -47,12 +47,6 @@ public final class FrameBackgroundOverlay extends BlockInteractOverlay
     protected boolean getState(Target target)
     {
         return target.state().getValue(PropertyHolder.LEATHER);
-    }
-
-    @Override
-    protected Texture getTexture(Target target, boolean state, Texture texFalse, Texture texTrue)
-    {
-        return TEXTURE_BG;
     }
 
     @Override

@@ -40,6 +40,7 @@ public final class FramedDoubleBlockModel extends AbstractFramedBlockModel
     private final Tuple<BlockState, BlockState> dummyStates;
     private final boolean canCullLeft;
     private final boolean canCullRight;
+    @Nullable
     private Tuple<BakedModel, BakedModel> models = null;
 
     public FramedDoubleBlockModel(GeometryFactory.Context ctx, NullCullPredicate cullPredicate, ItemModelInfo itemModelInfo)
@@ -84,7 +85,8 @@ public final class FramedDoubleBlockModel extends AbstractFramedBlockModel
     }
 
     @Override
-    public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand)
+    @SuppressWarnings("deprecation")
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand)
     {
         return getQuads(state, side, rand, ModelData.EMPTY, RenderType.cutout());
     }
@@ -193,6 +195,7 @@ public final class FramedDoubleBlockModel extends AbstractFramedBlockModel
         return sprite != null ? sprite : parent.getParticleIcon();
     }
 
+    @Nullable
     private TextureAtlasSprite getSprite(ModelData data, boolean secondary)
     {
         ModelData innerData = data.get(secondary ? IFramedDoubleBlockEntity.DATA_TWO : IFramedDoubleBlockEntity.DATA_ONE);

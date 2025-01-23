@@ -40,6 +40,7 @@ public class FramedStackedInnerCornerSlopeEdgeBlock extends AbstractFramedDouble
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return ExtPlacementStateBuilder.of(this, ctx)

@@ -111,6 +111,7 @@ public final class FramedDiagonalGlassPaneBlock extends NeoForgeDiagonalGlassPan
     }*/
 
     @Override
+    @Nullable
     public BlockState updateIndirectNeighborDiagonalProperty(BlockState state, LevelAccessor level, BlockPos pos, EightWayDirection dir)
     {
         if (state.getValue(FramedProperties.STATE_LOCKED))

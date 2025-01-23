@@ -30,7 +30,7 @@ public abstract class FramedSpecialDoubleBlockItem extends BlockItem
         Level level = ctx.getLevel();
         BlockPos pos = ctx.getClickedPos();
         BlockState originalState = level.getBlockState(pos);
-        if (ctx.canPlace() && originalState.is(getBlock()))
+        if (ctx.canPlace() && originalState.is(getBlock()) && ctx.getPlayer() != null)
         {
             BlockState newState = getReplacementState(ctx, originalState);
             if (newState != null)

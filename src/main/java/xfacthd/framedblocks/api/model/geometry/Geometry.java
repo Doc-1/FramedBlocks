@@ -14,6 +14,7 @@ import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.extensions.IBakedModelExtension;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.common.util.TriState;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.FramedBlocksClientAPI;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.camo.*;
@@ -157,7 +158,7 @@ public abstract class Geometry
      * @param ctCtx The current connected textures context object, may be null
      * @param data The {@link ModelData} from the {@link FramedBlockEntity}
      */
-    public QuadCacheKey makeCacheKey(CamoContent<?> camo, Object ctCtx, ModelData data)
+    public QuadCacheKey makeCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, ModelData data)
     {
         // Avoid allocating a key if the CT context is null
         return ctCtx != null ? new SimpleQuadCacheKey(camo, ctCtx) : camo;

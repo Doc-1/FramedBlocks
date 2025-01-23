@@ -38,6 +38,7 @@ public record FramingSawRecipeAdditive(Ingredient ingredient, int count, @Nullab
 
     public FramingSawRecipeAdditive
     {
+        //noinspection ConstantValue
         Preconditions.checkArgument(ingredient != null, "Additive ingredient must be non-null");
         Preconditions.checkArgument(count > 0, "Additive count must be greater than 0");
     }

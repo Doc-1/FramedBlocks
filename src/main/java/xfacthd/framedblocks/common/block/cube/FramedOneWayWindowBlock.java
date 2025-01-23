@@ -131,7 +131,7 @@ public class FramedOneWayWindowBlock extends FramedBlock
     @Override
     protected BlockState rotate(BlockState state, Rotation rotation)
     {
-        Direction dir = state.getValue(PropertyHolder.NULLABLE_FACE).toDirection();
+        Direction dir = state.getValue(PropertyHolder.NULLABLE_FACE).toNullableDirection();
         if (dir != null && !Utils.isY(dir))
         {
             dir = rotation.rotate(dir);
@@ -143,7 +143,7 @@ public class FramedOneWayWindowBlock extends FramedBlock
     @Override
     protected BlockState mirror(BlockState state, Mirror mirror)
     {
-        Direction dir = state.getValue(PropertyHolder.NULLABLE_FACE).toDirection();
+        Direction dir = state.getValue(PropertyHolder.NULLABLE_FACE).toNullableDirection();
         if (dir != null && !Utils.isY(dir))
         {
             dir = mirror.mirror(dir);
@@ -155,7 +155,7 @@ public class FramedOneWayWindowBlock extends FramedBlock
     @Override
     public BlockState getAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side, @Nullable BlockState queryState, @Nullable BlockPos queryPos)
     {
-        Direction dir = state.getValue(PropertyHolder.NULLABLE_FACE).toDirection();
+        Direction dir = state.getValue(PropertyHolder.NULLABLE_FACE).toNullableDirection();
         if (dir == side && queryPos != null)
         {
             if (Utils.dirByNormal(pos, queryPos) == dir)
@@ -166,7 +166,7 @@ public class FramedOneWayWindowBlock extends FramedBlock
             {
                 queryState = level.getBlockState(queryPos);
             }
-            if (queryState.is(this) && queryState.getValue(PropertyHolder.NULLABLE_FACE).toDirection() == dir)
+            if (queryState.is(this) && queryState.getValue(PropertyHolder.NULLABLE_FACE).toNullableDirection() == dir)
             {
                 return Blocks.TINTED_GLASS.defaultBlockState();
             }

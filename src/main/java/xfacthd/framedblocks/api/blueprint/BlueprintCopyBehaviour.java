@@ -7,6 +7,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
@@ -130,7 +131,7 @@ public interface BlueprintCopyBehaviour
      * @param data The {@link BlueprintData} stored on the held blueprint stack
      * @param dummyStack The dummy {@link ItemStack} used to place the Block
      */
-    default void postProcessPaste(Level level, BlockPos pos, Player player, BlueprintData data, ItemStack dummyStack) { }
+    default void postProcessPaste(Level level, BlockPos pos, @Nullable Player player, BlueprintData data, ItemStack dummyStack) { }
 
     /**
      * Attach additional data stored in the given {@link BlueprintData} to the given {@link ItemStack}

@@ -36,6 +36,7 @@ public class FramedVerticalHalfSlopeBlock extends FramedBlock implements IComple
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return PlacementStateBuilder.of(this, ctx)

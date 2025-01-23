@@ -155,7 +155,7 @@ public class FramedSignBlockEntity extends FramedBlockEntity
         return executed;
     }
 
-    private static CommandSourceStack getCommandSource(ServerPlayer player, ServerLevel level, BlockPos pos)
+    private static CommandSourceStack getCommandSource(@Nullable ServerPlayer player, ServerLevel level, BlockPos pos)
     {
         String nameString = player == null ? "Sign" : player.getName().getString();
         Component name = player == null ? Component.literal("Sign") : player.getDisplayName();
@@ -189,7 +189,7 @@ public class FramedSignBlockEntity extends FramedBlockEntity
         }
     }
 
-    public boolean isTooFarAwayToEdit(Player player)
+    public boolean isTooFarAwayToEdit(@Nullable Player player)
     {
         return player == null || player.distanceToSqr(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()) > 64.0D;
     }
@@ -260,7 +260,7 @@ public class FramedSignBlockEntity extends FramedBlockEntity
         waxed = nbt.getBoolean("waxed");
     }
 
-    private static SignText loadLines(Level level, BlockPos pos, SignText text)
+    private static SignText loadLines(@Nullable Level level, BlockPos pos, SignText text)
     {
         for (int i = 0; i < 4; ++i)
         {
@@ -272,7 +272,7 @@ public class FramedSignBlockEntity extends FramedBlockEntity
         return text;
     }
 
-    private static Component loadLine(Level level, BlockPos pos, Component line)
+    private static Component loadLine(@Nullable Level level, BlockPos pos, Component line)
     {
         if (level instanceof ServerLevel serverlevel)
         {

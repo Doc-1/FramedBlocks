@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 import org.slf4j.Logger;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.cache.StateCache;
@@ -188,7 +189,7 @@ public final class AppearanceHelper
      * Determine the first direction from the difference between the two given positions which matches the given predicate
      */
     @Nullable
-    private static <T> Direction findFirstSuitableDirectionFromOffset(BlockPos pos, BlockPos queryPos, Direction side, T context, EdgePredicate<T> pred)
+    private static <T> Direction findFirstSuitableDirectionFromOffset(BlockPos pos, BlockPos queryPos, Direction side, @Nullable T context, EdgePredicate<T> pred)
     {
         if (pos.equals(queryPos))
         {
@@ -206,8 +207,9 @@ public final class AppearanceHelper
         return findFirstSuitableDirectionFromMultiCoordOffset(nx, ny, nz, side, context, pred);
     }
 
+    @Nullable
     private static <T> Direction findFirstSuitableDirectionFromMultiCoordOffset(
-            int nx, int ny, int nz, Direction side, T context, EdgePredicate<T> pred
+            int nx, int ny, int nz, Direction side, @Nullable T context, EdgePredicate<T> pred
     )
     {
         if (!Utils.isX(side))
@@ -330,7 +332,7 @@ public final class AppearanceHelper
     @FunctionalInterface
     private interface EdgePredicate<T>
     {
-        boolean test(T context, Direction side, Direction edge);
+        boolean test(@UnknownNullability T context, Direction side, Direction edge);
     }
 
 

@@ -17,6 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.IItemHandler;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.capability.*;
 import xfacthd.framedblocks.common.config.ServerConfig;
@@ -67,13 +69,18 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
     );
     private final int energyConsumption;
     private final int craftingDuration;
+    @UnknownNullability
     private FramingSawRecipeCache cache = null;
+    @Nullable
     private ResourceKey<Recipe<?>> selectedRecipeId = null;
+    @Nullable
     private RecipeHolder<FramingSawRecipe> selectedRecipe = null;
     private boolean active = false;
     private long lastActive = 0;
     private boolean recipeSatisfied = false;
+    @Nullable
     private FramingSawRecipeMatchResult matchResult = null;
+    @Nullable
     private FramingSawRecipeCalculation calculation = null;
     private int outputCount = 0;
     private int progress = 0;
@@ -110,17 +117,17 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
             {
                 be.progress = 0;
 
-                ItemStack result = be.selectedRecipe.value().getResult().copy();
+                ItemStack result = Objects.requireNonNull(be.selectedRecipe).value().getResult().copy();
                 result.setCount(be.outputCount);
                 be.internalAccess = true;
                 be.inhibitUpdate = true;
                 for (int i = 0; i < be.selectedRecipe.value().getAdditives().size(); i++)
                 {
                     int slot = i + FramingSawMenu.SLOT_ADDITIVE_FIRST;
-                    be.itemHandler.extractItem(slot, be.calculation.getAdditiveCount(i), false);
+                    be.itemHandler.extractItem(slot, Objects.requireNonNull(be.calculation).getAdditiveCount(i), false);
                 }
                 be.inhibitUpdate = false;
-                be.itemHandler.extractItem(FramingSawMenu.SLOT_INPUT, be.calculation.getInputCount(), false);
+                be.itemHandler.extractItem(FramingSawMenu.SLOT_INPUT, Objects.requireNonNull(be.calculation).getInputCount(), false);
                 be.itemHandler.insertItem(FramingSawMenu.SLOT_RESULT, result, false);
                 be.internalAccess = false;
             }
@@ -179,7 +186,7 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
 
         if (recipeSatisfied)
         {
-            calculation = selectedRecipe.value().makeCraftingCalculation(itemHandler, false);
+            calculation = Objects.requireNonNull(selectedRecipe).value().makeCraftingCalculation(itemHandler, false);
             outputCount = calculation.getOutputCount();
         }
         else
@@ -226,7 +233,7 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
         throw new IllegalArgumentException("Invalid slot: " + slot);
     }
 
-    public void selectRecipe(RecipeHolder<FramingSawRecipe> recipe)
+    public void selectRecipe(@Nullable RecipeHolder<FramingSawRecipe> recipe)
     {
         ResourceKey<Recipe<?>> lastId = selectedRecipeId;
         selectedRecipe = recipe;
@@ -238,11 +245,13 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
         }
     }
 
+    @Nullable
     public RecipeHolder<FramingSawRecipe> getSelectedRecipe()
     {
         return selectedRecipe;
     }
 
+    @Nullable
     public FramingSawRecipeMatchResult getMatchResult()
     {
         return matchResult;
@@ -312,7 +321,7 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
     {
         super.onLoad();
         cache = FramingSawRecipeCache.get(level().isClientSide());
-        if (selectedRecipeId != null && level() instanceof ServerLevel serverLevel)
+        if (level() instanceof ServerLevel serverLevel && selectedRecipeId != null)
         {
             RecipeHolder<FramingSawRecipe> recipe = (RecipeHolder<FramingSawRecipe>) serverLevel.recipeAccess()
                     .byKey(selectedRecipeId)

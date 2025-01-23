@@ -43,6 +43,7 @@ public class FramedStackedSlopePanelBlock extends AbstractFramedDoubleBlock
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return ExtPlacementStateBuilder.of(this, ctx)

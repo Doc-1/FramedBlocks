@@ -27,6 +27,8 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 import org.lwjgl.glfw.GLFW;
 import xfacthd.framedblocks.api.util.ClientUtils;
 import xfacthd.framedblocks.api.util.Utils;
@@ -89,6 +91,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
     protected final FramingSawRecipeCache cache = FramingSawRecipeCache.get(true);
     protected final ItemStack cubeStack = new ItemStack(FBContent.BLOCK_FRAMED_CUBE.value());
     private final List<FramingSawMenu.FramedRecipeHolder> filteredRecipes = new ArrayList<>();
+    @UnknownNullability
     private SearchEditBox searchBox = null;
     private int firstIndex = 0;
     private boolean scrolling = false;
@@ -279,7 +282,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
         }
     }
 
-    protected void renderItemTooltip(GuiGraphics graphics, int mouseX, int mouseY, ItemStack stack, FramingSawMenu.FramedRecipeHolder recipeHolder)
+    protected void renderItemTooltip(GuiGraphics graphics, int mouseX, int mouseY, ItemStack stack, @Nullable FramingSawMenu.FramedRecipeHolder recipeHolder)
     {
         //noinspection ConstantConditions
         List<Component> components = new ArrayList<>(getTooltipFromItem(minecraft, stack));
@@ -455,7 +458,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
             return Component.translatable(
                     TOOLTIP_HAVE_X_BUT_NEED_Y_TAG,
                     present,
-                    Utils.translateTag(additive.srcTag()).withStyle(ChatFormatting.GOLD)
+                    Utils.translateTag(Objects.requireNonNull(additive.srcTag())).withStyle(ChatFormatting.GOLD)
             );
         }
 
@@ -625,6 +628,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
+    @Nullable
     public PointedRecipe getRecipeAt(double mouseX, double mouseY)
     {
         double x = leftPos + RECIPES_X;

@@ -5,6 +5,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.camo.CamoContent;
 import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.QuadMap;
@@ -21,13 +22,14 @@ public class FramedCollapsibleBlockGeometry extends Geometry
     public static final ResourceLocation ALT_BASE_MODEL_LOC = Utils.rl("block/framed_collapsible_block_alt");
     private static final float MIN_DEPTH = .001F;
 
+    @Nullable
     private final Direction collapsedFace;
     private final boolean rotSplitLine;
     private final BakedModel altBaseModel;
 
     public FramedCollapsibleBlockGeometry(GeometryFactory.Context ctx)
     {
-        this.collapsedFace = ctx.state().getValue(PropertyHolder.NULLABLE_FACE).toDirection();
+        this.collapsedFace = ctx.state().getValue(PropertyHolder.NULLABLE_FACE).toNullableDirection();
         this.rotSplitLine = ctx.state().getValue(PropertyHolder.ROTATE_SPLIT_LINE);
         this.altBaseModel = ctx.modelLookup().getStandaloneModel(ALT_BASE_MODEL_LOC);
     }
@@ -155,7 +157,7 @@ public class FramedCollapsibleBlockGeometry extends Geometry
     }
 
     @Override
-    public QuadCacheKey makeCacheKey(CamoContent<?> camo, Object ctCtx, ModelData data)
+    public QuadCacheKey makeCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, ModelData data)
     {
         Integer packedOffsets = data.get(FramedCollapsibleBlockEntity.OFFSETS);
         return new CollapsibleBlockQuadCacheKey(camo, ctCtx, packedOffsets);
@@ -174,5 +176,5 @@ public class FramedCollapsibleBlockGeometry extends Geometry
         };
     }
 
-    private record CollapsibleBlockQuadCacheKey(CamoContent<?> camo, Object ctCtx, Integer packedOffsets) implements QuadCacheKey { }
+    private record CollapsibleBlockQuadCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, @Nullable Integer packedOffsets) implements QuadCacheKey { }
 }

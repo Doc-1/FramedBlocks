@@ -168,6 +168,7 @@ public final class Utils
         return (long) a * (long) (b / IntMath.gcd(a, b));
     }
 
+    @Nullable
     @SuppressWarnings("unchecked")
     public static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createBlockEntityTicker(
             BlockEntityType<A> type, BlockEntityType<E> actualType, BlockEntityTicker<? super E> ticker
@@ -176,17 +177,17 @@ public final class Utils
         return actualType == type ? (BlockEntityTicker<A>)ticker : null;
     }
 
-    public static MutableComponent translate(String prefix, String postfix, Object... arguments)
+    public static MutableComponent translate(@Nullable String prefix, @Nullable String postfix, Object... arguments)
     {
         return Component.translatable(translationKey(prefix, postfix), arguments);
     }
 
-    public static MutableComponent translate(String prefix, String postfix)
+    public static MutableComponent translate(@Nullable String prefix, @Nullable String postfix)
     {
         return Component.translatable(translationKey(prefix, postfix));
     }
 
-    public static String translationKey(String prefix, String postfix)
+    public static String translationKey(@Nullable String prefix, @Nullable String postfix)
     {
         String key = "";
         if (prefix != null)
@@ -257,11 +258,13 @@ public final class Utils
         return dir.getAxis() == Direction.Axis.Z;
     }
 
+    @Nullable
     public static Direction dirByNormal(int x, int y, int z)
     {
         return DIRECTION_BY_NORMAL.get(BlockPos.asLong(x, y, z));
     }
 
+    @Nullable
     public static Direction dirByNormal(BlockPos from, BlockPos to)
     {
         int nx = to.getX() - from.getX();
@@ -434,6 +437,7 @@ public final class Utils
         return ItemTags.create(Utils.rl(modid, name));
     }
 
+    @Nullable
     public static Property<?> getRotatableProperty(BlockState state)
     {
         for (Property<?> prop : state.getProperties())
@@ -494,7 +498,7 @@ public final class Utils
         }
     }
 
-    public static int maskNullDirection(Direction dir)
+    public static int maskNullDirection(@Nullable Direction dir)
     {
         return dir == null ? DIRECTIONS.length : dir.ordinal();
     }

@@ -52,6 +52,7 @@ public class FramedChiseledBookshelfBlock extends FramedBlock
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return PlacementStateBuilder.of(this, ctx).withHorizontalFacing(true).build();

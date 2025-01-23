@@ -53,11 +53,13 @@ public class FramedCornerSlopePanelWallBlock extends FramedBlock
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return getStateForPlacement(this, ctx, large);
     }
 
+    @Nullable
     public static BlockState getStateForPlacement(Block block, BlockPlaceContext ctx, boolean invert)
     {
         return ExtPlacementStateBuilder.of(block, ctx)

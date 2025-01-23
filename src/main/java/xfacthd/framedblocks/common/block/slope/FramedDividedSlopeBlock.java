@@ -44,6 +44,7 @@ public class FramedDividedSlopeBlock extends AbstractFramedDoubleBlock implement
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return ExtPlacementStateBuilder.of(this, ctx)

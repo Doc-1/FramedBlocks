@@ -15,7 +15,7 @@ import xfacthd.framedblocks.api.util.CamoList;
 public final class DoorGhostRenderBehaviour implements GhostRenderBehaviour
 {
     @Override
-    public int getPassCount(ItemStack stack, ItemStack proxiedStack)
+    public int getPassCount(ItemStack stack, @Nullable ItemStack proxiedStack)
     {
         return 2;
     }

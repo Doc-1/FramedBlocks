@@ -40,6 +40,7 @@ public class FramedDoubleThreewayCornerBlock extends AbstractFramedDoubleBlock
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return PlacementStateBuilder.of(this, ctx)
