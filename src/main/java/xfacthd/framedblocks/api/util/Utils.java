@@ -446,7 +446,7 @@ public final class Utils
             {
                 return prop;
             }
-            else if (prop instanceof EnumProperty<?> && prop.getValueClass() == Dictionary.class)
+            else if (prop instanceof EnumProperty<?> && prop.getValueClass() == Direction.class)
             {
                 return prop;
             }
