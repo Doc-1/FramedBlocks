@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.common.capability;
+package xfacthd.framedblocks.common.capability.item;
 
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

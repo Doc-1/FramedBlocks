@@ -2,7 +2,7 @@
 @FieldsAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-package xfacthd.framedblocks.common.data.capabilities;
+package xfacthd.framedblocks.common.capability.energy;
 
 import net.minecraft.FieldsAreNonnullByDefault;
 import net.minecraft.MethodsReturnNonnullByDefault;

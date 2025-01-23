@@ -20,8 +20,8 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.capability.IStorageBlockItemHandler;
-import xfacthd.framedblocks.common.capability.StorageBlockItemStackHandler;
+import xfacthd.framedblocks.common.capability.item.IStorageBlockItemHandler;
+import xfacthd.framedblocks.common.capability.item.StorageBlockItemStackHandler;
 import xfacthd.framedblocks.common.menu.FramedStorageMenu;
 
 import java.util.ArrayList;

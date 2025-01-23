@@ -14,7 +14,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.capability.TankFluidHandler;
+import xfacthd.framedblocks.common.capability.fluid.TankFluidHandler;
 
 public class FramedTankBlockEntity extends FramedBlockEntity
 {

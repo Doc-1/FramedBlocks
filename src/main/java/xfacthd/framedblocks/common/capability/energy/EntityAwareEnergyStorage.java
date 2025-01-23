@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.common.capability;
+package xfacthd.framedblocks.common.capability.energy;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;

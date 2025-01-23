@@ -17,7 +17,7 @@ import net.neoforged.neoforge.client.textures.FluidSpriteCache;
 import net.neoforged.neoforge.fluids.FluidStack;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.common.blockentity.special.FramedTankBlockEntity;
-import xfacthd.framedblocks.common.capability.TankFluidHandler;
+import xfacthd.framedblocks.common.capability.fluid.TankFluidHandler;
 
 public class FramedTankRenderer implements BlockEntityRenderer<FramedTankBlockEntity>
 {

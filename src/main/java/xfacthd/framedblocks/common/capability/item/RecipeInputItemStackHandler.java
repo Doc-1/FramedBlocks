@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.common.capability;
+package xfacthd.framedblocks.common.capability.item;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;

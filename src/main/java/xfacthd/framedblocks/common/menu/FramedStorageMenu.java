@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.*;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.blockentity.special.FramedStorageBlockEntity;
-import xfacthd.framedblocks.common.capability.IStorageBlockItemHandler;
+import xfacthd.framedblocks.common.capability.item.IStorageBlockItemHandler;
 import xfacthd.framedblocks.common.util.FramedUtils;
 
 public class FramedStorageMenu extends AbstractContainerMenu

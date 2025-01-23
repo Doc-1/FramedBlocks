@@ -1,11 +1,11 @@
-package xfacthd.framedblocks.common.data.capabilities;
+package xfacthd.framedblocks.common.capability;
 
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.capability.TankFluidHandler;
+import xfacthd.framedblocks.common.capability.fluid.TankFluidHandler;
 
 public final class CapabilitySetup
 {

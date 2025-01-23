@@ -11,7 +11,7 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import org.slf4j.Logger;
 import xfacthd.framedblocks.common.config.*;
 import xfacthd.framedblocks.common.data.BlueprintBehaviours;
-import xfacthd.framedblocks.common.data.capabilities.CapabilitySetup;
+import xfacthd.framedblocks.common.capability.CapabilitySetup;
 import xfacthd.framedblocks.common.data.cullupdate.CullingUpdateTracker;
 import xfacthd.framedblocks.common.data.shapes.ShapeReloader;
 import xfacthd.framedblocks.api.util.FramedConstants;
