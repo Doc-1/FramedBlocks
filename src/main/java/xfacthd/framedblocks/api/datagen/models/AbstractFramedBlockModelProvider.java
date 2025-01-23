@@ -105,6 +105,14 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
 
     protected static void framedBlockItemModel(BlockModelGenerators blockModels, Holder<Block> block, DynamicItemTintProvider tintProvider)
     {
+        if (!(block.value() instanceof IFramedBlock framedBlock))
+        {
+            throw new IllegalArgumentException("Expected IFramedBlock, got " + block.value());
+        }
+        if (framedBlock.getItemModelSource() == null)
+        {
+            throw new IllegalArgumentException("IFramed Block " + block.value() + " does not provide an item model source state");
+        }
         Item item = block.value().asItem();
         Preconditions.checkArgument(item != Items.AIR, "Cannot generate item model for block %s without item", block.value());
         blockModels.itemModelOutput.accept(item, InternalClientAPI.INSTANCE.createFramedBlockItemModel(block.value(), tintProvider));

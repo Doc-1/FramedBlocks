@@ -1,5 +1,6 @@
 package xfacthd.framedblocks.common.datagen.providers;
 
+import net.minecraft.client.renderer.item.EmptyModel;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -96,14 +97,12 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_THREEWAY_CORNER_SLOPE_EDGE, cube);
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_INNER_THREEWAY_CORNER_SLOPE_EDGE, cube);
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_SLAB, cube);
-        simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_DOUBLE_SLAB, cube);
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_ADJ_DOUBLE_SLAB, cube);
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_ADJ_DOUBLE_COPYCAT_SLAB, cube);
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_DIVIDED_SLAB, cube);
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_SLAB_EDGE, cube);
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_SLAB_CORNER, cube);
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_PANEL, cube);
-        simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_DOUBLE_PANEL, cube);
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_ADJ_DOUBLE_PANEL, cube);
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_ADJ_DOUBLE_COPYCAT_PANEL, cube);
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_DIVIDED_PANEL_HOR, cube);
@@ -235,13 +234,11 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_TUBE, cube);
 
         registerFramedCube(blockModels, cube);
-        //registerFramedSlab(blockModels, cube);
-        //registerFramedStairs(blockModels, cube);
-        //registerFramedWall(blockModels, cube);
+        registerFramedDoubleSlab(blockModels, cube);
+        registerFramedDoublePanel(blockModels, cube);
         registerFramedFence(blockModels, cube);
         registerFramedDoor(blockModels, cube);
         registerFramedIronDoor(blockModels, ironCube);
-        //registerFramedTrapDoor(blockModels, cube);
         registerFramedPressurePlate(blockModels, cube);
         registerFramedStonePressurePlate(blockModels, stoneCube);
         registerFramedObsidianPressurePlate(blockModels, obsidianCube);
@@ -326,6 +323,18 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
                 );
 
         framedBlockItemModel(blockModels, FBContent.BLOCK_FRAMED_CUBE);
+    }
+
+    private void registerFramedDoubleSlab(BlockModelGenerators blockModels, ResourceLocation cube)
+    {
+        simpleBlock(blockModels, FBContent.BLOCK_FRAMED_DOUBLE_SLAB, cube);
+        blockModels.itemModelOutput.accept(FBContent.BLOCK_FRAMED_DOUBLE_SLAB.value().asItem(), new EmptyModel.Unbaked());
+    }
+
+    private void registerFramedDoublePanel(BlockModelGenerators blockModels, ResourceLocation cube)
+    {
+        simpleBlock(blockModels, FBContent.BLOCK_FRAMED_DOUBLE_PANEL, cube);
+        blockModels.itemModelOutput.accept(FBContent.BLOCK_FRAMED_DOUBLE_PANEL.value().asItem(), new EmptyModel.Unbaked());
     }
 
     private void registerFramedFence(BlockModelGenerators blockModels, ResourceLocation cube)
