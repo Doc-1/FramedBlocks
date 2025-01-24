@@ -28,7 +28,6 @@ public class FramedDoubleSlabBlock extends AbstractFramedDoubleBlock
     @Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player)
     {
-        // TODO: include camo data of specific half when includeData is true
         return new ItemStack(FBContent.BLOCK_FRAMED_SLAB.value());
     }
 
