@@ -32,16 +32,13 @@ import java.util.Set;
 public final class FramedBlockDebugRenderer
 {
     private static final Map<BlockEntityType<? extends FramedBlockEntity>, Set<BlockDebugRenderer<? extends FramedBlockEntity>>> RENDERERS_BY_TYPE = new IdentityHashMap<>();
+    private static final Set<BlockDebugRenderer<?>> RENDERERS = new ReferenceOpenHashSet<>();
+    private static boolean anyEnabled = false;
 
     @SuppressWarnings("unchecked")
     private static void onRenderLevelStage(final RenderLevelStageEvent event)
     {
-        if (!DevToolsConfig.VIEW.isDoubleBlockPartHitDebugRendererEnabled()) return;
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) return;
-
-        DeltaTracker delta = event.getPartialTick();
-        Camera camera = event.getCamera();
-        PoseStack poseStack = event.getPoseStack();
+        if (!anyEnabled || event.getStage() != RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) return;
 
         HitResult hit = Minecraft.getInstance().hitResult;
         if (!(hit instanceof BlockHitResult blockHit)) return;
@@ -52,6 +49,10 @@ public final class FramedBlockDebugRenderer
 
         Set<BlockDebugRenderer<? extends FramedBlockEntity>> renderers = RENDERERS_BY_TYPE.get(be.getType());
         if (renderers.isEmpty()) return;
+
+        DeltaTracker delta = event.getPartialTick();
+        Camera camera = event.getCamera();
+        PoseStack poseStack = event.getPoseStack();
 
         Vec3 offset = Vec3.atLowerCornerOf(pos).subtract(camera.getPosition());
         poseStack.pushPose();
@@ -73,6 +74,12 @@ public final class FramedBlockDebugRenderer
 
     private static void onFrameGraphSetup(final FrameGraphSetupEvent event)
     {
+        anyEnabled = false;
+        for (BlockDebugRenderer<?> renderer : RENDERERS)
+        {
+            anyEnabled |= renderer.isEnabled();
+        }
+
         if (DevToolsConfig.VIEW.isDoubleBlockPartHitDebugRendererEnabled())
         {
             event.enableOutlineProcessing();
@@ -84,8 +91,10 @@ public final class FramedBlockDebugRenderer
         if (FMLEnvironment.production) return;
 
         ModLoader.postEvent(new AttachDebugRenderersEvent((type, renderer) ->
-                RENDERERS_BY_TYPE.computeIfAbsent(type, $ -> new ReferenceOpenHashSet<>()).add(renderer)
-        ));
+        {
+            RENDERERS_BY_TYPE.computeIfAbsent(type, $ -> new ReferenceOpenHashSet<>()).add(renderer);
+            RENDERERS.add(renderer);
+        }));
 
         NeoForge.EVENT_BUS.addListener(FramedBlockDebugRenderer::onFrameGraphSetup);
         NeoForge.EVENT_BUS.addListener(FramedBlockDebugRenderer::onRenderLevelStage);
