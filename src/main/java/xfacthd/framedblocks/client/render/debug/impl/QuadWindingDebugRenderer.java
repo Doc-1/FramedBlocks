@@ -65,6 +65,7 @@ public class QuadWindingDebugRenderer implements BlockDebugRenderer<FramedBlockE
                     poseStack.pushPose();
                     poseStack.translate(pos.x, pos.y, pos.z);
                     poseStack.mulPose(Minecraft.getInstance().gameRenderer.getMainCamera().rotation());
+                    poseStack.mulPose(Axis.YP.rotationDegrees(180));
                     poseStack.mulPose(Axis.ZP.rotationDegrees(180));
                     poseStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
 
