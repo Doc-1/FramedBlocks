@@ -4,8 +4,10 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 import xfacthd.framedblocks.api.camo.CamoContent;
 import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.QuadMap;
@@ -46,10 +48,11 @@ public class FramedCollapsibleBlockGeometry extends Geometry
 
         Integer offsets = data.get(FramedCollapsibleBlockEntity.OFFSETS);
         float[] vertexPos = new float[] { 1F, 1F, 1F, 1F };
+        boolean allSame = true;
         if (offsets != null && offsets != 0)
         {
             byte[] relOff = FramedCollapsibleBlockEntity.unpackOffsets(offsets);
-            boolean allSame = relOff[0] == relOff[1] && relOff[0] == relOff[2] && relOff[0] == relOff[3];
+            allSame = relOff[0] == relOff[1] && relOff[0] == relOff[2] && relOff[0] == relOff[3];
             for (int i = 0; i < 4; i++)
             {
                 vertexPos[i] = Math.max(1F - ((float) relOff[i] / 16F), allSame ? MIN_DEPTH : 0F);
@@ -58,6 +61,26 @@ public class FramedCollapsibleBlockGeometry extends Geometry
 
         if (quadDir == collapsedFace)
         {
+            boolean planar = true;
+            if (!allSame)
+            {
+                Vector3f v0 = new Vector3f(0, vertexPos[0], 0);
+                Vector3f v1 = new Vector3f(0, vertexPos[1], 1);
+                Vector3f v2 = new Vector3f(1, vertexPos[2], 1);
+                Vector3f v3 = new Vector3f(1, vertexPos[3], 0);
+
+                Vector3f v10 = v1.sub(v0);
+                Vector3f v20 = v2.sub(v0);
+                Vector3f n1 = v10.cross(v20);
+
+                planar = Mth.equal(0F, v3.sub(v0).dot(n1));
+            }
+            if (planar)
+            {
+                QuadModifier.of(quad).apply(Modifiers.setPosition(vertexPos)).export(quadMap.get(null));
+                return;
+            }
+
             float diff02 = Math.abs(vertexPos[0] - vertexPos[2]);
             float diff13 = Math.abs(vertexPos[1] - vertexPos[3]);
             boolean rotate = (diff13 > diff02) != rotSplitLine;
