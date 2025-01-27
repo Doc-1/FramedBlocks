@@ -1,5 +1,6 @@
 package xfacthd.framedblocks.common.block.sign;
 
+import com.google.common.base.Preconditions;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -80,6 +81,10 @@ public abstract class AbstractFramedSignBlock extends FramedBlock
         InteractionResult result = super.useItemOn(stack, state, level, pos, player, hand, hit);
         if (result.consumesAction() || preventUse(state, level, pos, player, stack, hit))
         {
+            if (level.isClientSide() && result instanceof InteractionResult.TryEmptyHandInteraction)
+            {
+                return InteractionResult.PASS;
+            }
             return result;
         }
 
@@ -122,6 +127,8 @@ public abstract class AbstractFramedSignBlock extends FramedBlock
     {
         if (level.getBlockEntity(pos) instanceof FramedSignBlockEntity sign)
         {
+            Preconditions.checkState(!level.isClientSide(), "Expected to only call this on the server");
+
             boolean front = sign.isFacingFrontText(player);
             if (sign.isWaxed())
             {
@@ -229,8 +236,11 @@ public abstract class AbstractFramedSignBlock extends FramedBlock
 
     public static void openEditScreen(Player player, FramedSignBlockEntity sign, boolean frontText)
     {
-        sign.setEditingPlayer(player.getUUID());
-        PacketDistributor.sendToPlayer((ServerPlayer)player, new ClientboundOpenSignScreenPayload(sign.getBlockPos(), frontText));
+        if (player instanceof ServerPlayer serverPlayer)
+        {
+            sign.setEditingPlayer(player.getUUID());
+            PacketDistributor.sendToPlayer(serverPlayer, new ClientboundOpenSignScreenPayload(sign.getBlockPos(), frontText));
+        }
     }
 
 
