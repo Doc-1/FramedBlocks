@@ -12,7 +12,6 @@ public final class QuadData
     final BakedQuad quad;
     final int[] vertexData;
     private final boolean uvRotated;
-    private final boolean uvMirrored;
 
     public QuadData(BakedQuad quad)
     {
@@ -20,7 +19,6 @@ public final class QuadData
         int[] vertexData = quad.getVertices();
         this.vertexData = Arrays.copyOf(vertexData, vertexData.length);
         this.uvRotated = ModelUtils.isQuadRotated(this);
-        this.uvMirrored = ModelUtils.isQuadMirrored(this, uvRotated);
     }
 
     QuadData(QuadData data)
@@ -28,7 +26,6 @@ public final class QuadData
         this.quad = data.quad;
         this.vertexData = Arrays.copyOf(data.vertexData, data.vertexData.length);
         this.uvRotated = data.uvRotated;
-        this.uvMirrored = data.uvMirrored;
     }
 
     public BakedQuad quad()
@@ -39,11 +36,6 @@ public final class QuadData
     public boolean uvRotated()
     {
         return uvRotated;
-    }
-
-    public boolean uvMirrored()
-    {
-        return uvMirrored;
     }
 
     public float pos(int vert, int idx)
