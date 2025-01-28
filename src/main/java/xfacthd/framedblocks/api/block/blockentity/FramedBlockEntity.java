@@ -14,7 +14,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.BlockItemStateProperties;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -178,11 +177,6 @@ public class FramedBlockEntity extends BlockEntity
 
     private InteractionResult setCamo(Player player, ItemStack stack, CamoContainerFactory<?> factory, boolean secondary)
     {
-        if (stack.getItem() instanceof BlockItem item && item.getBlock() instanceof IFramedBlock)
-        {
-            return InteractionResult.FAIL;
-        }
-
         CamoContainer<?, ?> camo = factory.applyCamo(level(), worldPosition, player, stack);
         if (camo != null)
         {

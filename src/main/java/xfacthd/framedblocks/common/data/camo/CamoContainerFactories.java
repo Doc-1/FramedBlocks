@@ -2,14 +2,24 @@ package xfacthd.framedblocks.common.data.camo;
 
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.api.camo.*;
+import xfacthd.framedblocks.api.block.IFramedBlock;
+import xfacthd.framedblocks.api.camo.CamoContainer;
+import xfacthd.framedblocks.api.camo.CamoContainerFactory;
+import xfacthd.framedblocks.api.camo.TriggerRegistrar;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.data.FramedRegistries;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
 
 public final class CamoContainerFactories
@@ -41,6 +51,11 @@ public final class CamoContainerFactories
     @Nullable
     public static CamoContainerFactory<?> findCamoFactory(ItemStack stack)
     {
+        if (stack.getItem() instanceof BlockItem item && item.getBlock() instanceof IFramedBlock)
+        {
+            return null;
+        }
+
         CamoContainerFactory<?> factory = APPLICATION_ITEMS.get(stack.getItem());
         if (factory == null)
         {
