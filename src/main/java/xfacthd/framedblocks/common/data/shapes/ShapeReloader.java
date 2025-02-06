@@ -2,11 +2,13 @@ package xfacthd.framedblocks.common.data.shapes;
 
 import com.google.common.base.Stopwatch;
 import com.mojang.logging.LogUtils;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import org.slf4j.Logger;
 import xfacthd.framedblocks.api.shapes.ReloadableShapeProvider;
 import xfacthd.framedblocks.api.shapes.ShapeCache;
+import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.List;
 public final class ShapeReloader implements ResourceManagerReloadListener
 {
     public static final ShapeReloader INSTANCE = new ShapeReloader();
+    public static final ResourceLocation LISTENER_ID = Utils.rl("voxel_shapes");
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final List<ShapeCache<?>> CACHES = new ArrayList<>();
     private static final List<ReloadableShapeProvider> PROVIDERS = new ArrayList<>();

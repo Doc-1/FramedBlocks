@@ -513,10 +513,10 @@ public final class FBClient
         ErrorModel.reload(event.getBakingResult().standaloneModels());
     }
 
-    private static void onRegisterReloadListener(final RegisterClientReloadListenersEvent event)
+    private static void onRegisterReloadListener(final AddClientReloadListenersEvent event)
     {
-        event.registerReloadListener((ResourceManagerReloadListener) BlockInteractOverlayLayer::onResourceReload);
-        event.registerReloadListener((ResourceManagerReloadListener) OverlayQuadGenerator::onResourceReload);
+        event.addListener(BlockInteractOverlayLayer.LISTENER_ID, (ResourceManagerReloadListener) BlockInteractOverlayLayer::onResourceReload);
+        event.addListener(OverlayQuadGenerator.LISTENER_ID, (ResourceManagerReloadListener) OverlayQuadGenerator::onResourceReload);
 
         ModelWrappingManager.fireRegistration();
         FramedBlockDebugRenderer.init();

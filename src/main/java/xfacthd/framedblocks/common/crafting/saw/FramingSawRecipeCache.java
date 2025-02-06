@@ -3,6 +3,7 @@ package xfacthd.framedblocks.common.crafting.saw;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
@@ -10,12 +11,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.util.FramedConstants;
+import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.net.payload.ClientboundFramingSawRecipesPayload;
 
@@ -31,6 +33,7 @@ public final class FramingSawRecipeCache
 {
     private static final FramingSawRecipeCache SERVER_INSTANCE = new FramingSawRecipeCache();
     private static final FramingSawRecipeCache CLIENT_INSTANCE = new FramingSawRecipeCache();
+    private static final ResourceLocation LISTENER_ID = Utils.rl("framing_saw_recipes");
 
     private final List<RecipeHolder<FramingSawRecipe>> recipes = new ArrayList<>();
     private final List<RecipeHolder<FramingSawRecipe>> recipesView = Collections.unmodifiableList(recipes);
@@ -128,9 +131,9 @@ public final class FramingSawRecipeCache
         return client ? CLIENT_INSTANCE : SERVER_INSTANCE;
     }
 
-    public static void onAddReloadListener(final AddReloadListenerEvent event)
+    public static void onAddReloadListener(final AddServerReloadListenersEvent event)
     {
-        event.addListener(new Reloader(event.getServerResources()));
+        event.addListener(LISTENER_ID, new Reloader(event.getServerResources()));
     }
 
     public static void onDataPackSync(final OnDatapackSyncEvent event)
