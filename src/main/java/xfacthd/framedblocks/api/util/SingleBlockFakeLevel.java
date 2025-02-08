@@ -13,8 +13,13 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("ConstantConditions")
-public record SingleBlockFakeLevel(Level realLevel, BlockPos realPos, BlockState state, @Nullable BlockEntity blockEntity, ModelData modelData) implements BlockAndTintGetter
+public record SingleBlockFakeLevel(Level realLevel, BlockPos realPos, BlockPos fakePos, BlockState state, @Nullable BlockEntity blockEntity, ModelData modelData) implements BlockAndTintGetter
 {
+    public SingleBlockFakeLevel(Level realLevel, BlockPos realPos, BlockState state, @Nullable BlockEntity blockEntity, ModelData modelData)
+    {
+        this(realLevel, realPos, BlockPos.ZERO, state, blockEntity, modelData);
+    }
+
     @Override
     public float getShade(Direction side, boolean shade)
     {
@@ -49,7 +54,7 @@ public record SingleBlockFakeLevel(Level realLevel, BlockPos realPos, BlockState
     @Override
     public BlockEntity getBlockEntity(BlockPos pos)
     {
-        if (pos == BlockPos.ZERO)
+        if (pos.equals(fakePos))
         {
             return blockEntity;
         }
@@ -59,7 +64,7 @@ public record SingleBlockFakeLevel(Level realLevel, BlockPos realPos, BlockState
     @Override
     public BlockState getBlockState(BlockPos pos)
     {
-        if (pos == BlockPos.ZERO)
+        if (pos.equals(fakePos))
         {
             return state;
         }
@@ -75,7 +80,7 @@ public record SingleBlockFakeLevel(Level realLevel, BlockPos realPos, BlockState
     @Override
     public ModelData getModelData(BlockPos pos)
     {
-        if (pos == BlockPos.ZERO)
+        if (pos.equals(fakePos))
         {
             return modelData;
         }

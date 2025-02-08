@@ -198,7 +198,7 @@ public final class GhostBlockRenderer
         profiler.pop(); //buffer
 
         profiler.push("level");
-        BlockAndTintGetter level = new SingleBlockFakeLevel(mc().level, renderPos, renderState, null, modelData);
+        BlockAndTintGetter level = new SingleBlockFakeLevel(mc().level, renderPos, renderPos, renderState, null, modelData);
         profiler.pop(); //level
 
         profiler.push("draw");
@@ -207,7 +207,7 @@ public final class GhostBlockRenderer
         poseStack.translate(offset.x, offset.y, offset.z);
         for (RenderType type : model.getRenderTypes(renderState, RANDOM, modelData))
         {
-            doRenderGhostBlockInLayer(poseStack, builder, level, renderState, type, modelData);
+            doRenderGhostBlockInLayer(poseStack, builder, level, renderPos, renderState, type, modelData);
         }
         poseStack.popPose();
         profiler.pop(); //draw
@@ -222,6 +222,7 @@ public final class GhostBlockRenderer
             PoseStack poseStack,
             VertexConsumer builder,
             BlockAndTintGetter level,
+            BlockPos renderPos,
             BlockState renderState,
             RenderType layer,
             ModelData modelData
@@ -229,7 +230,7 @@ public final class GhostBlockRenderer
     {
         mc().getBlockRenderer().renderBatched(
                 renderState,
-                BlockPos.ZERO,
+                renderPos,
                 level,
                 poseStack,
                 builder,
