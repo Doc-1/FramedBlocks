@@ -46,6 +46,10 @@ public class FramedDoublePanelBlock extends AbstractFramedDoubleBlock
     @Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player)
     {
+        if (includeData)
+        {
+            return super.getCloneItemStack(level, pos, state, true, player);
+        }
         return new ItemStack(FBContent.BLOCK_FRAMED_PANEL.value());
     }
 
@@ -121,7 +125,7 @@ public class FramedDoublePanelBlock extends AbstractFramedDoubleBlock
     @Nullable
     public BlockState getItemModelSource()
     {
-        return null;
+        return defaultBlockState();
     }
 
     @Override

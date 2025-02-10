@@ -1,5 +1,7 @@
 {
   "model": {
-    "type": "minecraft:empty"
+    "type": "framedblocks:block",
+    "block": "framedblocks:framed_double_slab",
+    "tint_provider": "framedblocks:double"
   }
 }

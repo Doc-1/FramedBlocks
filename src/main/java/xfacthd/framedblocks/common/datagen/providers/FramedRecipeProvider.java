@@ -183,6 +183,13 @@ public final class FramedRecipeProvider extends RecipeProvider
                 .unlockedBy(this, FBContent.BLOCK_FRAMED_CUBE)
                 .save(output);
 
+        shapedBuildingBlock(FBContent.BLOCK_FRAMED_DOUBLE_SLAB.value())
+                .pattern("F")
+                .pattern("F")
+                .define('F', FBContent.BLOCK_FRAMED_SLAB.value())
+                .unlockedBy(this, FBContent.BLOCK_FRAMED_SLAB)
+                .save(output);
+
         shapedBuildingBlock(FBContent.BLOCK_FRAMED_ADJ_DOUBLE_SLAB.value(), 2)
                 .pattern("FF")
                 .define('F', FBContent.BLOCK_FRAMED_COLLAPSIBLE_BLOCK.value())
@@ -220,6 +227,12 @@ public final class FramedRecipeProvider extends RecipeProvider
                 .pattern("F")
                 .define('F', FBContent.BLOCK_FRAMED_CUBE.value())
                 .unlockedBy(this, FBContent.BLOCK_FRAMED_CUBE)
+                .save(output);
+
+        shapedBuildingBlock(FBContent.BLOCK_FRAMED_DOUBLE_PANEL.value(), 6)
+                .pattern("FF")
+                .define('F', FBContent.BLOCK_FRAMED_PANEL.value())
+                .unlockedBy(this, FBContent.BLOCK_FRAMED_PANEL)
                 .save(output);
 
         shapedBuildingBlock(FBContent.BLOCK_FRAMED_ADJ_DOUBLE_PANEL.value(), 2)

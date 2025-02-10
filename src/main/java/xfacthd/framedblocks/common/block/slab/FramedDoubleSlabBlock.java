@@ -28,6 +28,10 @@ public class FramedDoubleSlabBlock extends AbstractFramedDoubleBlock
     @Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player)
     {
+        if (includeData)
+        {
+            return super.getCloneItemStack(level, pos, state, true, player);
+        }
         return new ItemStack(FBContent.BLOCK_FRAMED_SLAB.value());
     }
 
@@ -90,7 +94,7 @@ public class FramedDoubleSlabBlock extends AbstractFramedDoubleBlock
     @Nullable
     public BlockState getItemModelSource()
     {
-        return null;
+        return defaultBlockState();
     }
 
     @Override
