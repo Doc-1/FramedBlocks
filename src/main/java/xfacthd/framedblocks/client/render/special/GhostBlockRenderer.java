@@ -188,19 +188,18 @@ public final class GhostBlockRenderer
             ModelData modelData
     )
     {
+        profiler.push("prepare");
+
         RenderType bufferType = ClientConfig.VIEW.useAltGhostRenderer() ?
                 Sheets.translucentItemSheet() :
                 NeoForgeRenderTypes.TRANSLUCENT_ON_PARTICLES_TARGET.get();
         int opacity = ClientConfig.VIEW.getGhostRenderOpacity();
 
-        profiler.push("buffer");
         Vec3 offset = Vec3.atLowerCornerOf(renderPos).subtract(mc().gameRenderer.getMainCamera().getPosition());
         VertexConsumer builder = new GhostVertexConsumer(buffers.getBuffer(bufferType), opacity);
-        profiler.pop(); //buffer
-
-        profiler.push("level");
         BlockAndTintGetter level = new SingleBlockFakeLevel(mc().level, renderPos, renderPos, renderState, null, modelData);
-        profiler.pop(); //level
+
+        profiler.pop(); //prepare
 
         profiler.push("draw");
         BakedModel model = ModelUtils.getModel(renderState);
