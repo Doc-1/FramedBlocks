@@ -36,6 +36,7 @@ import xfacthd.framedblocks.client.screen.widget.BlockPreviewTooltipComponent;
 import xfacthd.framedblocks.client.screen.widget.SearchEditBox;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.compat.ae2.AppliedEnergisticsCompat;
+import xfacthd.framedblocks.common.compat.searchables.SearchablesCompat;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeAdditive;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
@@ -49,6 +50,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> implements IFramingSawScreen
 {
@@ -116,8 +118,9 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
 
         int searchX = leftPos + SEARCH_X;
         int searchY = topPos + SEARCH_Y;
+        Consumer<String> searchHandler = SearchablesCompat.createSearchHandler(menu::getRecipes, this::acceptSearchResult, this::onSearchChanged);
         searchBox = addRenderableWidget(new SearchEditBox(
-                font, searchX, searchY, SEARCH_WIDTH, SEARCH_HEIGHT, MSG_HINT_SEARCH, this::onSearchChanged, searchBox
+                font, searchX, searchY, SEARCH_WIDTH, SEARCH_HEIGHT, MSG_HINT_SEARCH, searchHandler, searchBox
         ));
         searchBox.setMaxLength(50);
     }
@@ -654,25 +657,30 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
     {
         if (query.isBlank())
         {
-            filteredRecipes.clear();
-            filteredRecipes.addAll(menu.getRecipes());
-            hasEffectiveSearchQuery = false;
-            tryScrollToRecipe(menu.getSelectedRecipeIndex());
+            acceptSearchResult(menu.getRecipes());
             return;
         }
 
-        filteredRecipes.clear();
+        List<FramingSawMenu.FramedRecipeHolder> recipes = new ArrayList<>(menu.getRecipes().size());
         query = query.toLowerCase(Locale.ROOT);
         for (FramingSawMenu.FramedRecipeHolder recipe : menu.getRecipes())
         {
             Component name = recipe.getRecipe().getResult().getItemName();
             if (name.getString().toLowerCase(Locale.ROOT).contains(query))
             {
-                filteredRecipes.add(recipe);
+                recipes.add(recipe);
             }
         }
+        acceptSearchResult(recipes);
+    }
+
+    private void acceptSearchResult(List<FramingSawMenu.FramedRecipeHolder> recipes)
+    {
+        filteredRecipes.clear();
+        filteredRecipes.addAll(recipes);
         hasEffectiveSearchQuery = filteredRecipes.size() != menu.getRecipes().size();
-        if (filteredRecipes.contains(menu.getRecipes().get(menu.getSelectedRecipeIndex())))
+        // If the query is not "effective" then the selected recipe must be in the list
+        if (!hasEffectiveSearchQuery || filteredRecipes.contains(menu.getRecipes().get(menu.getSelectedRecipeIndex())))
         {
             tryScrollToRecipe(menu.getSelectedRecipeIndex());
         }
