@@ -57,27 +57,13 @@ public abstract class AbstractFramedBlock extends Block implements IFramedBlock,
         this.occlusionShapes = blockType.generateOcclusionShapes(getStateDefinition().getPossibleStates(), shapes);
         this.beaconBeamOcclusion = computeBeaconBeamOcclusion(shapes);
 
-        registerDefaultState(defaultBlockState()
-                .setValue(FramedProperties.GLOWING, false)
-                .setValue(FramedProperties.PROPAGATES_SKYLIGHT, false)
-        );
-
-        if (blockType.canOccludeWithSolidCamo())
-        {
-            registerDefaultState(defaultBlockState()
-                    .setValue(FramedProperties.SOLID, false)
-            );
-        }
-        if (blockType.supportsWaterLogging())
-        {
-            registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
-        }
+        BlockUtils.configureStandardProperties(this);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
-        builder.add(FramedProperties.GLOWING, FramedProperties.PROPAGATES_SKYLIGHT);
+        BlockUtils.addRequiredProperties(builder);
     }
 
     @Override

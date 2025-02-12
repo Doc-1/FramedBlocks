@@ -4,6 +4,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.internal.InternalClientAPI;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
@@ -16,7 +17,7 @@ import java.util.Set;
 public final class WrapHelper
 {
     /** List of properties which are always present and always need to be ignored */
-    public static final Set<Property<?>> IGNORE_ALWAYS = Set.of(FramedProperties.GLOWING, FramedProperties.PROPAGATES_SKYLIGHT);
+    public static final Set<Property<?>> IGNORE_ALWAYS = BlockUtils.REQUIRED_STATE_PROPERTIES;
     /** {@link WrapHelper#IGNORE_ALWAYS} + waterlogged */
     public static final Set<Property<?>> IGNORE_WATERLOGGED = Utils.concat(Set.of(BlockStateProperties.WATERLOGGED), IGNORE_ALWAYS);
     /** {@link WrapHelper#IGNORE_ALWAYS} + waterlogged + state-lock */

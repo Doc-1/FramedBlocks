@@ -17,6 +17,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.common.FBContent;
@@ -35,17 +36,14 @@ public class FramedRedstoneWallTorchBlock extends RedstoneWallTorchBlock impleme
                 .lightLevel(state -> state.getValue(BlockStateProperties.LIT) ? 7 : 0)
                 .pushReaction(PushReaction.DESTROY)
         );
-        registerDefaultState(defaultBlockState()
-                .setValue(FramedProperties.GLOWING, false)
-                .setValue(FramedProperties.PROPAGATES_SKYLIGHT, false)
-        );
+        BlockUtils.configureStandardProperties(this);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         super.createBlockStateDefinition(builder);
-        builder.add(FramedProperties.GLOWING, FramedProperties.PROPAGATES_SKYLIGHT);
+        BlockUtils.addStandardProperties(this, builder);
     }
 
     @Override

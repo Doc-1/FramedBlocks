@@ -52,21 +52,17 @@ public class FramedRailSlopeBlock extends BaseRailBlock implements IFramedBlock,
         this.shapes = type.generateShapes(getStateDefinition().getPossibleStates());
         this.occlusionShapes = type.generateOcclusionShapes(getStateDefinition().getPossibleStates(), shapes);
         this.beFactory = beFactory;
-        registerDefaultState(defaultBlockState()
-                .setValue(BlockStateProperties.WATERLOGGED, false)
-                .setValue(FramedProperties.SOLID, false)
-                .setValue(FramedProperties.GLOWING, false)
-                .setValue(FramedProperties.Y_SLOPE, false)
-                .setValue(FramedProperties.PROPAGATES_SKYLIGHT, false)
-        );
+        BlockUtils.configureStandardProperties(this);
+        registerDefaultState(defaultBlockState().setValue(FramedProperties.Y_SLOPE, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
+        BlockUtils.addRequiredProperties(builder);
         builder.add(
                 PropertyHolder.ASCENDING_RAIL_SHAPE, BlockStateProperties.WATERLOGGED, FramedProperties.SOLID,
-                FramedProperties.GLOWING, FramedProperties.Y_SLOPE, FramedProperties.PROPAGATES_SKYLIGHT
+                FramedProperties.Y_SLOPE
         );
     }
 

@@ -31,6 +31,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.common.FBContent;
@@ -43,18 +44,16 @@ public final class FramedDiagonalGlassPaneBlock extends NeoForgeDiagonalGlassPan
     public FramedDiagonalGlassPaneBlock(Block block)
     {
         super(block);
-        registerDefaultState(defaultBlockState()
-                .setValue(FramedProperties.STATE_LOCKED, false)
-                .setValue(FramedProperties.GLOWING, false)
-                .setValue(FramedProperties.PROPAGATES_SKYLIGHT, false)
-        );
+        BlockUtils.configureStandardProperties(this);
+        registerDefaultState(defaultBlockState().setValue(FramedProperties.STATE_LOCKED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         super.createBlockStateDefinition(builder);
-        builder.add(FramedProperties.STATE_LOCKED, FramedProperties.GLOWING, FramedProperties.PROPAGATES_SKYLIGHT);
+        BlockUtils.addStandardProperties(this, builder);
+        builder.add(FramedProperties.STATE_LOCKED);
     }
 
     @Override

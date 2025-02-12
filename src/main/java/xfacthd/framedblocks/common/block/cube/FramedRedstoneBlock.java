@@ -30,17 +30,13 @@ public class FramedRedstoneBlock extends PoweredBlock implements IFramedBlock
     public FramedRedstoneBlock(Properties props)
     {
         super(IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_REDSTONE_BLOCK));
-        registerDefaultState(defaultBlockState()
-                .setValue(FramedProperties.SOLID, false)
-                .setValue(FramedProperties.GLOWING, false)
-                .setValue(FramedProperties.PROPAGATES_SKYLIGHT, false)
-        );
+        BlockUtils.configureStandardProperties(this);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
-        builder.add(FramedProperties.SOLID, FramedProperties.GLOWING, FramedProperties.PROPAGATES_SKYLIGHT);
+        BlockUtils.addStandardProperties(this, builder);
     }
 
     @Override

@@ -20,6 +20,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.type.IBlockType;
@@ -32,17 +33,13 @@ public class FramedBouncyCubeBlock extends SlimeBlock implements IFramedBlock
     public FramedBouncyCubeBlock(Properties props)
     {
         super(IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_BOUNCY_CUBE).friction(.8F));
-        registerDefaultState(defaultBlockState()
-                .setValue(FramedProperties.SOLID, false)
-                .setValue(FramedProperties.GLOWING, false)
-                .setValue(FramedProperties.PROPAGATES_SKYLIGHT, false)
-        );
+        BlockUtils.configureStandardProperties(this);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
-        builder.add(FramedProperties.SOLID, FramedProperties.GLOWING, FramedProperties.PROPAGATES_SKYLIGHT);
+        BlockUtils.addStandardProperties(this, builder);
     }
 
     @Override

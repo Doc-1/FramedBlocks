@@ -24,6 +24,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.*;
 import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.shapes.*;
@@ -47,18 +48,16 @@ public class FramedWallBlock extends WallBlock implements IFramedBlock
     public FramedWallBlock(Properties props)
     {
         super(IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_WALL));
-        registerDefaultState(defaultBlockState()
-                .setValue(FramedProperties.STATE_LOCKED, false)
-                .setValue(FramedProperties.GLOWING, false)
-                .setValue(FramedProperties.PROPAGATES_SKYLIGHT, false)
-        );
+        BlockUtils.configureStandardProperties(this);
+        registerDefaultState(defaultBlockState().setValue(FramedProperties.STATE_LOCKED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         super.createBlockStateDefinition(builder);
-        builder.add(FramedProperties.STATE_LOCKED, FramedProperties.GLOWING, FramedProperties.PROPAGATES_SKYLIGHT);
+        BlockUtils.addStandardProperties(this, builder);
+        builder.add(FramedProperties.STATE_LOCKED);
     }
 
     @Override

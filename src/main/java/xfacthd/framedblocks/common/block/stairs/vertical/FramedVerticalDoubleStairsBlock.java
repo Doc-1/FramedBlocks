@@ -9,15 +9,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
-import xfacthd.framedblocks.common.data.doubleblock.*;
+import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
+import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.data.property.StairsType;
-import xfacthd.framedblocks.common.util.FramedUtils;
 
 public class FramedVerticalDoubleStairsBlock extends FramedVerticalStairsBlock implements IFramedDoubleBlock
 {
@@ -30,7 +32,7 @@ public class FramedVerticalDoubleStairsBlock extends FramedVerticalStairsBlock i
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         super.createBlockStateDefinition(builder);
-        FramedUtils.removeProperty(builder, BlockStateProperties.WATERLOGGED);
+        BlockUtils.removeProperty(builder, BlockStateProperties.WATERLOGGED);
     }
 
     @Override

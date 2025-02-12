@@ -10,13 +10,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.neoforged.neoforge.common.util.Lazy;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.mixin.AccessorStateDefinitionBuilder;
 
 import java.util.Collections;
 import java.util.IdentityHashMap;
@@ -129,12 +125,6 @@ public final class FramedUtils
         {
             slotConsumer.accept(new Slot(playerInv, col, x + col * 18, y + 4));
         }
-    }
-
-    public static void removeProperty(StateDefinition.Builder<Block, BlockState> builder, Property<?> property)
-    {
-        Map<String, Property<?>> properties = ((AccessorStateDefinitionBuilder) builder).framedblocks$getProperties();
-        properties.remove(property.getName());
     }
 
 

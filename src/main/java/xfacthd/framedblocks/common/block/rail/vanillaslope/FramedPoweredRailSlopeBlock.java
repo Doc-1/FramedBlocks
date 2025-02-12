@@ -51,13 +51,10 @@ public class FramedPoweredRailSlopeBlock extends PoweredRailBlock implements IFr
         this.shapes = type.generateShapes(getStateDefinition().getPossibleStates());
         this.occlusionShapes = type.generateOcclusionShapes(getStateDefinition().getPossibleStates(), shapes);
         this.beFactory = beFactory;
+        BlockUtils.configureStandardProperties(this);
         registerDefaultState(defaultBlockState()
-                .setValue(BlockStateProperties.WATERLOGGED, false)
-                .setValue(FramedProperties.SOLID, false)
-                .setValue(FramedProperties.GLOWING, false)
                 .setValue(POWERED, false)
                 .setValue(FramedProperties.Y_SLOPE, false)
-                .setValue(FramedProperties.PROPAGATES_SKYLIGHT, false)
         );
     }
 
@@ -67,10 +64,10 @@ public class FramedPoweredRailSlopeBlock extends PoweredRailBlock implements IFr
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
+        BlockUtils.addRequiredProperties(builder);
         builder.add(
                 PropertyHolder.ASCENDING_RAIL_SHAPE, BlockStateProperties.POWERED, BlockStateProperties.WATERLOGGED,
-                FramedProperties.SOLID, FramedProperties.GLOWING, FramedProperties.Y_SLOPE,
-                FramedProperties.PROPAGATES_SKYLIGHT
+                FramedProperties.SOLID, FramedProperties.Y_SLOPE
         );
     }
 

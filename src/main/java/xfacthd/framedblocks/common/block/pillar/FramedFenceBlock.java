@@ -18,6 +18,7 @@ import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.util.Utils;
@@ -31,18 +32,16 @@ public class FramedFenceBlock extends FenceBlock implements IFramedBlock
     public FramedFenceBlock(Properties props)
     {
         super(IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_FENCE));
-        registerDefaultState(defaultBlockState()
-                .setValue(FramedProperties.STATE_LOCKED, false)
-                .setValue(FramedProperties.GLOWING, false)
-                .setValue(FramedProperties.PROPAGATES_SKYLIGHT, false)
-        );
+        BlockUtils.configureStandardProperties(this);
+        registerDefaultState(defaultBlockState().setValue(FramedProperties.STATE_LOCKED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         super.createBlockStateDefinition(builder);
-        builder.add(FramedProperties.GLOWING, FramedProperties.STATE_LOCKED, FramedProperties.PROPAGATES_SKYLIGHT);
+        BlockUtils.addStandardProperties(this, builder);
+        builder.add(FramedProperties.STATE_LOCKED);
     }
 
     @Override

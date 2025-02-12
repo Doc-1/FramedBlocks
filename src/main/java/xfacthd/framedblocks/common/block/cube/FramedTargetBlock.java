@@ -35,18 +35,14 @@ public class FramedTargetBlock extends TargetBlock implements IFramedBlock
     public FramedTargetBlock(Properties props)
     {
         super(IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_TARGET));
-        registerDefaultState(defaultBlockState()
-                .setValue(FramedProperties.SOLID, false)
-                .setValue(FramedProperties.GLOWING, false)
-                .setValue(FramedProperties.PROPAGATES_SKYLIGHT, false)
-        );
+        BlockUtils.configureStandardProperties(this);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         super.createBlockStateDefinition(builder);
-        builder.add(FramedProperties.SOLID, FramedProperties.GLOWING, FramedProperties.PROPAGATES_SKYLIGHT);
+        BlockUtils.addStandardProperties(this, builder);
     }
 
     @Override

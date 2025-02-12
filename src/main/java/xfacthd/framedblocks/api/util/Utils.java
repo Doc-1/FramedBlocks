@@ -31,7 +31,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
@@ -95,11 +94,6 @@ public final class Utils
      * Providing by tools for configuring blocks (respected for camo rotation)
      */
     public static final ItemAbility ACTION_WRENCH_CONFIGURE = ItemAbility.get("wrench_configure");
-
-    public static final Set<Property<?>> REQUIRED_STATE_PROPERTIES = Set.of(
-            FramedProperties.GLOWING,
-            FramedProperties.PROPAGATES_SKYLIGHT
-    );
 
     public static final Holder<Item> FRAMED_HAMMER = DeferredItem.createItem(Utils.rl("framed_hammer"));
     public static final Holder<Item> FRAMED_WRENCH = DeferredItem.createItem(Utils.rl("framed_wrench"));
@@ -476,20 +470,6 @@ public final class Utils
     public static <T extends Comparable<T>> T tryGetValue(BlockState state, Property<T> property, T _default)
     {
         return state.hasProperty(property) ? state.getValue(property) : _default;
-    }
-
-    public static void addRequiredProperties(StateDefinition.Builder<Block, BlockState> builder)
-    {
-        REQUIRED_STATE_PROPERTIES.forEach(builder::add);
-    }
-
-    public static BlockState copyRequiredProperties(BlockState from, BlockState to)
-    {
-        for (Property<?> property : REQUIRED_STATE_PROPERTIES)
-        {
-            to = Block.copyProperty(from, to, property);
-        }
-        return to;
     }
 
     public static void forAllDirections(Consumer<Direction> consumer)

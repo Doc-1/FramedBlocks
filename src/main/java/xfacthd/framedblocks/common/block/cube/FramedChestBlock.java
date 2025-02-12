@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.api.util.Utils;
@@ -39,7 +40,6 @@ import xfacthd.framedblocks.common.capability.item.IStorageBlockItemHandler;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.property.ChestState;
-import xfacthd.framedblocks.common.util.FramedUtils;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -148,7 +148,7 @@ public class FramedChestBlock extends FramedStorageBlock
                 FramedProperties.FACING_HOR, PropertyHolder.CHEST_STATE, PropertyHolder.LATCH_TYPE,
                 BlockStateProperties.CHEST_TYPE, BlockStateProperties.WATERLOGGED
         );
-        FramedUtils.removeProperty(builder, FramedProperties.SOLID);
+        BlockUtils.removeProperty(builder, FramedProperties.SOLID);
     }
 
     @Override

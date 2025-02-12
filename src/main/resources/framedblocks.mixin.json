@@ -6,6 +6,7 @@
     "mixins": [
         "AccessorStateDefinitionBuilder",
         "AccessorTransientCraftingContainer",
+        "InvokerBlock",
         "InvokerBlockItem",
         "MixinBlockStateBase",
         "MixinMapItemSavedData",
