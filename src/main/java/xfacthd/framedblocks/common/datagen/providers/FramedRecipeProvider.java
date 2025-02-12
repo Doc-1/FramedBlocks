@@ -229,7 +229,7 @@ public final class FramedRecipeProvider extends RecipeProvider
                 .unlockedBy(this, FBContent.BLOCK_FRAMED_CUBE)
                 .save(output);
 
-        shapedBuildingBlock(FBContent.BLOCK_FRAMED_DOUBLE_PANEL.value(), 6)
+        shapedBuildingBlock(FBContent.BLOCK_FRAMED_DOUBLE_PANEL.value())
                 .pattern("FF")
                 .define('F', FBContent.BLOCK_FRAMED_PANEL.value())
                 .unlockedBy(this, FBContent.BLOCK_FRAMED_PANEL)
