@@ -20,7 +20,6 @@ import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.util.FramedConstants;
-import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.data.BlockType;
 
@@ -91,7 +90,7 @@ public class FramedPressurePlateBlock extends PressurePlateBlock implements IFra
         {
             if (!level.isClientSide())
             {
-                Utils.wrapInStateCopy(level, pos, player, ItemStack.EMPTY, false, false, () ->
+                BlockUtils.wrapInStateCopy(level, pos, player, ItemStack.EMPTY, false, false, () ->
                 {
                     BlockState newState = getCounterpart().defaultBlockState();
                     level.setBlockAndUpdate(pos, newState);

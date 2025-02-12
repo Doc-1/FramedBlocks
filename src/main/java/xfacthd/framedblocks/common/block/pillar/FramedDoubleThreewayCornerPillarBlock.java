@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.api.util.Utils;
@@ -67,7 +68,7 @@ public class FramedDoubleThreewayCornerPillarBlock extends AbstractFramedDoubleB
     @Override
     protected BlockState mirror(BlockState state, Mirror mirror)
     {
-        return Utils.mirrorCornerBlock(state, mirror);
+        return BlockUtils.mirrorCornerBlock(state, mirror);
     }
 
     @Override

@@ -83,7 +83,7 @@ public class FramedFlatElevatedDoubleSlopeSlabCornerBlock extends AbstractFramed
     @Override
     protected BlockState mirror(BlockState state, Mirror mirror)
     {
-        return Utils.mirrorCornerBlock(state, mirror);
+        return BlockUtils.mirrorCornerBlock(state, mirror);
     }
 
     @Override

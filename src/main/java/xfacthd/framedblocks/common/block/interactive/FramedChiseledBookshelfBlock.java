@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.api.util.Utils;
@@ -202,7 +203,7 @@ public class FramedChiseledBookshelfBlock extends FramedBlock
     @Override
     protected BlockState mirror(BlockState state, Mirror mirror)
     {
-        return Utils.mirrorFaceBlock(state, mirror);
+        return BlockUtils.mirrorFaceBlock(state, mirror);
     }
 
     @Override

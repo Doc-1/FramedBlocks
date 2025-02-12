@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.util.*;
@@ -102,7 +103,7 @@ public class FramedSlopePanelBlock extends FramedBlock
 
     public static BlockState mirrorPanel(BlockState state, Mirror mirror)
     {
-        state = Utils.mirrorFaceBlock(state, mirror);
+        state = BlockUtils.mirrorFaceBlock(state, mirror);
 
         HorizontalRotation rot = state.getValue(PropertyHolder.ROTATION);
         if (mirror != Mirror.NONE && !rot.isVertical())

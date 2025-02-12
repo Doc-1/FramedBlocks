@@ -94,7 +94,7 @@ public class FramedElevatedSlopeSlabBlock extends FramedBlock
     @Override
     protected BlockState mirror(BlockState state, Mirror mirror)
     {
-        return Utils.mirrorFaceBlock(state, mirror);
+        return BlockUtils.mirrorFaceBlock(state, mirror);
     }
 
     @Override

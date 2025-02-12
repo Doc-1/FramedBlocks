@@ -88,7 +88,7 @@ public class FramedDoubleSlopeSlabBlock extends AbstractFramedDoubleBlock
     @Override
     protected BlockState mirror(BlockState state, Mirror mirror)
     {
-        return Utils.mirrorFaceBlock(state, mirror);
+        return BlockUtils.mirrorFaceBlock(state, mirror);
     }
 
     @Override

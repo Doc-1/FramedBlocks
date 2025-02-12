@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.shapes.*;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
@@ -70,7 +71,7 @@ public class PoweredFramingSawBlock extends FramingSawBlock implements EntityBlo
     {
         if (!level.isClientSide())
         {
-            return Utils.createBlockEntityTicker(
+            return BlockUtils.createBlockEntityTicker(
                     type, FBContent.BE_TYPE_POWERED_FRAMING_SAW.value(), PoweredFramingSawBlockEntity::tick
             );
         }

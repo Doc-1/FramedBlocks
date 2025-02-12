@@ -20,8 +20,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
-import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.FramedBlock;
 import xfacthd.framedblocks.common.blockentity.special.FramedItemFrameBlockEntity;
@@ -190,7 +190,7 @@ public class FramedItemFrameBlock extends FramedBlock
     @Override
     protected BlockState mirror(BlockState state, Mirror mirror)
     {
-        return Utils.mirrorFaceBlock(state, BlockStateProperties.FACING, mirror);
+        return BlockUtils.mirrorFaceBlock(state, BlockStateProperties.FACING, mirror);
     }
 
     @Override
@@ -205,7 +205,7 @@ public class FramedItemFrameBlock extends FramedBlock
     {
         if (!level.isClientSide() && state.getValue(PropertyHolder.MAP_FRAME))
         {
-            return Utils.createBlockEntityTicker(
+            return BlockUtils.createBlockEntityTicker(
                     type, FBContent.BE_TYPE_FRAMED_ITEM_FRAME.value(), (l, p, s, be) -> be.tickWithMap()
             );
         }

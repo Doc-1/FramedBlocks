@@ -447,7 +447,7 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
         {
             return false;
         }
-        return Utils.tryGetValue(state, FramedProperties.SOLID, false) && !state.getValue(FramedProperties.GLOWING);
+        return BlockUtils.tryGetValue(state, FramedProperties.SOLID, false) && !state.getValue(FramedProperties.GLOWING);
     }
 
     /**

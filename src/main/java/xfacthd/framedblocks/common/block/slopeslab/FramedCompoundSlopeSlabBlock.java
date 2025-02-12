@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.*;
-import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.block.FramedBlock;
 import xfacthd.framedblocks.common.data.BlockType;
 
@@ -59,7 +58,7 @@ public class FramedCompoundSlopeSlabBlock extends FramedBlock
     @Override
     protected BlockState mirror(BlockState state, Mirror mirror)
     {
-        return Utils.mirrorFaceBlock(state, mirror);
+        return BlockUtils.mirrorFaceBlock(state, mirror);
     }
 
     @Override

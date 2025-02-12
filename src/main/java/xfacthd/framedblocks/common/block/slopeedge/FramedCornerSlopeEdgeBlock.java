@@ -10,9 +10,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
-import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.block.ExtPlacementStateBuilder;
 import xfacthd.framedblocks.common.block.FramedBlock;
 import xfacthd.framedblocks.common.data.BlockType;
@@ -81,7 +81,7 @@ public class FramedCornerSlopeEdgeBlock extends FramedBlock
         CornerType type = state.getValue(PropertyHolder.CORNER_TYPE);
         if (type.isHorizontal())
         {
-            BlockState newState = Utils.mirrorFaceBlock(state, mirror);
+            BlockState newState = BlockUtils.mirrorFaceBlock(state, mirror);
             if (newState != state)
             {
                 return newState.setValue(PropertyHolder.CORNER_TYPE, type.horizontalOpposite());
@@ -90,7 +90,7 @@ public class FramedCornerSlopeEdgeBlock extends FramedBlock
         }
         else
         {
-            return Utils.mirrorCornerBlock(state, mirror);
+            return BlockUtils.mirrorCornerBlock(state, mirror);
         }
     }
 

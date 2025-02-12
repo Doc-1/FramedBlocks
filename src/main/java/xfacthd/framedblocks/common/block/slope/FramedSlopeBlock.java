@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.camo.CamoContainer;
@@ -89,7 +90,7 @@ public class FramedSlopeBlock extends FramedBlock implements ISlopeBlock, ICompl
                 {
                     boolean fancy = railSlope instanceof IFramedDoubleBlock;
                     CamoList camos = fancy ? stack.get(FBContent.DC_TYPE_CAMO_LIST) : null;
-                    Utils.wrapInStateCopy(level, pos, player, stack, false, true, () ->
+                    BlockUtils.wrapInStateCopy(level, pos, player, stack, false, true, () ->
                             level.setBlockAndUpdate(pos, newState)
                     );
 
@@ -144,11 +145,11 @@ public class FramedSlopeBlock extends FramedBlock implements ISlopeBlock, ICompl
     {
         if (state.getValue(PropertyHolder.SLOPE_TYPE) == SlopeType.HORIZONTAL)
         {
-            return Utils.mirrorCornerBlock(state, mirror);
+            return BlockUtils.mirrorCornerBlock(state, mirror);
         }
         else
         {
-            return Utils.mirrorFaceBlock(state, mirror);
+            return BlockUtils.mirrorFaceBlock(state, mirror);
         }
     }
 

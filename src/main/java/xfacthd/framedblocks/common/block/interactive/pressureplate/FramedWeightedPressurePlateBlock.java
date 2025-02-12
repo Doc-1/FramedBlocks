@@ -87,7 +87,7 @@ public class FramedWeightedPressurePlateBlock extends WeightedPressurePlateBlock
         {
             if (!level.isClientSide())
             {
-                Utils.wrapInStateCopy(level, pos, player, ItemStack.EMPTY, false, false, () ->
+                BlockUtils.wrapInStateCopy(level, pos, player, ItemStack.EMPTY, false, false, () ->
                 {
                     BlockState newState = getCounterpart().defaultBlockState();
                     level.setBlockAndUpdate(pos, newState);

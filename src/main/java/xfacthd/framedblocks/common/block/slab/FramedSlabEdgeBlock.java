@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.common.block.FramedBlock;
@@ -71,7 +72,7 @@ public class FramedSlabEdgeBlock extends FramedBlock
     @Override
     protected BlockState mirror(BlockState state, Mirror mirror)
     {
-        return Utils.mirrorFaceBlock(state, mirror);
+        return BlockUtils.mirrorFaceBlock(state, mirror);
     }
 
     @Override

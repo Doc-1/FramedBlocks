@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.util.Utils;
@@ -86,11 +87,11 @@ public class FramedDividedSlopeBlock extends AbstractFramedDoubleBlock implement
     {
         if (state.getValue(PropertyHolder.SLOPE_TYPE) == SlopeType.HORIZONTAL)
         {
-            return Utils.mirrorCornerBlock(state, mirror);
+            return BlockUtils.mirrorCornerBlock(state, mirror);
         }
         else
         {
-            return Utils.mirrorFaceBlock(state, mirror);
+            return BlockUtils.mirrorFaceBlock(state, mirror);
         }
     }
 

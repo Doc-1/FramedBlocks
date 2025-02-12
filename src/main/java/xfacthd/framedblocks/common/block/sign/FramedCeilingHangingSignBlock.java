@@ -28,9 +28,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
-import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.blockentity.special.FramedSignBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
@@ -186,7 +186,7 @@ public class FramedCeilingHangingSignBlock extends AbstractFramedHangingSignBloc
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type)
     {
-        return Utils.createBlockEntityTicker(type, FBContent.BE_TYPE_FRAMED_HANGING_SIGN.value(), FramedSignBlockEntity::tick);
+        return BlockUtils.createBlockEntityTicker(type, FBContent.BE_TYPE_FRAMED_HANGING_SIGN.value(), FramedSignBlockEntity::tick);
     }
 
     @Override

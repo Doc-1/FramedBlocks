@@ -1,12 +1,27 @@
 package xfacthd.framedblocks.api.block;
 
 import com.google.common.base.Preconditions;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
+import xfacthd.framedblocks.api.camo.CamoContainer;
+import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.type.IBlockType;
+import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.mixin.AccessorStateDefinitionBuilder;
 import xfacthd.framedblocks.mixin.InvokerBlock;
 
@@ -136,6 +151,167 @@ public final class BlockUtils
     public static void removeProperty(StateDefinition.Builder<Block, BlockState> builder, Property<?> property)
     {
         ((AccessorStateDefinitionBuilder) builder).framedblocks$getProperties().remove(property.getName());
+    }
+
+    @Nullable
+    public static Property<?> getRotatableProperty(BlockState state)
+    {
+        for (Property<?> prop : state.getProperties())
+        {
+            if (prop.getValueClass() == Direction.Axis.class)
+            {
+                return prop;
+            }
+            else if (prop instanceof EnumProperty<?> && prop.getValueClass() == Direction.class)
+            {
+                return prop;
+            }
+        }
+        return null;
+    }
+
+    public static <T extends Comparable<T>> T tryGetValue(BlockState state, Property<T> property, T _default)
+    {
+        return state.hasProperty(property) ? state.getValue(property) : _default;
+    }
+
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createBlockEntityTicker(
+            BlockEntityType<A> type, BlockEntityType<E> actualType, BlockEntityTicker<? super E> ticker
+    )
+    {
+        return actualType == type ? (BlockEntityTicker<A>)ticker : null;
+    }
+
+    /**
+     * Mirrors a block that is oriented towards a face of the block space.
+     * @param state The {@link BlockState} to mirror
+     * @param mirror The {@link Mirror} to apply to the state
+     * @apiNote The given state must have the {@link FramedProperties#FACING_HOR} property
+     */
+    public static BlockState mirrorFaceBlock(BlockState state, Mirror mirror)
+    {
+        return mirrorFaceBlock(state, FramedProperties.FACING_HOR, mirror);
+    }
+
+    /**
+     * Mirrors a block that is oriented towards a face of the block space
+     * @param state The {@link BlockState} to mirror
+     * @param property The {@link EnumProperty < Direction >} that should be mirrored on the given state
+     * @param mirror The {@link Mirror} to apply to the state
+     * @apiNote The given property must support at least all four cardinal directions
+     */
+    public static BlockState mirrorFaceBlock(BlockState state, EnumProperty<Direction> property, Mirror mirror)
+    {
+        if (mirror == Mirror.NONE)
+        {
+            return state;
+        }
+
+        Direction dir = state.getValue(property);
+        //Y directions are inherently ignored
+        if ((mirror == Mirror.FRONT_BACK && Utils.isX(dir)) || (mirror == Mirror.LEFT_RIGHT && Utils.isZ(dir)))
+        {
+            return state.setValue(property, dir.getOpposite());
+        }
+        return state;
+    }
+
+    /**
+     * Mirrors a block that is oriented into a corner of the block space.
+     * @param state The {@link BlockState} to mirror
+     * @param mirror The {@link Mirror} to apply to the state
+     * @apiNote The given state must have the {@link FramedProperties#FACING_HOR} property
+     */
+    public static BlockState mirrorCornerBlock(BlockState state, Mirror mirror)
+    {
+        return mirrorCornerBlock(state, FramedProperties.FACING_HOR, mirror);
+    }
+
+    /**
+     * Mirrors a block that is oriented into a corner of the block space
+     * @param state The {@link BlockState} to mirror
+     * @param property The {@link EnumProperty<Direction>} that should be mirrored on the given state
+     * @param mirror The {@link Mirror} to apply to the state
+     * @apiNote The given property must support at least all four cardinal directions
+     */
+    public static BlockState mirrorCornerBlock(BlockState state, EnumProperty<Direction> property, Mirror mirror)
+    {
+        if (mirror == Mirror.NONE)
+        {
+            return state;
+        }
+
+        Direction dir = state.getValue(property);
+        if (Utils.isY(dir))
+        {
+            return state;
+        }
+
+        if (mirror == Mirror.LEFT_RIGHT)
+        {
+            dir = switch (dir)
+            {
+                case NORTH -> Direction.WEST;
+                case EAST -> Direction.SOUTH;
+                case SOUTH -> Direction.EAST;
+                case WEST -> Direction.NORTH;
+                default -> throw new IllegalArgumentException("Unreachable!");
+            };
+        }
+        else
+        {
+            dir = switch (dir)
+            {
+                case NORTH -> Direction.EAST;
+                case EAST -> Direction.NORTH;
+                case SOUTH -> Direction.WEST;
+                case WEST -> Direction.SOUTH;
+                default -> throw new IllegalArgumentException("Unreachable!");
+            };
+        }
+        return state.setValue(property, dir);
+    }
+
+    public static void wrapInStateCopy(
+            LevelAccessor level,
+            BlockPos pos,
+            Player player,
+            ItemStack stack,
+            boolean writeToCamoTwo,
+            boolean consumeItem,
+            Runnable action
+    )
+    {
+        CamoContainer<?, ?> camo = EmptyCamoContainer.EMPTY;
+        boolean glowing = false;
+        boolean intangible = false;
+        boolean reinforced = false;
+
+        if (level.getBlockEntity(pos) instanceof FramedBlockEntity be)
+        {
+            camo = be.getCamo();
+            glowing = be.isGlowing();
+            intangible = be.isIntangible(null);
+            reinforced = be.isReinforced();
+        }
+
+        action.run();
+
+        if (consumeItem && !player.isCreative())
+        {
+            stack.shrink(1);
+            player.getInventory().setChanged();
+        }
+
+        if (level.getBlockEntity(pos) instanceof FramedBlockEntity be)
+        {
+            be.setCamo(camo, writeToCamoTwo);
+            be.setGlowing(glowing);
+            be.setIntangible(intangible);
+            be.setReinforced(reinforced);
+        }
     }
 
 

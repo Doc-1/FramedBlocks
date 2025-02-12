@@ -323,7 +323,7 @@ public class FramedChestBlock extends FramedStorageBlock
         {
             return null;
         }
-        return Utils.createBlockEntityTicker(type, FBContent.BE_TYPE_FRAMED_CHEST.value(), FramedChestBlockEntity::tick);
+        return BlockUtils.createBlockEntityTicker(type, FBContent.BE_TYPE_FRAMED_CHEST.value(), FramedChestBlockEntity::tick);
     }
 
     @Override

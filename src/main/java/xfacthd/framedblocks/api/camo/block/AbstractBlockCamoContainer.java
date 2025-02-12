@@ -3,8 +3,8 @@ package xfacthd.framedblocks.api.camo.block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.camo.CamoContainer;
-import xfacthd.framedblocks.api.util.Utils;
 
 public abstract class AbstractBlockCamoContainer<T extends AbstractBlockCamoContainer<T>> extends CamoContainer<BlockCamoContent, T>
 {
@@ -21,7 +21,7 @@ public abstract class AbstractBlockCamoContainer<T extends AbstractBlockCamoCont
     @Override
     public boolean canRotateCamo()
     {
-        return Utils.getRotatableProperty(content.getState()) != null;
+        return BlockUtils.getRotatableProperty(content.getState()) != null;
     }
 
     @Override
@@ -29,7 +29,7 @@ public abstract class AbstractBlockCamoContainer<T extends AbstractBlockCamoCont
     public T rotateCamo()
     {
         BlockState state = content.getState();
-        Property<?> prop = Utils.getRotatableProperty(state);
+        Property<?> prop = BlockUtils.getRotatableProperty(state);
         if (prop != null)
         {
             return copyWithState(state.cycle(prop));

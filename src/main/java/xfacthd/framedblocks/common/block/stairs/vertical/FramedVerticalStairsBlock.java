@@ -11,9 +11,9 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Half;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
-import xfacthd.framedblocks.api.util.*;
 import xfacthd.framedblocks.common.block.FramedBlock;
 import xfacthd.framedblocks.common.block.stairs.standard.FramedHalfStairsBlock;
 import xfacthd.framedblocks.common.data.*;
@@ -178,7 +178,7 @@ public class FramedVerticalStairsBlock extends FramedBlock
     @Override
     protected BlockState mirror(BlockState state, Mirror mirror)
     {
-        return Utils.mirrorCornerBlock(state, mirror);
+        return BlockUtils.mirrorCornerBlock(state, mirror);
     }
 
     @Override

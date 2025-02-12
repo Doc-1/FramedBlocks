@@ -10,10 +10,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.util.CamoList;
-import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 
@@ -39,7 +39,7 @@ public abstract class FramedSpecialDoubleBlockItem extends BlockItem
                 {
                     boolean writeToCamoTwo = shouldWriteToCamoTwo(ctx, originalState);
                     CamoList camos = ctx.getItemInHand().get(FBContent.DC_TYPE_CAMO_LIST);
-                    Utils.wrapInStateCopy(
+                    BlockUtils.wrapInStateCopy(
                             level,
                             pos,
                             ctx.getPlayer(),
