@@ -948,22 +948,6 @@ public final class OcclusionTests
         TestUtils.testDoubleBlockOccludesLightBelow(helper, state, List.of(Direction.DOWN, Direction.UP));
     }
 
-    @GameTest(template = "box_top", batch = "occlusion")
-    @TestedType(type = BlockType.FRAMED_FLOOR_BOARD)
-    public static void test_FloorBoard(GameTestHelper helper)
-    {
-        BlockState state = FBContent.BLOCK_FRAMED_FLOOR.value().defaultBlockState();
-        TestUtils.testBlockOccludesLightBelow(helper, state);
-    }
-
-    @GameTest(template = "box_bottom", batch = "occlusion")
-    @TestedType(type = BlockType.FRAMED_FLOOR_BOARD)
-    public static void testBottom_FloorBoard(GameTestHelper helper)
-    {
-        BlockState state = FBContent.BLOCK_FRAMED_FLOOR.value().defaultBlockState();
-        TestUtils.testBlockOccludesLightAbove(helper, state);
-    }
-
     @GameTest(template = "box_side", batch = "occlusion")
     @TestedType(type = BlockType.FRAMED_VERTICAL_STAIRS)
     public static void test_VerticalStairs_Vertical(GameTestHelper helper)
@@ -2386,19 +2370,39 @@ public final class OcclusionTests
         TestUtils.testBlockOccludesLightNorth(helper, state);
     }
 
-    @GameTest(template = "box_side", batch = "occlusion")
-    @TestedType(type = BlockType.FRAMED_WALL_BOARD)
-    public static void test_WallBoard_North(GameTestHelper helper)
+    @GameTest(template = "box_top", batch = "occlusion")
+    @TestedType(type = BlockType.FRAMED_BOARD)
+    public static void test_Board(GameTestHelper helper)
     {
-        BlockState state = FBContent.BLOCK_FRAMED_WALL_BOARD.value().defaultBlockState();
+        BlockState state = FBContent.BLOCK_FRAMED_BOARD.value()
+                .defaultBlockState()
+                .setValue(BlockStateProperties.FACING, Direction.DOWN);
+        TestUtils.testBlockOccludesLightBelow(helper, state);
+    }
+
+    @GameTest(template = "box_bottom", batch = "occlusion")
+    @TestedType(type = BlockType.FRAMED_BOARD)
+    public static void testBottom_Board(GameTestHelper helper)
+    {
+        BlockState state = FBContent.BLOCK_FRAMED_BOARD.value()
+                .defaultBlockState()
+                .setValue(BlockStateProperties.FACING, Direction.UP);
+        TestUtils.testBlockOccludesLightAbove(helper, state);
+    }
+
+    @GameTest(template = "box_side", batch = "occlusion")
+    @TestedType(type = BlockType.FRAMED_BOARD)
+    public static void test_Board_North(GameTestHelper helper)
+    {
+        BlockState state = FBContent.BLOCK_FRAMED_BOARD.value().defaultBlockState();
         TestUtils.testBlockOccludesLightNorth(helper, state);
     }
 
     @GameTest(template = "box_side", batch = "occlusion")
-    @TestedType(type = BlockType.FRAMED_WALL_BOARD)
-    public static void test_WallBoard_South(GameTestHelper helper)
+    @TestedType(type = BlockType.FRAMED_BOARD)
+    public static void test_Board_South(GameTestHelper helper)
     {
-        BlockState state = FBContent.BLOCK_FRAMED_WALL_BOARD.value()
+        BlockState state = FBContent.BLOCK_FRAMED_BOARD.value()
                 .defaultBlockState()
                 .setValue(FramedProperties.FACING_HOR, Direction.SOUTH);
         TestUtils.testBlockOccludesLightNorth(helper, state);

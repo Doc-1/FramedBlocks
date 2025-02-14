@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
@@ -28,10 +29,7 @@ public final class CornerStripSkipPredicate implements SideSkipPredicate
                 case FRAMED_CORNER_STRIP -> testAgainstCornerStrip(
                         dir, type, adjState, side
                 );
-                case FRAMED_FLOOR_BOARD -> testAgainstFloorBoard(
-                        dir, type, adjState, side
-                );
-                case FRAMED_WALL_BOARD -> testAgainstWallBoard(
+                case FRAMED_BOARD -> testAgainstWallBoard(
                         dir, type, adjState, side
                 );
                 default -> false;
@@ -50,18 +48,11 @@ public final class CornerStripSkipPredicate implements SideSkipPredicate
                getCornerDir(dir, type, side).isEqualTo(getCornerDir(adjDir, adjType, side.getOpposite()));
     }
 
-    @CullTest.TestTarget(BlockType.FRAMED_FLOOR_BOARD)
-    private static boolean testAgainstFloorBoard(Direction dir, SlopeType type, BlockState adjState, Direction side)
-    {
-        boolean top = adjState.getValue(FramedProperties.TOP);
-        return getHalfDir(dir, type, side).isEqualTo(FloorBoardSkipPredicate.getHalfDir(top, side.getOpposite()));
-    }
-
-    @CullTest.TestTarget(BlockType.FRAMED_WALL_BOARD)
+    @CullTest.TestTarget(BlockType.FRAMED_BOARD)
     private static boolean testAgainstWallBoard(Direction dir, SlopeType type, BlockState adjState, Direction side)
     {
-        Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
-        return getHalfDir(dir, type, side).isEqualTo(WallBoardSkipPredicate.getHalfDir(adjDir, side.getOpposite()));
+        Direction adjDir = adjState.getValue(BlockStateProperties.FACING);
+        return getHalfDir(dir, type, side).isEqualTo(BoardSkipPredicate.getHalfDir(adjDir, side.getOpposite()));
     }
 
 

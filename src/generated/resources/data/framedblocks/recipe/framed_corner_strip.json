@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    "framedblocks:framed_floor_board",
+    "framedblocks:framed_board",
     "framedblocks:framed_hammer"
   ],
   "result": {

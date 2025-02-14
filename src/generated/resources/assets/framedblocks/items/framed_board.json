@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "framedblocks:block",
-    "block": "framedblocks:framed_floor_board"
+    "block": "framedblocks:framed_board"
   }
 }

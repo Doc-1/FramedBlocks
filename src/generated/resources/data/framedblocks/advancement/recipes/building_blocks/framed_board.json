@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "hasFramedSlab": {
+    "hasFramedPanel": {
       "conditions": {
         "items": [
           {
-            "items": "framedblocks:framed_slab"
+            "items": "framedblocks:framed_panel"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "framedblocks:framed_floor_board"
+        "recipe": "framedblocks:framed_board"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "hasFramedSlab"
+      "hasFramedPanel"
     ]
   ],
   "rewards": {
     "recipes": [
-      "framedblocks:framed_floor_board"
+      "framedblocks:framed_board"
     ]
   }
 }

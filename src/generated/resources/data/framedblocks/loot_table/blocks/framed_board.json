@@ -28,11 +28,11 @@
               "function": "minecraft:explosion_decay"
             }
           ],
-          "name": "framedblocks:framed_floor_board"
+          "name": "framedblocks:framed_board"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "framedblocks:blocks/framed_floor_board"
+  "random_sequence": "framedblocks:blocks/framed_board"
 }

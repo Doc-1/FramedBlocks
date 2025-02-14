@@ -135,7 +135,7 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_LARGE_BUTTON, cube);
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_LARGE_STONE_BUTTON, stoneCube);
         simpleBlock(blockModels, FBContent.BLOCK_FRAMED_WALL_SIGN, cube);
-        simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_WALL_BOARD, cube);
+        simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_BOARD, cube);
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_CORNER_STRIP, cube);
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_LATTICE, cube);
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_THICK_LATTICE, cube);
@@ -254,7 +254,6 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         registerFramedSoulWallTorch(blockModels);
         registerFramedRedstoneTorch(blockModels);
         registerFramedRedstoneWallTorch(blockModels);
-        registerFramedFloorBoard(blockModels, cube);
         registerFramedChest(blockModels);
         registerFramedSecretStorage(blockModels);
         registerFramedTank(blockModels);
@@ -528,12 +527,6 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         variant(blockModels, FBContent.BLOCK_FRAMED_REDSTONE_WALL_TORCH)
                 .with(BlockModelGenerators.createBooleanModelDispatch(BlockStateProperties.LIT, wallTorch, wallTorchOff))
                 .with(BlockModelGenerators.createTorchHorizontalDispatch());
-    }
-
-    private void registerFramedFloorBoard(BlockModelGenerators blockModels, ResourceLocation cube)
-    {
-        simpleBlock(blockModels, FBContent.BLOCK_FRAMED_FLOOR, cube);
-        framedBlockItemModel(blockModels, FBContent.BLOCK_FRAMED_FLOOR);
     }
 
     private void registerFramedChest(BlockModelGenerators blockModels)

@@ -566,14 +566,7 @@ public final class FramedRecipeProvider extends RecipeProvider
                 .unlockedBy(this, FBContent.BLOCK_FRAMED_CUBE)
                 .save(output);
 
-        shapedBuildingBlock(FBContent.BLOCK_FRAMED_FLOOR.value(), 4)
-                .pattern("FFH")
-                .define('F', FBContent.BLOCK_FRAMED_SLAB.value())
-                .define('H', FBContent.ITEM_FRAMED_HAMMER.value())
-                .unlockedBy(this, FBContent.BLOCK_FRAMED_SLAB)
-                .save(output);
-
-        shapedBuildingBlock(FBContent.BLOCK_FRAMED_WALL_BOARD.value(), 4)
+        shapedBuildingBlock(FBContent.BLOCK_FRAMED_BOARD.value(), 4)
                 .pattern("FFH")
                 .define('F', FBContent.BLOCK_FRAMED_PANEL.value())
                 .define('H', FBContent.ITEM_FRAMED_HAMMER.value())
@@ -581,16 +574,10 @@ public final class FramedRecipeProvider extends RecipeProvider
                 .save(output);
 
         shapelessBuildingBlock(FBContent.BLOCK_FRAMED_CORNER_STRIP.value(), 16)
-                .requires(FBContent.BLOCK_FRAMED_FLOOR.value())
+                .requires(FBContent.BLOCK_FRAMED_BOARD.value())
                 .requires(FBContent.ITEM_FRAMED_HAMMER.value())
-                .unlockedBy(this, FBContent.BLOCK_FRAMED_FLOOR)
-                .save(output, key("framed_corner_strip_from_framed_floor_board"));
-
-        shapelessBuildingBlock(FBContent.BLOCK_FRAMED_CORNER_STRIP.value(), 16)
-                .requires(FBContent.BLOCK_FRAMED_WALL_BOARD.value())
-                .requires(FBContent.ITEM_FRAMED_HAMMER.value())
-                .unlockedBy(this, FBContent.BLOCK_FRAMED_WALL_BOARD)
-                .save(output, key("framed_corner_strip_from_framed_wall_board"));
+                .unlockedBy(this, FBContent.BLOCK_FRAMED_BOARD)
+                .save(output);
 
         shapedBuildingBlock(FBContent.BLOCK_FRAMED_LATTICE.value(), 3)
                 .pattern(" F ")
@@ -1516,7 +1503,6 @@ public final class FramedRecipeProvider extends RecipeProvider
         makeRotationRecipe(FBContent.BLOCK_FRAMED_DIVIDED_SLAB, FBContent.BLOCK_FRAMED_DIVIDED_PANEL_HOR, output);
         makeRotationRecipe(FBContent.BLOCK_FRAMED_STAIRS, FBContent.BLOCK_FRAMED_VERTICAL_STAIRS, output);
         makeRotationRecipe(FBContent.BLOCK_FRAMED_DOUBLE_STAIRS, FBContent.BLOCK_FRAMED_VERTICAL_DOUBLE_STAIRS, output);
-        makeRotationRecipe(FBContent.BLOCK_FRAMED_FLOOR, FBContent.BLOCK_FRAMED_WALL_BOARD, output);
         makeRotationRecipe(FBContent.BLOCK_FRAMED_SLOPE_SLAB, FBContent.BLOCK_FRAMED_SLOPE_PANEL, output);
         makeRotationRecipe(FBContent.BLOCK_FRAMED_ELEVATED_SLOPE_SLAB, FBContent.BLOCK_FRAMED_EXTENDED_SLOPE_PANEL, output);
         makeRotationRecipe(FBContent.BLOCK_FRAMED_DOUBLE_SLOPE_SLAB, FBContent.BLOCK_FRAMED_DOUBLE_SLOPE_PANEL, output);

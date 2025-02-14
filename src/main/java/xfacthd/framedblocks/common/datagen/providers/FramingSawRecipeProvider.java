@@ -375,11 +375,7 @@ public final class FramingSawRecipeProvider extends RecipeProvider
                 .additive(FramingSawRecipeAdditive.of(tag(Tags.Items.DUSTS_REDSTONE)))
                 .save(output);
 
-        FramingSawRecipeBuilder.builder(FBContent.BLOCK_FRAMED_FLOOR)
-                .material(FramingSawRecipe.CUBE_MATERIAL_VALUE / 16)
-                .save(output);
-
-        FramingSawRecipeBuilder.builder(FBContent.BLOCK_FRAMED_WALL_BOARD)
+        FramingSawRecipeBuilder.builder(FBContent.BLOCK_FRAMED_BOARD)
                 .material(FramingSawRecipe.CUBE_MATERIAL_VALUE / 16)
                 .save(output);
 
