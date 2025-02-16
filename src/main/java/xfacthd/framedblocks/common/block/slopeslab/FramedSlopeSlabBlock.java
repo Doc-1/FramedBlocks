@@ -1,8 +1,13 @@
 package xfacthd.framedblocks.common.block.slopeslab;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -10,14 +15,22 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.api.block.*;
-import xfacthd.framedblocks.api.util.*;
+import xfacthd.framedblocks.api.block.BlockUtils;
+import xfacthd.framedblocks.api.block.FramedProperties;
+import xfacthd.framedblocks.api.block.IFramedBlock;
+import xfacthd.framedblocks.api.block.PlacementStateBuilder;
+import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.block.FramedBlock;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 
+import java.util.List;
+
 public class FramedSlopeSlabBlock extends FramedBlock
 {
+    public static final Component PLACE_UPSIDE_DOWN = Utils.translate("desc", "slope_slab.place_upside_down")
+            .withStyle(ChatFormatting.ITALIC);
+
     public FramedSlopeSlabBlock(Properties props)
     {
         super(BlockType.FRAMED_SLOPE_SLAB, props);
@@ -83,6 +96,13 @@ public class FramedSlopeSlabBlock extends FramedBlock
     protected BlockState mirror(BlockState state, Mirror mirror)
     {
         return BlockUtils.mirrorFaceBlock(state, mirror);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, List<Component> lines, TooltipFlag flag)
+    {
+        lines.add(PLACE_UPSIDE_DOWN);
+        super.appendHoverText(stack, ctx, lines, flag);
     }
 
     @Override
