@@ -39,9 +39,12 @@ import xfacthd.framedblocks.common.config.DevToolsConfig;
 import xfacthd.framedblocks.common.config.ServerConfig;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeMatchResult;
 import xfacthd.framedblocks.common.data.property.NullableDirection;
+import xfacthd.framedblocks.common.datagen.GeneratorHandler;
 import xfacthd.framedblocks.common.item.FramedBlueprintItem;
 import xfacthd.framedblocks.common.blockentity.special.FramedChestBlockEntity;
 import xfacthd.framedblocks.common.item.PhantomPasteItem;
+
+import java.util.Objects;
 
 public final class FramedLanguageProvider extends LanguageProvider
 {
@@ -298,7 +301,7 @@ public final class FramedLanguageProvider extends LanguageProvider
         add(FBContent.ITEM_FRAMED_SCREWDRIVER.value(), "Framed Screwdriver");
         add(FBContent.ITEM_FRAMED_REINFORCEMENT.value(), "Framed Reinforcement");
         add(FBContent.ITEM_PHANTOM_PASTE.value(), "Phantom Paste");
-        add("item.framedblocks.framing_saw_pattern", "Framing Saw Pattern");
+        add(Objects.requireNonNull(GeneratorHandler.framingSawPattern).value(), "Framing Saw Pattern");
     }
 
     private void addSpecialTranslations()
