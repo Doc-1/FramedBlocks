@@ -2,7 +2,6 @@ package xfacthd.framedblocks.common.block.slopepanel;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -95,7 +94,7 @@ public class FramedDoubleSlopePanelBlock extends AbstractFramedDoubleBlock
     }
 
     @Override
-    public Tuple<BlockState, BlockState> calculateBlockPair(BlockState state)
+    public DoubleBlockParts calculateParts(BlockState state)
     {
         Direction facing = state.getValue(FramedProperties.FACING_HOR);
         HorizontalRotation rotation = state.getValue(PropertyHolder.ROTATION);
@@ -103,7 +102,7 @@ public class FramedDoubleSlopePanelBlock extends AbstractFramedDoubleBlock
         boolean ySlope = state.getValue(FramedProperties.Y_SLOPE);
 
         BlockState defState = FBContent.BLOCK_FRAMED_SLOPE_PANEL.value().defaultBlockState();
-        return new Tuple<>(
+        return new DoubleBlockParts(
                 defState.setValue(FramedProperties.FACING_HOR, facing)
                         .setValue(PropertyHolder.ROTATION, rotation)
                         .setValue(PropertyHolder.FRONT, front)

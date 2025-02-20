@@ -2,7 +2,6 @@ package xfacthd.framedblocks.common.block.slopeslab;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
@@ -92,14 +91,14 @@ public class FramedDoubleSlopeSlabBlock extends AbstractFramedDoubleBlock
     }
 
     @Override
-    public Tuple<BlockState, BlockState> calculateBlockPair(BlockState state)
+    public DoubleBlockParts calculateParts(BlockState state)
     {
         Direction facing = state.getValue(FramedProperties.FACING_HOR);
         boolean topHalf = state.getValue(PropertyHolder.TOP_HALF);
         boolean ySlope = state.getValue(FramedProperties.Y_SLOPE);
 
         BlockState defState = FBContent.BLOCK_FRAMED_SLOPE_SLAB.value().defaultBlockState();
-        return new Tuple<>(
+        return new DoubleBlockParts(
                 defState.setValue(FramedProperties.FACING_HOR, facing)
                         .setValue(PropertyHolder.TOP_HALF, topHalf)
                         .setValue(FramedProperties.TOP, false)

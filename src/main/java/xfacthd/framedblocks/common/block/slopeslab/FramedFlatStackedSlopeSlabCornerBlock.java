@@ -2,11 +2,12 @@ package xfacthd.framedblocks.common.block.slopeslab;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -14,7 +15,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.api.block.*;
+import xfacthd.framedblocks.api.block.BlockUtils;
+import xfacthd.framedblocks.api.block.FramedProperties;
+import xfacthd.framedblocks.api.block.IFramedBlock;
+import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.AbstractFramedDoubleBlock;
@@ -22,6 +26,7 @@ import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
 
@@ -143,7 +148,7 @@ public class FramedFlatStackedSlopeSlabCornerBlock extends AbstractFramedDoubleB
     }
 
     @Override
-    public Tuple<BlockState, BlockState> calculateBlockPair(BlockState state)
+    public DoubleBlockParts calculateParts(BlockState state)
     {
         Direction dir = state.getValue(FramedProperties.FACING_HOR);
         boolean top = state.getValue(FramedProperties.TOP);
@@ -159,7 +164,7 @@ public class FramedFlatStackedSlopeSlabCornerBlock extends AbstractFramedDoubleB
             topBlock = FBContent.BLOCK_FRAMED_FLAT_SLOPE_SLAB_CORNER.value();
         }
 
-        return new Tuple<>(
+        return new DoubleBlockParts(
                 FBContent.BLOCK_FRAMED_SLAB.value()
                         .defaultBlockState()
                         .setValue(FramedProperties.TOP, top),

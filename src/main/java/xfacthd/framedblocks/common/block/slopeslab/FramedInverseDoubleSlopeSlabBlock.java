@@ -2,23 +2,28 @@ package xfacthd.framedblocks.common.block.slopeslab;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.api.block.*;
+import xfacthd.framedblocks.api.block.BlockUtils;
+import xfacthd.framedblocks.api.block.FramedProperties;
+import xfacthd.framedblocks.api.block.IFramedBlock;
+import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.AbstractFramedDoubleBlock;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
 
@@ -67,13 +72,13 @@ public class FramedInverseDoubleSlopeSlabBlock extends AbstractFramedDoubleBlock
     }
 
     @Override
-    public Tuple<BlockState, BlockState> calculateBlockPair(BlockState state)
+    public DoubleBlockParts calculateParts(BlockState state)
     {
         Direction facing = state.getValue(FramedProperties.FACING_HOR);
         boolean ySlope = state.getValue(FramedProperties.Y_SLOPE);
 
         BlockState defState = FBContent.BLOCK_FRAMED_SLOPE_SLAB.value().defaultBlockState();
-        return new Tuple<>(
+        return new DoubleBlockParts(
                 defState.setValue(FramedProperties.FACING_HOR, facing.getOpposite())
                         .setValue(PropertyHolder.TOP_HALF, false)
                         .setValue(FramedProperties.TOP, true)

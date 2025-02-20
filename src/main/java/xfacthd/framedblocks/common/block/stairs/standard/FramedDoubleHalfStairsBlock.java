@@ -2,7 +2,6 @@ package xfacthd.framedblocks.common.block.stairs.standard;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -110,12 +109,12 @@ public class FramedDoubleHalfStairsBlock extends AbstractFramedDoubleBlock
     }
 
     @Override
-    public Tuple<BlockState, BlockState> calculateBlockPair(BlockState state)
+    public DoubleBlockParts calculateParts(BlockState state)
     {
         Direction dir = state.getValue(FramedProperties.FACING_HOR);
         boolean top = state.getValue(FramedProperties.TOP);
         boolean right = state.getValue(PropertyHolder.RIGHT);
-        return new Tuple<>(
+        return new DoubleBlockParts(
                 FBContent.BLOCK_FRAMED_HALF_STAIRS.value()
                         .defaultBlockState()
                         .setValue(FramedProperties.FACING_HOR, dir)

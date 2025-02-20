@@ -9,7 +9,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
@@ -24,8 +23,11 @@ import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.util.ModelUtils;
 import xfacthd.framedblocks.api.model.item.ItemModelInfo;
-import xfacthd.framedblocks.common.data.doubleblock.*;
 import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockStateCache;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
+import xfacthd.framedblocks.common.data.doubleblock.NullCullPredicate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,18 +39,18 @@ public final class FramedDoubleBlockModel extends AbstractFramedBlockModel
     private static final ModelData EMPTY_ALT_FRAME = makeDefaultData(true);
 
     private final DoubleBlockTopInteractionMode particleMode;
-    private final Tuple<BlockState, BlockState> dummyStates;
+    private final DoubleBlockParts parts;
     private final boolean canCullLeft;
     private final boolean canCullRight;
     @Nullable
-    private Tuple<BakedModel, BakedModel> models = null;
+    private PartModels models = null;
 
     public FramedDoubleBlockModel(GeometryFactory.Context ctx, NullCullPredicate cullPredicate, ItemModelInfo itemModelInfo)
     {
         super(ctx.baseModel(), ctx.state(), itemModelInfo);
         BlockState state = ctx.state();
         DoubleBlockStateCache cache = ((IFramedDoubleBlock) state.getBlock()).getCache(state);
-        this.dummyStates = cache.getBlockPair();
+        this.parts = cache.getParts();
         this.particleMode = cache.getTopInteractionMode();
         this.canCullLeft = cullPredicate.testLeft(state);
         this.canCullRight = cullPredicate.testRight(state);
@@ -70,10 +72,10 @@ public final class FramedDoubleBlockModel extends AbstractFramedBlockModel
         }
 
         List<List<BakedQuad>> quads = new ArrayList<>(2);
-        Tuple<BakedModel, BakedModel> models = getModels();
+        PartModels models = getModels();
 
-        if (leftVisible) quads.add(models.getA().getQuads(dummyStates.getA(), side, rand, dataLeft, layer));
-        if (rightVisible) quads.add(invertTintIndizes(models.getB().getQuads(dummyStates.getB(), side, rand, dataRight, layer)));
+        if (leftVisible) quads.add(models.modelOne.getQuads(parts.stateOne(), side, rand, dataLeft, layer));
+        if (rightVisible) quads.add(invertTintIndizes(models.modelTwo().getQuads(parts.stateTwo(), side, rand, dataRight, layer)));
 
         return ConcatenatedListView.of(quads);
     }
@@ -121,27 +123,27 @@ public final class FramedDoubleBlockModel extends AbstractFramedBlockModel
     @Override
     public ChunkRenderTypeSet getRenderTypes(BlockState state, RandomSource rand, ModelData data)
     {
-        Tuple<BakedModel, BakedModel> models = getModels();
+        PartModels models = getModels();
 
         ModelData dataLeft = Objects.requireNonNullElse(data.get(IFramedDoubleBlockEntity.DATA_ONE), ModelData.EMPTY);
         ModelData dataRight = Objects.requireNonNullElse(data.get(IFramedDoubleBlockEntity.DATA_TWO), ModelData.EMPTY);
 
         return ChunkRenderTypeSet.union(
-                models.getA().getRenderTypes(dummyStates.getA(), rand, dataLeft),
-                models.getB().getRenderTypes(dummyStates.getB(), rand, dataRight)
+                models.modelOne.getRenderTypes(parts.stateOne(), rand, dataLeft),
+                models.modelTwo().getRenderTypes(parts.stateTwo(), rand, dataRight)
         );
     }
 
     @Override
     public ModelData getModelData(BlockAndTintGetter level, BlockPos pos, BlockState state, ModelData tileData)
     {
-        Tuple<BakedModel, BakedModel> models = getModels();
+        PartModels models = getModels();
 
         ModelData dataLeft = Objects.requireNonNullElse(tileData.get(IFramedDoubleBlockEntity.DATA_ONE), ModelData.EMPTY);
         ModelData dataRight = Objects.requireNonNullElse(tileData.get(IFramedDoubleBlockEntity.DATA_TWO), ModelData.EMPTY);
 
-        dataLeft = models.getA().getModelData(level, pos, dummyStates.getA(), dataLeft);
-        dataRight = models.getB().getModelData(level, pos, dummyStates.getB(), dataRight);
+        dataLeft = models.modelOne.getModelData(level, pos, parts.stateOne(), dataLeft);
+        dataRight = models.modelTwo().getModelData(level, pos, parts.stateTwo(), dataRight);
 
         return tileData.derive()
                 .with(IFramedDoubleBlockEntity.DATA_ONE, dataLeft)
@@ -152,17 +154,17 @@ public final class FramedDoubleBlockModel extends AbstractFramedBlockModel
     @Override
     public TriState useAmbientOcclusion(BlockState state, ModelData data, RenderType renderType)
     {
-        Tuple<BakedModel, BakedModel> models = getModels();
+        PartModels models = getModels();
 
         ModelData dataLeft = Objects.requireNonNullElse(data.get(IFramedDoubleBlockEntity.DATA_ONE), ModelData.EMPTY);
-        TriState aoLeft = models.getA().useAmbientOcclusion(dummyStates.getA(), dataLeft, renderType);
+        TriState aoLeft = models.modelOne.useAmbientOcclusion(parts.stateOne(), dataLeft, renderType);
         if (aoLeft == TriState.TRUE)
         {
             return aoLeft;
         }
 
         ModelData dataRight = Objects.requireNonNullElse(data.get(IFramedDoubleBlockEntity.DATA_TWO), ModelData.EMPTY);
-        TriState aoRight = models.getA().useAmbientOcclusion(dummyStates.getB(), dataRight, renderType);
+        TriState aoRight = models.modelTwo.useAmbientOcclusion(parts.stateTwo(), dataRight, renderType);
         if (aoRight == TriState.TRUE)
         {
             return aoRight;
@@ -171,14 +173,14 @@ public final class FramedDoubleBlockModel extends AbstractFramedBlockModel
         return TriState.DEFAULT;
     }
 
-    private Tuple<BakedModel, BakedModel> getModels()
+    private PartModels getModels()
     {
         if (models == null)
         {
             BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
-            models = new Tuple<>(
-                    dispatcher.getBlockModel(dummyStates.getA()),
-                    dispatcher.getBlockModel(dummyStates.getB())
+            models = new PartModels(
+                    dispatcher.getBlockModel(parts.stateOne()),
+                    dispatcher.getBlockModel(parts.stateTwo())
             );
         }
         return models;
@@ -204,7 +206,7 @@ public final class FramedDoubleBlockModel extends AbstractFramedBlockModel
             FramedBlockData fbData = innerData.get(FramedBlockData.PROPERTY);
             if (fbData != null && !fbData.getCamoContent().isEmpty())
             {
-                BakedModel model = secondary ? getModels().getB() : getModels().getA();
+                BakedModel model = secondary ? getModels().modelTwo : getModels().modelOne;
                 return model.getParticleIcon(innerData);
             }
         }
@@ -226,4 +228,6 @@ public final class FramedDoubleBlockModel extends AbstractFramedBlockModel
         FramedBlockData data = new FramedBlockData(EmptyCamoContainer.EMPTY, altModel);
         return ModelData.builder().with(FramedBlockData.PROPERTY, data).build();
     }
+
+    private record PartModels(BakedModel modelOne, BakedModel modelTwo) { }
 }

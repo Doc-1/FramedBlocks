@@ -2,7 +2,6 @@ package xfacthd.framedblocks.common.block.slab;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -64,12 +63,12 @@ public class FramedCheckeredPanelBlock extends AbstractFramedDoubleBlock
     }
 
     @Override
-    public Tuple<BlockState, BlockState> calculateBlockPair(BlockState state)
+    public DoubleBlockParts calculateParts(BlockState state)
     {
         BlockState segmentState = FBContent.BLOCK_FRAMED_CHECKERED_PANEL_SEGMENT.value()
                 .defaultBlockState()
                 .setValue(FramedProperties.FACING_HOR, state.getValue(FramedProperties.FACING_HOR));
-        return new Tuple<>(segmentState, segmentState.setValue(PropertyHolder.SECOND, true));
+        return new DoubleBlockParts(segmentState, segmentState.setValue(PropertyHolder.SECOND, true));
     }
 
     @Override

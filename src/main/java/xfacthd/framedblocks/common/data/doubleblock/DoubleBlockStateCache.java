@@ -1,7 +1,6 @@
 package xfacthd.framedblocks.common.data.doubleblock;
 
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.cache.StateCache;
@@ -15,7 +14,7 @@ import java.util.Objects;
 public class DoubleBlockStateCache extends StateCache
 {
     private final DoubleBlockTopInteractionMode topInteractionMode;
-    private final Tuple<BlockState, BlockState> statePair;
+    private final DoubleBlockParts parts;
     private final SolidityCheck[] solidityChecks = new SolidityCheck[DIR_COUNT];
     private final CamoGetter[] camoGetters = new CamoGetter[DIR_COUNT * DIR_COUNT_N];
 
@@ -24,7 +23,7 @@ public class DoubleBlockStateCache extends StateCache
         super(state, type);
         IFramedDoubleBlock block = (IFramedDoubleBlock) state.getBlock();
         this.topInteractionMode = block.calculateTopInteractionMode(state);
-        this.statePair = block.calculateBlockPair(state);
+        this.parts = block.calculateParts(state);
         Utils.forAllDirections(false, side ->
         {
             solidityChecks[side.ordinal()] = block.calculateSolidityCheck(state, side);
@@ -52,9 +51,9 @@ public class DoubleBlockStateCache extends StateCache
         return topInteractionMode;
     }
 
-    public final Tuple<BlockState, BlockState> getBlockPair()
+    public final DoubleBlockParts getParts()
     {
-        return statePair;
+        return parts;
     }
 
     public final SolidityCheck getSolidityCheck(Direction side)
@@ -76,8 +75,8 @@ public class DoubleBlockStateCache extends StateCache
         }
         DoubleBlockStateCache that = (DoubleBlockStateCache) other;
         return topInteractionMode == that.topInteractionMode &&
-                statePair.getA() == that.statePair.getA() &&
-                statePair.getB() == that.statePair.getB() &&
+                parts.stateOne() == that.parts.stateOne() &&
+                parts.stateTwo() == that.parts.stateTwo() &&
                 Arrays.equals(solidityChecks, that.solidityChecks) &&
                 Arrays.equals(camoGetters, that.camoGetters);
     }
@@ -87,8 +86,8 @@ public class DoubleBlockStateCache extends StateCache
     {
         int result = super.hashCode();
         result = 31 * result + Objects.hashCode(topInteractionMode);
-        result = 31 * result + Objects.hashCode(statePair.getA());
-        result = 31 * result + Objects.hashCode(statePair.getB());
+        result = 31 * result + Objects.hashCode(parts.stateOne());
+        result = 31 * result + Objects.hashCode(parts.stateTwo());
         result = 31 * result + Arrays.hashCode(solidityChecks);
         result = 31 * result + Arrays.hashCode(camoGetters);
         return result;

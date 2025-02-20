@@ -1,7 +1,6 @@
 package xfacthd.framedblocks.common.block.slab;
 
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -16,11 +15,11 @@ public class FramedAdjustableDoubleSlabBlock extends FramedAdjustableDoubleBlock
     private FramedAdjustableDoubleSlabBlock(
             BlockType type,
             Properties props,
-            Function<BlockState, Tuple<BlockState, BlockState>> statePairBuilder,
+            Function<BlockState, DoubleBlockParts> partsBuilder,
             BlockEntityType.BlockEntitySupplier<FramedAdjustableDoubleBlockEntity> beSupplier
     )
     {
-        super(type, props, state -> Direction.UP, statePairBuilder, beSupplier);
+        super(type, props, state -> Direction.UP, partsBuilder, beSupplier);
     }
 
     @Override
@@ -63,7 +62,7 @@ public class FramedAdjustableDoubleSlabBlock extends FramedAdjustableDoubleBlock
         return new FramedAdjustableDoubleSlabBlock(
                 BlockType.FRAMED_ADJ_DOUBLE_SLAB,
                 props,
-                FramedAdjustableDoubleBlock::makeStandardStatePair,
+                FramedAdjustableDoubleBlock::makeStandardParts,
                 FramedAdjustableDoubleBlockEntity::standard
         );
     }
@@ -73,7 +72,7 @@ public class FramedAdjustableDoubleSlabBlock extends FramedAdjustableDoubleBlock
         return new FramedAdjustableDoubleSlabBlock(
                 BlockType.FRAMED_ADJ_DOUBLE_COPYCAT_SLAB,
                 props,
-                FramedAdjustableDoubleBlock::makeCopycatStatePair,
+                FramedAdjustableDoubleBlock::makeCopycatParts,
                 FramedAdjustableDoubleBlockEntity::copycat
         );
     }

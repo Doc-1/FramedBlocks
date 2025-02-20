@@ -2,7 +2,6 @@ package xfacthd.framedblocks.common.block.stairs.vertical;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +11,10 @@ import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
-import xfacthd.framedblocks.common.data.doubleblock.*;
+import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
+import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.data.property.StairsType;
 
 public class FramedVerticalDividedStairsBlock extends FramedVerticalStairsBlock implements IFramedDoubleBlock
@@ -23,13 +25,13 @@ public class FramedVerticalDividedStairsBlock extends FramedVerticalStairsBlock 
     }
 
     @Override
-    public Tuple<BlockState, BlockState> calculateBlockPair(BlockState state)
+    public DoubleBlockParts calculateParts(BlockState state)
     {
         Direction facing = state.getValue(FramedProperties.FACING_HOR);
 
         return switch (state.getValue(PropertyHolder.STAIRS_TYPE))
         {
-            case VERTICAL -> new Tuple<>(
+            case VERTICAL -> new DoubleBlockParts(
                     FBContent.BLOCK_FRAMED_VERTICAL_HALF_STAIRS.value().defaultBlockState()
                             .setValue(FramedProperties.FACING_HOR, facing)
                             .setValue(FramedProperties.TOP, false),
@@ -37,7 +39,7 @@ public class FramedVerticalDividedStairsBlock extends FramedVerticalStairsBlock 
                             .setValue(FramedProperties.FACING_HOR, facing)
                             .setValue(FramedProperties.TOP, true)
             );
-            case TOP_FWD -> new Tuple<>(
+            case TOP_FWD -> new DoubleBlockParts(
                     FBContent.BLOCK_FRAMED_VERTICAL_HALF_STAIRS.value().defaultBlockState()
                             .setValue(FramedProperties.FACING_HOR, facing)
                             .setValue(FramedProperties.TOP, false),
@@ -45,7 +47,7 @@ public class FramedVerticalDividedStairsBlock extends FramedVerticalStairsBlock 
                             .setValue(FramedProperties.FACING_HOR, facing.getCounterClockWise())
                             .setValue(FramedProperties.TOP, true)
             );
-            case TOP_CCW -> new Tuple<>(
+            case TOP_CCW -> new DoubleBlockParts(
                     FBContent.BLOCK_FRAMED_VERTICAL_HALF_STAIRS.value().defaultBlockState()
                             .setValue(FramedProperties.FACING_HOR, facing)
                             .setValue(FramedProperties.TOP, false),
@@ -53,7 +55,7 @@ public class FramedVerticalDividedStairsBlock extends FramedVerticalStairsBlock 
                             .setValue(FramedProperties.FACING_HOR, facing)
                             .setValue(FramedProperties.TOP, true)
             );
-            case TOP_BOTH -> new Tuple<>(
+            case TOP_BOTH -> new DoubleBlockParts(
                     FBContent.BLOCK_FRAMED_VERTICAL_HALF_STAIRS.value().defaultBlockState()
                             .setValue(FramedProperties.FACING_HOR, facing)
                             .setValue(FramedProperties.TOP, false),
@@ -61,7 +63,7 @@ public class FramedVerticalDividedStairsBlock extends FramedVerticalStairsBlock 
                             .setValue(FramedProperties.FACING_HOR, facing)
                             .setValue(FramedProperties.TOP, true)
             );
-            case BOTTOM_FWD -> new Tuple<>(
+            case BOTTOM_FWD -> new DoubleBlockParts(
                     FBContent.BLOCK_FRAMED_SLAB_EDGE.value().defaultBlockState()
                             .setValue(FramedProperties.FACING_HOR, facing.getCounterClockWise())
                             .setValue(FramedProperties.TOP, false),
@@ -69,7 +71,7 @@ public class FramedVerticalDividedStairsBlock extends FramedVerticalStairsBlock 
                             .setValue(FramedProperties.FACING_HOR, facing)
                             .setValue(FramedProperties.TOP, true)
             );
-            case BOTTOM_CCW -> new Tuple<>(
+            case BOTTOM_CCW -> new DoubleBlockParts(
                     FBContent.BLOCK_FRAMED_SLAB_EDGE.value().defaultBlockState()
                             .setValue(FramedProperties.FACING_HOR, facing)
                             .setValue(FramedProperties.TOP, false),
@@ -77,7 +79,7 @@ public class FramedVerticalDividedStairsBlock extends FramedVerticalStairsBlock 
                             .setValue(FramedProperties.FACING_HOR, facing)
                             .setValue(FramedProperties.TOP, true)
             );
-            case BOTTOM_BOTH -> new Tuple<>(
+            case BOTTOM_BOTH -> new DoubleBlockParts(
                     FBContent.BLOCK_FRAMED_SLAB_CORNER.value().defaultBlockState()
                             .setValue(FramedProperties.FACING_HOR, facing)
                             .setValue(FramedProperties.TOP, false),

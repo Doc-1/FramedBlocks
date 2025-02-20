@@ -2,11 +2,12 @@ package xfacthd.framedblocks.common.block.slopeedge;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -20,7 +21,10 @@ import xfacthd.framedblocks.common.block.ExtPlacementStateBuilder;
 import xfacthd.framedblocks.common.blockentity.doubled.slopeedge.FramedElevatedDoubleCornerSlopeEdgeBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
-import xfacthd.framedblocks.common.data.doubleblock.*;
+import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
+import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.data.property.CornerType;
 
 public class FramedElevatedDoubleCornerSlopeEdgeBlock extends AbstractFramedDoubleBlock
@@ -119,7 +123,7 @@ public class FramedElevatedDoubleCornerSlopeEdgeBlock extends AbstractFramedDoub
     }
 
     @Override
-    public Tuple<BlockState, BlockState> calculateBlockPair(BlockState state)
+    public DoubleBlockParts calculateParts(BlockState state)
     {
         Direction dir = state.getValue(FramedProperties.FACING_HOR);
         CornerType type = state.getValue(PropertyHolder.CORNER_TYPE);
@@ -133,7 +137,7 @@ public class FramedElevatedDoubleCornerSlopeEdgeBlock extends AbstractFramedDoub
             typeTwo = type.verticalOpposite();
         }
         boolean ySlope = state.getValue(FramedProperties.Y_SLOPE);
-        return new Tuple<>(
+        return new DoubleBlockParts(
                 FBContent.BLOCK_FRAMED_ELEVATED_CORNER_SLOPE_EDGE.value()
                         .defaultBlockState()
                         .setValue(FramedProperties.FACING_HOR, dir)

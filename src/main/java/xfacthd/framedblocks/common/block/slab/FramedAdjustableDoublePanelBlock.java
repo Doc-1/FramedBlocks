@@ -1,7 +1,6 @@
 package xfacthd.framedblocks.common.block.slab;
 
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -21,11 +20,11 @@ public class FramedAdjustableDoublePanelBlock extends FramedAdjustableDoubleBloc
     private FramedAdjustableDoublePanelBlock(
             BlockType type,
             Properties props,
-            Function<BlockState, Tuple<BlockState, BlockState>> statePairBuilder,
+            Function<BlockState, DoubleBlockParts> partsBuilder,
             BlockEntityType.BlockEntitySupplier<FramedAdjustableDoubleBlockEntity> beSupplier
     )
     {
-        super(type, props, state -> state.getValue(FramedProperties.FACING_HOR), statePairBuilder, beSupplier);
+        super(type, props, state -> state.getValue(FramedProperties.FACING_HOR), partsBuilder, beSupplier);
     }
 
     @Override
@@ -95,7 +94,7 @@ public class FramedAdjustableDoublePanelBlock extends FramedAdjustableDoubleBloc
         return new FramedAdjustableDoublePanelBlock(
                 BlockType.FRAMED_ADJ_DOUBLE_PANEL,
                 props,
-                FramedAdjustableDoubleBlock::makeStandardStatePair,
+                FramedAdjustableDoubleBlock::makeStandardParts,
                 FramedAdjustableDoubleBlockEntity::standard
         );
     }
@@ -105,7 +104,7 @@ public class FramedAdjustableDoublePanelBlock extends FramedAdjustableDoubleBloc
         return new FramedAdjustableDoublePanelBlock(
                 BlockType.FRAMED_ADJ_DOUBLE_COPYCAT_PANEL,
                 props,
-                FramedAdjustableDoubleBlock::makeCopycatStatePair,
+                FramedAdjustableDoubleBlock::makeCopycatParts,
                 FramedAdjustableDoubleBlockEntity::copycat
         );
     }

@@ -5,7 +5,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -25,6 +24,7 @@ import xfacthd.framedblocks.common.blockentity.special.FramedCollapsibleCopycatB
 import xfacthd.framedblocks.common.blockentity.special.ICollapsibleBlockEntity;
 import xfacthd.framedblocks.common.blockentity.special.ICollapsibleCopycatBlockEntity;
 import xfacthd.framedblocks.common.data.component.AdjustableDoubleBlockData;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -105,12 +105,12 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
     @Override
     public int getVertexOffset(BlockState state, int vertex)
     {
-        Tuple<BlockState, BlockState> blockPair = getBlockPair();
-        if (state == blockPair.getA())
+        DoubleBlockParts parts = getParts();
+        if (state == parts.stateOne())
         {
             return 16 - firstHeight;
         }
-        if (state == blockPair.getB())
+        if (state == parts.stateTwo())
         {
             return firstHeight;
         }
@@ -121,12 +121,12 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
     public int getFaceOffset(BlockState state, Direction side)
     {
         Direction facing = getFacing(getBlockState());
-        Tuple<BlockState, BlockState> blockPair = getBlockPair();
-        if (state == blockPair.getA() && side == facing)
+        DoubleBlockParts parts = getParts();
+        if (state == parts.stateOne() && side == facing)
         {
             return 16 - firstHeight;
         }
-        if (state == blockPair.getB() && side == facing.getOpposite())
+        if (state == parts.stateTwo() && side == facing.getOpposite())
         {
             return firstHeight;
         }
@@ -136,12 +136,12 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
     @Override
     public int getPackedOffsets(BlockState state)
     {
-        Tuple<BlockState, BlockState> blockPair = getBlockPair();
-        if (state == blockPair.getA())
+        DoubleBlockParts parts = getParts();
+        if (state == parts.stateOne())
         {
             return offsetPacker.pack(getBlockState(), firstHeight, false);
         }
-        if (state == blockPair.getB())
+        if (state == parts.stateTwo())
         {
             return offsetPacker.pack(getBlockState(), firstHeight, true);
         }

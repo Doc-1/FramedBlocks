@@ -1,6 +1,5 @@
 package xfacthd.framedblocks.common.data.doubleblock;
 
-import net.minecraft.util.Tuple;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.camo.CamoContainer;
@@ -19,7 +18,7 @@ public enum CamoGetter
 
         @Override
         @Nullable
-        public BlockState getComponent(Tuple<BlockState, BlockState> blockPair)
+        public BlockState getComponent(DoubleBlockParts parts)
         {
             return null;
         }
@@ -33,9 +32,9 @@ public enum CamoGetter
         }
 
         @Override
-        public BlockState getComponent(Tuple<BlockState, BlockState> blockPair)
+        public BlockState getComponent(DoubleBlockParts parts)
         {
-            return blockPair.getA();
+            return parts.stateOne();
         }
     },
     SECOND
@@ -47,16 +46,16 @@ public enum CamoGetter
         }
 
         @Override
-        public BlockState getComponent(Tuple<BlockState, BlockState> blockPair)
+        public BlockState getComponent(DoubleBlockParts parts)
         {
-            return blockPair.getB();
+            return parts.stateTwo();
         }
     };
 
     public abstract CamoContainer<?, ?> getCamo(FramedDoubleBlockEntity be);
 
     @Nullable
-    public abstract BlockState getComponent(Tuple<BlockState, BlockState> blockPair);
+    public abstract BlockState getComponent(DoubleBlockParts parts);
 
 
 

@@ -4,10 +4,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.util.ARGB;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.EmptyBlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -24,12 +26,15 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.blueprint.BlueprintData;
-import xfacthd.framedblocks.api.camo.*;
+import xfacthd.framedblocks.api.camo.CamoContainer;
+import xfacthd.framedblocks.api.camo.CamoContainerHelper;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
-import xfacthd.framedblocks.api.util.*;
+import xfacthd.framedblocks.api.util.CamoList;
+import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockStateCache;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockSoundType;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
@@ -68,12 +73,12 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     @Override
     public CamoContainer<?, ?> getCamo(BlockState state)
     {
-        Tuple<BlockState, BlockState> blockPair = getStateCache().getBlockPair();
-        if (state == blockPair.getA())
+        DoubleBlockParts parts = getStateCache().getParts();
+        if (state == parts.stateOne())
         {
             return getCamo();
         }
-        if (state == blockPair.getB())
+        if (state == parts.stateTwo())
         {
             return getCamoTwo();
         }
@@ -315,15 +320,16 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
         lookVec = lookVec.normalize().multiply(1D/16D, 1D/16D, 1D/16D);
         Vec3 vecStart = hit.getLocation().subtract(lookVec);
         Vec3 vecEnd = hit.getLocation().add(lookVec);
+        DoubleBlockParts parts = getParts();
 
-        VoxelShape shapeSec = getBlockPair().getB().getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
+        VoxelShape shapeSec = parts.stateTwo().getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
         BlockHitResult clipSec = shapeSec.clip(vecStart, vecEnd, worldPosition);
         if (clipSec == null)
         {
             return false;
         }
 
-        VoxelShape shapePri = getBlockPair().getA().getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
+        VoxelShape shapePri = parts.stateOne().getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
         BlockHitResult clipPri = shapePri.clip(vecStart, vecEnd, worldPosition);
         if (clipPri == null)
         {
@@ -359,9 +365,9 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     @Override
     protected boolean updateCulling(Direction side, BlockState state, boolean rerender)
     {
-        Tuple<BlockState, BlockState> blockPair = getStateCache().getBlockPair();
-        boolean changed = super.updateCulling(side, blockPair.getA(), rerender);
-        changed |= updateCulling(culledFaces, blockPair.getB(), side, rerender);
+        DoubleBlockParts parts = getStateCache().getParts();
+        boolean changed = super.updateCulling(side, parts.stateOne(), rerender);
+        changed |= updateCulling(culledFaces, parts.stateTwo(), side, rerender);
         return changed;
     }
 
@@ -369,9 +375,9 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
      * Debug rendering
      */
 
-    public final Tuple<BlockState, BlockState> getBlockPair()
+    public final DoubleBlockParts getParts()
     {
-        return getStateCache().getBlockPair();
+        return getStateCache().getParts();
     }
 
     public final boolean debugHitSecondary(BlockHitResult hit, Player player)

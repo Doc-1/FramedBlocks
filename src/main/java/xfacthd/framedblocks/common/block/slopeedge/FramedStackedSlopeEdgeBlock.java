@@ -2,11 +2,12 @@ package xfacthd.framedblocks.common.block.slopeedge;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -19,11 +20,16 @@ import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.block.*;
+import xfacthd.framedblocks.common.block.AbstractFramedDoubleBlock;
+import xfacthd.framedblocks.common.block.ExtPlacementStateBuilder;
+import xfacthd.framedblocks.common.block.IComplexSlopeSource;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
-import xfacthd.framedblocks.common.data.doubleblock.*;
+import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
+import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.data.property.SlopeType;
 
 public class FramedStackedSlopeEdgeBlock extends AbstractFramedDoubleBlock implements IComplexSlopeSource
@@ -144,7 +150,7 @@ public class FramedStackedSlopeEdgeBlock extends AbstractFramedDoubleBlock imple
     }
 
     @Override
-    public Tuple<BlockState, BlockState> calculateBlockPair(BlockState state)
+    public DoubleBlockParts calculateParts(BlockState state)
     {
         Direction dir = state.getValue(FramedProperties.FACING_HOR);
         SlopeType type = state.getValue(PropertyHolder.SLOPE_TYPE);
@@ -159,7 +165,7 @@ public class FramedStackedSlopeEdgeBlock extends AbstractFramedDoubleBlock imple
 
         if (type == SlopeType.HORIZONTAL)
         {
-            return new Tuple<>(
+            return new DoubleBlockParts(
                     FBContent.BLOCK_FRAMED_VERTICAL_STAIRS.value()
                             .defaultBlockState()
                             .setValue(FramedProperties.FACING_HOR, dir),
@@ -169,7 +175,7 @@ public class FramedStackedSlopeEdgeBlock extends AbstractFramedDoubleBlock imple
         else
         {
             Half half = type == SlopeType.TOP ? Half.TOP : Half.BOTTOM;
-            return new Tuple<>(
+            return new DoubleBlockParts(
                     FBContent.BLOCK_FRAMED_STAIRS.value()
                             .defaultBlockState()
                             .setValue(BlockStateProperties.HORIZONTAL_FACING, dir)

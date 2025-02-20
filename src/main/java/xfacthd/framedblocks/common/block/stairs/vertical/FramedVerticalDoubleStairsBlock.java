@@ -2,7 +2,6 @@ package xfacthd.framedblocks.common.block.stairs.vertical;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,6 +16,7 @@ import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.data.property.StairsType;
@@ -36,7 +36,7 @@ public class FramedVerticalDoubleStairsBlock extends FramedVerticalStairsBlock i
     }
 
     @Override
-    public Tuple<BlockState, BlockState> calculateBlockPair(BlockState state)
+    public DoubleBlockParts calculateParts(BlockState state)
     {
         Direction facing = state.getValue(FramedProperties.FACING_HOR);
         StairsType type = state.getValue(PropertyHolder.STAIRS_TYPE);
@@ -72,7 +72,7 @@ public class FramedVerticalDoubleStairsBlock extends FramedVerticalStairsBlock i
                     .setValue(PropertyHolder.STAIRS_TYPE, StairsType.TOP_BOTH);
         };
 
-        return new Tuple<>(
+        return new DoubleBlockParts(
                 FBContent.BLOCK_FRAMED_VERTICAL_STAIRS.value()
                         .defaultBlockState()
                         .setValue(BlockStateProperties.HORIZONTAL_FACING, facing)

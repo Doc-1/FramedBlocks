@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,6 +22,7 @@ import xfacthd.framedblocks.api.render.debug.BlockDebugRenderer;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.common.config.DevToolsConfig;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 
 import java.util.Objects;
 
@@ -49,10 +49,10 @@ public class DoubleBlockPartDebugRenderer implements BlockDebugRenderer<FramedDo
         BlockState state = be.getBlockState();
         if (!(state.getBlock() instanceof IFramedBlock)) return;
 
-        Tuple<BlockState, BlockState> blockPair = be.getBlockPair();
+        DoubleBlockParts parts = be.getParts();
         Player player = Objects.requireNonNull(Minecraft.getInstance().player);
         boolean secondary = be.debugHitSecondary(blockHit, player);
-        BlockState partState = secondary ? blockPair.getB() : blockPair.getA();
+        BlockState partState = secondary ? parts.stateTwo() : parts.stateOne();
         BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(partState);
 
         OutlineBufferSource outlineBuffer = Minecraft.getInstance().renderBuffers().outlineBufferSource();

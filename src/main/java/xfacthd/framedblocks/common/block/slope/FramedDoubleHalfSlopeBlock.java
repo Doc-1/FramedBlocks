@@ -2,13 +2,14 @@ package xfacthd.framedblocks.common.block.slope;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -24,6 +25,7 @@ import xfacthd.framedblocks.common.blockentity.doubled.slope.FramedDoubleHalfSlo
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.item.VerticalAndWallBlockItem;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
@@ -113,14 +115,14 @@ public class FramedDoubleHalfSlopeBlock extends AbstractFramedDoubleBlock
     }
 
     @Override
-    public Tuple<BlockState, BlockState> calculateBlockPair(BlockState state)
+    public DoubleBlockParts calculateParts(BlockState state)
     {
         Direction facing = state.getValue(FramedProperties.FACING_HOR);
         boolean right = state.getValue(PropertyHolder.RIGHT);
         boolean ySlope = state.getValue(FramedProperties.Y_SLOPE);
 
         BlockState defState = FBContent.BLOCK_FRAMED_HALF_SLOPE.value().defaultBlockState();
-        return new Tuple<>(
+        return new DoubleBlockParts(
                 defState.setValue(FramedProperties.FACING_HOR, facing)
                         .setValue(FramedProperties.TOP, false)
                         .setValue(PropertyHolder.RIGHT, right)

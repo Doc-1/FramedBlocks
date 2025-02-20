@@ -1,7 +1,6 @@
 package xfacthd.framedblocks.common.block.slab;
 
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
@@ -15,6 +14,7 @@ import xfacthd.framedblocks.common.block.AbstractFramedDoubleBlock;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
 
@@ -36,10 +36,10 @@ public class FramedDoubleSlabBlock extends AbstractFramedDoubleBlock
     }
 
     @Override
-    public Tuple<BlockState, BlockState> calculateBlockPair(BlockState state)
+    public DoubleBlockParts calculateParts(BlockState state)
     {
         BlockState defState = FBContent.BLOCK_FRAMED_SLAB.value().defaultBlockState();
-        return new Tuple<>(
+        return new DoubleBlockParts(
                 defState.setValue(FramedProperties.TOP, false),
                 defState.setValue(FramedProperties.TOP, true)
         );

@@ -2,7 +2,6 @@ package xfacthd.framedblocks.common.block.slab;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -27,10 +26,10 @@ public class FramedCheckeredCubeBlock extends AbstractFramedDoubleBlock
     }
 
     @Override
-    public Tuple<BlockState, BlockState> calculateBlockPair(BlockState state)
+    public DoubleBlockParts calculateParts(BlockState state)
     {
         BlockState segmentState = FBContent.BLOCK_FRAMED_CHECKERED_CUBE_SEGMENT.value().defaultBlockState();
-        return new Tuple<>(segmentState, segmentState.setValue(PropertyHolder.SECOND, true));
+        return new DoubleBlockParts(segmentState, segmentState.setValue(PropertyHolder.SECOND, true));
     }
 
     @Override

@@ -2,13 +2,14 @@ package xfacthd.framedblocks.common.block.slopepanelcorner;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -23,6 +24,7 @@ import xfacthd.framedblocks.common.blockentity.doubled.slopepanelcorner.FramedEx
 import xfacthd.framedblocks.common.blockentity.doubled.slopepanelcorner.FramedExtendedInnerDoubleCornerSlopePanelBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.item.VerticalAndWallBlockItem;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
@@ -97,7 +99,7 @@ public class FramedExtendedDoubleCornerSlopePanelBlock extends AbstractFramedDou
     }
 
     @Override
-    public Tuple<BlockState, BlockState> calculateBlockPair(BlockState state)
+    public DoubleBlockParts calculateParts(BlockState state)
     {
         Direction dir = state.getValue(FramedProperties.FACING_HOR);
         boolean top = state.getValue(FramedProperties.TOP);
@@ -105,7 +107,7 @@ public class FramedExtendedDoubleCornerSlopePanelBlock extends AbstractFramedDou
 
         return switch (getBlockType())
         {
-            case FRAMED_EXT_DOUBLE_CORNER_SLOPE_PANEL -> new Tuple<>(
+            case FRAMED_EXT_DOUBLE_CORNER_SLOPE_PANEL -> new DoubleBlockParts(
                     FBContent.BLOCK_FRAMED_EXTENDED_CORNER_SLOPE_PANEL.value()
                             .defaultBlockState()
                             .setValue(FramedProperties.FACING_HOR, dir)
@@ -117,7 +119,7 @@ public class FramedExtendedDoubleCornerSlopePanelBlock extends AbstractFramedDou
                             .setValue(FramedProperties.TOP, !top)
                             .setValue(FramedProperties.Y_SLOPE, ySlope)
             );
-            case FRAMED_EXT_INNER_DOUBLE_CORNER_SLOPE_PANEL -> new Tuple<>(
+            case FRAMED_EXT_INNER_DOUBLE_CORNER_SLOPE_PANEL -> new DoubleBlockParts(
                     FBContent.BLOCK_FRAMED_EXTENDED_INNER_CORNER_SLOPE_PANEL.value()
                             .defaultBlockState()
                             .setValue(FramedProperties.FACING_HOR, dir)

@@ -4,9 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -17,11 +16,14 @@ import xfacthd.framedblocks.api.shapes.CommonShapes;
 import xfacthd.framedblocks.api.shapes.ShapeProvider;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.block.*;
+import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
-import xfacthd.framedblocks.common.data.doubleblock.*;
+import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
+import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.data.property.StairsType;
 
 public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock implements IFramedDoubleBlock
@@ -59,7 +61,7 @@ public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock i
     }
 
     @Override
-    public Tuple<BlockState, BlockState> calculateBlockPair(BlockState state)
+    public DoubleBlockParts calculateParts(BlockState state)
     {
         Direction dir = state.getValue(FramedProperties.FACING_HOR);
         boolean right = state.getValue(PropertyHolder.RIGHT);
@@ -67,7 +69,7 @@ public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock i
         {
             return switch (state.getValue(PropertyHolder.STAIRS_TYPE))
             {
-                case VERTICAL -> new Tuple<>(
+                case VERTICAL -> new DoubleBlockParts(
                         FBContent.BLOCK_FRAMED_PANEL.value()
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir),
@@ -75,7 +77,7 @@ public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock i
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir.getCounterClockWise())
                 );
-                case TOP_FWD -> new Tuple<>(
+                case TOP_FWD -> new DoubleBlockParts(
                         FBContent.BLOCK_FRAMED_HALF_STAIRS.value()
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir.getCounterClockWise())
@@ -84,7 +86,7 @@ public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock i
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir.getCounterClockWise())
                 );
-                case TOP_CCW -> new Tuple<>(
+                case TOP_CCW -> new DoubleBlockParts(
                         FBContent.BLOCK_FRAMED_PANEL.value()
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir),
@@ -92,7 +94,7 @@ public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock i
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir.getCounterClockWise())
                 );
-                case TOP_BOTH -> new Tuple<>(
+                case TOP_BOTH -> new DoubleBlockParts(
                         FBContent.BLOCK_FRAMED_HALF_STAIRS.value()
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir.getCounterClockWise())
@@ -101,7 +103,7 @@ public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock i
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir.getCounterClockWise())
                 );
-                case BOTTOM_FWD -> new Tuple<>(
+                case BOTTOM_FWD -> new DoubleBlockParts(
                         FBContent.BLOCK_FRAMED_HALF_STAIRS.value()
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir.getCounterClockWise())
@@ -111,7 +113,7 @@ public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock i
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir.getCounterClockWise())
                 );
-                case BOTTOM_CCW -> new Tuple<>(
+                case BOTTOM_CCW -> new DoubleBlockParts(
                         FBContent.BLOCK_FRAMED_PANEL.value()
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir),
@@ -120,7 +122,7 @@ public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock i
                                 .setValue(FramedProperties.FACING_HOR, dir.getCounterClockWise())
                                 .setValue(FramedProperties.TOP, true)
                 );
-                case BOTTOM_BOTH -> new Tuple<>(
+                case BOTTOM_BOTH -> new DoubleBlockParts(
                         FBContent.BLOCK_FRAMED_HALF_STAIRS.value()
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir.getCounterClockWise())
@@ -137,7 +139,7 @@ public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock i
         {
             return switch (state.getValue(PropertyHolder.STAIRS_TYPE))
             {
-                case VERTICAL -> new Tuple<>(
+                case VERTICAL -> new DoubleBlockParts(
                         FBContent.BLOCK_FRAMED_PANEL.value()
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir.getCounterClockWise()),
@@ -145,7 +147,7 @@ public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock i
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir.getClockWise())
                 );
-                case TOP_FWD -> new Tuple<>(
+                case TOP_FWD -> new DoubleBlockParts(
                         FBContent.BLOCK_FRAMED_PANEL.value()
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir.getCounterClockWise()),
@@ -153,7 +155,7 @@ public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock i
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir.getClockWise())
                 );
-                case TOP_CCW -> new Tuple<>(
+                case TOP_CCW -> new DoubleBlockParts(
                         FBContent.BLOCK_FRAMED_HALF_STAIRS.value()
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir),
@@ -161,7 +163,7 @@ public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock i
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir.getClockWise())
                 );
-                case TOP_BOTH -> new Tuple<>(
+                case TOP_BOTH -> new DoubleBlockParts(
                         FBContent.BLOCK_FRAMED_HALF_STAIRS.value()
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir),
@@ -169,7 +171,7 @@ public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock i
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir.getClockWise())
                 );
-                case BOTTOM_FWD -> new Tuple<>(
+                case BOTTOM_FWD -> new DoubleBlockParts(
                         FBContent.BLOCK_FRAMED_PANEL.value()
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir.getCounterClockWise()),
@@ -178,7 +180,7 @@ public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock i
                                 .setValue(FramedProperties.FACING_HOR, dir.getClockWise())
                                 .setValue(FramedProperties.TOP, true)
                 );
-                case BOTTOM_CCW -> new Tuple<>(
+                case BOTTOM_CCW -> new DoubleBlockParts(
                         FBContent.BLOCK_FRAMED_HALF_STAIRS.value()
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir)
@@ -187,7 +189,7 @@ public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock i
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir.getClockWise())
                 );
-                case BOTTOM_BOTH -> new Tuple<>(
+                case BOTTOM_BOTH -> new DoubleBlockParts(
                         FBContent.BLOCK_FRAMED_HALF_STAIRS.value()
                                 .defaultBlockState()
                                 .setValue(FramedProperties.FACING_HOR, dir)

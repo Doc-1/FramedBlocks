@@ -2,7 +2,6 @@ package xfacthd.framedblocks.common.block.slab;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -14,6 +13,7 @@ import xfacthd.framedblocks.common.block.cube.FramedCollapsibleCopycatBlock;
 import xfacthd.framedblocks.common.blockentity.doubled.slab.FramedAdjustableDoubleBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.data.property.NullableDirection;
 
 import java.util.function.Function;
@@ -21,20 +21,20 @@ import java.util.function.Function;
 public abstract class FramedAdjustableDoubleBlock extends AbstractFramedDoubleBlock
 {
     private final Function<BlockState, Direction> facingGetter;
-    private final Function<BlockState, Tuple<BlockState, BlockState>> statePairBuilder;
+    private final Function<BlockState, DoubleBlockParts> partsBuilder;
     private final BlockEntityType.BlockEntitySupplier<FramedAdjustableDoubleBlockEntity> beSupplier;
 
     protected FramedAdjustableDoubleBlock(
             BlockType type,
             Properties props,
             Function<BlockState, Direction> facingGetter,
-            Function<BlockState, Tuple<BlockState, BlockState>> statePairBuilder,
+            Function<BlockState, DoubleBlockParts> partsBuilder,
             BlockEntityType.BlockEntitySupplier<FramedAdjustableDoubleBlockEntity> beSupplier
     )
     {
         super(type, props);
         this.facingGetter = facingGetter;
-        this.statePairBuilder = statePairBuilder;
+        this.partsBuilder = partsBuilder;
         this.beSupplier = beSupplier;
     }
 
@@ -64,9 +64,9 @@ public abstract class FramedAdjustableDoubleBlock extends AbstractFramedDoubleBl
     }
 
     @Override
-    public Tuple<BlockState, BlockState> calculateBlockPair(BlockState state)
+    public DoubleBlockParts calculateParts(BlockState state)
     {
-        return statePairBuilder.apply(state);
+        return partsBuilder.apply(state);
     }
 
     public Direction getFacing(BlockState state)
@@ -82,23 +82,23 @@ public abstract class FramedAdjustableDoubleBlock extends AbstractFramedDoubleBl
 
 
 
-    protected static Tuple<BlockState, BlockState> makeStandardStatePair(BlockState state)
+    protected static DoubleBlockParts makeStandardParts(BlockState state)
     {
         Direction facing = ((FramedAdjustableDoubleBlock) state.getBlock()).getFacing(state);
         BlockState defState = FBContent.BLOCK_FRAMED_COLLAPSIBLE_BLOCK.value().defaultBlockState();
-        return new Tuple<>(
+        return new DoubleBlockParts(
                 defState.setValue(PropertyHolder.NULLABLE_FACE, NullableDirection.fromDirection(facing)),
                 defState.setValue(PropertyHolder.NULLABLE_FACE, NullableDirection.fromDirection(facing.getOpposite()))
         );
     }
 
-    protected static Tuple<BlockState, BlockState> makeCopycatStatePair(BlockState state)
+    protected static DoubleBlockParts makeCopycatParts(BlockState state)
     {
         Direction facing = ((FramedAdjustableDoubleBlock) state.getBlock()).getFacing(state);
         BlockState defState = FBContent.BLOCK_FRAMED_COLLAPSIBLE_COPYCAT_BLOCK.value().defaultBlockState();
         int solidFirst = ~(1 << facing.ordinal()) & FramedCollapsibleCopycatBlock.ALL_SOLID;
         int solidSecond = ~(1 << facing.getOpposite().ordinal()) & FramedCollapsibleCopycatBlock.ALL_SOLID;
-        return new Tuple<>(
+        return new DoubleBlockParts(
                 defState.setValue(PropertyHolder.SOLID_FACES, solidFirst),
                 defState.setValue(PropertyHolder.SOLID_FACES, solidSecond)
         );

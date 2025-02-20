@@ -2,7 +2,6 @@ package xfacthd.framedblocks.common.block.stairs.standard;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Half;
@@ -30,14 +29,14 @@ public class FramedSlicedStairsPanelBlock extends FramedStairsBlock implements I
     }
 
     @Override
-    public Tuple<BlockState, BlockState> calculateBlockPair(BlockState state)
+    public DoubleBlockParts calculateParts(BlockState state)
     {
         Direction dir = state.getValue(FACING);
         boolean top = state.getValue(HALF) == Half.TOP;
 
         return switch (state.getValue(SHAPE))
         {
-            case STRAIGHT -> new Tuple<>(
+            case STRAIGHT -> new DoubleBlockParts(
                     FBContent.BLOCK_FRAMED_PANEL.value()
                             .defaultBlockState()
                             .setValue(FramedProperties.FACING_HOR, dir),
@@ -46,7 +45,7 @@ public class FramedSlicedStairsPanelBlock extends FramedStairsBlock implements I
                             .setValue(FramedProperties.FACING_HOR, dir.getOpposite())
                             .setValue(FramedProperties.TOP, top)
             );
-            case INNER_LEFT -> new Tuple<>(
+            case INNER_LEFT -> new DoubleBlockParts(
                     FBContent.BLOCK_FRAMED_VERTICAL_STAIRS.value()
                             .defaultBlockState()
                             .setValue(FramedProperties.FACING_HOR, dir),
@@ -55,7 +54,7 @@ public class FramedSlicedStairsPanelBlock extends FramedStairsBlock implements I
                             .setValue(FramedProperties.FACING_HOR, dir.getOpposite())
                             .setValue(FramedProperties.TOP, top)
             );
-            case INNER_RIGHT -> new Tuple<>(
+            case INNER_RIGHT -> new DoubleBlockParts(
                     FBContent.BLOCK_FRAMED_VERTICAL_STAIRS.value()
                             .defaultBlockState()
                             .setValue(FramedProperties.FACING_HOR, dir.getClockWise()),
@@ -64,7 +63,7 @@ public class FramedSlicedStairsPanelBlock extends FramedStairsBlock implements I
                             .setValue(FramedProperties.FACING_HOR, dir.getCounterClockWise())
                             .setValue(FramedProperties.TOP, top)
             );
-            case OUTER_LEFT -> new Tuple<>(
+            case OUTER_LEFT -> new DoubleBlockParts(
                     FBContent.BLOCK_FRAMED_CORNER_PILLAR.value()
                             .defaultBlockState()
                             .setValue(FramedProperties.FACING_HOR, dir),
@@ -73,7 +72,7 @@ public class FramedSlicedStairsPanelBlock extends FramedStairsBlock implements I
                             .setValue(FramedProperties.FACING_HOR, dir.getOpposite())
                             .setValue(FramedProperties.TOP, top)
             );
-            case OUTER_RIGHT -> new Tuple<>(
+            case OUTER_RIGHT -> new DoubleBlockParts(
                     FBContent.BLOCK_FRAMED_CORNER_PILLAR.value()
                             .defaultBlockState()
                             .setValue(FramedProperties.FACING_HOR, dir.getClockWise()),
