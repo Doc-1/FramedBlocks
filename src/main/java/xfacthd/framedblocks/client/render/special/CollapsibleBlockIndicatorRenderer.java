@@ -2,7 +2,6 @@ package xfacthd.framedblocks.client.render.special;
 
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -74,8 +73,6 @@ public final class CollapsibleBlockIndicatorRenderer
         drawCornerMarkers(builder, poseStack, faceDir, hit, vY);
 
         poseStack.popPose();
-
-        ((MultiBufferSource.BufferSource) event.getMultiBufferSource()).endBatch(FramedRenderTypes.LINES_NO_DEPTH);
     }
 
     private static double[] getVertexHeights(Level level, BlockPos pos, NullableDirection face)
