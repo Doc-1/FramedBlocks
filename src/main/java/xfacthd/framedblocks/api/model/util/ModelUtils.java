@@ -27,7 +27,7 @@ public final class ModelUtils
     public static final ChunkRenderTypeSet SOLID = ChunkRenderTypeSet.of(RenderType.solid());
     public static final ChunkRenderTypeSet CUTOUT = ChunkRenderTypeSet.of(RenderType.cutout());
     public static final ChunkRenderTypeSet TRANSLUCENT = ChunkRenderTypeSet.of(RenderType.translucent());
-    private static final double UV_SUBSTEP_COUNT = 8D;
+    private static final float UV_SUBSTEP_COUNT = 8F;
 
     public static void unpackPosition(int[] vertexData, float[] pos, int vert)
     {
@@ -184,6 +184,7 @@ public final class ModelUtils
      * @param rotated Whether the UVs are rotated
      * @param mirrored Whether the UVs are mirrored
      */
+    @Deprecated(forRemoval = true)
     public static void remapUV(
             Direction quadDir,
             TextureAtlasSprite sprite,
@@ -223,6 +224,8 @@ public final class ModelUtils
      * @param rotated Whether the UVs are rotated
      * @param mirrored Whether the UVs are mirrored
      */
+    @Deprecated(forRemoval = true)
+    @SuppressWarnings("unused")
     public static void remapUV(
             Direction quadDir,
             TextureAtlasSprite sprite,
@@ -240,72 +243,78 @@ public final class ModelUtils
             boolean mirrored
     )
     {
-        if (rotated)
-        {
-            if (quadDir == Direction.UP)
-            {
-                invert = vAxis == mirrored;
-            }
-            else if (quadDir == Direction.DOWN)
-            {
-                invert = !mirrored;
-            }
-            else if (!vAxis)
-            {
-                invert = invert == mirrored;
-            }
-        }
-        else if (mirrored)
-        {
-            if (quadDir == Direction.UP)
-            {
-                invert = !vAxis || (uvSrc[0][1] > uvSrc[1][1]) || (uvSrc[3][1] > uvSrc[2][1]);
-            }
-            else if (quadDir == Direction.DOWN)
-            {
-                invert = !vAxis || (uvSrc[0][1] < uvSrc[1][1]) || (uvSrc[3][1] < uvSrc[2][1]);
-            }
-            else if (!vAxis)
-            {
-                invert = !invert;
-            }
-        }
+        remapUV(sprite, coord1, coord2, coordTo, uvSrc, uvDest, uv1, uv2, uvTo, vAxis, rotated);
+    }
 
+    /**
+     * Maps a coordinate 'coordTo' between the given coordinates 'coord1' and 'coord2'
+     * onto the UV range they occupy as given by the values at 'uv1' and 'uv2' in the 'uv'
+     * array, calculates the target UV coordinate corresponding to the value of 'coordTo'
+     * and places it at 'uvTo' in the 'uv' array
+     * @param sprite The quad's texture
+     * @param coord1 The first coordinate
+     * @param coord2 The second coordinate
+     * @param coordTo The target coordinate, must lie between coord1 and coord2
+     * @param uvSrc The source UV data (not modified)
+     * @param uvDest The UV data to modify (modified in place)
+     * @param uv1 The first UV texture coordinate
+     * @param uv2 The second UV texture coordinate
+     * @param uvTo The target UV texture coordinate
+     * @param vAxis Whether the modification should happen on the V axis or the U axis
+     * @param rotated Whether the UVs are rotated
+     */
+    public static void remapUV(
+            TextureAtlasSprite sprite,
+            float coord1,
+            float coord2,
+            float coordTo,
+            float[][] uvSrc,
+            float[][] uvDest,
+            int uv1,
+            int uv2,
+            int uvTo,
+            boolean vAxis,
+            boolean rotated
+    )
+    {
         float coordMin = Math.min(coord1, coord2);
         float coordMax = Math.max(coord1, coord2);
 
         int uvIdx = rotated != vAxis ? 1 : 0;
 
-        float uvMin = Math.min(uvSrc[uv1][uvIdx], uvSrc[uv2][uvIdx]);
-        float uvMax = Math.max(uvSrc[uv1][uvIdx], uvSrc[uv2][uvIdx]);
+        float uvAbs1 = uvSrc[uv1][uvIdx];
+        float uvAbs2 = uvSrc[uv2][uvIdx];
+        float uvAbsMin = Math.min(uvAbs1, uvAbs2);
+        float uvAbsMax = Math.max(uvAbs1, uvAbs2);
+        boolean invert = ((coord2 > coord1) ^ (uvAbs2 > uvAbs1)) != vAxis;
 
         if (coordTo == coordMin)
         {
-            uvDest[uvTo][uvIdx] = (invert) ? uvMax : uvMin;
+            uvDest[uvTo][uvIdx] = (invert) ? uvAbsMax : uvAbsMin;
         }
         else if (coordTo == coordMax)
         {
-            uvDest[uvTo][uvIdx] = (invert) ? uvMin : uvMax;
+            uvDest[uvTo][uvIdx] = (invert) ? uvAbsMin : uvAbsMax;
         }
         else
         {
             if (FramedBlocksClientAPI.getInstance().useDiscreteUVSteps())
             {
-                double relMin = uvIdx == 0 ? sprite.getUOffset(uvMin) : sprite.getVOffset(uvMin);
-                double relMax = uvIdx == 0 ? sprite.getUOffset(uvMax) : sprite.getVOffset(uvMax);
+                float uvRelMin = uvIdx == 0 ? sprite.getUOffset(uvAbsMin) : sprite.getVOffset(uvAbsMin);
+                float uvRelMax = uvIdx == 0 ? sprite.getUOffset(uvAbsMax) : sprite.getVOffset(uvAbsMax);
 
-                double mult = (coordTo - coordMin) / (coordMax - coordMin);
-                if (invert) { mult = 1D - mult; }
+                float mult = (coordTo - coordMin) / (coordMax - coordMin);
+                if (invert) { mult = 1F - mult; }
 
-                double relTo = Mth.lerp(mult, relMin, relMax);
-                relTo = Math.round(relTo * UV_SUBSTEP_COUNT) / UV_SUBSTEP_COUNT;
-                uvDest[uvTo][uvIdx] = uvIdx == 0 ? sprite.getU(relTo) : sprite.getV(relTo);
+                float uvRelTo = Mth.lerp(mult, uvRelMin, uvRelMax);
+                uvRelTo = Math.round(uvRelTo * UV_SUBSTEP_COUNT) / UV_SUBSTEP_COUNT;
+                uvDest[uvTo][uvIdx] = uvIdx == 0 ? sprite.getU(uvRelTo) : sprite.getV(uvRelTo);
             }
             else
             {
                 float mult = (coordTo - coordMin) / (coordMax - coordMin);
                 if (invert) { mult = 1F - mult; }
-                uvDest[uvTo][uvIdx] = Mth.lerp(mult, uvMin, uvMax);
+                uvDest[uvTo][uvIdx] = Mth.lerp(mult, uvAbsMin, uvAbsMax);
             }
         }
     }

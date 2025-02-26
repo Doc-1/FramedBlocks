@@ -158,18 +158,17 @@ public final class Modifiers
 
         float[][] uv = data.uv();
         boolean rotated = data.uvRotated();
-        boolean mirrored = data.uvMirrored();
         TextureAtlasSprite sprite = data.quad().getSprite();
 
         if (xAxis)
         {
-            ModelUtils.remapUV(quadDir, sprite, pos[1][coordIdx], pos[2][coordIdx], toXZ1, uv, 1, 2, idxR, false, false, rotated, mirrored);
-            ModelUtils.remapUV(quadDir, sprite, pos[0][coordIdx], pos[3][coordIdx], toXZ2, uv, 0, 3, idxL, false, false, rotated, mirrored);
+            ModelUtils.remapUV(sprite, pos[1][coordIdx], pos[2][coordIdx], toXZ1, uv, uv, 1, 2, idxR, false, rotated);
+            ModelUtils.remapUV(sprite, pos[0][coordIdx], pos[3][coordIdx], toXZ2, uv, uv, 0, 3, idxL, false, rotated);
         }
         else
         {
-            ModelUtils.remapUV(quadDir, sprite, pos[1][coordIdx], pos[0][coordIdx], toXZ1, uv, 0, 1, idxR, true, !up, rotated, mirrored);
-            ModelUtils.remapUV(quadDir, sprite, pos[2][coordIdx], pos[3][coordIdx], toXZ2, uv, 3, 2, idxL, true, !up, rotated, mirrored);
+            ModelUtils.remapUV(sprite, pos[1][coordIdx], pos[0][coordIdx], toXZ1, uv, uv, 0, 1, idxR, true, rotated);
+            ModelUtils.remapUV(sprite, pos[2][coordIdx], pos[3][coordIdx], toXZ2, uv, uv, 3, 2, idxL, true, rotated);
         }
 
         pos[idxR][coordIdx] = toXZ1;
@@ -249,10 +248,9 @@ public final class Modifiers
 
         float[][] uv = data.uv();
         boolean rotated = data.uvRotated();
-        boolean mirrored = data.uvMirrored();
         TextureAtlasSprite sprite = data.quad().getSprite();
-        ModelUtils.remapUV(quadDir, sprite, pos[1][1], pos[0][1], toY1, uv, 0, 1, idx1, true, !mirrored, rotated, mirrored);
-        ModelUtils.remapUV(quadDir, sprite, pos[2][1], pos[3][1], toY2, uv, 3, 2, idx2, true, !mirrored, rotated, mirrored);
+        ModelUtils.remapUV(sprite, pos[1][1], pos[0][1], toY1, uv, uv, 0, 1, idx1, true, rotated);
+        ModelUtils.remapUV(sprite, pos[2][1], pos[3][1], toY2, uv, uv, 3, 2, idx2, true, rotated);
 
         pos[idx1][1] = toY1;
         pos[idx2][1] = toY2;
@@ -351,10 +349,9 @@ public final class Modifiers
 
         float[][] uv = data.uv();
         boolean rotated = data.uvRotated();
-        boolean mirrored = data.uvMirrored();
         TextureAtlasSprite sprite = data.quad().getSprite();
-        ModelUtils.remapUV(quadDir, sprite, pos[0][coordIdx], pos[3][coordIdx], toXZ1, uv, 0, 3, idx1, false, positive != towardsRight, rotated, mirrored);
-        ModelUtils.remapUV(quadDir, sprite, pos[1][coordIdx], pos[2][coordIdx], toXZ2, uv, 1, 2, idx2, false, positive != towardsRight, rotated, mirrored);
+        ModelUtils.remapUV(sprite, pos[0][coordIdx], pos[3][coordIdx], toXZ1, uv, uv, 0, 3, idx1, false, rotated);
+        ModelUtils.remapUV(sprite, pos[1][coordIdx], pos[2][coordIdx], toXZ2, uv, uv, 1, 2, idx2, false, rotated);
 
         pos[idx1][coordIdx] = toXZ1;
         pos[idx2][coordIdx] = toXZ2;
