@@ -13,6 +13,7 @@ import xfacthd.framedblocks.client.screen.overlay.*;
 import xfacthd.framedblocks.client.util.ClientConfig;
 import xfacthd.framedblocks.client.util.KeyMappings;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.block.slopeslab.FramedSlopeSlabBlock;
 import xfacthd.framedblocks.common.block.special.FramingSawBlock;
 import xfacthd.framedblocks.common.block.special.PoweredFramingSawBlock;
 import xfacthd.framedblocks.common.blockentity.special.FramedStorageBlockEntity;
@@ -343,6 +344,7 @@ public final class FramedLanguageProvider extends LanguageProvider
         add(FramedBlueprintItem.TRUE, "true");
         add(FramedBlueprintItem.CANT_COPY, "[Framed Blueprint] This block can currently not be copied!");
         add(FramedBlueprintItem.CANT_PLACE_FLUID_CAMO, "[Framed Blueprint] Copying blocks with fluid camos is currently not possible!");
+        add(FramedSlopeSlabBlock.PLACE_UPSIDE_DOWN, "Hold sneak key to place upside down");
     }
 
     private void addOverlayTranslations()

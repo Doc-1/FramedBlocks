@@ -243,6 +243,7 @@
   "desc.framedblocks.blueprint_none": "None",
   "desc.framedblocks.blueprint_reinforced": "Reinforced: %s",
   "desc.framedblocks.blueprint_true": "true",
+  "desc.framedblocks.slope_slab.place_upside_down": "Hold sneak key to place upside down",
   "framedblocks.key.categories.framedblocks": "FramedBlocks",
   "framedblocks.key.update_cull": "Update culling cache",
   "item.framedblocks.framed_blueprint": "Framed Blueprint",
