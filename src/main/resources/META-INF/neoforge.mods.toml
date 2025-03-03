@@ -91,13 +91,6 @@ license="LGPL v3"
     side="BOTH"
 
 [[dependencies.framedblocks]]
-    modId="guidebook"
-    type="optional"
-    versionRange="[${guidebook_version},)"
-    ordering="NONE"
-    side="BOTH"
-
-[[dependencies.framedblocks]]
     modId="ae2"
     type="optional"
     versionRange="[${ae2_version},)"
