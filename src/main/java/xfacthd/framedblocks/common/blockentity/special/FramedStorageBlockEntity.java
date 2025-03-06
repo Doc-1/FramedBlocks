@@ -31,6 +31,7 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
 {
     public static final Component TITLE = Utils.translate("title", "framed_secret_storage");
     public static final int SLOTS = 9 * 3;
+    public static final String INVENTORY_NBT_KEY = "inventory";
 
     private final StorageBlockItemStackHandler itemHandler = createItemHandler(this, false);
     @Nullable
@@ -136,7 +137,7 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
     @Override
     public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        nbt.put("inventory", itemHandler.serializeNBT(provider));
+        nbt.put(INVENTORY_NBT_KEY, itemHandler.serializeNBT(provider));
         if (customName != null)
         {
             nbt.putString("custom_name", Component.Serializer.toJson(customName, provider));
@@ -148,7 +149,7 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
         super.loadAdditional(nbt, provider);
-        itemHandler.deserializeNBT(provider, nbt.getCompound("inventory"));
+        itemHandler.deserializeNBT(provider, nbt.getCompound(INVENTORY_NBT_KEY));
         if (nbt.contains("custom_name", Tag.TAG_STRING))
         {
             customName = Component.Serializer.fromJson(nbt.getString("custom_name"), provider);
