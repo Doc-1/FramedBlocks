@@ -81,6 +81,7 @@ public final class FBContent
 
     private static final Map<BlockType, RegistryObject<Block>> BLOCKS_BY_TYPE = new EnumMap<>(BlockType.class);
     private static final Map<FramedToolType, RegistryObject<Item>> TOOLS_BY_TYPE = new EnumMap<>(FramedToolType.class);
+    private static final List<RegisteredBE<? extends FramedBlockEntity>> FRAMED_BLOCK_ENTITIES = new ArrayList<>();
     private static final List<RegistryObject<BlockEntityType<? extends FramedDoubleBlockEntity>>> DOUBLE_BLOCK_ENTITIES = new ArrayList<>();
 
     // region Blocks
@@ -310,7 +311,8 @@ public final class FBContent
     public static final RegisteredBE<FramedBlockEntity> BE_TYPE_FRAMED_BLOCK = createBlockEntityType(
             FramedBlockEntity::new,
             "framed_tile",
-            getDefaultEntityBlocks()
+            getDefaultEntityBlocks(),
+            true
     );
     public static final RegisteredBE<FramedElevatedDoubleSlopeEdgeBlockEntity> BE_TYPE_FRAMED_ELEVATED_DOUBLE_SLOPE_EDGE = createBlockEntityType(
             FramedElevatedDoubleSlopeEdgeBlockEntity::new,
@@ -597,7 +599,8 @@ public final class FBContent
     public static final RegisteredBE<PoweredFramingSawBlockEntity> BE_TYPE_POWERED_FRAMING_SAW = createBlockEntityType(
             PoweredFramingSawBlockEntity::new,
             "powered_framing_saw",
-            () -> new Block[] { BLOCK_POWERED_FRAMING_SAW.get() }
+            () -> new Block[] { BLOCK_POWERED_FRAMING_SAW.get() },
+            false
     );
     // endregion
 
@@ -677,6 +680,11 @@ public final class FBContent
         return TOOLS_BY_TYPE.get(type).get();
     }
 
+    public static List<RegisteredBE<? extends FramedBlockEntity>> getFramedBlockEntities()
+    {
+        return FRAMED_BLOCK_ENTITIES;
+    }
+
     public static List<RegistryObject<BlockEntityType<? extends FramedDoubleBlockEntity>>> getDoubleBlockEntities()
     {
         return DOUBLE_BLOCK_ENTITIES;
@@ -747,7 +755,7 @@ public final class FBContent
                 .map(RegistryObject::get)
                 .toArray(Block[]::new);
 
-        RegisteredBE<T> result = createBlockEntityType(factory, types[0].getName(), blocks);
+        RegisteredBE<T> result = createBlockEntityType(factory, types[0].getName(), blocks, true);
         if (!FMLEnvironment.production && Arrays.stream(types).anyMatch(BlockType::isDoubleBlock))
         {
             //noinspection unchecked
@@ -757,14 +765,20 @@ public final class FBContent
     }
 
     private static <T extends BlockEntity> RegisteredBE<T> createBlockEntityType(
-            BlockEntityType.BlockEntitySupplier<T> factory, String name, Supplier<Block[]> blocks
+            BlockEntityType.BlockEntitySupplier<T> factory, String name, Supplier<Block[]> blocks, boolean isFramedBE
     )
     {
-        return new RegisteredBE<>(BE_TYPES.register(name, () ->
+        RegisteredBE<T> result = new RegisteredBE<>(BE_TYPES.register(name, () ->
         {
             //noinspection ConstantConditions
             return BlockEntityType.Builder.of(factory, blocks.get()).build(null);
         }));
+        if (isFramedBE)
+        {
+            //noinspection unchecked
+            FRAMED_BLOCK_ENTITIES.add((RegisteredBE<? extends FramedBlockEntity>) result);
+        }
+        return result;
     }
 
     private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> createMenuType(IContainerFactory<T> factory, String name)

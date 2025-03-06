@@ -21,6 +21,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.FramedBlocks;
 import xfacthd.framedblocks.api.block.FramedBlockEntity;
+import xfacthd.framedblocks.api.block.IFramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.camo.EmptyCamoContainer;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.internal.InternalAPI;
@@ -33,7 +34,7 @@ import xfacthd.framedblocks.common.util.DoubleBlockTopInteractionMode;
 
 import java.util.List;
 
-public abstract class FramedDoubleBlockEntity extends FramedBlockEntity
+public abstract class FramedDoubleBlockEntity extends FramedBlockEntity implements IFramedDoubleBlockEntity
 {
     public static final boolean ENABLE_DOUBLE_BLOCK_DEBUG_RENDERER = false;
     public static final ModelProperty<ModelData> DATA_LEFT = new ModelProperty<>();
@@ -97,6 +98,7 @@ public abstract class FramedDoubleBlockEntity extends FramedBlockEntity
         return secondary ? camoContainer : getCamo();
     }
 
+    @Override
     public final CamoContainer getCamoTwo()
     {
         return camoContainer;

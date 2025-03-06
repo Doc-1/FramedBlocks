@@ -31,6 +31,7 @@ import java.util.List;
 public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuProvider, Nameable, Clearable
 {
     public static final Component TITLE = Utils.translate("title", "framed_secret_storage");
+    public static final String INVENTORY_NBT_KEY = "inventory";
 
     private final ItemStackHandler itemHandler = new ItemStackHandler(9 * 4)
     {
@@ -160,7 +161,7 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
     public CompoundTag writeToBlueprint()
     {
         CompoundTag tag = saveWithoutMetadata();
-        tag.remove("inventory");
+        tag.remove(INVENTORY_NBT_KEY);
         tag.remove("custom_name");
         return tag;
     }
@@ -168,7 +169,7 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
     @Override
     public void saveAdditional(CompoundTag nbt)
     {
-        nbt.put("inventory", itemHandler.serializeNBT());
+        nbt.put(INVENTORY_NBT_KEY, itemHandler.serializeNBT());
         if (customName != null)
         {
             nbt.putString("custom_name", Component.Serializer.toJson(customName));
@@ -180,7 +181,7 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
     public void load(CompoundTag nbt)
     {
         super.load(nbt);
-        itemHandler.deserializeNBT(nbt.getCompound("inventory"));
+        itemHandler.deserializeNBT(nbt.getCompound(INVENTORY_NBT_KEY));
         if (nbt.contains("custom_name", Tag.TAG_STRING))
         {
             customName = Component.Serializer.fromJson(nbt.getString("custom_name"));

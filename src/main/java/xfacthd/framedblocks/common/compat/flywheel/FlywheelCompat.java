@@ -1,6 +1,6 @@
 package xfacthd.framedblocks.common.compat.flywheel;
 
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import dev.engine_room.flywheel.api.visualization.VisualizationLevel;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraftforge.fml.ModList;
 
@@ -26,7 +26,7 @@ public final class FlywheelCompat
     {
         public static boolean isVirtualLevel(BlockGetter level)
         {
-            return level instanceof VirtualRenderWorld;
+            return level instanceof VisualizationLevel;
         }
     }
 

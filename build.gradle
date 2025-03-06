@@ -128,10 +128,28 @@ repositories {
         url = 'https://maven.minecraftforge.net/'
     }
     maven {
-        url "https://www.cursemaven.com"
+        name = 'CurseMaven'
+        url = 'https://www.cursemaven.com'
+        content {
+            includeGroup('curse.maven')
+        }
     }
     maven {
+        name = "tterrag's maven"
         url = "https://maven.tterrag.com/"
+        content {
+            includeGroup('team.chisel.ctm')
+            includeGroup('com.tterrag.registrate')
+        }
+    }
+    maven {
+        name = 'Create maven'
+        url = 'https://maven.createmod.net/'
+        content {
+            includeGroup('com.simibubi.create')
+            includeGroup('net.createmod.ponder')
+            includeGroup('dev.engine-room.flywheel')
+        }
     }
     maven {
         name = "Jared's maven"
@@ -192,9 +210,12 @@ dependencies {
     //runtimeOnly fg.deobf("curse.maven:oculus-581495:5299671")
     //runtimeOnly fg.deobf("curse.maven:starlight-forge-526854:4631193")
 
-    compileOnly fg.deobf("com.simibubi.create:create-1.20.1:0.5.1.f-27:slim") { transitive = false }
-    compileOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-1.20.1:0.6.10-8")
-    //runtimeOnly fg.deobf("com.tterrag.registrate:Registrate:MC1.20-1.3.11") //Only needed when Create and/or Flywheel are switched to implementation
+    compileOnly fg.deobf("com.simibubi.create:create-${create_mc_version}:${create_version}-${create_build_number}:slim") { transitive = false }
+    compileOnly fg.deobf("net.createmod.ponder:Ponder-Forge-${create_mc_version}:${ponder_version}")
+    compileOnly fg.deobf("dev.engine-room.flywheel:flywheel-forge-api-${create_mc_version}:${flywheel_version}-${flywheel_build_number}")
+    // Only needed when Create and Ponder are switched to implementation
+    //runtimeOnly fg.deobf("dev.engine-room.flywheel:flywheel-forge-${create_mc_version}:${flywheel_version}-${flywheel_build_number}")
+    //runtimeOnly fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 
     compileOnly fg.deobf("curse.maven:moonlight-499980:4621773")
     compileOnly fg.deobf("curse.maven:supplementaries-412082:4622527")

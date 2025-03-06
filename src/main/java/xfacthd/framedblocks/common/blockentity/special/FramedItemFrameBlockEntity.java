@@ -29,6 +29,7 @@ public class FramedItemFrameBlockEntity extends FramedBlockEntity
 {
     public static final int ROTATION_STEPS = 8;
     private static final int MAP_UPDATE_INTERVAL = 10;
+    public static final String ITEM_NBT_KEY = "item";
     public static final String NBT_KEY_FRAMED_MAP = FramedConstants.MOD_ID + ":framed";
 
     private final boolean glowing;
@@ -228,13 +229,13 @@ public class FramedItemFrameBlockEntity extends FramedBlockEntity
 
     private void readFromNetwork(CompoundTag tag)
     {
-        heldItem = ItemStack.of(tag.getCompound("item"));
+        heldItem = ItemStack.of(tag.getCompound(ITEM_NBT_KEY));
         rotation = tag.getByte("rotation");
     }
 
     private void writeToNetwork(CompoundTag tag)
     {
-        tag.put("item", heldItem.save(new CompoundTag()));
+        tag.put(ITEM_NBT_KEY, heldItem.save(new CompoundTag()));
         tag.putByte("rotation", (byte) rotation);
     }
 
@@ -274,7 +275,7 @@ public class FramedItemFrameBlockEntity extends FramedBlockEntity
     {
         super.load(tag);
 
-        heldItem = ItemStack.of(tag.getCompound("item"));
+        heldItem = ItemStack.of(tag.getCompound(ITEM_NBT_KEY));
         rotation = tag.getByte("rotation");
         mapTickOffset = tag.getInt("map_tick_offset");
     }
@@ -284,7 +285,7 @@ public class FramedItemFrameBlockEntity extends FramedBlockEntity
     {
         super.saveAdditional(tag);
 
-        tag.put("item", heldItem.save(new CompoundTag()));
+        tag.put(ITEM_NBT_KEY, heldItem.save(new CompoundTag()));
         tag.putByte("rotation", (byte) rotation);
         tag.putInt("map_tick_offset", mapTickOffset);
     }

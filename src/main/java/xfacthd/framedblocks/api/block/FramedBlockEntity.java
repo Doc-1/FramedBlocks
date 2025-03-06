@@ -48,6 +48,7 @@ import java.util.Objects;
 public class FramedBlockEntity extends BlockEntity
 {
     private static final Logger LOGGER = LogUtils.getLogger();
+    public static final String CAMO_NBT_KEY = "camo";
     public static final Component MSG_BLACKLISTED = Utils.translate("msg", "camo.blacklisted");
     public static final Component MSG_BLOCK_ENTITY = Utils.translate("msg", "camo.block_entity");
     public static final Component MSG_NON_SOLID = Utils.translate("msg", "camo.non_solid");
@@ -702,6 +703,19 @@ public class FramedBlockEntity extends BlockEntity
         }
     }
 
+    /**
+     * Returns whether this block is marked as intangible.
+     * <p>
+     * If this method returns {@code true}, an entity interacting with this block may still behave as if it
+     * returned {@code false} depending on the context.
+     *
+     * @return whether this block is marked as intangible
+     */
+    public boolean isMarkedIntangible()
+    {
+        return intangible;
+    }
+
     public boolean isIntangible(CollisionContext ctx)
     {
         if (!FramedBlocksAPI.getInstance().enableIntangibility() || !intangible)
@@ -918,7 +932,7 @@ public class FramedBlockEntity extends BlockEntity
 
     protected void writeToDataPacket(CompoundTag nbt)
     {
-        nbt.put("camo", CamoContainer.writeToNetwork(camoContainer));
+        nbt.put(CAMO_NBT_KEY, CamoContainer.writeToNetwork(camoContainer));
         nbt.putByte("flags", writeFlags());
     }
 
@@ -927,7 +941,7 @@ public class FramedBlockEntity extends BlockEntity
         boolean needUpdate = false;
         boolean needCullingUpdate = false;
 
-        CamoContainer newCamo = CamoContainer.readFromNetwork(nbt.getCompound("camo"));
+        CamoContainer newCamo = CamoContainer.readFromNetwork(nbt.getCompound(CAMO_NBT_KEY));
         if (!newCamo.equals(camoContainer))
         {
             int oldLight = getLightValue();
@@ -983,7 +997,7 @@ public class FramedBlockEntity extends BlockEntity
     {
         CompoundTag nbt = super.getUpdateTag();
 
-        nbt.put("camo", CamoContainer.writeToNetwork(camoContainer));
+        nbt.put(CAMO_NBT_KEY, CamoContainer.writeToNetwork(camoContainer));
         nbt.putByte("flags", writeFlags());
 
         return nbt;
@@ -992,7 +1006,7 @@ public class FramedBlockEntity extends BlockEntity
     @Override
     public void handleUpdateTag(CompoundTag nbt)
     {
-        CamoContainer newCamo = CamoContainer.readFromNetwork(nbt.getCompound("camo"));
+        CamoContainer newCamo = CamoContainer.readFromNetwork(nbt.getCompound(CAMO_NBT_KEY));
         if (!newCamo.equals(camoContainer))
         {
             camoContainer = newCamo;
@@ -1075,7 +1089,7 @@ public class FramedBlockEntity extends BlockEntity
     @Override
     public void saveAdditional(CompoundTag nbt)
     {
-        nbt.put("camo", CamoContainer.save(camoContainer));
+        nbt.put(CAMO_NBT_KEY, CamoContainer.save(camoContainer));
         nbt.putBoolean("glowing", glowing);
         nbt.putBoolean("intangible", intangible);
         nbt.putBoolean("reinforced", reinforced);
@@ -1089,9 +1103,9 @@ public class FramedBlockEntity extends BlockEntity
     {
         super.load(nbt);
 
-        InternalAPI.INSTANCE.updateCamoNbt(nbt, "camo_state", "camo_stack", "camo");
+        InternalAPI.INSTANCE.updateCamoNbt(nbt, "camo_state", "camo_stack", CAMO_NBT_KEY);
 
-        CamoContainer camo = CamoContainer.load(nbt.getCompound("camo"));
+        CamoContainer camo = CamoContainer.load(nbt.getCompound(CAMO_NBT_KEY));
         if (camo.isEmpty() || isValidBlock(camo.getState(), null))
         {
             recheckStates = nbt.getByte("updated") < DATA_VERSION;
