@@ -17,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.BlockItemStateProperties;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -763,9 +764,9 @@ public class FramedBlockEntity extends BlockEntity
         return camoContainer.getContent().getFriction(level(), worldPosition, entity, frameFriction);
     }
 
-    public TriState canCamoSustainPlant(Direction side, BlockState plant)
+    public TriState canCamoSustainPlant(BlockGetter level, Direction side, BlockState plant)
     {
-        return camoContainer.getContent().canSustainPlant(level(), worldPosition, side, plant);
+        return camoContainer.getContent().canSustainPlant(level, worldPosition, side, plant);
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

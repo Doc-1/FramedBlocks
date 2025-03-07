@@ -7,6 +7,7 @@ import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.LevelReader;
@@ -210,9 +211,9 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     }
 
     @Override
-    public TriState canCamoSustainPlant(Direction side, BlockState plant)
+    public TriState canCamoSustainPlant(BlockGetter level, Direction side, BlockState plant)
     {
-        return getStateCache().getSolidityCheck(side).canSustainPlant(this, side, plant);
+        return getStateCache().getSolidityCheck(side).canSustainPlant(this, level, side, plant);
     }
 
     @Override
