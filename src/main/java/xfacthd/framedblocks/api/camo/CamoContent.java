@@ -151,18 +151,18 @@ public abstract class CamoContent<C extends CamoContent<C>> implements QuadCache
     /**
      * {@return whether this camo can be occluded by the given adjacent non-framed block at the given adjacent position}
      */
-    public abstract boolean isOccludedBy(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos);
+    public abstract boolean isOccludedBy(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos, Direction side);
 
     /**
      * {@return whether this camo can be occluded by the given camo applied to an adjacent framed block at the given
      * adjacent position}
      */
-    public abstract boolean isOccludedBy(CamoContent<?> adjCamo, BlockGetter level, BlockPos pos, BlockPos adjPos);
+    public abstract boolean isOccludedBy(CamoContent<?> adjCamo, BlockGetter level, BlockPos pos, BlockPos adjPos, Direction side);
 
     /**
      * {@return whether this camo occludes the given adjacent non-framed block at the given adjacent position}
      */
-    public abstract boolean occludes(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos);
+    public abstract boolean occludes(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos, Direction side);
 
     /**
      * {@return {@link ParticleOptions} to be spawned when an entity runs over or lands on a block with this camo}
@@ -198,7 +198,7 @@ public abstract class CamoContent<C extends CamoContent<C>> implements QuadCache
     public abstract int hashCode();
 
     @Override
-    public abstract boolean equals(Object obj);
+    public abstract boolean equals(@Nullable Object obj);
 
     @Override
     public abstract String toString();

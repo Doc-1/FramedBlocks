@@ -70,9 +70,9 @@ public final class CullingHelper
                         return false;
                     }
                     CamoContent<?> adjCamoContent = adjBe.getCamo(side.getOpposite()).getContent();
-                    return camoContent.isOccludedBy(adjCamoContent, level, pos, adjPos);
+                    return camoContent.isOccludedBy(adjCamoContent, level, pos, adjPos, side);
                 }
-                return camoContent.isOccludedBy(adjState, level, pos, adjPos);
+                return camoContent.isOccludedBy(adjState, level, pos, adjPos, side);
             }
             return false;
         }
@@ -90,7 +90,7 @@ public final class CullingHelper
             if (!adjCamoContent.isEmpty() && level.getBlockEntity(pos) instanceof FramedBlockEntity be)
             {
                 CamoContent<?> camoContent = be.getCamo(state).getContent();
-                return camoContent.isOccludedBy(adjCamoContent, level, pos, adjPos);
+                return camoContent.isOccludedBy(adjCamoContent, level, pos, adjPos, side);
             }
             return false;
         }
@@ -121,7 +121,7 @@ public final class CullingHelper
             if (((IFramedBlock) state.getBlock()).getCache(state).isFullFace(side))
             {
                 CamoContent<?> camoContent = be.getCamo(side).getContent();
-                return camoContent.occludes(adjState, level, pos, adjPos);
+                return camoContent.occludes(adjState, level, pos, adjPos, side);
             }
             return be.isSolidSide(side);
         }

@@ -90,7 +90,7 @@ public final class FluidCamoContent extends CamoContent<FluidCamoContent>
     @Override
     public boolean shouldDisplayFluidOverlay(BlockAndTintGetter level, BlockPos pos, FluidState fluidState)
     {
-        return fluidState.getType() != fluid;
+        return fluidState.getFluidType() != fluid.getFluidType();
     }
 
     @Override
@@ -172,19 +172,19 @@ public final class FluidCamoContent extends CamoContent<FluidCamoContent>
     }
 
     @Override
-    public boolean isOccludedBy(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos)
+    public boolean isOccludedBy(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos, Direction side)
     {
         return adjState.isSolidRender();
     }
 
     @Override
-    public boolean isOccludedBy(CamoContent<?> adjCamo, BlockGetter level, BlockPos pos, BlockPos adjPos)
+    public boolean isOccludedBy(CamoContent<?> adjCamo, BlockGetter level, BlockPos pos, BlockPos adjPos, Direction side)
     {
         return adjCamo.isSolid() || equals(adjCamo);
     }
 
     @Override
-    public boolean occludes(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos)
+    public boolean occludes(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos, Direction side)
     {
         return false;
     }
@@ -220,11 +220,9 @@ public final class FluidCamoContent extends CamoContent<FluidCamoContent>
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(@Nullable Object obj)
     {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != FluidCamoContent.class) return false;
-        return fluid == ((FluidCamoContent) obj).fluid;
+        return obj == this || (obj instanceof FluidCamoContent camo && fluid == camo.fluid);
     }
 
     @Override

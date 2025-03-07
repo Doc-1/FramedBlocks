@@ -153,19 +153,19 @@ public final class EmptyCamoContent extends CamoContent<EmptyCamoContent>
     }
 
     @Override
-    public boolean isOccludedBy(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos)
+    public boolean isOccludedBy(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos, Direction side)
     {
         return false;
     }
 
     @Override
-    public boolean isOccludedBy(CamoContent<?> adjCamo, BlockGetter level, BlockPos pos, BlockPos adjPos)
+    public boolean isOccludedBy(CamoContent<?> adjCamo, BlockGetter level, BlockPos pos, BlockPos adjPos, Direction side)
     {
         return false;
     }
 
     @Override
-    public boolean occludes(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos)
+    public boolean occludes(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos, Direction side)
     {
         return false;
     }
@@ -201,7 +201,7 @@ public final class EmptyCamoContent extends CamoContent<EmptyCamoContent>
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(@Nullable Object obj)
     {
         return obj == this;
     }

@@ -171,7 +171,7 @@ public final class BlockCamoContent extends CamoContent<BlockCamoContent>
     }
 
     @Override
-    public boolean isOccludedBy(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos)
+    public boolean isOccludedBy(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos, Direction side)
     {
         if (adjState.isSolidRender())
         {
@@ -181,22 +181,21 @@ public final class BlockCamoContent extends CamoContent<BlockCamoContent>
         {
             return !adjState.is(Utils.NON_OCCLUDEABLE);
         }
-        Direction side = Utils.dirByNormal(pos, adjPos);
-        return side != null && state.skipRendering(adjState, side);
+        return state.skipRendering(adjState, side);
     }
 
     @Override
-    public boolean isOccludedBy(CamoContent<?> adjCamo, BlockGetter level, BlockPos pos, BlockPos adjPos)
+    public boolean isOccludedBy(CamoContent<?> adjCamo, BlockGetter level, BlockPos pos, BlockPos adjPos, Direction side)
     {
         if (adjCamo instanceof BlockCamoContent blockCamo)
         {
-            return isOccludedBy(blockCamo.state, level, pos, adjPos);
+            return isOccludedBy(blockCamo.state, level, pos, adjPos, side);
         }
         return adjCamo.isSolid();
     }
 
     @Override
-    public boolean occludes(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos)
+    public boolean occludes(BlockState adjState, BlockGetter level, BlockPos pos, BlockPos adjPos, Direction side)
     {
         if (state.isSolidRender())
         {
@@ -206,8 +205,7 @@ public final class BlockCamoContent extends CamoContent<BlockCamoContent>
         {
             return !adjState.is(Utils.NON_OCCLUDEABLE);
         }
-        Direction side = Utils.dirByNormal(adjPos, pos);
-        return side != null && adjState.skipRendering(state, side);
+        return adjState.skipRendering(state, side.getOpposite());
     }
 
     @Override
@@ -243,9 +241,7 @@ public final class BlockCamoContent extends CamoContent<BlockCamoContent>
     @Override
     public boolean equals(@Nullable Object obj)
     {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != BlockCamoContent.class) return false;
-        return state == ((BlockCamoContent) obj).state;
+        return obj == this || (obj instanceof BlockCamoContent camo && state == camo.state);
     }
 
     @Override
