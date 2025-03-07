@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HalfTransparentBlock;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import xfacthd.framedblocks.api.FramedBlocksAPI;
 import xfacthd.framedblocks.api.block.FramedBlockEntity;
@@ -60,6 +61,10 @@ public final class CullingHelper
         {
             if (fullFace && (!adjFramed || adjBlock.getCache(adjState).isFullFace(side.getOpposite())))
             {
+                if (!adjFramed && adjState.getBlock() instanceof LiquidBlock)
+                {
+                    return false;
+                }
                 return compareState(level, pos, adjPos, adjState, adjFramed, side);
             }
             return false;
