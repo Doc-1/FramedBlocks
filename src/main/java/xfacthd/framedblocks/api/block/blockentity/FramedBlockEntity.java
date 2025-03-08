@@ -80,6 +80,7 @@ public class FramedBlockEntity extends BlockEntity
     protected static final int FLAG_GLOWING = 1;
     protected static final int FLAG_INTANGIBLE = 1 << 1;
     protected static final int FLAG_REINFORCED = 1 << 2;
+    protected static final int FLAG_EMISSIVE = 1 << 3;
 
     private final boolean[] culledFaces = new boolean[6];
     private StateCache stateCache;
@@ -87,6 +88,7 @@ public class FramedBlockEntity extends BlockEntity
     private boolean glowing = false;
     private boolean intangible = false;
     private boolean reinforced = false;
+    private boolean emissive = false;
     private boolean recheckStates = false;
     private boolean forceLightUpdate = false;
     private boolean cullStateDirty = false;
@@ -144,6 +146,10 @@ public class FramedBlockEntity extends BlockEntity
         else if (reinforced && canRemoveReinforcement(stack))
         {
             return removeReinforcement(player, stack, hand);
+        }
+        else if (!emissive && stack.is(Utils.GLOW_PASTE))
+        {
+            return applyEmissivity(player, stack);
         }
 
         CamoContainer<?, ?> newCamo = CamoContainerHelper.handleCamoInteraction(level(), worldPosition, player, camo, stack, hand);
@@ -288,6 +294,20 @@ public class FramedBlockEntity extends BlockEntity
             }
 
             Utils.giveToPlayer(player, new ItemStack(Utils.FRAMED_REINFORCEMENT.value()), true);
+        }
+        return InteractionResult.SUCCESS;
+    }
+
+    private InteractionResult applyEmissivity(Player player, ItemStack stack)
+    {
+        if (!level().isClientSide())
+        {
+            if (!player.isCreative())
+            {
+                stack.shrink(1);
+            }
+
+            setEmissive(true);
         }
         return InteractionResult.SUCCESS;
     }
@@ -666,6 +686,22 @@ public class FramedBlockEntity extends BlockEntity
         return reinforced;
     }
 
+    public void setEmissive(boolean emissive)
+    {
+        if (this.emissive != emissive)
+        {
+            this.emissive = emissive;
+
+            level().sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+            setChangedWithoutSignalUpdate();
+        }
+    }
+
+    public boolean isEmissive()
+    {
+        return emissive;
+    }
+
     protected final void doLightUpdate()
     {
         AuxiliaryLightManager lightManager = level().getAuxLightManager(worldPosition);
@@ -881,6 +917,13 @@ public class FramedBlockEntity extends BlockEntity
             needUpdate = true;
         }
 
+        boolean newEmissive = readFlag(flags, FLAG_EMISSIVE);
+        if (newEmissive != emissive)
+        {
+            emissive = newEmissive;
+            needUpdate = true;
+        }
+
         if (needCullingUpdate)
         {
             updateCulling(true, false);
@@ -911,12 +954,8 @@ public class FramedBlockEntity extends BlockEntity
         byte flags = nbt.getByte("flags");
         glowing = readFlag(flags, FLAG_GLOWING);
         intangible = readFlag(flags, FLAG_INTANGIBLE);
-
-        boolean newReinforced = readFlag(flags, FLAG_REINFORCED);
-        if (newReinforced != reinforced)
-        {
-            reinforced = newReinforced;
-        }
+        reinforced = readFlag(flags, FLAG_REINFORCED);
+        emissive = readFlag(flags, FLAG_EMISSIVE);
 
         requestModelDataUpdate();
     }
@@ -938,6 +977,7 @@ public class FramedBlockEntity extends BlockEntity
         if (glowing) flags |= FLAG_GLOWING;
         if (intangible) flags |= FLAG_INTANGIBLE;
         if (reinforced) flags |= FLAG_REINFORCED;
+        if (emissive) flags |= FLAG_EMISSIVE;
         return flags;
     }
 
@@ -967,7 +1007,7 @@ public class FramedBlockEntity extends BlockEntity
     public ModelData getModelData(boolean includeCullInfo)
     {
         boolean[] cullData = includeCullInfo ? culledFaces : FramedBlockData.NO_CULLED_FACES;
-        FramedBlockData modelData = new FramedBlockData(camoContainer, cullData, false, isReinforced());
+        FramedBlockData modelData = new FramedBlockData(camoContainer, cullData, false, isReinforced(), isEmissive());
         ModelData.Builder builder = ModelData.builder().with(FramedBlockData.PROPERTY, modelData);
         attachAdditionalModelData(builder);
         return builder.build();
@@ -987,6 +1027,7 @@ public class FramedBlockEntity extends BlockEntity
                 glowing,
                 intangible,
                 reinforced,
+                emissive,
                 BlockItemStateProperties.EMPTY,
                 collectAuxBlueprintData()
         );
@@ -1029,6 +1070,7 @@ public class FramedBlockEntity extends BlockEntity
         tag.remove("glowing");
         tag.remove("intangible");
         tag.remove("reinforced");
+        tag.remove("emissive");
         tag.remove("updated");
     }
 
@@ -1038,7 +1080,7 @@ public class FramedBlockEntity extends BlockEntity
         collectCamoComponents(builder);
         collectMiscComponents(builder);
 
-        FrameConfig cfg = new FrameConfig(glowing, intangible, reinforced);
+        FrameConfig cfg = new FrameConfig(glowing, intangible, reinforced, emissive);
         if (!cfg.equals(FrameConfig.DEFAULT))
         {
             builder.set(Utils.DC_TYPE_FRAME_CONFIG, cfg);
@@ -1079,6 +1121,7 @@ public class FramedBlockEntity extends BlockEntity
         nbt.putBoolean("glowing", glowing);
         nbt.putBoolean("intangible", intangible);
         nbt.putBoolean("reinforced", reinforced);
+        nbt.putBoolean("emissive", emissive);
         nbt.putByte("updated", (byte) DATA_VERSION);
 
         super.saveAdditional(nbt, provider);
@@ -1093,6 +1136,7 @@ public class FramedBlockEntity extends BlockEntity
         glowing = nbt.getBoolean("glowing");
         intangible = nbt.getBoolean("intangible");
         reinforced = nbt.getBoolean("reinforced");
+        emissive = nbt.getBoolean("emissive");
 
         if (glowing)
         {

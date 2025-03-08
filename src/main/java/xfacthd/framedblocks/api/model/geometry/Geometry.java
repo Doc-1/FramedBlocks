@@ -180,18 +180,26 @@ public abstract class Geometry
     public TriState useAmbientOcclusion(BlockState state, ModelData data, RenderType renderType)
     {
         FramedBlockData fbData = data.get(FramedBlockData.PROPERTY);
-        CamoContent<?> camoContent;
-        if (fbData != null && !(camoContent = fbData.getCamoContent()).isEmpty())
+        if (fbData != null)
         {
-            BakedModel model = CamoContainerHelper.Client.getOrCreateModel(camoContent);
-            TriState camoAO = model.useAmbientOcclusion(camoContent.getAppearanceState(), ModelData.EMPTY, renderType);
-            if (camoAO != TriState.DEFAULT)
-            {
-                return camoAO;
-            }
-            if (camoContent.getLightEmission() != 0 || camoContent.isEmissive())
+            if (fbData.isEmissive())
             {
                 return TriState.FALSE;
+            }
+
+            CamoContent<?> camoContent = fbData.getCamoContent();
+            if (!camoContent.isEmpty())
+            {
+                BakedModel model = CamoContainerHelper.Client.getOrCreateModel(camoContent);
+                TriState camoAO = model.useAmbientOcclusion(camoContent.getAppearanceState(), ModelData.EMPTY, renderType);
+                if (camoAO != TriState.DEFAULT)
+                {
+                    return camoAO;
+                }
+                if (camoContent.getLightEmission() != 0 || camoContent.isEmissive())
+                {
+                    return TriState.FALSE;
+                }
             }
         }
         if (ConfigView.Client.INSTANCE.shouldForceAmbientOcclusionOnGlowingBlocks())

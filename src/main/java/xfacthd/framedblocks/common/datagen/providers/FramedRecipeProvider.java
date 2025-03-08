@@ -1230,15 +1230,6 @@ public final class FramedRecipeProvider extends RecipeProvider
                 .unlockedBy(this, FBContent.BLOCK_FRAMED_SMALL_INNER_CORNER_SLOPE_PANEL)
                 .save(output);
 
-        shapedBuildingBlock(FBContent.BLOCK_FRAMED_GLOWING_CUBE.value())
-                .pattern(" G ")
-                .pattern("GCG")
-                .pattern(" G ")
-                .define('G', Tags.Items.DUSTS_GLOWSTONE)
-                .define('C', FBContent.BLOCK_FRAMED_CUBE.value())
-                .unlockedBy(this, FBContent.BLOCK_FRAMED_CUBE)
-                .save(output);
-
         shapedBuildingBlock(FBContent.BLOCK_FRAMED_PYRAMID.value(), 4)
                 .pattern("SS")
                 .pattern("SS")
@@ -1503,6 +1494,15 @@ public final class FramedRecipeProvider extends RecipeProvider
                 .define('C', Items.CHORUS_FRUIT)
                 .unlockedBy(this, Items.PHANTOM_MEMBRANE)
                 .save(output, key("phantom_paste_from_chorus_fruit"));
+
+        shapedRecipe(RecipeCategory.MISC, FBContent.ITEM_GLOW_PASTE.value(), 8)
+                .pattern("SSS")
+                .pattern("SGS")
+                .pattern("SSS")
+                .define('S', Tags.Items.SLIME_BALLS)
+                .define('G', Tags.Items.DUSTS_GLOWSTONE)
+                .unlockedBy(this, Tags.Items.DUSTS_GLOWSTONE)
+                .save(output);
 
 
 

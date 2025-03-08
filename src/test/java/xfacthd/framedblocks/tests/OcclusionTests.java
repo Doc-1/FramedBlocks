@@ -2409,14 +2409,6 @@ public final class OcclusionTests
     }
 
     @GameTest(template = "box_top", batch = "occlusion")
-    @TestedType(type = BlockType.FRAMED_GLOWING_CUBE)
-    public static void test_GlowingCube(GameTestHelper helper)
-    {
-        BlockState state = FBContent.BLOCK_FRAMED_GLOWING_CUBE.value().defaultBlockState();
-        TestUtils.testBlockOccludesLightBelow(helper, state);
-    }
-
-    @GameTest(template = "box_top", batch = "occlusion")
     @TestedType(type = BlockType.FRAMED_PYRAMID)
     public static void test_Pyramid(GameTestHelper helper)
     {

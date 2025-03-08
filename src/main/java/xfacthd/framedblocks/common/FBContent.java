@@ -340,7 +340,6 @@ public final class FBContent
     public static final Holder<Block> BLOCK_FRAMED_STACKED_CORNER_SLOPE_PANEL_WALL = registerBlock(FramedStackedCornerSlopePanelWallBlock::new, BlockType.FRAMED_STACKED_CORNER_SLOPE_PANEL_W);
     public static final Holder<Block> BLOCK_FRAMED_STACKED_INNER_CORNER_SLOPE_PANEL = registerBlock(FramedStackedCornerSlopePanelBlock::new, BlockType.FRAMED_STACKED_INNER_CORNER_SLOPE_PANEL);
     public static final Holder<Block> BLOCK_FRAMED_STACKED_INNER_CORNER_SLOPE_PANEL_WALL = registerBlock(FramedStackedCornerSlopePanelWallBlock::new, BlockType.FRAMED_STACKED_INNER_CORNER_SLOPE_PANEL_W);
-    public static final Holder<Block> BLOCK_FRAMED_GLOWING_CUBE = registerBlock(FramedGlowingCubeBlock::new, BlockType.FRAMED_GLOWING_CUBE);
     public static final Holder<Block> BLOCK_FRAMED_PYRAMID = registerBlock(FramedPyramidBlock::new, BlockType.FRAMED_PYRAMID);
     public static final Holder<Block> BLOCK_FRAMED_PYRAMID_SLAB = registerBlock(FramedPyramidBlock::new, BlockType.FRAMED_PYRAMID_SLAB);
     public static final Holder<Block> BLOCK_FRAMED_TARGET = registerBlock(FramedTargetBlock::new, BlockType.FRAMED_TARGET);
@@ -425,6 +424,7 @@ public final class FBContent
     public static final Holder<Item> ITEM_FRAMED_SCREWDRIVER = registerToolItem(FramedToolItem::new, FramedToolType.SCREWDRIVER);
     public static final Holder<Item> ITEM_FRAMED_REINFORCEMENT = ITEMS.registerSimpleItem("framed_reinforcement");
     public static final Holder<Item> ITEM_PHANTOM_PASTE = ITEMS.registerItem("phantom_paste", PhantomPasteItem::new);
+    public static final Holder<Item> ITEM_GLOW_PASTE = ITEMS.registerSimpleItem("glow_paste");
     // endregion
 
     // region BlockEntityTypes

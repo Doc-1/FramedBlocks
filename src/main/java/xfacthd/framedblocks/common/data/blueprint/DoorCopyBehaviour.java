@@ -73,6 +73,17 @@ public final class DoorCopyBehaviour implements BlueprintCopyBehaviour
     }
 
     @Override
+    public int getEmissiveCount(BlueprintData data)
+    {
+        int count = BlueprintCopyBehaviour.super.getEmissiveCount(data);
+        if (getSecondData(data).emissive())
+        {
+            count++;
+        }
+        return count;
+    }
+
+    @Override
     public void postProcessPaste(Level level, BlockPos pos, @Nullable Player player, BlueprintData data, ItemStack dummyStack)
     {
         BlueprintData secData = getSecondData(data);

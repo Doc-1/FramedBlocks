@@ -31,7 +31,7 @@ public class QuadWindingDebugRenderer implements BlockDebugRenderer<FramedBlockE
     public static final QuadWindingDebugRenderer INSTANCE = new QuadWindingDebugRenderer();
     private static final RandomSource RANDOM = RandomSource.create();
     private static final FramedBlockData FRAMED_BLOCK_DATA = new FramedBlockData(
-            new SimpleBlockCamoContainer(Blocks.STONE.defaultBlockState(), FBContent.FACTORY_BLOCK.get()), new boolean[6], false, false
+            new SimpleBlockCamoContainer(Blocks.STONE.defaultBlockState(), FBContent.FACTORY_BLOCK.get()), new boolean[6], false, false, false
     );
 
     @Override

@@ -17,13 +17,14 @@ public final class FramedBlockData
     private final byte hidden;
     private final boolean altModel;
     private final boolean reinforced;
+    private final boolean emissive;
 
     public FramedBlockData(CamoContainer<?, ?> camoContent, boolean altModel)
     {
-        this(camoContent, NO_CULLED_FACES, altModel, false);
+        this(camoContent, NO_CULLED_FACES, altModel, false, false);
     }
 
-    public FramedBlockData(CamoContainer<?, ?> camoContainer, boolean[] hidden, boolean altModel, boolean reinforced)
+    public FramedBlockData(CamoContainer<?, ?> camoContainer, boolean[] hidden, boolean altModel, boolean reinforced, boolean emissive)
     {
         this.camoContainer = camoContainer;
         this.camoContent = camoContainer.getContent();
@@ -38,6 +39,7 @@ public final class FramedBlockData
         this.hidden = mask;
         this.altModel = altModel;
         this.reinforced = reinforced;
+        this.emissive = emissive;
     }
 
     public CamoContainer<?, ?> getCamoContainer()
@@ -63,5 +65,10 @@ public final class FramedBlockData
     public boolean isReinforced()
     {
         return reinforced;
+    }
+
+    public boolean isEmissive()
+    {
+        return emissive;
     }
 }

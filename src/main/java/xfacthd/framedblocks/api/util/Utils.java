@@ -89,6 +89,7 @@ public final class Utils
     public static final Holder<Item> FRAMED_SCREWDRIVER = DeferredItem.createItem(Utils.rl("framed_screwdriver"));
     public static final Holder<Item> FRAMED_REINFORCEMENT = DeferredItem.createItem(Utils.rl("framed_reinforcement"));
     public static final Holder<Item> PHANTOM_PASTE = DeferredItem.createItem(Utils.rl("phantom_paste"));
+    public static final Holder<Item> GLOW_PASTE = DeferredItem.createItem(Utils.rl("glow_paste"));
 
     public static final DeferredDataComponentType<CamoList> DC_TYPE_CAMO_LIST = DeferredDataComponentType.createDataComponent(
             Utils.rl("camo_list")

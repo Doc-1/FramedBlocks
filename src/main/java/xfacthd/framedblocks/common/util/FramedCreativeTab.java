@@ -34,6 +34,7 @@ public final class FramedCreativeTab
 
                     output.accept(FBContent.ITEM_FRAMED_REINFORCEMENT.value());
                     output.accept(FBContent.ITEM_PHANTOM_PASTE.value());
+                    output.accept(FBContent.ITEM_GLOW_PASTE.value());
                 })
                 .build();
     }

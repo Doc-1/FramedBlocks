@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "hasFramedCube": {
+    "hasDusts/glowstone": {
       "conditions": {
         "items": [
           {
-            "items": "framedblocks:framed_cube"
+            "items": "#c:dusts/glowstone"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "framedblocks:framed_glowing_cube"
+        "recipe": "framedblocks:glow_paste"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "hasFramedCube"
+      "hasDusts/glowstone"
     ]
   ],
   "rewards": {
     "recipes": [
-      "framedblocks:framed_glowing_cube"
+      "framedblocks:glow_paste"
     ]
   }
 }

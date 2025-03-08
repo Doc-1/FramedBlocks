@@ -12,7 +12,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.QuadTransformers;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.common.util.TriState;
 import org.jetbrains.annotations.Nullable;
@@ -52,7 +51,8 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
     private static final int FLAG_NO_CAMO_REINFORCED = 0b010;
     private static final int FLAG_NO_CAMO_SOLID_BG = 0b100;
     private static final BlockCamoContent[] DEFAULT_NO_CAMO_CONTENTS = makeNoCamoContents(FBContent.BLOCK_FRAMED_CUBE.value().defaultBlockState());
-    private static final UnaryOperator<BakedQuad> EMISSIVE_PROCESSOR = QuadTransformers.settingMaxEmissivity()::process;
+    private static final UnaryOperator<BakedQuad> EMISSIVE_PROCESSOR = quad ->
+            new BakedQuad(quad.getVertices(), quad.getTintIndex(), quad.getDirection(), quad.getSprite(), false, 15, false);
 
     private final Map<QuadCacheKey, QuadTable> quadCache = new ConcurrentHashMap<>();
     private final Map<QuadCacheKey, CachedRenderTypes> renderTypeCache = new ConcurrentHashMap<>();
@@ -196,6 +196,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         boolean needCtCtx;
         CachedRenderTypes renderTypes;
         boolean reinforce;
+        boolean emissive = fbData.isEmissive();
 
         if (camoContent == null)
         {
@@ -225,7 +226,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
                 return List.of();
             }
 
-            boolean needCopy = additionalQuads || reinforce || uncachedPostProcess;
+            boolean needCopy = additionalQuads || reinforce || uncachedPostProcess || emissive;
             List<BakedQuad> quads = List.of();
             if (camoInRenderType)
             {
@@ -236,7 +237,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
                     // ones returned nothing due to the dev forgetting to specify cull-faces in the model
                     quads = ModelUtils.getFilteredNullQuads(camoModel, camoContent.getAppearanceState(), rand, camoData, renderType, side);
                 }
-                if (camoContent.isEmissive())
+                if (camoContent.isEmissive() && !emissive) // No point in copying the quads twice for emissivity
                 {
                     quads = Utils.copyAllWithModifier(quads, new ArrayList<>(quads.size()), EMISSIVE_PROCESSOR);
                     needCopy = false;
@@ -255,6 +256,10 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
             {
                 quads.add(ReinforcementModel.getQuad(side));
             }
+            if (emissive)
+            {
+                quads.replaceAll(EMISSIVE_PROCESSOR);
+            }
             if (uncachedPostProcess)
             {
                 geometry.postProcessUncachedQuads(quads);
@@ -272,7 +277,12 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
                 quadTable = buildQuadCache(key.camo(), camoModel, rand, extraData, ctData, renderTypes, reinforce);
                 quadCache.put(key, quadTable);
             }
-            return nullLayer ? quadTable.getAllQuads(side) : quadTable.getQuads(renderType, side);
+            List<BakedQuad> quads = nullLayer ? quadTable.getAllQuads(side) : quadTable.getQuads(renderType, side);
+            if (emissive && !quads.isEmpty())
+            {
+                quads = Utils.copyAllWithModifier(quads, new ArrayList<>(quads.size()), EMISSIVE_PROCESSOR);
+            }
+            return quads;
         }
     }
 

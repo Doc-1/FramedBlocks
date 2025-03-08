@@ -20,6 +20,7 @@ public record BlueprintData(
         boolean glowing,
         boolean intangible,
         boolean reinforced,
+        boolean emissive,
         BlockItemStateProperties blockState,
         Optional<AuxBlueprintData<?>> auxData
 )
@@ -30,6 +31,7 @@ public record BlueprintData(
             Codec.BOOL.fieldOf("glowing").forGetter(BlueprintData::glowing),
             Codec.BOOL.fieldOf("intangible").forGetter(BlueprintData::intangible),
             Codec.BOOL.fieldOf("reinforced").forGetter(BlueprintData::reinforced),
+            Codec.BOOL.fieldOf("emissive").forGetter(BlueprintData::emissive),
             BlockItemStateProperties.CODEC.optionalFieldOf("blockstate", BlockItemStateProperties.EMPTY).forGetter(BlueprintData::blockState),
             AuxBlueprintData.CODEC.optionalFieldOf("aux_data").forGetter(BlueprintData::auxData)
     ).apply(inst, BlueprintData::new));
@@ -44,13 +46,15 @@ public record BlueprintData(
             BlueprintData::intangible,
             ByteBufCodecs.BOOL,
             BlueprintData::reinforced,
+            ByteBufCodecs.BOOL,
+            BlueprintData::emissive,
             BlockItemStateProperties.STREAM_CODEC,
             BlueprintData::blockState,
             ByteBufCodecs.optional(AuxBlueprintData.STREAM_CODEC),
             BlueprintData::auxData,
             BlueprintData::new
     );
-    public static final BlueprintData EMPTY = new BlueprintData(Blocks.AIR, CamoList.EMPTY, false, false, false, BlockItemStateProperties.EMPTY, Optional.empty());
+    public static final BlueprintData EMPTY = new BlueprintData(Blocks.AIR, CamoList.EMPTY, false, false, false, false, BlockItemStateProperties.EMPTY, Optional.empty());
 
     @SuppressWarnings("unchecked")
     public <T extends AuxBlueprintData<T>> T getAuxDataOrDefault(T _default)
@@ -69,11 +73,11 @@ public record BlueprintData(
 
     public BlueprintData withBlockState(BlockItemStateProperties newBlockState)
     {
-        return new BlueprintData(block, camos, glowing, intangible, reinforced, newBlockState, auxData);
+        return new BlueprintData(block, camos, glowing, intangible, reinforced, emissive, newBlockState, auxData);
     }
 
     public BlueprintData withAuxData(AuxBlueprintData<?> newAuxData)
     {
-        return new BlueprintData(block, camos, glowing, intangible, reinforced, blockState, Optional.of(newAuxData));
+        return new BlueprintData(block, camos, glowing, intangible, reinforced, emissive, blockState, Optional.of(newAuxData));
     }
 }

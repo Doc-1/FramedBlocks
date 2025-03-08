@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": "#c:dusts/glowstone",
+    "S": "#c:slime_balls"
+  },
+  "pattern": [
+    "SSS",
+    "SGS",
+    "SSS"
+  ],
+  "result": {
+    "count": 8,
+    "id": "framedblocks:glow_paste"
+  }
+}

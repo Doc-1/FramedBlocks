@@ -219,7 +219,6 @@ public final class SideSkipPredicates extends BlockTypeMap<SideSkipPredicate>
         put(BlockType.FRAMED_STACKED_CORNER_SLOPE_PANEL_W, SideSkipPredicate.FALSE);
         put(BlockType.FRAMED_STACKED_INNER_CORNER_SLOPE_PANEL, SideSkipPredicate.FALSE);
         put(BlockType.FRAMED_STACKED_INNER_CORNER_SLOPE_PANEL_W, SideSkipPredicate.FALSE);
-        put(BlockType.FRAMED_GLOWING_CUBE, SideSkipPredicate.FALSE);
         put(BlockType.FRAMED_PYRAMID, SideSkipPredicate.FALSE);
         put(BlockType.FRAMED_PYRAMID_SLAB, SideSkipPredicate.FALSE);
         put(BlockType.FRAMED_TARGET, SideSkipPredicate.FALSE);

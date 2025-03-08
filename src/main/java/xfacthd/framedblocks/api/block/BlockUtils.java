@@ -288,6 +288,7 @@ public final class BlockUtils
         boolean glowing = false;
         boolean intangible = false;
         boolean reinforced = false;
+        boolean emissive = false;
 
         if (level.getBlockEntity(pos) instanceof FramedBlockEntity be)
         {
@@ -295,6 +296,7 @@ public final class BlockUtils
             glowing = be.isGlowing();
             intangible = be.isIntangible(null);
             reinforced = be.isReinforced();
+            emissive = be.isEmissive();
         }
 
         action.run();
@@ -311,6 +313,7 @@ public final class BlockUtils
             be.setGlowing(glowing);
             be.setIntangible(intangible);
             be.setReinforced(reinforced);
+            be.setEmissive(emissive);
         }
     }
 

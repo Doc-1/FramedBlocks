@@ -256,7 +256,6 @@ public final class FramedLanguageProvider extends LanguageProvider
         add(FBContent.BLOCK_FRAMED_STACKED_CORNER_SLOPE_PANEL_WALL.value(), "Framed Stacked Corner Slope Panel");
         add(FBContent.BLOCK_FRAMED_STACKED_INNER_CORNER_SLOPE_PANEL.value(), "Framed Stacked Inner Corner Slope Panel");
         add(FBContent.BLOCK_FRAMED_STACKED_INNER_CORNER_SLOPE_PANEL_WALL.value(), "Framed Stacked Inner Corner Slope Panel");
-        add(FBContent.BLOCK_FRAMED_GLOWING_CUBE.value(), "Framed Glowing Cube");
         add(FBContent.BLOCK_FRAMED_PYRAMID.value(), "Framed Pyramid");
         add(FBContent.BLOCK_FRAMED_PYRAMID_SLAB.value(), "Framed Pyramid Slab");
         add(FBContent.BLOCK_FRAMED_HORIZONTAL_PANE.value(), "Framed Horizontal Pane");
@@ -301,6 +300,7 @@ public final class FramedLanguageProvider extends LanguageProvider
         add(FBContent.ITEM_FRAMED_SCREWDRIVER.value(), "Framed Screwdriver");
         add(FBContent.ITEM_FRAMED_REINFORCEMENT.value(), "Framed Reinforcement");
         add(FBContent.ITEM_PHANTOM_PASTE.value(), "Phantom Paste");
+        add(FBContent.ITEM_GLOW_PASTE.value(), "Glow Paste");
         add(Objects.requireNonNull(GeneratorHandler.framingSawPattern).value(), "Framing Saw Pattern");
     }
 
@@ -394,6 +394,7 @@ public final class FramedLanguageProvider extends LanguageProvider
         add(FramedBlueprintItem.IS_ILLUMINATED, "Illuminated: %s");
         add(FramedBlueprintItem.IS_INTANGIBLE, "Intangible: %s");
         add(FramedBlueprintItem.IS_REINFORCED, "Reinforced: %s");
+        add(FramedBlueprintItem.IS_EMISSIVE, "Emissive: %s");
         add(FramedBlueprintItem.MISSING_MATERIALS, "[Framed Blueprint] Missing required materials:");
         add(FramedBlueprintItem.BLOCK_NONE, "None");
         add(FramedBlueprintItem.BLOCK_INVALID, "Invalid");

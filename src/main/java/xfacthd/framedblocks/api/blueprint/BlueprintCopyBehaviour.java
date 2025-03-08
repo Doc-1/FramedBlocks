@@ -111,6 +111,18 @@ public interface BlueprintCopyBehaviour
     }
 
     /**
+     * Provide a custom amount of the glow paste item when placing the block,
+     * i.e. when placing a "multi-block" like doors
+     *
+     * @param data The {@link BlueprintData} stored on the held blueprint stack
+     * @return The amount of items to consume
+     */
+    default int getEmissiveCount(BlueprintData data)
+    {
+        return data.emissive() ? 1 : 0;
+    }
+
+    /**
      * Add additional materials to be consumed when placing the block
      *
      * @param data The {@link BlueprintData} stored on the held blueprint stack

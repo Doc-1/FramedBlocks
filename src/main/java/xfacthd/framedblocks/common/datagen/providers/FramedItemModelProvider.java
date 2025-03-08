@@ -43,6 +43,7 @@ public final class FramedItemModelProvider extends AbstractFramedItemModelProvid
 
         itemModels.generateFlatItem(FBContent.ITEM_FRAMED_REINFORCEMENT.value(), FLAT_CUTOUT);
         itemModels.generateFlatItem(FBContent.ITEM_PHANTOM_PASTE.value(), FLAT_CUTOUT);
+        itemModels.generateFlatItem(FBContent.ITEM_GLOW_PASTE.value(), FLAT_CUTOUT);
 
         ResourceLocation patternTexture = Utils.rl(AppliedEnergisticsCompat.MOD_ID, "item/crafting_pattern");
         Item patternItem = Objects.requireNonNull(GeneratorHandler.framingSawPattern).asItem();
@@ -75,6 +76,7 @@ public final class FramedItemModelProvider extends AbstractFramedItemModelProvid
                 FBContent.ITEM_FRAMED_SCREWDRIVER,
                 FBContent.ITEM_FRAMED_REINFORCEMENT,
                 FBContent.ITEM_PHANTOM_PASTE,
+                FBContent.ITEM_GLOW_PASTE,
                 FBContent.ITEM_FRAMED_BLUEPRINT
         );
     }

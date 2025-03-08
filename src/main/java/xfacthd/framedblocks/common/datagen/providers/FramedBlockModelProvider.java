@@ -265,7 +265,6 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         registerFramedCollapsibleCopycatBlock(blockModels);
         registerFramedBouncyBlock(blockModels);
         registerFramedRedstoneBlock(blockModels);
-        registerFramedGlowingCube(blockModels);
         registerFramedTarget(blockModels, cube);
         registerFramedItemFrame(blockModels);
         registerFramedFancyRail(blockModels);
@@ -674,20 +673,6 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_REDSTONE_BLOCK, block);
 
         makeOverlayCube(blockModels, FramedMarkedCubeGeometry.REDSTONE_FRAME_LOCATION, Utils.rl("block/redstone_frame"));
-    }
-
-    private void registerFramedGlowingCube(BlockModelGenerators blockModels)
-    {
-        ResourceLocation block = makeUnderlayedCube(blockModels, FBContent.BLOCK_FRAMED_GLOWING_CUBE, TEXTURE, ClientUtils.DUMMY_TEXTURE, builder ->
-        {
-            builder.ambientOcclusion(false);
-            for (int i = 0; i < builder.getElementCount(); i++)
-            {
-                builder.element(i, elem -> elem.emissivity(15, 15).shade(false));
-            }
-        });
-
-        simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_GLOWING_CUBE, block);
     }
 
     private void registerFramedTarget(BlockModelGenerators blockModels, ResourceLocation cube)

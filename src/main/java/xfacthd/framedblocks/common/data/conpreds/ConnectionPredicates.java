@@ -219,7 +219,6 @@ public final class ConnectionPredicates extends BlockTypeMap<ConnectionPredicate
         put(BlockType.FRAMED_STACKED_CORNER_SLOPE_PANEL_W, new StackedCornerSlopePanelWallConnectionPredicate());
         put(BlockType.FRAMED_STACKED_INNER_CORNER_SLOPE_PANEL, new StackedInnerCornerSlopePanelConnectionPredicate());
         put(BlockType.FRAMED_STACKED_INNER_CORNER_SLOPE_PANEL_W, new StackedInnerCornerSlopePanelWallConnectionPredicate());
-        put(BlockType.FRAMED_GLOWING_CUBE, ConnectionPredicate.FULL_EDGE);
         put(BlockType.FRAMED_PYRAMID, ConnectionPredicate.FULL_FACE);
         put(BlockType.FRAMED_PYRAMID_SLAB, ConnectionPredicate.FULL_FACE);
         put(BlockType.FRAMED_TARGET, ConnectionPredicate.FULL_EDGE);

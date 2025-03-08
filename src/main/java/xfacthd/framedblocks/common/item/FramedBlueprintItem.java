@@ -40,6 +40,7 @@ public class FramedBlueprintItem extends FramedToolItem
     public static final String IS_ILLUMINATED = "desc.framedblocks.blueprint_illuminated";
     public static final String IS_INTANGIBLE = "desc.framedblocks.blueprint_intangible";
     public static final String IS_REINFORCED = "desc.framedblocks.blueprint_reinforced";
+    public static final String IS_EMISSIVE = "desc.framedblocks.blueprint_emissive";
     public static final String MISSING_MATERIALS = Utils.translationKey("desc", "blueprint_missing_materials");
     public static final MutableComponent BLOCK_NONE = Utils.translate("desc", "blueprint_none").withStyle(ChatFormatting.RED);
     public static final MutableComponent BLOCK_INVALID = Utils.translate("desc", "blueprint_invalid").withStyle(ChatFormatting.RED);
@@ -311,6 +312,11 @@ public class FramedBlueprintItem extends FramedToolItem
         {
             materials.add(new ItemStack(FBContent.ITEM_FRAMED_REINFORCEMENT.value(), reinforcement));
         }
+        int emissive = behaviour.getEmissiveCount(data);
+        if (emissive > 0)
+        {
+            materials.add(new ItemStack(FBContent.ITEM_GLOW_PASTE, emissive));
+        }
         materials.addAll(behaviour.getAdditionalConsumedMaterials(data));
         return materials;
     }
@@ -381,14 +387,14 @@ public class FramedBlueprintItem extends FramedToolItem
             Component illuminated = blueprintData.glowing() ? TRUE : FALSE;
             Component intangible = blueprintData.intangible() ? TRUE : FALSE;
             Component reinforced = blueprintData.reinforced() ? TRUE : FALSE;
+            Component emissive = blueprintData.emissive() ? TRUE : FALSE;
 
-            Component lineOne = Component.translatable(CONTAINED_BLOCK, blockName).withStyle(ChatFormatting.GOLD);
-            Component lineTwo = Component.translatable(CAMO_BLOCK, camoName).withStyle(ChatFormatting.GOLD);
-            Component lineThree = Component.translatable(IS_ILLUMINATED, illuminated).withStyle(ChatFormatting.GOLD);
-            Component lineFour = Component.translatable(IS_INTANGIBLE, intangible).withStyle(ChatFormatting.GOLD);
-            Component lineFive = Component.translatable(IS_REINFORCED, reinforced).withStyle(ChatFormatting.GOLD);
-
-            components.addAll(Arrays.asList(lineOne, lineTwo, lineThree, lineFour, lineFive));
+            components.add(Component.translatable(CONTAINED_BLOCK, blockName).withStyle(ChatFormatting.GOLD));
+            components.add(Component.translatable(CAMO_BLOCK, camoName).withStyle(ChatFormatting.GOLD));
+            components.add(Component.translatable(IS_ILLUMINATED, illuminated).withStyle(ChatFormatting.GOLD));
+            components.add(Component.translatable(IS_INTANGIBLE, intangible).withStyle(ChatFormatting.GOLD));
+            components.add(Component.translatable(IS_REINFORCED, reinforced).withStyle(ChatFormatting.GOLD));
+            components.add(Component.translatable(IS_EMISSIVE, emissive).withStyle(ChatFormatting.GOLD));
         }
     }
 
