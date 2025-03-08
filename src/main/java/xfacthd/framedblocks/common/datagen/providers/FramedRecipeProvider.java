@@ -1495,10 +1495,10 @@ public final class FramedRecipeProvider extends RecipeProvider
                 .unlockedBy(this, Items.PHANTOM_MEMBRANE)
                 .save(output, key("phantom_paste_from_chorus_fruit"));
 
-        shapedRecipe(RecipeCategory.MISC, FBContent.ITEM_GLOW_PASTE.value(), 8)
-                .pattern("SSS")
+        shapedRecipe(RecipeCategory.MISC, FBContent.ITEM_GLOW_PASTE.value(), 16)
+                .pattern(" S ")
                 .pattern("SGS")
-                .pattern("SSS")
+                .pattern(" S ")
                 .define('S', Tags.Items.SLIME_BALLS)
                 .define('G', Tags.Items.DUSTS_GLOWSTONE)
                 .unlockedBy(this, Tags.Items.DUSTS_GLOWSTONE)

@@ -6,12 +6,12 @@
     "S": "#c:slime_balls"
   },
   "pattern": [
-    "SSS",
+    " S ",
     "SGS",
-    "SSS"
+    " S "
   ],
   "result": {
-    "count": 8,
+    "count": 16,
     "id": "framedblocks:glow_paste"
   }
 }
