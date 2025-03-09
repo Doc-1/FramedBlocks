@@ -42,7 +42,6 @@ public final class FramedDiagonalFenceBlock extends NeoForgeDiagonalFenceBlock i
     {
         super(block);
         BlockUtils.configureStandardProperties(this);
-        registerDefaultState(defaultBlockState().setValue(FramedProperties.STATE_LOCKED, false));
     }
 
     @Override
@@ -50,7 +49,6 @@ public final class FramedDiagonalFenceBlock extends NeoForgeDiagonalFenceBlock i
     {
         super.createBlockStateDefinition(builder);
         BlockUtils.addStandardProperties(this, builder);
-        builder.add(FramedProperties.STATE_LOCKED);
     }
 
     @Override

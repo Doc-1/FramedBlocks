@@ -68,6 +68,11 @@ public final class BlockUtils
         {
             removeProperty(builder, BlockStateProperties.WATERLOGGED);
         }
+
+        if (block.getBlockType().canLockState())
+        {
+            builder.add(FramedProperties.STATE_LOCKED);
+        }
     }
 
     /**
@@ -87,6 +92,10 @@ public final class BlockUtils
         if (block.getBlockType().supportsWaterLogging())
         {
             state = state.setValue(BlockStateProperties.WATERLOGGED, false);
+        }
+        if (block.getBlockType().canLockState())
+        {
+            state = state.setValue(FramedProperties.STATE_LOCKED, false);
         }
         ((InvokerBlock) block).framedblocks$callRegisterDefaultState(state);
     }

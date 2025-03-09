@@ -49,7 +49,6 @@ public class FramedWallBlock extends WallBlock implements IFramedBlock
     {
         super(IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_WALL));
         BlockUtils.configureStandardProperties(this);
-        registerDefaultState(defaultBlockState().setValue(FramedProperties.STATE_LOCKED, false));
     }
 
     @Override
@@ -57,7 +56,6 @@ public class FramedWallBlock extends WallBlock implements IFramedBlock
     {
         super.createBlockStateDefinition(builder);
         BlockUtils.addStandardProperties(this, builder);
-        builder.add(FramedProperties.STATE_LOCKED);
     }
 
     @Override

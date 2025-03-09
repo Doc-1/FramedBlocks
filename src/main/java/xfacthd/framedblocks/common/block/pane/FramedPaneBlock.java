@@ -33,7 +33,6 @@ public class FramedPaneBlock extends IronBarsBlock implements IFramedBlock
         super(IFramedBlock.applyDefaultProperties(props, type));
         this.type = type;
         BlockUtils.configureStandardProperties(this);
-        registerDefaultState(defaultBlockState().setValue(FramedProperties.STATE_LOCKED, false));
     }
 
     @Override

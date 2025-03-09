@@ -39,7 +39,6 @@ public class FramedStairsBlock extends StairBlock implements IFramedBlock
         super(FBContent.BLOCK_FRAMED_CUBE.value().defaultBlockState(), IFramedBlock.applyDefaultProperties(props, type));
         this.type = type;
         BlockUtils.configureStandardProperties(this);
-        registerDefaultState(defaultBlockState().setValue(FramedProperties.STATE_LOCKED, false));
     }
 
     @Override

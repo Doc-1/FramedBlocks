@@ -33,7 +33,6 @@ public class FramedFenceBlock extends FenceBlock implements IFramedBlock
     {
         super(IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_FENCE));
         BlockUtils.configureStandardProperties(this);
-        registerDefaultState(defaultBlockState().setValue(FramedProperties.STATE_LOCKED, false));
     }
 
     @Override
@@ -41,7 +40,6 @@ public class FramedFenceBlock extends FenceBlock implements IFramedBlock
     {
         super.createBlockStateDefinition(builder);
         BlockUtils.addStandardProperties(this, builder);
-        builder.add(FramedProperties.STATE_LOCKED);
     }
 
     @Override

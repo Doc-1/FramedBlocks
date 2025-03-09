@@ -24,7 +24,6 @@ public class FramedVerticalStairsBlock extends FramedBlock
     public FramedVerticalStairsBlock(BlockType type, Properties props)
     {
         super(type, props);
-        registerDefaultState(defaultBlockState().setValue(FramedProperties.STATE_LOCKED, false));
     }
 
     @Override
