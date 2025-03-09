@@ -52,6 +52,8 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
     private static final int FLAG_NO_CAMO_SOLID_BG = 0b100;
     private static final BlockCamoContent[] DEFAULT_NO_CAMO_CONTENTS = makeNoCamoContents(FBContent.BLOCK_FRAMED_CUBE.value().defaultBlockState());
     private static final UnaryOperator<BakedQuad> EMISSIVE_PROCESSOR = quad ->
+            new BakedQuad(quad.getVertices(), quad.getTintIndex(), quad.getDirection(), quad.getSprite(), quad.isShade(), 15, quad.hasAmbientOcclusion());
+    private static final UnaryOperator<BakedQuad> FULL_EMISSIVE_PROCESSOR = quad ->
             new BakedQuad(quad.getVertices(), quad.getTintIndex(), quad.getDirection(), quad.getSprite(), false, 15, false);
 
     private final Map<QuadCacheKey, QuadTable> quadCache = new ConcurrentHashMap<>();
@@ -258,7 +260,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
             }
             if (emissive)
             {
-                quads.replaceAll(EMISSIVE_PROCESSOR);
+                quads.replaceAll(FULL_EMISSIVE_PROCESSOR);
             }
             if (uncachedPostProcess)
             {
@@ -310,7 +312,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
     )
     {
         QuadTable quadTable = new QuadTable();
-        UnaryOperator<BakedQuad> preprocessor = camoContent.isEmissive() ? EMISSIVE_PROCESSOR : UnaryOperator.identity();
+        UnaryOperator<BakedQuad> preprocessor = camoContent.isEmissive() ? FULL_EMISSIVE_PROCESSOR : UnaryOperator.identity();
 
         for (RenderType renderType : renderTypes.camoTypes)
         {
