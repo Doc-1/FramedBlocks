@@ -836,6 +836,11 @@ public final class FramingSawRecipeProvider extends RecipeProvider
                 .material(FramingSawRecipe.CUBE_MATERIAL_VALUE)
                 .additive(FramingSawRecipeAdditive.of(Items.SOUL_TORCH))
                 .save(output);
+
+        FramingSawRecipeBuilder.builder(FBContent.BLOCK_FRAMED_HOPPER)
+                .material(FramingSawRecipe.CUBE_MATERIAL_VALUE)
+                .additive(FramingSawRecipeAdditive.of(tag(Tags.Items.CHESTS)))
+                .save(output);
     }
 
     public static final class Runner extends RecipeProvider.Runner

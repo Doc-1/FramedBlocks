@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "framedblocks:block",
+    "block": "framedblocks:framed_hopper"
+  }
+}

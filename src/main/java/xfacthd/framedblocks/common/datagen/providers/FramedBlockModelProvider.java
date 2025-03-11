@@ -234,6 +234,7 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_CHECKERED_PANEL, cube);
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_TUBE, cube);
         simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_CORNER_TUBE, cube);
+        simpleBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_HOPPER, cube);
 
         registerFramedCube(blockModels, cube);
         registerFramedFence(blockModels, cube);

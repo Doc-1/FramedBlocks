@@ -26,6 +26,7 @@ import xfacthd.framedblocks.client.screen.overlay.ToggleWaterloggableOverlay;
 import xfacthd.framedblocks.client.screen.overlay.ToggleYSlopeOverlay;
 import xfacthd.framedblocks.common.block.cube.FramedTankBlock;
 import xfacthd.framedblocks.common.block.slopeslab.FramedSlopeSlabBlock;
+import xfacthd.framedblocks.common.blockentity.special.FramedHopperBlockEntity;
 import xfacthd.framedblocks.common.compat.atlasviewer.AtlasViewerCompat;
 import xfacthd.framedblocks.common.compat.jade.JadeCompat;
 import xfacthd.framedblocks.common.compat.jei.JeiConstants;
@@ -283,6 +284,7 @@ public final class FramedLanguageProvider extends LanguageProvider
         add(FBContent.BLOCK_FRAMED_CHAIN.value(), "Framed Chain");
         add(FBContent.BLOCK_FRAMED_LANTERN.value(), "Framed Lantern");
         add(FBContent.BLOCK_FRAMED_SOUL_LANTERN.value(), "Framed Soul Lantern");
+        add(FBContent.BLOCK_FRAMED_HOPPER.value(), "Framed Hopper");
     }
 
     private void addSpecialBlockTranslations()
@@ -345,6 +347,7 @@ public final class FramedLanguageProvider extends LanguageProvider
     {
         add(FramedChestBlockEntity.TITLE, "Framed Chest");
         add(FramedStorageBlockEntity.TITLE, "Framed Secret Storage");
+        add(FramedHopperBlockEntity.TITLE, "Framed Item Hopper");
 
         add(FramingSawBlock.SAW_MENU_TITLE, "Framing Saw");
         add(PoweredFramingSawBlock.POWERED_SAW_MENU_TITLE, "Powered Framing Saw");
