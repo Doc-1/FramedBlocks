@@ -2,7 +2,7 @@
 @FieldsAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-package xfacthd.framedblocks.common.compat.supplementaries;
+package xfacthd.framedblocks.common.compat.amendments;
 
 import net.minecraft.FieldsAreNonnullByDefault;
 import net.minecraft.MethodsReturnNonnullByDefault;

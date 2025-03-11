@@ -25,7 +25,7 @@ import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.block.FramedBlock;
 import xfacthd.framedblocks.common.blockentity.special.FramedFlowerPotBlockEntity;
-import xfacthd.framedblocks.common.compat.supplementaries.SupplementariesCompat;
+import xfacthd.framedblocks.common.compat.amendments.AmendmentsCompat;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 
@@ -51,7 +51,7 @@ public class FramedFlowerPotBlock extends FramedBlock
     public BlockState getStateForPlacement(BlockPlaceContext context)
     {
         BlockState state = defaultBlockState();
-        if (SupplementariesCompat.isLoaded())
+        if (AmendmentsCompat.isLoaded())
         {
             state = state.setValue(
                     PropertyHolder.HANGING,
@@ -84,7 +84,7 @@ public class FramedFlowerPotBlock extends FramedBlock
     {
         if (state.getValue(PropertyHolder.HANGING))
         {
-            return SupplementariesCompat.canSurviveHanging(level, pos.relative(Direction.UP));
+            return AmendmentsCompat.canSurviveHanging(level, pos.relative(Direction.UP));
         }
         return true;
     }
