@@ -298,7 +298,7 @@ public final class AppearanceHelper
             return null;
         }
 
-        ModelData data = manager.getAt(pos);
+        ModelData data = ((ModelDataAccessor) manager).framedblocks$getCachedAt(pos);
         if (data == null)
         {
             return null;
@@ -319,6 +319,15 @@ public final class AppearanceHelper
             return block.unpackNestedModelData(data, state, componentState).get(FramedBlockData.PROPERTY);
         }
         return null;
+    }
+
+
+
+    @ApiStatus.Internal
+    public interface ModelDataAccessor
+    {
+        @Nullable
+        ModelData framedblocks$getCachedAt(BlockPos pos);
     }
 
 

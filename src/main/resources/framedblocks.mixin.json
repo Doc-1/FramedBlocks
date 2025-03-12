@@ -10,7 +10,8 @@
     ],
     "client": [
         "client.MixinLevelRenderer",
-        "client.MixinModelBlockRenderer"
+        "client.MixinModelBlockRenderer",
+        "client.MixinModelDataManager"
     ],
     "injectors": {
         "defaultRequire": 1
