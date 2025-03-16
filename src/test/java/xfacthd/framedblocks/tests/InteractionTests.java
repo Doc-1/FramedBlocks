@@ -345,7 +345,7 @@ public final class InteractionTests
     {
         TestUtils.chainTasks(helper, List.of(
                 () -> helper.setBlock(POS_ABOVE_FLOOR, FBContent.BLOCK_FRAMED_CUBE.value()),
-                () -> TestUtils.applyCamo(helper, POS_ABOVE_FLOOR, Blocks.OAK_LOG, List.of(Direction.UP)),
+                () -> TestUtils.applyCamo(helper, POS_ABOVE_FLOOR, Blocks.OAK_LOG),
                 () ->
                 {
                     FramedBlockEntity be = TestUtils.getBlockEntity(helper, POS_ABOVE_FLOOR, FramedBlockEntity.class);
@@ -423,7 +423,7 @@ public final class InteractionTests
     {
         TestUtils.chainTasks(helper, List.of(
                 () -> helper.setBlock(POS_ABOVE_FLOOR, FBContent.BLOCK_FRAMED_FLOWER_POT.value()),
-                () -> TestUtils.applyCamo(helper, POS_ABOVE_FLOOR, Blocks.POLISHED_GRANITE, List.of(Direction.UP)),
+                () -> TestUtils.applyCamo(helper, POS_ABOVE_FLOOR, Blocks.POLISHED_GRANITE),
                 () ->
                 {
                     FramedFlowerPotBlockEntity be = TestUtils.getBlockEntity(helper, POS_ABOVE_FLOOR, FramedFlowerPotBlockEntity.class);

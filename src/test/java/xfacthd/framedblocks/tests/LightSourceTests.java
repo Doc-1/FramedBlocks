@@ -43,7 +43,7 @@ public final class LightSourceTests
                         100,
                         0,
                         true,
-                        helper -> TestUtils.testBlockLightEmission(helper, state, getCamoSides(state.getBlock()))
+                        helper -> TestUtils.testBlockLightEmission(helper, state)
                 ))
                 .toList();
     }
@@ -55,7 +55,9 @@ public final class LightSourceTests
                 type != BlockType.FRAMED_SOUL_TORCH &&
                 type != BlockType.FRAMED_SOUL_WALL_TORCH &&
                 type != BlockType.FRAMED_REDSTONE_TORCH &&
-                type != BlockType.FRAMED_REDSTONE_WALL_TORCH;
+                type != BlockType.FRAMED_REDSTONE_WALL_TORCH &&
+                type != BlockType.FRAMED_LANTERN &&
+                type != BlockType.FRAMED_SOUL_LANTERN;
     }
 
     private static BlockState getTestState(Block block)
@@ -82,50 +84,6 @@ public final class LightSourceTests
     {
         ResourceLocation regName = BuiltInRegistries.BLOCK.getKey(state.getBlock());
         return String.format("lightsourcetests.test_%s", regName.getPath());
-    }
-
-    private static List<Direction> getCamoSides(Block block)
-    {
-        Preconditions.checkArgument(block instanceof IFramedBlock);
-
-        IBlockType type = ((IFramedBlock) block).getBlockType();
-        if (!type.isDoubleBlock() || !(type instanceof BlockType))
-        {
-            return List.of(Direction.UP);
-        }
-
-        return switch ((BlockType) type)
-        {
-            case FRAMED_DIVIDED_SLAB,
-                 FRAMED_DOUBLE_PANEL,
-                 FRAMED_DOUBLE_SLOPE_PANEL,
-                 FRAMED_INV_DOUBLE_SLOPE_PANEL,
-                 FRAMED_EXTENDED_DOUBLE_SLOPE_PANEL,
-                 FRAMED_FLAT_DOUBLE_SLOPE_PANEL_CORNER,
-                 FRAMED_FLAT_INV_DOUBLE_SLOPE_PANEL_CORNER,
-                 FRAMED_FLAT_EXT_DOUBLE_SLOPE_PANEL_CORNER,
-                 FRAMED_FLAT_EXT_INNER_DOUBLE_SLOPE_PANEL_CORNER,
-                 FRAMED_STACKED_SLOPE_PANEL,
-                 FRAMED_FLAT_STACKED_SLOPE_PANEL_CORNER,
-                 FRAMED_FLAT_STACKED_INNER_SLOPE_PANEL_CORNER,
-                 FRAMED_SMALL_DOUBLE_CORNER_SLOPE_PANEL_W,
-                 FRAMED_EXT_DOUBLE_CORNER_SLOPE_PANEL,
-                 FRAMED_EXT_DOUBLE_CORNER_SLOPE_PANEL_W,
-                 FRAMED_EXT_INNER_DOUBLE_CORNER_SLOPE_PANEL_W,
-                 FRAMED_STACKED_CORNER_SLOPE_PANEL,
-                 FRAMED_STACKED_INNER_CORNER_SLOPE_PANEL,
-                 FRAMED_VERTICAL_DOUBLE_HALF_SLOPE -> List.of(Direction.NORTH, Direction.SOUTH);
-
-            case FRAMED_DIVIDED_PANEL_VERTICAL,
-                 FRAMED_DIVIDED_SLOPE,
-                 FRAMED_DIVIDED_STAIRS,
-                 FRAMED_SLICED_STAIRS_SLAB,
-                 FRAMED_VERTICAL_SLICED_STAIRS -> List.of(Direction.EAST, Direction.WEST);
-
-            case FRAMED_CHECKERED_SLAB -> List.of(Direction.NORTH, Direction.WEST);
-
-            default -> List.of(Direction.DOWN, Direction.UP);
-        };
     }
 
     private LightSourceTests() { }
