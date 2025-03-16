@@ -183,7 +183,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
         {
             return superMult;
         }
-        return ARGB.multiply(superMult, localMult);
+        return ARGB.average(superMult, localMult);
     }
 
     @Override
