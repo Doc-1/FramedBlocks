@@ -19,6 +19,24 @@ import java.util.List;
 
 public final class ShapeRotationRecipe extends ShapelessRecipe
 {
+    public static final MapCodec<ShapeRotationRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+            Codec.STRING.optionalFieldOf("group", "").forGetter(ShapelessRecipe::group),
+            ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+            Ingredient.CODEC.fieldOf("tool").forGetter(recipe -> recipe.tool),
+            Ingredient.CODEC.fieldOf("block").forGetter(recipe -> recipe.block)
+    ).apply(inst, ShapeRotationRecipe::new));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ShapeRotationRecipe> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.STRING_UTF8,
+            ShapelessRecipe::group,
+            ItemStack.STREAM_CODEC,
+            recipe -> recipe.result,
+            Ingredient.CONTENTS_STREAM_CODEC,
+            recipe -> recipe.tool,
+            Ingredient.CONTENTS_STREAM_CODEC,
+            recipe -> recipe.block,
+            ShapeRotationRecipe::new
+    );
+
     private final Ingredient tool;
     private final Ingredient block;
 
@@ -49,40 +67,5 @@ public final class ShapeRotationRecipe extends ShapelessRecipe
     public RecipeSerializer<ShapelessRecipe> getSerializer()
     {
         return (RecipeSerializer<ShapelessRecipe>)(RecipeSerializer) FBContent.RECIPE_SERIALIZER_SHAPE_ROTATION.value();
-    }
-
-
-
-    public static final class Serializer implements RecipeSerializer<ShapeRotationRecipe>
-    {
-        private static final MapCodec<ShapeRotationRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-                Codec.STRING.optionalFieldOf("group", "").forGetter(ShapelessRecipe::group),
-                ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
-                Ingredient.CODEC.fieldOf("tool").forGetter(recipe -> recipe.tool),
-                Ingredient.CODEC.fieldOf("block").forGetter(recipe -> recipe.block)
-        ).apply(inst, ShapeRotationRecipe::new));
-        private static final StreamCodec<RegistryFriendlyByteBuf, ShapeRotationRecipe> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.STRING_UTF8,
-                ShapelessRecipe::group,
-                ItemStack.STREAM_CODEC,
-                recipe -> recipe.result,
-                Ingredient.CONTENTS_STREAM_CODEC,
-                recipe -> recipe.tool,
-                Ingredient.CONTENTS_STREAM_CODEC,
-                recipe -> recipe.block,
-                ShapeRotationRecipe::new
-        );
-
-        @Override
-        public MapCodec<ShapeRotationRecipe> codec()
-        {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, ShapeRotationRecipe> streamCodec()
-        {
-            return STREAM_CODEC;
-        }
     }
 }

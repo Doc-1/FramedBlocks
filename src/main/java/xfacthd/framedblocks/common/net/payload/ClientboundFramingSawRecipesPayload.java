@@ -11,7 +11,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
-import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeSerializer;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ public record ClientboundFramingSawRecipesPayload(List<RecipeHolder<FramingSawRe
     private static final StreamCodec<RegistryFriendlyByteBuf, RecipeHolder<FramingSawRecipe>> HOLDER_STREAM_CODEC = StreamCodec.composite(
             ResourceKey.streamCodec(Registries.RECIPE),
             RecipeHolder::id,
-            FramingSawRecipeSerializer.STREAM_CODEC,
+            FramingSawRecipe.STREAM_CODEC,
             RecipeHolder::value,
             RecipeHolder::new
     );

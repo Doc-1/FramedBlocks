@@ -1,7 +1,13 @@
 package xfacthd.framedblocks.common.crafting.saw;
 
 import com.google.gson.JsonSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.PlacementInfo;
@@ -24,6 +30,23 @@ public final class FramingSawRecipe implements Recipe<RecipeInput>
 {
     public static final int CUBE_MATERIAL_VALUE = 6144; // Empirically determined value
     public static final int MAX_ADDITIVE_COUNT = 3;
+    public static final MapCodec<FramingSawRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+            Codec.intRange(0, Integer.MAX_VALUE).fieldOf("material").forGetter(FramingSawRecipe::getMaterialAmount),
+            FramingSawRecipeAdditive.CODEC.sizeLimitedListOf(FramingSawRecipe.MAX_ADDITIVE_COUNT).optionalFieldOf("additives", List.of()).forGetter(FramingSawRecipe::getAdditives),
+            ItemStack.STRICT_CODEC.fieldOf("result").forGetter(FramingSawRecipe::getResult),
+            Codec.BOOL.optionalFieldOf("disabled", false).forGetter(FramingSawRecipe::isDisabled)
+    ).apply(inst, FramingSawRecipe::new));
+    public static final StreamCodec<RegistryFriendlyByteBuf, FramingSawRecipe> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT,
+            FramingSawRecipe::getMaterialAmount,
+            FramingSawRecipeAdditive.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            FramingSawRecipe::getAdditives,
+            ItemStack.STREAM_CODEC,
+            FramingSawRecipe::getResult,
+            ByteBufCodecs.BOOL,
+            FramingSawRecipe::isDisabled,
+            FramingSawRecipe::new
+    );
 
     private final int materialAmount;
     private final List<FramingSawRecipeAdditive> additives;
