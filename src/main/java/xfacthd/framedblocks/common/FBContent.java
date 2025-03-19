@@ -81,6 +81,7 @@ import xfacthd.framedblocks.common.compat.jei.camo.JeiCamoApplicationRecipe;
 import xfacthd.framedblocks.common.compat.jei.camo.JeiCamoApplicationRecipeSerializer;
 import xfacthd.framedblocks.common.crafting.camo.CamoApplicationRecipe;
 import xfacthd.framedblocks.common.crafting.camo.CamoApplicationRecipeSerializer;
+import xfacthd.framedblocks.common.crafting.rotation.ShapeRotationRecipe;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeDisplay;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeSerializer;
@@ -664,6 +665,10 @@ public final class FBContent
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<JeiCamoApplicationRecipe>> RECIPE_SERIALIZER_JEI_CAMO = RECIPE_SERIALIZERS.register(
             "jei_camo",
             JeiCamoApplicationRecipeSerializer::new
+    );
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ShapeRotationRecipe>> RECIPE_SERIALIZER_SHAPE_ROTATION = RECIPE_SERIALIZERS.register(
+            "rotate_shape",
+            ShapeRotationRecipe.Serializer::new
     );
     // endregion
 

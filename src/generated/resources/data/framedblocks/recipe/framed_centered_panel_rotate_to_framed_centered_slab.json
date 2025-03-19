@@ -1,12 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "building",
-  "ingredients": [
-    "framedblocks:framed_centered_panel",
-    "framedblocks:framed_wrench"
-  ],
+  "type": "framedblocks:rotate_shape",
+  "block": "framedblocks:framed_centered_panel",
   "result": {
     "count": 1,
     "id": "framedblocks:framed_centered_slab"
-  }
+  },
+  "tool": "#c:tools/wrench"
 }
