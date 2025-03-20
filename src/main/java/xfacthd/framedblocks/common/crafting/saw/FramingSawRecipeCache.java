@@ -10,19 +10,17 @@ import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeMap;
+import net.neoforged.neoforge.client.event.RecipesReceivedEvent;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.net.payload.ClientboundFramingSawRecipesPayload;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -40,17 +38,13 @@ public final class FramingSawRecipeCache
     private final Map<Item, RecipeHolder<FramingSawRecipe>> recipesByResult = new IdentityHashMap<>();
     private final Map<Item, RecipeHolder<FramingSawRecipe>> recipesWithAdditives = new IdentityHashMap<>();
     private final Reference2IntMap<Item> materialValues = new Reference2IntOpenHashMap<>();
+    private boolean recipesPopulated = false;
 
-    public void update(RecipeManager recipeManager)
-    {
-        update(recipeManager.recipeMap().byType(FBContent.RECIPE_TYPE_FRAMING_SAW_RECIPE.value()));
-    }
-
-    public void update(Collection<RecipeHolder<FramingSawRecipe>> recipeList)
+    private void update(RecipeMap recipeMap)
     {
         clear();
 
-        recipes.addAll(recipeList);
+        recipes.addAll(recipeMap.byType(FBContent.RECIPE_TYPE_FRAMING_SAW_RECIPE.value()));
         recipes.sort(FramingSawRecipeCache::sortRecipes);
 
         recipes.forEach(holder ->
@@ -76,14 +70,22 @@ public final class FramingSawRecipeCache
                 recipesWithAdditives.put(result.getItem(), holder);
             }
         });
+
+        recipesPopulated = true;
     }
 
     public void clear()
     {
+        recipesPopulated = false;
         recipes.clear();
         recipesByResult.clear();
         recipesWithAdditives.clear();
         materialValues.clear();
+    }
+
+    public boolean isPopulated()
+    {
+        return recipesPopulated;
     }
 
     public List<RecipeHolder<FramingSawRecipe>> getRecipes()
@@ -138,8 +140,12 @@ public final class FramingSawRecipeCache
 
     public static void onDataPackSync(final OnDatapackSyncEvent event)
     {
-        ClientboundFramingSawRecipesPayload payload = new ClientboundFramingSawRecipesPayload(SERVER_INSTANCE.recipes);
-        event.getRelevantPlayers().forEach(player -> PacketDistributor.sendToPlayer(player, payload));
+        event.sendRecipes(FBContent.RECIPE_TYPE_FRAMING_SAW_RECIPE.value());
+    }
+
+    public static void onRecipesReceived(final RecipesReceivedEvent event)
+    {
+        CLIENT_INSTANCE.update(event.getRecipeMap());
     }
 
     private static int sortRecipes(RecipeHolder<FramingSawRecipe> holder1, RecipeHolder<FramingSawRecipe> holder2)
@@ -178,7 +184,7 @@ public final class FramingSawRecipeCache
         @Override
         public void onResourceManagerReload(ResourceManager resourceManager)
         {
-            FramingSawRecipeCache.SERVER_INSTANCE.update(serverResources.getRecipeManager());
+            FramingSawRecipeCache.SERVER_INSTANCE.update(serverResources.getRecipeManager().recipeMap());
         }
     }
 }
