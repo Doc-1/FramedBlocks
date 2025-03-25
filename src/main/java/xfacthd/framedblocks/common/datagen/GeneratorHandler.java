@@ -10,7 +10,6 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.util.FramedConstants;
-import xfacthd.framedblocks.client.itemmodel.DynamicItemTintProviders;
 import xfacthd.framedblocks.common.compat.ae2.AppliedEnergisticsCompat;
 import xfacthd.framedblocks.common.datagen.providers.*;
 
@@ -35,9 +34,6 @@ public final class GeneratorHandler
 
     private static void onGatherData(final GatherDataEvent.Client event)
     {
-        // TODO: needs a better solution that works when other mods generate data
-        DynamicItemTintProviders.init();
-
         event.createProvider(FramedSpriteSourceProvider::new);
         event.createProvider(FramedBlockModelProvider::new);
         event.createProvider(FramedItemModelProvider::new);

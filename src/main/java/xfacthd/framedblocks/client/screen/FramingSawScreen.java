@@ -303,7 +303,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
         }
         if (recipeHolder != null)
         {
-            minecraft.getItemModelResolver().updateForTopItem(SCRATCH_RENDER_STATE, stack, ItemDisplayContext.FIXED, false, null, null, 0);
+            minecraft.getItemModelResolver().updateForTopItem(SCRATCH_RENDER_STATE, stack, ItemDisplayContext.FIXED, null, null, 0);
             if (SCRATCH_RENDER_STATE.usesBlockLight())
             {
                 tooltip = Optional.of(new BlockPreviewTooltipComponent.Component(SCRATCH_RENDER_STATE));

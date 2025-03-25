@@ -3,6 +3,7 @@ package xfacthd.framedblocks.common.blockentity.doubled.slab;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
@@ -12,21 +13,19 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.model.data.ModelData;
 import xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.common.block.slab.FramedAdjustableDoubleBlock;
+import xfacthd.framedblocks.common.blockentity.PackedCollapsibleBlockOffsets;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
-import xfacthd.framedblocks.common.blockentity.special.FramedCollapsibleBlockEntity;
-import xfacthd.framedblocks.common.blockentity.special.FramedCollapsibleCopycatBlockEntity;
 import xfacthd.framedblocks.common.blockentity.special.ICollapsibleBlockEntity;
 import xfacthd.framedblocks.common.blockentity.special.ICollapsibleCopycatBlockEntity;
 import xfacthd.framedblocks.common.data.component.AdjustableDoubleBlockData;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 
-import java.util.Objects;
 import java.util.Optional;
 
 public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity implements ICollapsibleBlockEntity, ICollapsibleCopycatBlockEntity
@@ -35,20 +34,12 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
     private static final int MAX_PART_HEIGHT = 15;
     public static final int CENTER_PART_HEIGHT = 8;
 
-    private final ModelProperty<Integer> offsetProperty;
     private final OffsetPacker offsetPacker;
     private int firstHeight = CENTER_PART_HEIGHT;
 
-    private FramedAdjustableDoubleBlockEntity(
-            BlockEntityType<?> type,
-            BlockPos pos,
-            BlockState state,
-            ModelProperty<Integer> offsetProperty,
-            OffsetPacker offsetPacker
-    )
+    private FramedAdjustableDoubleBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, OffsetPacker offsetPacker)
     {
         super(type, pos, state);
-        this.offsetProperty = offsetProperty;
         this.offsetPacker = offsetPacker;
     }
 
@@ -149,19 +140,9 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
     }
 
     @Override
-    public ModelData getModelData(boolean includeCullInfo)
+    protected void attachAdditionalModelData(ModelData.Builder builder)
     {
-        BlockState state = getBlockState();
-        ModelData data = super.getModelData(includeCullInfo);
-        ModelData dataLeft = Objects.requireNonNull(data.get(DATA_ONE))
-                .derive()
-                .with(offsetProperty, offsetPacker.pack(state, firstHeight, false))
-                .build();
-        ModelData dataRight = Objects.requireNonNull(data.get(DATA_TWO))
-                .derive()
-                .with(offsetProperty, offsetPacker.pack(state, firstHeight, true))
-                .build();
-        return data.derive().with(DATA_ONE, dataLeft).with(DATA_TWO, dataRight).build();
+        builder.with(PackedCollapsibleBlockOffsets.PROPERTY, offsetPacker.packDouble(getBlockState(), firstHeight));
     }
 
     private static Direction getFacing(BlockState state)
@@ -181,7 +162,7 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
     {
         boolean needUpdate = super.readFromDataPacket(nbt, lookupProvider);
 
-        int height = nbt.getInt("first_height");
+        int height = nbt.getIntOr("first_height", CENTER_PART_HEIGHT);
         if (height != firstHeight)
         {
             firstHeight = height;
@@ -205,7 +186,7 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
     public void handleUpdateTag(CompoundTag nbt, HolderLookup.Provider provider)
     {
         super.handleUpdateTag(nbt, provider);
-        firstHeight = nbt.getInt("first_height");
+        firstHeight = nbt.getIntOr("first_height", CENTER_PART_HEIGHT);
     }
 
     @Override
@@ -224,13 +205,20 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
     }
 
     @Override
+    public void removeComponentsFromTag(CompoundTag tag)
+    {
+        super.removeComponentsFromTag(tag);
+        tag.remove("first_height");
+    }
+
+    @Override
     protected void collectMiscComponents(DataComponentMap.Builder builder)
     {
         builder.set(FBContent.DC_TYPE_ADJ_DOUBLE_BLOCK_DATA, new AdjustableDoubleBlockData(firstHeight));
     }
 
     @Override
-    protected void applyMiscComponents(DataComponentInput input)
+    protected void applyMiscComponents(DataComponentGetter input)
     {
         AdjustableDoubleBlockData blockData = input.get(FBContent.DC_TYPE_ADJ_DOUBLE_BLOCK_DATA);
         if (blockData != null)
@@ -250,7 +238,7 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
         super.loadAdditional(nbt, provider);
-        firstHeight = nbt.getInt("first_height");
+        firstHeight = nbt.getIntOr("first_height", CENTER_PART_HEIGHT);
     }
 
 
@@ -261,7 +249,6 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
                 FBContent.BE_TYPE_FRAMED_ADJ_DOUBLE_BLOCK.value(),
                 pos,
                 state,
-                FramedCollapsibleBlockEntity.OFFSETS,
                 FramedAdjustableDoubleBlockEntity::getPackedOffsetsStandard
         );
     }
@@ -272,7 +259,6 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
                 FBContent.BE_TYPE_FRAMED_ADJ_DOUBLE_COPYCAT_BLOCK.value(),
                 pos,
                 state,
-                FramedCollapsibleCopycatBlockEntity.OFFSETS,
                 FramedAdjustableDoubleBlockEntity::getPackedOffsetsCopycat
         );
     }
@@ -309,5 +295,11 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
     public interface OffsetPacker
     {
         int pack(BlockState state, int firstHeight, boolean right);
+
+        default PackedCollapsibleBlockOffsets packDouble(BlockState state, int firstHeight)
+        {
+            DoubleBlockParts parts = ((IFramedDoubleBlock) state.getBlock()).getParts(state);
+            return new PackedCollapsibleBlockOffsets.Double(parts, pack(state, firstHeight, false), pack(state, firstHeight, true));
+        }
     }
 }

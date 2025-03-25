@@ -14,10 +14,10 @@ import java.util.Map;
 public final class WallConnectionPredicate implements ConnectionPredicate
 {
     private static final Map<Direction, Property<WallSide>> WALL_PROPERTIES = Map.of(
-            Direction.NORTH, WallBlock.NORTH_WALL,
-            Direction.EAST, WallBlock.EAST_WALL,
-            Direction.SOUTH, WallBlock.SOUTH_WALL,
-            Direction.WEST, WallBlock.WEST_WALL
+            Direction.NORTH, WallBlock.NORTH,
+            Direction.EAST, WallBlock.EAST,
+            Direction.SOUTH, WallBlock.SOUTH,
+            Direction.WEST, WallBlock.WEST
     );
 
     @Override

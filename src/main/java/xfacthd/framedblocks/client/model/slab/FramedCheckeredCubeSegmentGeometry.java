@@ -22,7 +22,7 @@ public class FramedCheckeredCubeSegmentGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (Utils.isY(quadDir))
         {
             boolean up = quadDir == Direction.UP;

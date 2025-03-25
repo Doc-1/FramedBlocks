@@ -1,8 +1,6 @@
 package xfacthd.framedblocks.common.block.cube;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -13,22 +11,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
-import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.FramedBlock;
 import xfacthd.framedblocks.common.blockentity.special.FramedTankBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
-
-import java.util.List;
+import xfacthd.framedblocks.common.item.block.FramedTankBlockItem;
 
 public class FramedTankBlock extends FramedBlock
 {
-    public static final String TANK_CONTENTS = Utils.translationKey("desc", "block.fluid_tank.contents");
-    public static final Component EMPTY_FLUID = Utils.translate("desc", "block.fluid_tank.contents.empty").withStyle(ChatFormatting.ITALIC);
-
     public FramedTankBlock(Properties props)
     {
         super(BlockType.FRAMED_TANK, props);
@@ -80,17 +71,9 @@ public class FramedTankBlock extends FramedBlock
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, List<Component> lines, TooltipFlag flag)
+    public BlockItem createBlockItem(Item.Properties props)
     {
-        super.appendHoverText(stack, ctx, lines, flag);
-
-        Component name = EMPTY_FLUID;
-        SimpleFluidContent content = stack.getOrDefault(FBContent.DC_TYPE_TANK_CONTENTS, SimpleFluidContent.EMPTY);
-        if (!content.isEmpty())
-        {
-            name = content.getFluid().getFluidType().getDescription().copy().withStyle(ChatFormatting.WHITE);
-        }
-        lines.add(Component.translatable(TANK_CONTENTS, name).withStyle(ChatFormatting.GOLD));
+        return new FramedTankBlockItem(this, props);
     }
 
     @Override

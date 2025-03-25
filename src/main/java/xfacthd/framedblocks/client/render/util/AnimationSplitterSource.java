@@ -20,11 +20,10 @@ import java.util.Optional;
 
 public record AnimationSplitterSource(ResourceLocation resource, List<Frame> frames) implements SpriteSource
 {
-    private static final MapCodec<AnimationSplitterSource> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+    public static final MapCodec<AnimationSplitterSource> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             ResourceLocation.CODEC.fieldOf("resource").forGetter(s -> s.resource),
             ExtraCodecs.nonEmptyList(Frame.CODEC.listOf()).fieldOf("frames").forGetter(s -> s.frames)
     ).apply(inst, AnimationSplitterSource::new));
-    public static final SpriteSourceType TYPE = new SpriteSourceType(CODEC);
 
     @Override
     public void run(ResourceManager mgr, Output out)
@@ -44,9 +43,9 @@ public record AnimationSplitterSource(ResourceLocation resource, List<Frame> fra
     }
 
     @Override
-    public SpriteSourceType type()
+    public MapCodec<AnimationSplitterSource> codec()
     {
-        return TYPE;
+        return CODEC;
     }
 
 

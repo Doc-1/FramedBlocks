@@ -1,6 +1,7 @@
 package xfacthd.framedblocks.api.model.quad;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.core.Direction;
 import net.neoforged.neoforge.client.model.IQuadTransformer;
 import org.joml.Vector3f;
 import xfacthd.framedblocks.api.model.util.ModelUtils;
@@ -16,7 +17,7 @@ public final class QuadData
     public QuadData(BakedQuad quad)
     {
         this.quad = quad;
-        int[] vertexData = quad.getVertices();
+        int[] vertexData = quad.vertices();
         this.vertexData = Arrays.copyOf(vertexData, vertexData.length);
         this.uvRotated = ModelUtils.isQuadRotated(this);
     }
@@ -150,5 +151,25 @@ public final class QuadData
     {
         int offset = vert * IQuadTransformer.STRIDE + IQuadTransformer.UV2;
         vertexData[offset] = val;
+    }
+
+    public Direction recomputeNormals()
+    {
+        Vector3f v1 = pos(3, new Vector3f());
+        Vector3f t1 = pos(1, new Vector3f());
+        Vector3f v2 = pos(2, new Vector3f());
+        Vector3f t2 = pos(0, new Vector3f());
+
+        v1.sub(t1);
+        v2.sub(t2);
+        v2.cross(v1);
+        v2.normalize();
+
+        for (int vert = 0; vert < 4; vert++)
+        {
+            normal(vert, v2);
+        }
+
+        return Direction.getApproximateNearest(v2.x, v2.y, v2.z);
     }
 }

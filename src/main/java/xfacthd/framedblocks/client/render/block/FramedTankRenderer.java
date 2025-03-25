@@ -28,7 +28,7 @@ public class FramedTankRenderer implements BlockEntityRenderer<FramedTankBlockEn
     public FramedTankRenderer(@SuppressWarnings("unused") BlockEntityRendererProvider.Context ctx) { }
 
     @Override
-    public void render(FramedTankBlockEntity be, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay)
+    public void render(FramedTankBlockEntity be, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay, Vec3 cameraPos)
     {
         FluidStack fluid = be.getContents();
         if (fluid.isEmpty() || be.getLevel() == null) return;

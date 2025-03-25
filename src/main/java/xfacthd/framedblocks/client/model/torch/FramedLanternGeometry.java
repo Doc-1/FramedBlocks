@@ -1,22 +1,23 @@
 package xfacthd.framedblocks.client.model.torch;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
 import org.joml.Vector3f;
+import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
+import xfacthd.framedblocks.api.model.geometry.PartConsumer;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.MultiQuadModifier;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
-import xfacthd.framedblocks.api.model.util.ModelUtils;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.data.PropertyHolder;
@@ -27,32 +28,29 @@ import java.util.List;
 
 public class FramedLanternGeometry extends Geometry
 {
-    public static final ResourceLocation STANDING_CHAIN_LOCATION = Utils.rl("block/framed_lantern_chain_standing");
-    public static final ResourceLocation HANGING_CHAIN_LOCATION = Utils.rl("block/framed_lantern_chain_hanging");
-    private static final ChunkRenderTypeSet SOLID_CUTOUT = ChunkRenderTypeSet.of(RenderType.solid(), RenderType.cutout());
     private static final Vector3f ROT_ORIGIN = new Vector3f(.5F, .5F, .5F);
 
     private final BlockState state;
     private final boolean hanging;
     private final ChainType chain;
     private final boolean soul;
-    private final BakedModel baseModel;
-    private final BakedModel chainModel;
+    private final BlockStateModel baseModel;
+    private final BlockState auxShaderState;
 
-    private FramedLanternGeometry(GeometryFactory.Context ctx, boolean soul)
+    private FramedLanternGeometry(GeometryFactory.Context ctx, boolean soul, BlockState auxShaderState)
     {
         this.state = ctx.state();
         this.hanging = ctx.state().getValue(BlockStateProperties.HANGING);
         this.chain = ctx.state().getValue(PropertyHolder.CHAIN_TYPE);
         this.soul = soul;
         this.baseModel = ctx.baseModel();
-        this.chainModel = ctx.modelLookup().getStandaloneModel(hanging ? HANGING_CHAIN_LOCATION : STANDING_CHAIN_LOCATION);
+        this.auxShaderState = auxShaderState;
     }
 
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (Utils.isY(quadDir))
         {
             boolean up = quadDir == Direction.UP;
@@ -167,22 +165,9 @@ public class FramedLanternGeometry extends Geometry
     }
 
     @Override
-    public ChunkRenderTypeSet getAdditionalRenderTypes(RandomSource rand, ModelData extraData)
+    public void collectAdditionalPartsCached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data, QuadCacheKey cacheKey)
     {
-        return chain == ChainType.METAL ? SOLID_CUTOUT : ModelUtils.SOLID;
-    }
-
-    @Override
-    public void getAdditionalQuads(QuadMap quadMap, RandomSource rand, ModelData data, RenderType renderType)
-    {
-        if (renderType == RenderType.solid())
-        {
-            quadMap.get(null).addAll(baseModel.getQuads(state, null, rand, ModelData.EMPTY, renderType));
-        }
-        else if (renderType == RenderType.cutout() && chain == ChainType.METAL)
-        {
-            quadMap.get(null).addAll(chainModel.getQuads(state, null, rand, ModelData.EMPTY, renderType));
-        }
+        consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, auxShaderState, null);
     }
 
     @Override
@@ -195,11 +180,11 @@ public class FramedLanternGeometry extends Geometry
 
     public static FramedLanternGeometry normal(GeometryFactory.Context ctx)
     {
-        return new FramedLanternGeometry(ctx, false);
+        return new FramedLanternGeometry(ctx, false, Blocks.LANTERN.defaultBlockState());
     }
 
     public static FramedLanternGeometry soul(GeometryFactory.Context ctx)
     {
-        return new FramedLanternGeometry(ctx, true);
+        return new FramedLanternGeometry(ctx, true, Blocks.SOUL_LANTERN.defaultBlockState());
     }
 }

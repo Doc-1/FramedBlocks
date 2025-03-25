@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -95,8 +96,7 @@ public final class ChunkBanTest
             return 0;
         }
 
-        CommandSource source = ctx.getSource().source;
-        if (!(source instanceof ServerPlayer player) || source instanceof FakePlayer)
+        if (!(ctx.getSource().getPlayer() instanceof ServerPlayer player) || player instanceof FakePlayer)
         {
             ctx.getSource().sendFailure(MSG_NOT_A_PLAYER);
             return 0;
@@ -117,10 +117,11 @@ public final class ChunkBanTest
             state = FBContent.BLOCK_FRAMED_DOUBLE_SLAB.value().defaultBlockState();
         }
 
+        ServerLevel level = ctx.getSource().getLevel();
         ChunkPos chunk = new ChunkPos(new BlockPos((int) player.getX(), (int) player.getY(), (int) player.getZ()));
-        int minY = player.level().getMinY();
+        int minY = level.getMinY();
         startPos = placePos = SectionPos.of(chunk, SectionPos.blockToSectionCoord(minY)).origin().above();
-        dimension = player.level().dimension();
+        dimension = level.dimension();
         resultMsgConsumer = msg -> ctx.getSource().sendSuccess(() -> msg, true);
 
         ctx.getSource().sendSuccess(() -> Component.literal("Starting chunkban test preparation in chunk " + chunk), true);

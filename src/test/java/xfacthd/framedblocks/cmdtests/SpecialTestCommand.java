@@ -120,7 +120,7 @@ public final class SpecialTestCommand
 
             String pathText = path.toAbsolutePath().toString();
             Component pathComponent = Component.literal(pathText).withStyle(style ->
-                    style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, pathText))
+                    style.withClickEvent(new ClickEvent.OpenFile(pathText))
                             .applyFormat(ChatFormatting.UNDERLINE)
             );
             return Component.literal("Tests results exported to ").append(pathComponent);

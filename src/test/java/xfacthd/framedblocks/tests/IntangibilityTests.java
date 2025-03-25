@@ -8,7 +8,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.gametest.GameTestHolder;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.util.FramedConstants;
@@ -19,13 +18,13 @@ import xfacthd.framedblocks.common.config.ServerConfig;
 
 import java.util.*;
 
-@GameTestHolder(FramedConstants.MOD_ID)
+//@GameTestHolder(FramedConstants.MOD_ID)
 public final class IntangibilityTests
 {
     private static final String BATCH_NAME = "intangibility";
     private static final String STRUCTURE_NAME = FramedConstants.MOD_ID + ":floor_slab_1x1";
 
-    @GameTestGenerator
+    /*@GameTestGenerator
     public static Collection<TestFunction> generateIntangibilityTests()
     {
         return Arrays.stream(BlockType.values())
@@ -56,7 +55,7 @@ public final class IntangibilityTests
     public static void afterBatch(ServerLevel level)
     {
         ServerConfig.VIEW.setOverrideIntangibilityConfig(false);
-    }
+    }*/
 
     private static BlockState getTestState(Block block)
     {

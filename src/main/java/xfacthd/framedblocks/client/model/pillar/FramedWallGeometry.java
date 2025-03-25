@@ -80,7 +80,7 @@ public class FramedWallGeometry extends Geometry
     {
         if (height != WallSide.NONE)
         {
-            Direction quadDir = quad.getDirection();
+            Direction quadDir = quad.direction();
             if (Utils.isY(quadDir))
             {
                 Vector4f rect = rects[dir.ordinal() - 2 + (center ? 4 : 0)];
@@ -103,7 +103,7 @@ public class FramedWallGeometry extends Geometry
 
     private static void buildWallEndCap(QuadMap quadMap, BakedQuad quad, Direction dir, WallSide height)
     {
-        if (quad.getDirection() == dir && height != WallSide.NONE)
+        if (quad.direction() == dir && height != WallSide.NONE)
         {
             QuadModifier.of(quad)
                     .apply(Modifiers.cutSide(SMALL_MIN, 0, SMALL_MAX, height == WallSide.TALL ? 1F : LOW_HEIGHT))
@@ -113,7 +113,7 @@ public class FramedWallGeometry extends Geometry
 
     private void buildCenterPillar(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (center)
         {
             if (Utils.isY(quadDir))

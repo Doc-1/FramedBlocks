@@ -10,8 +10,6 @@ import xfacthd.framedblocks.api.model.geometry.Geometry;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
-import xfacthd.framedblocks.api.model.item.TranslatedItemModelInfo;
-import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.model.slopepanel.FramedSlopePanelGeometry;
 import xfacthd.framedblocks.client.model.slopeslab.FramedSlopeSlabGeometry;
@@ -34,7 +32,7 @@ public class FramedPyramidGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (Utils.isY(facing))
         {
             boolean up = facing == Direction.UP;
@@ -115,11 +113,5 @@ public class FramedPyramidGeometry extends Geometry
                         .export(quadMap.get(null));
             }
         }
-    }
-
-    @Override
-    public ItemModelInfo getItemModelInfo()
-    {
-        return TranslatedItemModelInfo.HAND_Y_HALF_UP;
     }
 }

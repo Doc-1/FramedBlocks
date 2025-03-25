@@ -1,6 +1,7 @@
 package xfacthd.framedblocks.common.blockentity.special;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -36,7 +37,7 @@ public class FramedDoorBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    protected void applyCamoComponents(DataComponentInput input)
+    protected void applyCamoComponents(DataComponentGetter input)
     {
         CamoList camoList = input.getOrDefault(FBContent.DC_TYPE_CAMO_LIST, CamoList.EMPTY);
         boolean top = getBlockState().getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER;

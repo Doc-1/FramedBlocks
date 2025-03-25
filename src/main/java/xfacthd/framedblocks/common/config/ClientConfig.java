@@ -2,18 +2,15 @@ package xfacthd.framedblocks.common.config;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import xfacthd.framedblocks.api.predicate.contex.ConTexMode;
-import xfacthd.framedblocks.api.util.*;
+import xfacthd.framedblocks.api.util.CamoMessageVerbosity;
+import xfacthd.framedblocks.api.util.ConfigView;
+import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.model.SolidFrameMode;
 import xfacthd.framedblocks.client.screen.overlay.OverlayDisplayMode;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 public final class ClientConfig
 {
@@ -27,10 +24,10 @@ public final class ClientConfig
     private static final String KEY_DETAILED_CULLING = "detailedCulling";
     private static final String KEY_USE_DISCRETE_UV_STEPS = "discreteUVSteps";
     private static final String KEY_CON_TEX_MODE = "conTexMode";
-    private static final String KEY_CON_TEX_DISABLE_LIST = "conTexDisabled";
     private static final String KEY_CAMO_MESSAGE_VERBOSITY = "camoMessageVerbosity";
     private static final String KEY_FORCE_AO_ON_GLOWING_BLOCKS = "forceAoOnGlowingBlocks";
     private static final String KEY_RENDER_ITEM_MODELS_WITH_CAMO = "renderItemModelsWithCamo";
+    private static final String KEY_SUPPORT_WEIGHTED_VARIANTS = "supportWeightedVariants";
     private static final String KEY_SHOW_ALL_RECIPE_PERMUTATIONS_IN_EMI = "showAllRecipePermutationsInEmi";
     private static final String KEY_SOLID_FRAME_MODE = "solidFrameMode";
     private static final String KEY_SHOW_BUTTON_PLATE_OVERLAY = "showButtonPlateTypeOverlay";
@@ -54,10 +51,10 @@ public final class ClientConfig
     public static final String TRANSLATION_DETAILED_CULLING = translate(KEY_DETAILED_CULLING);
     public static final String TRANSLATION_USE_DISCRETE_UV_STEPS = translate(KEY_USE_DISCRETE_UV_STEPS);
     public static final String TRANSLATION_CON_TEX_MODE = translate(KEY_CON_TEX_MODE);
-    public static final String TRANSLATION_CON_TEX_DISABLE_LIST = translate(KEY_CON_TEX_DISABLE_LIST);
     public static final String TRANSLATION_CAMO_MESSAGE_VERBOSITY = translate(KEY_CAMO_MESSAGE_VERBOSITY);
     public static final String TRANSLATION_FORCE_AO_ON_GLOWING_BLOCKS = translate(KEY_FORCE_AO_ON_GLOWING_BLOCKS);
     public static final String TRANSLATION_RENDER_ITEM_MODELS_WITH_CAMO = translate(KEY_RENDER_ITEM_MODELS_WITH_CAMO);
+    public static final String TRANSLATION_SUPPORT_WEIGHTED_VARIANTS = translate(KEY_SUPPORT_WEIGHTED_VARIANTS);
     public static final String TRANSLATION_SHOW_ALL_RECIPE_PERMUTATIONS_IN_EMI = translate(KEY_SHOW_ALL_RECIPE_PERMUTATIONS_IN_EMI);
     public static final String TRANSLATION_SOLID_FRAME_MODE = translate(KEY_SOLID_FRAME_MODE);
     public static final String TRANSLATION_SHOW_BUTTON_PLATE_OVERLAY = translate(KEY_SHOW_BUTTON_PLATE_OVERLAY);
@@ -85,10 +82,10 @@ public final class ClientConfig
     private static boolean detailedCulling = false;
     private static boolean useDiscreteUVSteps = false;
     private static ConTexMode conTexMode = ConTexMode.DETAILED;
-    private static Set<String> conTexDisabled = Set.of();
     private static CamoMessageVerbosity camoMessageVerbosity = CamoMessageVerbosity.DEFAULT;
     private static boolean forceAoOnGlowingBlocks = false;
     private static boolean renderItemModelsWithCamo = false;
+    private static boolean supportWeightedVariants = false;
     private static boolean showAllRecipePermutationsInEmi = false;
     private static SolidFrameMode solidFrameMode = SolidFrameMode.DEFAULT;
     private static boolean showButtonPlateOverlay = false;
@@ -112,10 +109,10 @@ public final class ClientConfig
     private static final ModConfigSpec.BooleanValue DETAILED_CULLING_VALUE;
     private static final ModConfigSpec.BooleanValue USE_DISCRETE_UV_STEPS_VALUE;
     private static final ModConfigSpec.EnumValue<ConTexMode> CON_TEX_MODE_VALUE;
-    private static final ModConfigSpec.ConfigValue<List<? extends String>> CON_TEX_DISABLE_LIST_VALUE;
     private static final ModConfigSpec.EnumValue<CamoMessageVerbosity> CAMO_MESSAGE_VERBOSITY_VALUE;
     private static final ModConfigSpec.BooleanValue FORCE_AO_ON_GLOWING_BLOCKS_VALUE;
     private static final ModConfigSpec.BooleanValue RENDER_ITEM_MODELS_WITH_CAMO_VALUE;
+    private static final ModConfigSpec.BooleanValue SUPPORT_WEIGHTED_VARIANTS_VALUE;
     private static final ModConfigSpec.BooleanValue SHOW_ALL_RECIPE_PERMUTATIONS_IN_EMI_VALUE;
     private static final ModConfigSpec.EnumValue<SolidFrameMode> SOLID_FRAME_MODE_VALUE;
     private static final ModConfigSpec.BooleanValue SHOW_BUTTON_PLATE_OVERLAY_VALUE;
@@ -181,11 +178,6 @@ public final class ClientConfig
                 )
                 .translation(TRANSLATION_CON_TEX_MODE)
                 .defineEnum(KEY_CON_TEX_MODE, ConTexMode.DETAILED);
-        CON_TEX_DISABLE_LIST_VALUE = builder
-                .comment("Disable connected textures support for the listed mod IDs of connected textures mods")
-                .translation(TRANSLATION_CON_TEX_DISABLE_LIST)
-                .gameRestart()
-                .defineListAllowEmpty(KEY_CON_TEX_DISABLE_LIST, new ArrayList<>(), () -> "", ClientConfig::validateModId);
         CAMO_MESSAGE_VERBOSITY_VALUE = builder
                 .comment(
                         "Configures the verbosity of messages displayed when a block cannot be used as a camo",
@@ -209,6 +201,13 @@ public final class ClientConfig
                 )
                 .translation(TRANSLATION_RENDER_ITEM_MODELS_WITH_CAMO)
                 .define(KEY_RENDER_ITEM_MODELS_WITH_CAMO, true);
+        SUPPORT_WEIGHTED_VARIANTS_VALUE = builder
+                .comment(
+                        "If true, randomization in weighted models such as stone and grass will be taken into account.",
+                        "This may increase RAM usage by framed block models"
+                )
+                .translation(TRANSLATION_SUPPORT_WEIGHTED_VARIANTS)
+                .define(KEY_SUPPORT_WEIGHTED_VARIANTS, true);
         SHOW_ALL_RECIPE_PERMUTATIONS_IN_EMI_VALUE = builder
                 .comment("If true, all possible recipes of the Framing Saw will be added to EMI, else only the permutations using the Framed Cube will be added")
                 .comment("This setting only has an effect when EMI is installed")
@@ -313,11 +312,6 @@ public final class ClientConfig
         return Utils.translateConfig("client", key);
     }
 
-    private static boolean validateModId(Object val)
-    {
-        return val instanceof String string && ModList.get().isLoaded(string);
-    }
-
     private static void onConfigReloaded(ModConfigEvent event)
     {
         if (event.getConfig().getType() == ModConfig.Type.CLIENT && event.getConfig().getSpec() == SPEC)
@@ -329,10 +323,10 @@ public final class ClientConfig
             detailedCulling = DETAILED_CULLING_VALUE.get();
             useDiscreteUVSteps = USE_DISCRETE_UV_STEPS_VALUE.get();
             conTexMode = CON_TEX_MODE_VALUE.get();
-            conTexDisabled = Set.copyOf(CON_TEX_DISABLE_LIST_VALUE.get());
             camoMessageVerbosity = CAMO_MESSAGE_VERBOSITY_VALUE.get();
             forceAoOnGlowingBlocks = FORCE_AO_ON_GLOWING_BLOCKS_VALUE.get();
             renderItemModelsWithCamo = RENDER_ITEM_MODELS_WITH_CAMO_VALUE.get();
+            supportWeightedVariants = SUPPORT_WEIGHTED_VARIANTS_VALUE.get();
             showAllRecipePermutationsInEmi = SHOW_ALL_RECIPE_PERMUTATIONS_IN_EMI_VALUE.get();
             solidFrameMode = SOLID_FRAME_MODE_VALUE.get();
             showButtonPlateOverlay = SHOW_BUTTON_PLATE_OVERLAY_VALUE.get();
@@ -401,12 +395,6 @@ public final class ClientConfig
         }
 
         @Override
-        public boolean isConTexDisabledFor(String modId)
-        {
-            return conTexDisabled.contains(modId);
-        }
-
-        @Override
         public CamoMessageVerbosity getCamoMessageVerbosity()
         {
             return camoMessageVerbosity;
@@ -422,6 +410,12 @@ public final class ClientConfig
         public boolean shouldRenderItemModelsWithCamo()
         {
             return renderItemModelsWithCamo;
+        }
+
+        @Override
+        public boolean supportWeightedVariants()
+        {
+            return supportWeightedVariants;
         }
 
         @Override

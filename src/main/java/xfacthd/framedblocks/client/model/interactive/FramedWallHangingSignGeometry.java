@@ -1,26 +1,29 @@
 package xfacthd.framedblocks.client.model.interactive;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
 import xfacthd.framedblocks.api.block.FramedProperties;
+import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
+import xfacthd.framedblocks.api.model.geometry.PartConsumer;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
-import xfacthd.framedblocks.api.model.util.ModelUtils;
-import xfacthd.framedblocks.api.util.Utils;
 
 public class FramedWallHangingSignGeometry extends Geometry
 {
+    private static final BlockState AUX_SHADER_STATE = Blocks.OAK_WALL_HANGING_SIGN.defaultBlockState();
+
     private final BlockState state;
-    private final BakedModel baseModel;
+    private final BlockStateModel baseModel;
     private final Direction dir;
 
     public FramedWallHangingSignGeometry(GeometryFactory.Context ctx)
@@ -33,7 +36,7 @@ public class FramedWallHangingSignGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (quadDir.getAxis() == dir.getAxis())
         {
             QuadModifier.of(quad)
@@ -77,17 +80,8 @@ public class FramedWallHangingSignGeometry extends Geometry
     }
 
     @Override
-    public ChunkRenderTypeSet getAdditionalRenderTypes(RandomSource rand, ModelData extraData)
+    public void collectAdditionalPartsCached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data, QuadCacheKey cacheKey)
     {
-        return ModelUtils.CUTOUT;
-    }
-
-    @Override
-    public void getAdditionalQuads(QuadMap quadMap, RandomSource rand, ModelData data, RenderType renderType)
-    {
-        if (renderType == RenderType.cutout())
-        {
-            Utils.forAllDirections(dir -> quadMap.get(dir).addAll(baseModel.getQuads(state, dir, rand, data, renderType)));
-        }
+        consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, AUX_SHADER_STATE, null);
     }
 }

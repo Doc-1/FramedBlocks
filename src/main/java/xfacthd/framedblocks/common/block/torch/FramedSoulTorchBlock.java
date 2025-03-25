@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.data.BlockType;
+import xfacthd.framedblocks.common.item.block.FramedStandingAndWallBlockItem;
 
 public class FramedSoulTorchBlock extends FramedTorchBlock
 {
@@ -32,7 +33,7 @@ public class FramedSoulTorchBlock extends FramedTorchBlock
     @Override
     public BlockItem createBlockItem(Item.Properties props)
     {
-        return new StandingAndWallBlockItem(
+        return new FramedStandingAndWallBlockItem(
                 FBContent.BLOCK_FRAMED_SOUL_TORCH.value(),
                 FBContent.BLOCK_FRAMED_SOUL_WALL_TORCH.value(),
                 Direction.DOWN,

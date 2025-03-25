@@ -1,12 +1,21 @@
 package xfacthd.framedblocks.api.internal;
 
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.TriState;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
+import xfacthd.framedblocks.api.model.ExtendedBlockModelPart;
+import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.item.DynamicItemTintProvider;
-import xfacthd.framedblocks.api.model.wrapping.*;
+import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
+import xfacthd.framedblocks.api.model.wrapping.ModelFactory;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.render.debug.BlockDebugRenderer;
 import xfacthd.framedblocks.api.util.Utils;
@@ -30,5 +39,7 @@ public interface InternalClientAPI
 
     void enqueueClientTask(int delay, Runnable task);
 
-    ItemModel.Unbaked createFramedBlockItemModel(Block block, DynamicItemTintProvider tintProvider);
+    ItemModel.Unbaked createFramedBlockItemModel(Block block, DynamicItemTintProvider tintProvider, ResourceLocation baseModel);
+
+    ExtendedBlockModelPart makeBlockModelPart(QuadMap quadMap, TriState partAO, TextureAtlasSprite particleSprite, RenderType renderType, @Nullable BlockState shaderState);
 }

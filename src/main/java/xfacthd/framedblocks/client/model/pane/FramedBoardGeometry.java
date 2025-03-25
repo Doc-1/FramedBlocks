@@ -8,13 +8,10 @@ import xfacthd.framedblocks.api.model.geometry.Geometry;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
-import xfacthd.framedblocks.api.model.item.ItemModelInfo;
-import xfacthd.framedblocks.api.model.item.TranslatedItemModelInfo;
 import xfacthd.framedblocks.api.util.Utils;
 
 public class FramedBoardGeometry extends Geometry
 {
-    private static final TranslatedItemModelInfo ITEM_MODEL_INFO = TranslatedItemModelInfo.handOrGui(0F, 0F, -.5F);
     private static final float DEPTH = 1F/16F;
 
     private final Direction dir;
@@ -27,7 +24,7 @@ public class FramedBoardGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (quadDir == dir.getOpposite())
         {
             QuadModifier.of(quad)
@@ -56,11 +53,5 @@ public class FramedBoardGeometry extends Geometry
                         .export(quadMap.get(quadDir));
             }
         }
-    }
-
-    @Override
-    public ItemModelInfo getItemModelInfo()
-    {
-        return Utils.isY(dir) ? super.getItemModelInfo() : ITEM_MODEL_INFO;
     }
 }

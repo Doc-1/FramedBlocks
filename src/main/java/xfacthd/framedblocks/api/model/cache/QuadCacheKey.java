@@ -10,4 +10,6 @@ public interface QuadCacheKey
 
     @Nullable
     Object ctCtx();
+
+    boolean emissive();
 }

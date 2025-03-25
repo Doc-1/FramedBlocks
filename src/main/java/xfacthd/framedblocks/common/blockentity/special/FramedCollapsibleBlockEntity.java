@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -13,13 +14,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.blockentity.PackedCollapsibleBlockOffsets;
 import xfacthd.framedblocks.common.data.component.CollapsibleBlockData;
 import xfacthd.framedblocks.common.data.property.NullableDirection;
 import xfacthd.framedblocks.common.data.PropertyHolder;
@@ -28,7 +29,6 @@ import java.util.Optional;
 
 public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements ICollapsibleBlockEntity
 {
-    public static final ModelProperty<Integer> OFFSETS = new ModelProperty<>();
     private static final int DIRECTIONS = Direction.values().length;
     private static final int VERTEX_COUNT = 4;
     private static final int BIT_PER_VERTEX = 5;
@@ -232,7 +232,7 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
     @Override
     protected void attachAdditionalModelData(ModelData.Builder builder)
     {
-        builder.with(OFFSETS, packedOffsets);
+        builder.with(PackedCollapsibleBlockOffsets.PROPERTY, new PackedCollapsibleBlockOffsets.Single(packedOffsets));
     }
 
     @Override
@@ -248,7 +248,7 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
     {
         boolean needUpdate = super.readFromDataPacket(nbt, lookupProvider);
 
-        int packed = nbt.getInt("offsets");
+        int packed = nbt.getIntOr("offsets", 0);
         if (packed != packedOffsets)
         {
             packedOffsets = packed;
@@ -257,7 +257,7 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
             updateCulling(true, false);
         }
 
-        int faceIdx = nbt.getByte("face");
+        int faceIdx = nbt.getByteOr("face", (byte) -1);
         Direction face = faceIdx == -1 ? null : Direction.from3DDataValue(faceIdx);
         if (collapsedFace != face)
         {
@@ -281,9 +281,9 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
     @Override
     public void handleUpdateTag(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        packedOffsets = nbt.getInt("offsets");
+        packedOffsets = nbt.getIntOr("offsets", 0);
 
-        int face = nbt.getByte("face");
+        int face = nbt.getByteOr("face", (byte) -1);
         collapsedFace = face == -1 ? null : Direction.from3DDataValue(face);
 
         super.handleUpdateTag(nbt, provider);
@@ -306,13 +306,21 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
     }
 
     @Override
+    public void removeComponentsFromTag(CompoundTag tag)
+    {
+        super.removeComponentsFromTag(tag);
+        tag.remove("offsets");
+        tag.remove("face");
+    }
+
+    @Override
     protected void collectMiscComponents(DataComponentMap.Builder builder)
     {
         builder.set(FBContent.DC_TYPE_COLLAPSIBLE_BLOCK_DATA, new CollapsibleBlockData(collapsedFace, packedOffsets));
     }
 
     @Override
-    protected void applyMiscComponents(DataComponentInput input)
+    protected void applyMiscComponents(DataComponentGetter input)
     {
         CollapsibleBlockData blockData = input.get(FBContent.DC_TYPE_COLLAPSIBLE_BLOCK_DATA);
         if (blockData != null)
@@ -334,8 +342,8 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
         super.loadAdditional(nbt, provider);
-        packedOffsets = nbt.getInt("offsets");
-        int face = nbt.getInt("face");
+        packedOffsets = nbt.getIntOr("offsets", 0);
+        int face = nbt.getIntOr("face", -1);
         collapsedFace = face == -1 ? null : Direction.from3DDataValue(face);
     }
 

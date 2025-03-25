@@ -1,12 +1,14 @@
 package xfacthd.framedblocks.common.blockentity.special;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.DynamicOps;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -141,12 +143,12 @@ public class FramedSignBlockEntity extends FramedBlockEntity
         for (Component line : getText(front).getMessages(player.isTextFilteringEnabled()))
         {
             ClickEvent event = line.getStyle().getClickEvent();
-            if (event != null && event.getAction() == ClickEvent.Action.RUN_COMMAND)
+            if (event instanceof ClickEvent.RunCommand(String cmd))
             {
                 //noinspection ConstantConditions
                 player.getServer().getCommands().performPrefixedCommand(
                         getCommandSource((ServerPlayer) player, (ServerLevel) level, pos),
-                        event.getValue()
+                        cmd
                 );
                 executed = true;
             }
@@ -208,10 +210,10 @@ public class FramedSignBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    protected boolean readFromDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
+    protected boolean readFromDataPacket(CompoundTag nbt, HolderLookup.Provider registries)
     {
-        readFromNbt(nbt);
-        return super.readFromDataPacket(nbt, lookupProvider);
+        readFromNbt(nbt, registries);
+        return super.readFromDataPacket(nbt, registries);
     }
 
     @Override
@@ -223,10 +225,10 @@ public class FramedSignBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag nbt, HolderLookup.Provider provider)
+    public void handleUpdateTag(CompoundTag nbt, HolderLookup.Provider registries)
     {
-        super.handleUpdateTag(nbt, provider);
-        readFromNbt(nbt);
+        super.handleUpdateTag(nbt, registries);
+        readFromNbt(nbt, registries);
     }
 
     private void writeToNbt(CompoundTag nbt)
@@ -241,23 +243,12 @@ public class FramedSignBlockEntity extends FramedBlockEntity
         nbt.putBoolean("waxed", waxed);
     }
 
-    private void readFromNbt(CompoundTag nbt)
+    private void readFromNbt(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        if (nbt.contains("front_text"))
-        {
-            SignText.DIRECT_CODEC.parse(NbtOps.INSTANCE, nbt.getCompound("front_text"))
-                    .resultOrPartial(FramedBlocks.LOGGER::error)
-                    .ifPresent(tag -> frontText = loadLines(level, worldPosition, tag));
-        }
-
-        if (nbt.contains("back_text"))
-        {
-            SignText.DIRECT_CODEC.parse(NbtOps.INSTANCE, nbt.getCompound("back_text"))
-                    .resultOrPartial(FramedBlocks.LOGGER::error)
-                    .ifPresent(tag -> backText = loadLines(level, worldPosition, tag));
-        }
-
-        waxed = nbt.getBoolean("waxed");
+        DynamicOps<Tag> regOps = provider.createSerializationContext(NbtOps.INSTANCE);
+        frontText = nbt.read("front_text", SignText.DIRECT_CODEC, regOps).map(lines -> loadLines(level, worldPosition, lines)).orElseGet(SignText::new);
+        backText = nbt.read("back_text", SignText.DIRECT_CODEC, regOps).map(lines -> loadLines(level, worldPosition, lines)).orElseGet(SignText::new);
+        waxed = nbt.getBooleanOr("waxed", false);
     }
 
     private static SignText loadLines(@Nullable Level level, BlockPos pos, SignText text)
@@ -297,7 +288,7 @@ public class FramedSignBlockEntity extends FramedBlockEntity
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
         super.loadAdditional(nbt, provider);
-        readFromNbt(nbt);
+        readFromNbt(nbt, provider);
     }
 
 

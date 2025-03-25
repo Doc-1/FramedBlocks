@@ -1,10 +1,10 @@
 package xfacthd.framedblocks.api.model.wrapping;
 
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 
 public interface ModelFactory
 {
-    BakedModel create(GeometryFactory.Context ctx);
+    BlockStateModel create(GeometryFactory.Context ctx);
 
     default void reset() { }
 }

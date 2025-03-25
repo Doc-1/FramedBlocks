@@ -39,6 +39,7 @@ public final class SelfTest
         RotateMirrorErrors.checkRotateMirrorErrors(reporter, blocks);
         JadeRenderStateErrors.checkJadeRenderStateErrors(reporter, blocks);
         BlockEntityPresence.checkBlockEntityTypePresent(reporter, blocks);
+        DoubleBlockPartModelStateConsistency.checkBlockPartConsistency(reporter, blocks);
 
         reporter.finish();
     }

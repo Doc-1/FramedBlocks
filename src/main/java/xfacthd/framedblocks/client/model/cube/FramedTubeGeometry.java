@@ -25,7 +25,7 @@ public class FramedTubeGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (axis == Direction.Axis.Y)
         {
             if (quadDir.getAxis() == axis)

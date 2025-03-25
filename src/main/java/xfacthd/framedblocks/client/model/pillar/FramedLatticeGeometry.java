@@ -37,7 +37,7 @@ public class FramedLatticeGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (Utils.isY(quadDir))
         {
             QuadModifier.of(quad)
@@ -99,7 +99,7 @@ public class FramedLatticeGeometry extends Geometry
         QuadModifier.of(quad)
                 .apply(Modifiers.cutSide(minCoord, minCoord, maxCoord, maxCoord))
                 .applyIf(Modifiers.setPosition(maxCoord), !frontAxis)
-                .export(quadMap.get(frontAxis ? quad.getDirection() : null));
+                .export(quadMap.get(frontAxis ? quad.direction() : null));
 
         if (sideAxis)
         {

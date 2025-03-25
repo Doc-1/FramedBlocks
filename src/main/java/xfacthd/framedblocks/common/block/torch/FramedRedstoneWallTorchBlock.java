@@ -61,18 +61,6 @@ public class FramedRedstoneWallTorchBlock extends RedstoneWallTorchBlock impleme
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
-    {
-        super.onRemove(state, level, pos, newState, isMoving);
-
-        // RedstoneTorchBlock overrides this and doesn't call super => BEs are not automatically removed
-        if (!state.is(newState.getBlock()) || !newState.hasBlockEntity())
-        {
-            level.removeBlockEntity(pos);
-        }
-    }
-
-    @Override
     protected float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos)
     {
         return getCamoShadeBrightness(state, level, pos, super.getShadeBrightness(state, level, pos));

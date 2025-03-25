@@ -33,7 +33,7 @@ public class FramedPillarGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         createPillarQuad(quad, axis, capStart, capEnd, sideCut)
                 .export(quadMap.get(quadDir.getAxis() == axis ? quadDir : null));
     }
@@ -42,7 +42,7 @@ public class FramedPillarGeometry extends Geometry
             BakedQuad quad, Direction.Axis axis, float capStart, float capEnd, float sideCut
     )
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (quadDir.getAxis() == axis)
         {
             if (axis == Direction.Axis.Y)

@@ -1,7 +1,6 @@
 package xfacthd.framedblocks.common.block.interactive.pressureplate;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -127,12 +126,6 @@ public class FramedPressurePlateBlock extends PressurePlateBlock implements IFra
             return getEntityCount(level, TOUCH_AABB.move(pos), Player.class) > 0 ? 15 : 0;
         }
         return super.getSignalStrength(level, pos);
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, List<Component> lines, TooltipFlag flag)
-    {
-        appendCamoHoverText(stack, lines);
     }
 
     @Override

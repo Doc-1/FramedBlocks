@@ -26,8 +26,6 @@ public final class ExtConfigView
     {
         int getGhostRenderOpacity();
 
-        boolean isConTexDisabledFor(String modId);
-
         /**
          * If true, all recipe permutations will be added to EMI, otherwise only cube->any variants will be added
          */

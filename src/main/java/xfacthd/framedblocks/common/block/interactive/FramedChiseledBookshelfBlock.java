@@ -3,6 +3,7 @@ package xfacthd.framedblocks.common.block.interactive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.*;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
@@ -165,16 +166,14 @@ public class FramedChiseledBookshelfBlock extends FramedBlock
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean isMoving)
     {
-        if (newState.getBlock() != state.getBlock() && level.getBlockEntity(pos) instanceof FramedChiseledBookshelfBlockEntity be)
+        if (level.getBlockEntity(pos) instanceof FramedChiseledBookshelfBlockEntity be)
         {
             be.getDrops().forEach(stack -> popResource(level, pos, stack));
             be.clearContents();
             level.updateNeighbourForOutputSignal(pos, this);
         }
-
-        super.onRemove(state, level, pos, newState, isMoving);
     }
 
     @Override

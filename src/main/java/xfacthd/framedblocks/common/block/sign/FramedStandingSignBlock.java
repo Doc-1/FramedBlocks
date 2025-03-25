@@ -23,7 +23,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.common.data.BlockType;
-import xfacthd.framedblocks.common.item.FramedSignItem;
+import xfacthd.framedblocks.common.item.block.FramedSignItem;
 
 public class FramedStandingSignBlock extends AbstractFramedSignBlock
 {

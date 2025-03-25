@@ -66,7 +66,7 @@ public class EntityAwareEnergyStorage extends EnergyStorage
     @Override
     public void deserializeNBT(HolderLookup.Provider provider, Tag tag)
     {
-        energy = tag instanceof CompoundTag cmpTag ? cmpTag.getInt("energy") : 0;
+        energy = tag instanceof CompoundTag cmpTag ? cmpTag.getIntOr("energy", 0) : 0;
         energy = Math.min(energy, capacity);
     }
 }

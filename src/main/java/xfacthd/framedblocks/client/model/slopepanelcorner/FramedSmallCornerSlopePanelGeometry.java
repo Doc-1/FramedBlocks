@@ -9,13 +9,10 @@ import xfacthd.framedblocks.api.model.geometry.Geometry;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
-import xfacthd.framedblocks.api.model.item.TranslatedItemModelInfo;
-import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.client.model.slopepanel.FramedSlopePanelGeometry;
 
 public class FramedSmallCornerSlopePanelGeometry extends Geometry
 {
-    private static final TranslatedItemModelInfo ITEM_MODEL_INFO = TranslatedItemModelInfo.hand(0F, .5F, -.5F);
     private static final Vector3f ORIGIN_BOTTOM = new Vector3f(.5F, 0, .5F);
     private static final Vector3f ORIGIN_TOP = new Vector3f(.5F, 1, .5F);
 
@@ -33,7 +30,7 @@ public class FramedSmallCornerSlopePanelGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (quadDir == dir || quadDir == dir.getCounterClockWise())
         {
             Direction cutDir = quadDir == dir ? dir.getClockWise() : dir.getOpposite();
@@ -75,11 +72,5 @@ public class FramedSmallCornerSlopePanelGeometry extends Geometry
                     .apply(Modifiers.cutTopBottom(dir.getClockWise(), .5F))
                     .export(quadMap.get(quadDir));
         }
-    }
-
-    @Override
-    public ItemModelInfo getItemModelInfo()
-    {
-        return ITEM_MODEL_INFO;
     }
 }

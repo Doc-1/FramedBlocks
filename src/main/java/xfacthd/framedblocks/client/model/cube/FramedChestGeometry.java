@@ -1,38 +1,36 @@
 package xfacthd.framedblocks.client.model.cube;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
 import xfacthd.framedblocks.api.block.FramedProperties;
+import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
+import xfacthd.framedblocks.api.model.geometry.PartConsumer;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
-import xfacthd.framedblocks.api.model.util.ModelUtils;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.property.ChestState;
 import xfacthd.framedblocks.common.data.property.LatchType;
 
-import java.util.List;
-
 public class FramedChestGeometry extends Geometry
 {
     private final BlockState state;
-    private final BakedModel baseModel;
+    private final BlockStateModel baseModel;
     private final Direction facing;
     private final ChestType type;
     private final boolean closed;
     private final LatchType latch;
-    private final ChunkRenderTypeSet addLayers;
 
     public FramedChestGeometry(GeometryFactory.Context ctx)
     {
@@ -42,13 +40,12 @@ public class FramedChestGeometry extends Geometry
         this.type = ctx.state().getValue(BlockStateProperties.CHEST_TYPE);
         this.closed = ctx.state().getValue(PropertyHolder.CHEST_STATE) == ChestState.CLOSED;
         this.latch = ctx.state().getValue(PropertyHolder.LATCH_TYPE);
-        this.addLayers = latch == LatchType.DEFAULT ? ModelUtils.CUTOUT : ChunkRenderTypeSet.none();
     }
 
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (Utils.isY(quadDir))
         {
             QuadModifier.of(quad)
@@ -85,7 +82,7 @@ public class FramedChestGeometry extends Geometry
 
     public static void makeChestLatch(QuadMap quadMap, BakedQuad quad, Direction facing, ChestType type)
     {
-        Direction face = quad.getDirection();
+        Direction face = quad.direction();
         float length = type == ChestType.SINGLE ? 9F/16F : 1F/16F;
 
         if (face == facing || face == facing.getOpposite())
@@ -119,23 +116,11 @@ public class FramedChestGeometry extends Geometry
     }
 
     @Override
-    public ChunkRenderTypeSet getAdditionalRenderTypes(RandomSource rand, ModelData extraData)
+    public void collectAdditionalPartsCached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data, QuadCacheKey cacheKey)
     {
-        return addLayers;
-    }
-
-    @Override
-    public void getAdditionalQuads(QuadMap quadMap, RandomSource rand, ModelData data, RenderType renderType)
-    {
-        if (!closed || latch != LatchType.DEFAULT)
+        if (closed && latch != LatchType.DEFAULT)
         {
-            return;
-        }
-
-        List<BakedQuad> quads = baseModel.getQuads(state, null, rand, data, renderType);
-        for (BakedQuad quad : quads)
-        {
-            quadMap.get(null).add(quad);
+            consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, null, null);
         }
     }
 }

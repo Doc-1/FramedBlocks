@@ -1,35 +1,34 @@
 package xfacthd.framedblocks.client.model.torch;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
+import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
-import xfacthd.framedblocks.api.model.util.ModelUtils;
+import xfacthd.framedblocks.api.model.geometry.PartConsumer;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.api.util.ClientUtils;
-
-import java.util.List;
 
 public class FramedRedstoneWallTorchGeometry extends Geometry
 {
+    private static final BlockState AUX_SHADER_STATE = Blocks.REDSTONE_WALL_TORCH.defaultBlockState();
     private static final float MIN = 7F/16F;
     private static final float MAX = 9F/16F;
     private static final float TOP = 11.5F/16F;
     private static final float BOTTOM = 12.5F/16F;
 
     private final BlockState state;
-    private final BakedModel baseModel;
+    private final BlockStateModel baseModel;
     private final float yAngle;
     private final boolean lit;
 
@@ -42,29 +41,15 @@ public class FramedRedstoneWallTorchGeometry extends Geometry
     }
 
     @Override
-    public ChunkRenderTypeSet getAdditionalRenderTypes(RandomSource rand, ModelData extraData)
+    public void collectAdditionalPartsCached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data, QuadCacheKey cacheKey)
     {
-        return ModelUtils.getRenderTypes(Blocks.REDSTONE_WALL_TORCH.defaultBlockState(), rand, extraData);
-    }
-
-    @Override
-    public void getAdditionalQuads(QuadMap quadMap, RandomSource rand, ModelData extraData, RenderType renderType)
-    {
-        List<BakedQuad> quads = baseModel.getQuads(state, null, rand, extraData, renderType);
-        for (BakedQuad quad : quads)
-        {
-            if (!ClientUtils.isDummyTexture(quad))
-            {
-                // Ensure glowing torch parts have no AO even if the rest doesn't
-                QuadModifier.of(quad).ambientOcclusion(false).export(quadMap.get(null));
-            }
-        }
+        consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, AUX_SHADER_STATE, FramedRedstoneTorchGeometry.HEAD_MODIFIER);
     }
 
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (Utils.isY(quadDir))
         {
             float top = lit ? (TOP - (1F/16F)) : TOP;

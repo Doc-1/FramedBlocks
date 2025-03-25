@@ -5,14 +5,11 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.BlockModelShaper;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -22,7 +19,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.model.data.ModelData;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.wrapping.ModelLookup;
@@ -58,7 +54,8 @@ public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlock
             PoseStack poseStack,
             MultiBufferSource buffer,
             int light,
-            int overlay
+            int overlay,
+            Vec3 cameraPos
     )
     {
         BlockState state = be.getBlockState();
@@ -71,11 +68,6 @@ public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlock
         LatchType latch = state.getValue(PropertyHolder.LATCH_TYPE);
 
         long lastChange = result.apply(FramedChestBlock.OPENNESS_COMBINER).orElse(0L);
-
-        BakedModel model = LID_MODELS[makeModelIndex(dir, type, latch)];
-        //noinspection ConstantConditions
-        ModelData data = model.getModelData(be.getLevel(), be.getBlockPos(), state, be.getModelData());
-
         float angle = calculateAngle(be, chestState, dir, lastChange, partialTicks);
 
         float xOff = Utils.isX(dir) ? (Utils.isPositive(dir) ? 1F/16F : 15F/16F) : 0;
@@ -87,7 +79,8 @@ public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlock
         poseStack.mulPose(Utils.isX(dir) ? Axis.ZP.rotationDegrees(angle) : Axis.XN.rotationDegrees(angle));
         poseStack.translate(-xOff, -9F/16F, -zOff);
 
-        renderLidModel(be, state, poseStack, buffer, model, data);
+        BlockStateModel model = LID_MODELS[makeModelIndex(dir, type, latch)];
+        renderLidModel(be, state, poseStack, buffer, model);
 
         poseStack.popPose();
     }
@@ -97,8 +90,7 @@ public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlock
             BlockState state,
             PoseStack matrix,
             MultiBufferSource buffer,
-            BakedModel model,
-            ModelData data
+            BlockStateModel model
     )
     {
         int color = Minecraft.getInstance().getBlockColors().getColor(state, be.getLevel(), be.getBlockPos(), 0);
@@ -110,23 +102,18 @@ public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlock
         int light = LevelRenderer.getLightColor(be.getLevel(), be.getBlockPos());
 
         RANDOM.setSeed(42);
-        for (RenderType type : model.getRenderTypes(state, RANDOM, data))
-        {
-            RenderType bufferType = RenderUtils.getEntityRenderType(type);
-
-            RenderUtils.renderModel(
-                    matrix.last(),
-                    buffer.getBuffer(bufferType),
-                    state,
-                    model,
-                    RANDOM,
-                    red, green, blue,
-                    light,
-                    OverlayTexture.NO_OVERLAY,
-                    data,
-                    type
-            );
-        }
+        RenderUtils.renderModel(
+                matrix.last(),
+                buffer,
+                be.getLevel(),
+                be.getBlockPos(),
+                state,
+                model,
+                RANDOM,
+                red, green, blue,
+                light,
+                OverlayTexture.NO_OVERLAY
+        );
     }
 
     private static float calculateAngle(
@@ -166,7 +153,7 @@ public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlock
 
     public static void onModelsLoaded(ModelBakery.BakingResult bakingResult)
     {
-        Map<ModelResourceLocation, BakedModel> registry = bakingResult.blockStateModels();
+        Map<BlockState, BlockStateModel> registry = bakingResult.blockStateModels();
         ModelLookup lookup = ModelLookup.bind(bakingResult);
         for (Direction dir : Direction.Plane.HORIZONTAL)
         {
@@ -179,9 +166,7 @@ public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlock
                             .setValue(BlockStateProperties.CHEST_TYPE, type)
                             .setValue(PropertyHolder.LATCH_TYPE, latch);
 
-                    ModelResourceLocation location = BlockModelShaper.stateToModelLocation(state);
-
-                    BakedModel model = registry.get(location);
+                    BlockStateModel model = registry.get(state);
                     if (model instanceof FramedBlockModel fbModel)
                     {
                         model = fbModel.getBaseModel();

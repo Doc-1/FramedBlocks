@@ -29,7 +29,7 @@ public class FramedChainGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         Direction.Axis quadPerpAxis = Utils.nextAxisNotEqualTo(quadDir.getAxis(), axis);
         if (axis == Direction.Axis.Y)
         {

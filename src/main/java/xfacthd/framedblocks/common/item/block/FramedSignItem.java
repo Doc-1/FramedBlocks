@@ -1,9 +1,8 @@
-package xfacthd.framedblocks.common.item;
+package xfacthd.framedblocks.common.item.block;
 
 import net.minecraft.core.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -12,7 +11,7 @@ import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.sign.AbstractFramedSignBlock;
 import xfacthd.framedblocks.common.blockentity.special.FramedSignBlockEntity;
 
-public class FramedSignItem extends StandingAndWallBlockItem
+public class FramedSignItem extends FramedStandingAndWallBlockItem
 {
     public FramedSignItem(Properties props)
     {

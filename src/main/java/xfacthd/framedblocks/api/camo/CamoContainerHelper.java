@@ -4,21 +4,24 @@ import com.google.common.base.Preconditions;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.*;
-import net.minecraft.nbt.*;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.util.RandomSource;
+import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.common.util.TriState;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import xfacthd.framedblocks.api.FramedBlocksAPI;
@@ -86,7 +89,7 @@ public final class CamoContainerHelper
             return EmptyCamoContainer.EMPTY;
         }
 
-        int id = tag.getInt("type");
+        int id = tag.getIntOr("type", -1);
         CamoContainerFactory<?> factory = REGISTRY.byId(id);
         if (factory == null)
         {
@@ -199,23 +202,13 @@ public final class CamoContainerHelper
     public static final class Client
     {
         /**
-         * {@return a {@link BakedModel} to be rendered for the given {@link CamoContent}}
+         * {@return a {@link BlockStateModel } to be rendered for the given {@link CamoContent}}
          */
         @SuppressWarnings({ "rawtypes", "unchecked" })
-        public static BakedModel getOrCreateModel(CamoContent<?> content)
+        public static BlockStateModel getOrCreateModel(CamoContent<?> content)
         {
             CamoClientHandler clientHandler = content.getClientHandler();
             return clientHandler.getOrCreateModel(content);
-        }
-
-        /**
-         * {@return the set of render types which the given {@link CamoContent} renders in}
-         */
-        @SuppressWarnings({ "rawtypes", "unchecked" })
-        public static ChunkRenderTypeSet getRenderTypes(CamoContent<?> content, RandomSource random, ModelData modelData)
-        {
-            CamoClientHandler clientHandler = content.getClientHandler();
-            return clientHandler.getRenderTypes(content, random, modelData);
         }
 
 

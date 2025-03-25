@@ -1,16 +1,16 @@
-package xfacthd.framedblocks.common.item;
+package xfacthd.framedblocks.common.item.block;
 
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.item.FramedBlockItem;
 import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.Map;
 
-public class VerticalAndWallBlockItem extends BlockItem
+public class VerticalAndWallBlockItem extends FramedBlockItem
 {
     private final Block wallBlock;
 

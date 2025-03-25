@@ -31,7 +31,7 @@ public class FramedPaneGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction face = quad.getDirection();
+        Direction face = quad.direction();
         if (Utils.isY(face))
         {
             if (isPillarVisible())
@@ -76,7 +76,7 @@ public class FramedPaneGeometry extends Geometry
         QuadModifier.of(quad)
                 .apply(Modifiers.cutTopBottom(7F/16F, 7F/16F, 9F/16F, 9F/16F))
                 .applyIf(Modifiers.setPosition(.001F), mirrored)
-                .export(quadMap.get(mirrored ? null : quad.getDirection()));
+                .export(quadMap.get(mirrored ? null : quad.direction()));
     }
 
     protected static void createTopBottomEdgeQuad(QuadMap quadMap, BakedQuad quad, Direction dir, boolean mirrored)
@@ -87,14 +87,14 @@ public class FramedPaneGeometry extends Geometry
                 .apply(Modifiers.cutTopBottom(dir.getOpposite(), 7F/16F))
                 .apply(Modifiers.cutTopBottom(dir.getClockWise().getAxis(), 9F/16F))
                 .applyIf(Modifiers.setPosition(.001F), mirrored)
-                .export(quadMap.get(mirrored ? null : quad.getDirection()));
+                .export(quadMap.get(mirrored ? null : quad.direction()));
     }
 
     protected static void createSideEdgeQuad(QuadMap quadMap, BakedQuad quad, boolean inset, boolean mirrored)
     {
         Preconditions.checkArgument(!inset || !mirrored, "Quad can't be mirrored and inset!");
 
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         Direction exportSide = inset ? null : (mirrored ? quadDir.getOpposite() : quadDir);
 
         QuadModifier.of(quad)

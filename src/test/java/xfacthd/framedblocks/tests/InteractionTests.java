@@ -6,7 +6,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.gametest.GameTestHolder;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.camo.block.BlockCamoContent;
 import xfacthd.framedblocks.api.util.FramedConstants;
@@ -19,19 +18,19 @@ import xfacthd.framedblocks.common.data.PropertyHolder;
 
 import java.util.List;
 
-@GameTestHolder(FramedConstants.MOD_ID)
+//@GameTestHolder(FramedConstants.MOD_ID)
 public final class InteractionTests
 {
     private static final BlockPos POS_ABOVE_FLOOR = new BlockPos(0, 2, 0);
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testSignDying(GameTestHelper helper)
     {
         TestUtils.chainTasks(helper, List.of(
                 () -> helper.setBlock(POS_ABOVE_FLOOR, FBContent.BLOCK_FRAMED_SIGN.value()),
                 () ->
                 {
-                    FramedSignBlockEntity be = TestUtils.getBlockEntity(helper, POS_ABOVE_FLOOR, FramedSignBlockEntity.class);
+                    FramedSignBlockEntity be = helper.getBlockEntity(POS_ABOVE_FLOOR, FramedSignBlockEntity.class);
                     TestUtils.assertTrue(
                             helper,
                             POS_ABOVE_FLOOR,
@@ -54,7 +53,7 @@ public final class InteractionTests
                 () -> TestUtils.clickWithItem(helper, POS_ABOVE_FLOOR, Items.RED_DYE, Direction.SOUTH),
                 () ->
                 {
-                    FramedSignBlockEntity be = TestUtils.getBlockEntity(helper, POS_ABOVE_FLOOR, FramedSignBlockEntity.class);
+                    FramedSignBlockEntity be = helper.getBlockEntity(POS_ABOVE_FLOOR, FramedSignBlockEntity.class);
                     TestUtils.assertTrue(
                             helper,
                             POS_ABOVE_FLOOR,
@@ -77,7 +76,7 @@ public final class InteractionTests
                 () -> TestUtils.clickWithItem(helper, POS_ABOVE_FLOOR, Items.GLOW_INK_SAC, Direction.SOUTH),
                 () ->
                 {
-                    FramedSignBlockEntity be = TestUtils.getBlockEntity(helper, POS_ABOVE_FLOOR, FramedSignBlockEntity.class);
+                    FramedSignBlockEntity be = helper.getBlockEntity(POS_ABOVE_FLOOR, FramedSignBlockEntity.class);
                     TestUtils.assertTrue(
                             helper,
                             POS_ABOVE_FLOOR,
@@ -100,7 +99,7 @@ public final class InteractionTests
                 () -> TestUtils.clickWithItem(helper, POS_ABOVE_FLOOR, Items.HONEYCOMB, Direction.SOUTH),
                 () ->
                 {
-                    FramedSignBlockEntity be = TestUtils.getBlockEntity(helper, POS_ABOVE_FLOOR, FramedSignBlockEntity.class);
+                    FramedSignBlockEntity be = helper.getBlockEntity(POS_ABOVE_FLOOR, FramedSignBlockEntity.class);
                     TestUtils.assertTrue(
                             helper,
                             POS_ABOVE_FLOOR,
@@ -123,7 +122,7 @@ public final class InteractionTests
                 () -> TestUtils.clickWithItem(helper, POS_ABOVE_FLOOR, Items.WOODEN_AXE, Direction.SOUTH),
                 () ->
                 {
-                    FramedSignBlockEntity be = TestUtils.getBlockEntity(helper, POS_ABOVE_FLOOR, FramedSignBlockEntity.class);
+                    FramedSignBlockEntity be = helper.getBlockEntity(POS_ABOVE_FLOOR, FramedSignBlockEntity.class);
                     TestUtils.assertTrue(
                             helper,
                             POS_ABOVE_FLOOR,
@@ -147,7 +146,7 @@ public final class InteractionTests
         ));
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testButtonPress(GameTestHelper helper)
     {
         TestUtils.chainTasks(helper, List.of(
@@ -161,7 +160,7 @@ public final class InteractionTests
         helper.runAfterDelay(34, helper::succeed);
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testStoneButtonPress(GameTestHelper helper)
     {
         TestUtils.chainTasks(helper, List.of(
@@ -175,7 +174,7 @@ public final class InteractionTests
         helper.runAfterDelay(24, helper::succeed);
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testLeverFlip(GameTestHelper helper)
     {
         TestUtils.chainTasks(helper, List.of(
@@ -189,7 +188,7 @@ public final class InteractionTests
         ));
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testDoorInteract(GameTestHelper helper)
     {
         TestUtils.chainTasks(helper, List.of(
@@ -203,7 +202,7 @@ public final class InteractionTests
         ));
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testTrapDoorInteract(GameTestHelper helper)
     {
         TestUtils.chainTasks(helper, List.of(
@@ -217,7 +216,7 @@ public final class InteractionTests
         ));
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testFenceGateInteract(GameTestHelper helper)
     {
         TestUtils.chainTasks(helper, List.of(
@@ -231,7 +230,7 @@ public final class InteractionTests
         ));
     }
 
-    @GameTest(template = "floor_slab_1x1", batch = "interaction")
+    //@GameTest(template = "floor_slab_1x1", batch = "interaction")
     public static void testPressurePlateInteract(GameTestHelper helper)
     {
         int delay = TestUtils.chainTasks(helper, List.of(
@@ -246,7 +245,7 @@ public final class InteractionTests
         helper.runAfterDelay(delay + 21, helper::succeed);
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testBuildDoubleSlab(GameTestHelper helper)
     {
         TestUtils.chainTasks(helper, List.of(
@@ -256,7 +255,7 @@ public final class InteractionTests
         ));
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testBuildDoublePanelNorthSouth(GameTestHelper helper)
     {
         TestUtils.chainTasks(helper, List.of(
@@ -268,7 +267,7 @@ public final class InteractionTests
         ));
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testBuildDoublePanelEastWest(GameTestHelper helper)
     {
         BlockState state = FBContent.BLOCK_FRAMED_PANEL.value()
@@ -284,7 +283,7 @@ public final class InteractionTests
         ));
     }
 
-    @GameTest(template = "floor_1x2", batch = "interaction")
+    //@GameTest(template = "floor_1x2", batch = "interaction")
     public static void testBuildRailSlope(GameTestHelper helper)
     {
         helper.setBlock(POS_ABOVE_FLOOR, Blocks.STONE);
@@ -298,7 +297,7 @@ public final class InteractionTests
         ));
     }
 
-    @GameTest(template = "floor_1x2", batch = "interaction")
+    //@GameTest(template = "floor_1x2", batch = "interaction")
     public static void testBuildPoweredRailSlope(GameTestHelper helper)
     {
         helper.setBlock(POS_ABOVE_FLOOR, Blocks.STONE);
@@ -312,7 +311,7 @@ public final class InteractionTests
         ));
     }
 
-    @GameTest(template = "floor_1x2", batch = "interaction")
+    //@GameTest(template = "floor_1x2", batch = "interaction")
     public static void testBuildDetectorRailSlope(GameTestHelper helper)
     {
         helper.setBlock(POS_ABOVE_FLOOR, Blocks.STONE);
@@ -326,7 +325,7 @@ public final class InteractionTests
         ));
     }
 
-    @GameTest(template = "floor_1x2", batch = "interaction")
+    //@GameTest(template = "floor_1x2", batch = "interaction")
     public static void testBuildActivatorRailSlope(GameTestHelper helper)
     {
         helper.setBlock(POS_ABOVE_FLOOR, Blocks.STONE);
@@ -340,7 +339,7 @@ public final class InteractionTests
         ));
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testRotateCamo(GameTestHelper helper)
     {
         TestUtils.chainTasks(helper, List.of(
@@ -348,7 +347,7 @@ public final class InteractionTests
                 () -> TestUtils.applyCamo(helper, POS_ABOVE_FLOOR, Blocks.OAK_LOG),
                 () ->
                 {
-                    FramedBlockEntity be = TestUtils.getBlockEntity(helper, POS_ABOVE_FLOOR, FramedBlockEntity.class);
+                    FramedBlockEntity be = helper.getBlockEntity(POS_ABOVE_FLOOR, FramedBlockEntity.class);
                     TestUtils.assertTrue(
                             helper,
                             POS_ABOVE_FLOOR,
@@ -359,7 +358,7 @@ public final class InteractionTests
                 () -> TestUtils.clickWithItem(helper, POS_ABOVE_FLOOR, FBContent.ITEM_FRAMED_SCREWDRIVER.value()),
                 () ->
                 {
-                    FramedBlockEntity be = TestUtils.getBlockEntity(helper, POS_ABOVE_FLOOR, FramedBlockEntity.class);
+                    FramedBlockEntity be = helper.getBlockEntity(POS_ABOVE_FLOOR, FramedBlockEntity.class);
                     TestUtils.assertTrue(
                             helper,
                             POS_ABOVE_FLOOR,
@@ -371,7 +370,7 @@ public final class InteractionTests
         ));
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testSwitchChestLock(GameTestHelper helper)
     {
         TestUtils.chainTasks(helper, List.of(
@@ -387,19 +386,19 @@ public final class InteractionTests
         ));
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testSwitchOffsetPrism(GameTestHelper helper)
     {
         testSwitchOffset(helper, FBContent.BLOCK_FRAMED_PRISM_CORNER);
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testSwitchOffsetInnerPrism(GameTestHelper helper)
     {
         testSwitchOffset(helper, FBContent.BLOCK_FRAMED_INNER_PRISM_CORNER);
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testSwitchOffsetDoublePrism(GameTestHelper helper)
     {
         testSwitchOffset(helper, FBContent.BLOCK_FRAMED_DOUBLE_PRISM_CORNER);
@@ -418,7 +417,7 @@ public final class InteractionTests
         ));
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testFlowerPotInteract(GameTestHelper helper)
     {
         TestUtils.chainTasks(helper, List.of(
@@ -426,7 +425,7 @@ public final class InteractionTests
                 () -> TestUtils.applyCamo(helper, POS_ABOVE_FLOOR, Blocks.POLISHED_GRANITE),
                 () ->
                 {
-                    FramedFlowerPotBlockEntity be = TestUtils.getBlockEntity(helper, POS_ABOVE_FLOOR, FramedFlowerPotBlockEntity.class);
+                    FramedFlowerPotBlockEntity be = helper.getBlockEntity(POS_ABOVE_FLOOR, FramedFlowerPotBlockEntity.class);
 
                     TestUtils.assertTrue(
                             helper,
@@ -438,7 +437,7 @@ public final class InteractionTests
                 () -> TestUtils.clickWithItem(helper, POS_ABOVE_FLOOR, Blocks.CACTUS),
                 () ->
                 {
-                    FramedFlowerPotBlockEntity be = TestUtils.getBlockEntity(helper, POS_ABOVE_FLOOR, FramedFlowerPotBlockEntity.class);
+                    FramedFlowerPotBlockEntity be = helper.getBlockEntity(POS_ABOVE_FLOOR, FramedFlowerPotBlockEntity.class);
 
                     TestUtils.assertTrue(
                             helper,
@@ -457,7 +456,7 @@ public final class InteractionTests
                 () -> TestUtils.clickWithItem(helper, POS_ABOVE_FLOOR, Items.AIR),
                 () ->
                 {
-                    FramedFlowerPotBlockEntity be = TestUtils.getBlockEntity(helper, POS_ABOVE_FLOOR, FramedFlowerPotBlockEntity.class);
+                    FramedFlowerPotBlockEntity be = helper.getBlockEntity(POS_ABOVE_FLOOR, FramedFlowerPotBlockEntity.class);
 
                     TestUtils.assertTrue(
                             helper,
@@ -470,7 +469,7 @@ public final class InteractionTests
         ));
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testIronDoorInteract(GameTestHelper helper)
     {
         TestUtils.chainTasks(helper, List.of(
@@ -483,7 +482,7 @@ public final class InteractionTests
         ));
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testIronTrapDoorInteract(GameTestHelper helper)
     {
         TestUtils.chainTasks(helper, List.of(
@@ -496,7 +495,7 @@ public final class InteractionTests
         ));
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testLargeButtonPress(GameTestHelper helper)
     {
         TestUtils.chainTasks(helper, List.of(
@@ -510,7 +509,7 @@ public final class InteractionTests
         helper.runAfterDelay(34, helper::succeed);
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testLargeStoneButtonPress(GameTestHelper helper)
     {
         TestUtils.chainTasks(helper, List.of(
@@ -524,14 +523,14 @@ public final class InteractionTests
         helper.runAfterDelay(24, helper::succeed);
     }
 
-    @GameTest(template = "floor_1x1", batch = "interaction")
+    //@GameTest(template = "floor_1x1", batch = "interaction")
     public static void testTargetColoring(GameTestHelper helper)
     {
         TestUtils.chainTasks(helper, List.of(
                 () -> helper.setBlock(POS_ABOVE_FLOOR, FBContent.BLOCK_FRAMED_TARGET.value()),
                 () ->
                 {
-                    FramedTargetBlockEntity be = TestUtils.getBlockEntity(helper, POS_ABOVE_FLOOR, FramedTargetBlockEntity.class);
+                    FramedTargetBlockEntity be = helper.getBlockEntity(POS_ABOVE_FLOOR, FramedTargetBlockEntity.class);
                     TestUtils.assertTrue(
                             helper,
                             POS_ABOVE_FLOOR,
@@ -542,7 +541,7 @@ public final class InteractionTests
                 () -> TestUtils.clickWithItem(helper, POS_ABOVE_FLOOR, Items.LIME_DYE),
                 () ->
                 {
-                    FramedTargetBlockEntity be = TestUtils.getBlockEntity(helper, POS_ABOVE_FLOOR, FramedTargetBlockEntity.class);
+                    FramedTargetBlockEntity be = helper.getBlockEntity(POS_ABOVE_FLOOR, FramedTargetBlockEntity.class);
                     TestUtils.assertTrue(
                             helper,
                             POS_ABOVE_FLOOR,

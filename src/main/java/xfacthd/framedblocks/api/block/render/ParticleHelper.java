@@ -114,7 +114,7 @@ public final class ParticleHelper
 
             List<AABB> boxes = state.getShape(level, pos).toAabbs();
             double countMult = 1D / boxes.size();
-            boxes.forEach(aabb ->
+            for (AABB aabb : boxes)
             {
                 double sizeX = Math.min(1D, aabb.maxX - aabb.minX);
                 double sizeY = Math.min(1D, aabb.maxY - aabb.minY);
@@ -141,7 +141,7 @@ public final class ParticleHelper
                         }
                     }
                 }
-            });
+            }
         }
 
 

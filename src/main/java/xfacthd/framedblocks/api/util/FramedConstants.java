@@ -3,8 +3,6 @@ package xfacthd.framedblocks.api.util;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
-import xfacthd.framedblocks.api.FramedBlocksClientAPI;
 import xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
 import xfacthd.framedblocks.api.camo.CamoContainerFactory;
 
@@ -15,10 +13,6 @@ public final class FramedConstants
     public static final ResourceKey<Registry<CamoContainerFactory<?>>> CAMO_CONTAINER_FACTORY_REGISTRY_KEY = ResourceKey.createRegistryKey(CAMO_CONTAINER_FACTORY_REGISTRY_NAME);
     public static final ResourceLocation AUX_BLUEPRINT_DATA_TYPE_REGISTRY_NAME = Utils.rl("aux_blueprint_data");
     public static final ResourceKey<Registry<AuxBlueprintData.Type<?>>> AUX_BLUEPRINT_DATA_TYPE_REGISTRY_KEY = ResourceKey.createRegistryKey(AUX_BLUEPRINT_DATA_TYPE_REGISTRY_NAME);
-    /**
-     * @see FramedBlocksClientAPI#addConTexProperty(String, ModelProperty)
-     */
-    public static final String IMC_METHOD_ADD_PROPERTY = "add_ct_property";
 
 
 

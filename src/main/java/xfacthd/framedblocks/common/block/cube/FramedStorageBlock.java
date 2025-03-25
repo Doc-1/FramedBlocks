@@ -2,6 +2,7 @@ package xfacthd.framedblocks.common.block.cube;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -47,16 +48,14 @@ public class FramedStorageBlock extends FramedBlock
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
+    protected void affectNeighborsAfterRemoval(BlockState p_394424_, ServerLevel level, BlockPos pos, boolean isMoving)
     {
-        if (newState.getBlock() != state.getBlock() && level.getBlockEntity(pos) instanceof FramedStorageBlockEntity be)
+        if (level.getBlockEntity(pos) instanceof FramedStorageBlockEntity be)
         {
             be.getDrops().forEach(stack -> popResource(level, pos, stack));
             be.clearContent();
             level.updateNeighbourForOutputSignal(pos, this);
         }
-
-        super.onRemove(state, level, pos, newState, isMoving);
     }
 
     @Override

@@ -3,21 +3,19 @@ package xfacthd.framedblocks.common.compat.jade;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec2;
 import net.neoforged.neoforge.client.RenderTypeHelper;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import snownee.jade.api.ui.Element;
@@ -27,6 +25,7 @@ import xfacthd.framedblocks.api.render.Quaternions;
 import xfacthd.framedblocks.api.util.SingleBlockFakeLevel;
 import xfacthd.framedblocks.common.config.ClientConfig;
 
+import java.util.List;
 import java.util.Objects;
 
 final class FramedBlockElement extends Element
@@ -44,21 +43,18 @@ final class FramedBlockElement extends Element
 
     private final BlockState state;
     private final SingleBlockFakeLevel fakeLevel;
-    private final BakedModel model;
-    private final ModelData modelData;
+    private final BlockStateModel model;
     private final float scale;
-    private final boolean useModelTransform;
 
     FramedBlockElement(BlockState state, FramedBlockEntity blockEntity)
     {
         IFramedBlock block = (IFramedBlock) state.getBlock();
         this.state = block.getJadeRenderState(state);
-        this.fakeLevel = new SingleBlockFakeLevel(Objects.requireNonNull(blockEntity.getLevel()), blockEntity.getBlockPos(), this.state, blockEntity, ModelData.EMPTY);
         this.model = Minecraft.getInstance().getBlockRenderer().getBlockModel(this.state);
         boolean renderCamo = ClientConfig.VIEW.shouldRenderCamoInJade();
-        this.modelData = renderCamo ? blockEntity.getModelData(false) : ModelData.EMPTY;
+        ModelData modelData = renderCamo ? blockEntity.getModelData(false) : ModelData.EMPTY;
+        this.fakeLevel = new SingleBlockFakeLevel(Objects.requireNonNull(blockEntity.getLevel()), blockEntity.getBlockPos(), this.state, blockEntity, modelData);
         this.scale = block.getJadeRenderScale(this.state);
-        this.useModelTransform = block.shouldApplyGuiTransformFromModel();
     }
 
     @Override
@@ -77,37 +73,23 @@ final class FramedBlockElement extends Element
 
             poseStack.translate(x + (SIZE / 2F), y + (SIZE / 2F), Z_OFFSET);
             poseStack.scale(RENDER_SIZE * scale, -RENDER_SIZE * scale, RENDER_SIZE * scale);
-            if (useModelTransform)
-            {
-                model.applyTransform(ItemDisplayContext.GUI, poseStack, false);
-            }
-            else
-            {
-                DEFAULT_TRANSFORM.apply(false, poseStack);
-            }
+            DEFAULT_TRANSFORM.apply(false, poseStack.last());
             poseStack.translate(-.5F, -.5F, -.5F);
 
             long seed = state.getSeed(BlockPos.ZERO);
             RANDOM.setSeed(seed);
             MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-            for (RenderType renderType : model.getRenderTypes(state, RANDOM, modelData))
-            {
-                VertexConsumer consumer = buffer.getBuffer(RenderTypeHelper.getEntityRenderType(renderType));
-                Minecraft.getInstance().getBlockRenderer().getModelRenderer().tesselateBlock(
-                        fakeLevel,
-                        model,
-                        state,
-                        BlockPos.ZERO,
-                        poseStack,
-                        consumer,
-                        false,
-                        RANDOM,
-                        seed,
-                        OverlayTexture.NO_OVERLAY,
-                        modelData,
-                        renderType
-                );
-            }
+            List<BlockModelPart> modelParts = model.collectParts(fakeLevel, BlockPos.ZERO, state, RANDOM);
+            Minecraft.getInstance().getBlockRenderer().getModelRenderer().tesselateBlock(
+                    fakeLevel,
+                    modelParts,
+                    state,
+                    BlockPos.ZERO,
+                    poseStack,
+                    renderType -> buffer.getBuffer(RenderTypeHelper.getEntityRenderType(renderType)),
+                    false,
+                    OverlayTexture.NO_OVERLAY
+            );
 
             RenderSystem.setupGuiFlatDiffuseLighting(DIFFUSE_LIGHT_0, DIFFUSE_LIGHT_1);
             buffer.endBatch();

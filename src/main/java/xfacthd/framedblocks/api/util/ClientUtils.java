@@ -4,6 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -52,7 +54,7 @@ public final class ClientUtils
 
     public static boolean isTexture(BakedQuad quad, ResourceLocation texture)
     {
-        return quad.getSprite().contents().name().equals(texture);
+        return quad.sprite().contents().name().equals(texture);
     }
 
     public static void renderTransparentFakeItem(GuiGraphics graphics, ItemStack stack, int x, int y)
@@ -64,6 +66,12 @@ public final class ClientUtils
     public static boolean isLeftHand(ItemDisplayContext ctx)
     {
         return ctx == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || ctx == ItemDisplayContext.THIRD_PERSON_LEFT_HAND;
+    }
+
+    @SuppressWarnings("deprecation")
+    public static TextureAtlasSprite getBlockSprite(ResourceLocation id)
+    {
+        return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(id);
     }
 
 

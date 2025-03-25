@@ -14,12 +14,13 @@
         "MixinStairBlock"
     ],
     "client": [
-        "client.AccessorDelegateBakedModel",
+        "client.AccessorBlockModelShaper",
         "client.AccessorModelManager",
         "client.AccessorMultiPlayerGameMode",
         "client.MixinItemRenderer",
         "client.MixinItemStackRenderStateLayer",
-        "client.MixinLevelRenderer"
+        "client.MixinLevelRenderer",
+        "client.MixinWeightedVariants"
     ],
     "injectors": {
         "defaultRequire": 1

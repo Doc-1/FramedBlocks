@@ -49,7 +49,8 @@ public class FramedItemFrameRenderer implements BlockEntityRenderer<FramedItemFr
             PoseStack poseStack,
             MultiBufferSource buffer,
             int packedLight,
-            int packedOverlay
+            int packedOverlay,
+            Vec3 cameraPos
     )
     {
         poseStack.pushPose();

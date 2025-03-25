@@ -1,60 +1,82 @@
 package xfacthd.framedblocks.client.model.interactive;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.camo.CamoContent;
 import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
+import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
+import xfacthd.framedblocks.api.model.geometry.PartConsumer;
+import xfacthd.framedblocks.api.model.geometry.QuadListModifier;
+import xfacthd.framedblocks.api.model.util.ModelUtils;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
-import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.util.ClientUtils;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.api.model.util.ModelUtils;
 import xfacthd.framedblocks.common.block.interactive.FramedFlowerPotBlock;
 import xfacthd.framedblocks.common.blockentity.special.FramedFlowerPotBlockEntity;
 import xfacthd.framedblocks.common.compat.amendments.AmendmentsCompat;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 
-import java.util.List;
-
 public class FramedFlowerPotGeometry extends Geometry
 {
+    private static final BlockState DIRT_STATE = Blocks.DIRT.defaultBlockState();
     private static final ResourceLocation POT_TEXTURE = Utils.rl("minecraft", "block/flower_pot");
     private static final ResourceLocation DIRT_TEXTURE = Utils.rl("minecraft", "block/dirt");
+    private static final QuadListModifier DIRT_UP_MODIFIER = QuadListModifier.replacing(quad ->
+            QuadModifier.of(quad)
+                    .apply(Modifiers.cutTopBottom(6F/16F, 6F/16F, 10F/16F, 10F/16F))
+                    .apply(Modifiers.setPosition(4F/16F))
+                    .exportDirect()
+    );
+    private static final QuadListModifier DIRT_DOWN_MODIFIER = QuadListModifier.replacing(quad ->
+            QuadModifier.of(quad)
+                    .apply(Modifiers.cutTopBottom(6F/16F, 6F/16F, 10F/16F, 10F/16F))
+                    .apply(Modifiers.setPosition(15F/16F))
+                    .exportDirect()
+    );
+    private static final QuadListModifier DIRT_HOR_MODIFIER = QuadListModifier.replacing(quad ->
+            QuadModifier.of(quad)
+                    .apply(Modifiers.cutSide(6F / 16F, 1F / 16F, 10F / 16F, 4F / 16F))
+                    .apply(Modifiers.setPosition(10F / 16F))
+                    .exportDirect()
+    );
 
+    private final BlockState state;
     private final boolean hanging;
     @Nullable
-    private final BakedModel hangingPotModel;
+    private final BlockModelPart hangingPotModel;
 
     public FramedFlowerPotGeometry(GeometryFactory.Context ctx)
     {
+        this.state = ctx.state();
         this.hanging = AmendmentsCompat.isLoaded() && ctx.state().getValue(PropertyHolder.HANGING);
-        this.hangingPotModel = hanging ? ctx.modelLookup().getStandaloneModel(AmendmentsCompat.Client.HANGING_MODEL_LOCATION) : null;
+        this.hangingPotModel = hanging ? ctx.modelLookup().getStandaloneModel(AmendmentsCompat.Client.HANGING_MODEL_KEY) : null;
     }
 
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        if (quad.getDirection() == Direction.DOWN)
+        if (quad.direction() == Direction.DOWN)
         {
             QuadModifier.of(quad)
                     .apply(Modifiers.cutTopBottom(5F/16F, 5F/16F, 11F/16F, 11F/16F))
                     .export(quadMap.get(Direction.DOWN));
         }
-        else if (quad.getDirection() == Direction.UP)
+        else if (quad.direction() == Direction.UP)
         {
             QuadModifier.of(quad)
                     .apply(Modifiers.cutTopBottom(5F/16F, 5F/16F, 11F/16F, 6F/16F))
@@ -76,7 +98,7 @@ public class FramedFlowerPotGeometry extends Geometry
                     .apply(Modifiers.setPosition(6F/16F))
                     .export(quadMap.get(null));
         }
-        else if (!Utils.isY(quad.getDirection()))
+        else if (!Utils.isY(quad.direction()))
         {
             QuadModifier.of(quad)
                     .apply(Modifiers.cutSide(5F/16F, 0, 11F/16F, 6F/16F))
@@ -91,43 +113,52 @@ public class FramedFlowerPotGeometry extends Geometry
     }
 
     @Override
-    public ChunkRenderTypeSet getAdditionalRenderTypes(RandomSource rand, ModelData data)
-    {
-        BlockState potState = FramedFlowerPotBlock.getFlowerPotState(getFlowerBlock(data));
-        return ChunkRenderTypeSet.union(
-                ModelUtils.getRenderTypes(Blocks.DIRT.defaultBlockState(), rand, ModelData.EMPTY),
-                !potState.isAir() ? ModelUtils.getRenderTypes(potState, rand, ModelData.EMPTY) : ChunkRenderTypeSet.none(),
-                hanging ? ModelUtils.CUTOUT : ChunkRenderTypeSet.none()
-        );
-    }
-
-    @Override
-    public void getAdditionalQuads(QuadMap quadMap, RandomSource rand, ModelData data, RenderType layer)
+    public void collectAdditionalPartsCached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data, QuadCacheKey cacheKey)
     {
         BlockState potState = FramedFlowerPotBlock.getFlowerPotState(getFlowerBlock(data));
         if (!potState.isAir())
         {
-            addPlantQuads(quadMap, potState, rand, layer);
-        }
-        addDirtQuads(quadMap, rand, data, layer);
-
-        if (hanging && hangingPotModel != null && layer == RenderType.cutout())
-        {
-            Utils.forAllDirections(dir ->
-                    Utils.copyAll(hangingPotModel.getQuads(null, dir, rand, data, null), quadMap.get(dir))
+            BlockStateModel potModel = ModelUtils.getModel(potState);
+            consumer.acceptAll(potModel, level, pos, random, potState, true, false, false, false, potState, (quadMap, quads, side) ->
+                    quads.removeIf(quad -> ClientUtils.isTexture(quad, POT_TEXTURE) || ClientUtils.isTexture(quad, DIRT_TEXTURE))
             );
+        }
+
+        AbstractFramedBlockData fbData = data.get(AbstractFramedBlockData.PROPERTY);
+        boolean camoOccludes = fbData != null && fbData.unwrap(false).getCamoContent().canOcclude();
+        BlockStateModel dirtModel = ModelUtils.getModel(DIRT_STATE);
+        consumer.acceptAll(dirtModel, level, pos, random, DIRT_STATE, false, true, false, false, DIRT_STATE, (quadMap, quads, side) ->
+        {
+            if ((camoOccludes && side != Direction.UP) || side == null)
+            {
+                quads.clear();
+                return;
+            }
+
+            QuadListModifier mod = switch (side)
+            {
+                case UP -> DIRT_UP_MODIFIER;
+                case DOWN -> DIRT_DOWN_MODIFIER;
+                default -> DIRT_HOR_MODIFIER;
+            };
+            mod.modify(quadMap, quads, side);
+        });
+
+        if (hanging && hangingPotModel != null)
+        {
+            consumer.accept(hangingPotModel, state, true, false, false, false, null, null);
         }
     }
 
     @Override
-    public QuadCacheKey makeCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, ModelData data)
+    public QuadCacheKey makeCacheKey(BlockAndTintGetter level, BlockPos pos, RandomSource random, CamoContent<?> camo, @Nullable Object ctCtx, boolean emissive, ModelData data)
     {
         Block flower = getFlowerBlock(data);
         if (flower != Blocks.AIR)
         {
-            return new FlowerPotQuadCacheKey(camo, ctCtx, flower);
+            return new FlowerPotQuadCacheKey(camo, ctCtx, emissive, flower);
         }
-        return super.makeCacheKey(camo, ctCtx, data);
+        return super.makeCacheKey(level, pos, random, camo, ctCtx, emissive, data);
     }
 
     @Override
@@ -136,68 +167,11 @@ public class FramedFlowerPotGeometry extends Geometry
         return true;
     }
 
-    private static void addPlantQuads(QuadMap quadMap, BlockState potState, RandomSource rand, RenderType layer)
-    {
-        BakedModel potModel = ModelUtils.getModel(potState);
-
-        if (potModel.getRenderTypes(potState, rand, ModelData.EMPTY).contains(layer))
-        {
-            Utils.forAllDirections(dir ->
-            {
-                List<BakedQuad> outQuads = quadMap.get(dir);
-                for (BakedQuad quad : potModel.getQuads(potState, dir, rand, ModelData.EMPTY, layer))
-                {
-                    if (!ClientUtils.isTexture(quad, POT_TEXTURE) && !ClientUtils.isTexture(quad, DIRT_TEXTURE))
-                    {
-                        outQuads.add(ModelUtils.invertTintIndex(quad));
-                    }
-                }
-            });
-        }
-    }
-
-    private static void addDirtQuads(QuadMap quadMap, RandomSource rand, ModelData data, RenderType layer)
-    {
-        BakedModel dirtModel = ModelUtils.getModel(Blocks.DIRT.defaultBlockState());
-        if (dirtModel.getRenderTypes(Blocks.DIRT.defaultBlockState(), rand, ModelData.EMPTY).contains(layer))
-        {
-            dirtModel.getQuads(Blocks.DIRT.defaultBlockState(), Direction.UP, rand, ModelData.EMPTY, layer).forEach(q ->
-                    QuadModifier.of(q)
-                            .apply(Modifiers.cutTopBottom(6F/16F, 6F/16F, 10F/16F, 10F/16F))
-                            .apply(Modifiers.setPosition(4F/16F))
-                            .export(quadMap.get(null))
-            );
-
-            FramedBlockData fbData = data.get(FramedBlockData.PROPERTY);
-            if (fbData != null && !fbData.getCamoContent().canOcclude())
-            {
-                for (BakedQuad quad : dirtModel.getQuads(Blocks.DIRT.defaultBlockState(), Direction.DOWN, rand, ModelData.EMPTY, layer))
-                {
-                    QuadModifier.of(quad)
-                            .apply(Modifiers.cutTopBottom(6F / 16F, 6F / 16F, 10F / 16F, 10F / 16F))
-                            .apply(Modifiers.setPosition(15F / 16F))
-                            .export(quadMap.get(null));
-                }
-
-                Utils.forHorizontalDirections(dir ->
-                {
-                    for (BakedQuad quad : dirtModel.getQuads(Blocks.AIR.defaultBlockState(), dir, rand, ModelData.EMPTY, layer))
-                    {
-                        QuadModifier.of(quad)
-                                .apply(Modifiers.cutSide(6F / 16F, 1F / 16F, 10F / 16F, 4F / 16F))
-                                .apply(Modifiers.setPosition(10F / 16F))
-                                .export(quadMap.get(null));
-                    }
-                });
-            }
-        }
-    }
-
     private static Block getFlowerBlock(ModelData data)
     {
         Block flower = data.get(FramedFlowerPotBlockEntity.FLOWER_BLOCK);
         return flower != null ? flower : Blocks.AIR;
     }
 
-    private record FlowerPotQuadCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, Block flower) implements QuadCacheKey { }
+    private record FlowerPotQuadCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, boolean emissive, Block flower) implements QuadCacheKey { }
 }

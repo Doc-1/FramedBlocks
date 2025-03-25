@@ -1,9 +1,9 @@
 package xfacthd.framedblocks.client.render.special;
 
 import com.google.common.base.Preconditions;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
@@ -11,7 +11,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.Profiler;
@@ -30,7 +31,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.client.NeoForgeRenderTypes;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
 import xfacthd.framedblocks.api.ghost.GhostRenderBehaviour;
 import xfacthd.framedblocks.api.model.util.ModelUtils;
 import xfacthd.framedblocks.api.ghost.RegisterGhostRenderBehavioursEvent;
@@ -42,6 +43,7 @@ import xfacthd.framedblocks.client.render.util.GhostVertexConsumer;
 import xfacthd.framedblocks.common.config.ClientConfig;
 
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("ConstantConditions")
@@ -52,6 +54,7 @@ public final class GhostBlockRenderer
     private static final GhostRenderBehaviour DEFAULT_BEHAVIOUR = new GhostRenderBehaviour() {};
     private static final String PROFILER_KEY = FramedConstants.MOD_ID + "_ghost_block";
     private static final float SCALE = 1.0001F;
+    private static final List<BlockModelPart> PART_SCRATCH_LIST = new ObjectArrayList<>();
 
     public static void onRenderLevelStage(final RenderLevelStageEvent event)
     {
@@ -202,45 +205,20 @@ public final class GhostBlockRenderer
         profiler.pop(); //prepare
 
         profiler.push("draw");
-        BakedModel model = ModelUtils.getModel(renderState);
+        BlockStateModel model = ModelUtils.getModel(renderState);
         poseStack.pushPose();
         poseStack.translate(offset.x + .5, offset.y + .5, offset.z + .5);
         poseStack.scale(SCALE, SCALE, SCALE); // Scale up very slightly to avoid z-fighting with replaceable blocks like snow layers
         poseStack.translate(-.5F, -.5F, -.5F);
-        for (RenderType type : model.getRenderTypes(renderState, RANDOM, modelData))
-        {
-            doRenderGhostBlockInLayer(poseStack, builder, level, renderPos, renderState, type, modelData);
-        }
+        PART_SCRATCH_LIST.clear();
+        model.collectParts(level, renderPos, renderState, RANDOM, PART_SCRATCH_LIST);
+        mc().getBlockRenderer().renderBatched(renderState, renderPos, level, poseStack, type -> builder, false, PART_SCRATCH_LIST);
         poseStack.popPose();
         profiler.pop(); //draw
 
         profiler.push("upload");
-        RenderSystem.enableCull();
         buffers.endBatch(bufferType);
         profiler.pop(); //upload
-    }
-
-    private static void doRenderGhostBlockInLayer(
-            PoseStack poseStack,
-            VertexConsumer builder,
-            BlockAndTintGetter level,
-            BlockPos renderPos,
-            BlockState renderState,
-            RenderType layer,
-            ModelData modelData
-    )
-    {
-        mc().getBlockRenderer().renderBatched(
-                renderState,
-                renderPos,
-                level,
-                poseStack,
-                builder,
-                false,
-                RANDOM,
-                modelData,
-                layer
-        );
     }
 
 

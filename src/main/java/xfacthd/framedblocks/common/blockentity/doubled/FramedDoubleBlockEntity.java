@@ -2,8 +2,10 @@ package xfacthd.framedblocks.common.blockentity.doubled;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.TriState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -21,8 +23,6 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.client.model.data.*;
-import net.neoforged.neoforge.common.util.TriState;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
@@ -30,9 +30,11 @@ import xfacthd.framedblocks.api.blueprint.BlueprintData;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.CamoContainerHelper;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
+import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.util.CamoList;
 import xfacthd.framedblocks.api.util.Utils;
+import xfacthd.framedblocks.client.model.FramedDoubleBlockData;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
@@ -398,7 +400,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     protected boolean readFromDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
     {
         boolean needUpdate = false;
-        CamoContainer<?, ?> newCamo = CamoContainerHelper.readFromNetwork(nbt.getCompound(CAMO_TWO_NBT_KEY));
+        CamoContainer<?, ?> newCamo = CamoContainerHelper.readFromNetwork(nbt.getCompoundOrEmpty(CAMO_TWO_NBT_KEY));
         if (!newCamo.equals(camoContainer))
         {
             int oldLight = getLightValue();
@@ -429,7 +431,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     protected boolean readCamoFromUpdateTag(CompoundTag nbt, HolderLookup.Provider provider)
     {
         boolean changed = super.readCamoFromUpdateTag(nbt, provider);
-        CamoContainer<?, ?> newCamo = CamoContainerHelper.readFromNetwork(nbt.getCompound(CAMO_TWO_NBT_KEY));
+        CamoContainer<?, ?> newCamo = CamoContainerHelper.readFromNetwork(nbt.getCompoundOrEmpty(CAMO_TWO_NBT_KEY));
         if (!newCamo.equals(camoContainer))
         {
             camoContainer = newCamo;
@@ -443,14 +445,12 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
      */
 
     @Override
-    public ModelData getModelData(boolean includeCullInfo)
+    protected AbstractFramedBlockData computeBlockData(boolean includeCullInfo)
     {
         boolean[] cullData = includeCullInfo ? culledFaces : FramedBlockData.NO_CULLED_FACES;
         FramedBlockData modelData = new FramedBlockData(camoContainer, cullData, true, isReinforced(), isEmissive());
-        return ModelData.builder()
-                .with(DATA_ONE, super.getModelData(includeCullInfo))
-                .with(DATA_TWO, ModelData.builder().with(FramedBlockData.PROPERTY, modelData).build())
-                .build();
+
+        return new FramedDoubleBlockData(getParts(), (FramedBlockData) super.computeBlockData(includeCullInfo), modelData);
     }
 
     /*
@@ -488,7 +488,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     }
 
     @Override
-    protected void applyCamoComponents(DataComponentInput input)
+    protected void applyCamoComponents(DataComponentGetter input)
     {
         super.applyCamoComponents(input);
         setCamo(input.getOrDefault(Utils.DC_TYPE_CAMO_LIST, CamoList.EMPTY).getCamo(1), true);

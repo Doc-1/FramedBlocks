@@ -3,29 +3,19 @@ package xfacthd.framedblocks.client.data.ghost;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.blockentity.PackedCollapsibleBlockOffsets;
 import xfacthd.framedblocks.common.blockentity.doubled.slab.FramedAdjustableDoubleBlockEntity;
-import xfacthd.framedblocks.common.blockentity.special.FramedCollapsibleBlockEntity;
-import xfacthd.framedblocks.common.blockentity.special.FramedCollapsibleCopycatBlockEntity;
 import xfacthd.framedblocks.common.data.component.AdjustableDoubleBlockData;
-
-import java.util.Objects;
 
 public final class AdjustableDoubleBlockGhostRenderBehaviour extends DoubleBlockGhostRenderBehaviour
 {
-    private final ModelProperty<Integer> offsetProperty;
     private final FramedAdjustableDoubleBlockEntity.OffsetPacker offsetPacker;
 
-    private AdjustableDoubleBlockGhostRenderBehaviour(
-            ModelProperty<Integer> offsetProperty,
-            FramedAdjustableDoubleBlockEntity.OffsetPacker offsetPacker
-    )
+    private AdjustableDoubleBlockGhostRenderBehaviour(FramedAdjustableDoubleBlockEntity.OffsetPacker offsetPacker)
     {
-        this.offsetProperty = offsetProperty;
         this.offsetPacker = offsetPacker;
     }
 
@@ -34,18 +24,7 @@ public final class AdjustableDoubleBlockGhostRenderBehaviour extends DoubleBlock
     {
         AdjustableDoubleBlockData blockData = stack.get(FBContent.DC_TYPE_ADJ_DOUBLE_BLOCK_DATA);
         int firstHeight = blockData != null ? blockData.firstHeight() : FramedAdjustableDoubleBlockEntity.CENTER_PART_HEIGHT;
-        int offsetsLeft = offsetPacker.pack(renderState, firstHeight, false);
-        int offsetsRight = offsetPacker.pack(renderState, firstHeight, true);
-
-        ModelData dataLeft = Objects.requireNonNullElse(data.get(IFramedDoubleBlockEntity.DATA_ONE), ModelData.EMPTY)
-                .derive()
-                .with(offsetProperty, offsetsLeft)
-                .build();
-        ModelData dataRight = Objects.requireNonNullElse(data.get(IFramedDoubleBlockEntity.DATA_TWO), ModelData.EMPTY)
-                .derive()
-                .with(offsetProperty, offsetsRight)
-                .build();
-        return data.derive().with(IFramedDoubleBlockEntity.DATA_ONE, dataLeft).with(IFramedDoubleBlockEntity.DATA_TWO, dataRight).build();
+        return data.derive().with(PackedCollapsibleBlockOffsets.PROPERTY, offsetPacker.packDouble(renderState, firstHeight)).build();
     }
 
 
@@ -53,7 +32,6 @@ public final class AdjustableDoubleBlockGhostRenderBehaviour extends DoubleBlock
     public static AdjustableDoubleBlockGhostRenderBehaviour standard()
     {
         return new AdjustableDoubleBlockGhostRenderBehaviour(
-                FramedCollapsibleBlockEntity.OFFSETS,
                 FramedAdjustableDoubleBlockEntity::getPackedOffsetsStandard
         );
     }
@@ -61,7 +39,6 @@ public final class AdjustableDoubleBlockGhostRenderBehaviour extends DoubleBlock
     public static AdjustableDoubleBlockGhostRenderBehaviour copycat()
     {
         return new AdjustableDoubleBlockGhostRenderBehaviour(
-                FramedCollapsibleCopycatBlockEntity.OFFSETS,
                 FramedAdjustableDoubleBlockEntity::getPackedOffsetsCopycat
         );
     }

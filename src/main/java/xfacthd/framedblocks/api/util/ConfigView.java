@@ -95,6 +95,11 @@ public final class ConfigView
          * Returns whether item models of framed blocks should render with the camo stored on the stack, if present
          */
         boolean shouldRenderItemModelsWithCamo();
+
+        /**
+         * Returns whether weighted models are taken into account ({@code true}) or unwrapped ({@code false})
+         */
+        boolean supportWeightedVariants();
     }
 
     public interface DevTools

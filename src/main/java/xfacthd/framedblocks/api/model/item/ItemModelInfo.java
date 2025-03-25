@@ -1,9 +1,8 @@
 package xfacthd.framedblocks.api.model.item;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
+import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.util.CamoList;
 
@@ -24,12 +23,6 @@ public interface ItemModelInfo
      */
     default ModelData buildItemModelData(BlockState state, CamoList camos)
     {
-        FramedBlockData fbData = new FramedBlockData(camos.getCamo(0), false);
-        return ModelData.builder().with(FramedBlockData.PROPERTY, fbData).build();
+        return ModelData.of(AbstractFramedBlockData.PROPERTY, new FramedBlockData(camos.getCamo(0), false));
     }
-
-    /**
-     * Apply additional transforms to the item when it's rendered in the given display context
-     */
-    default void applyItemTransform(PoseStack poseStack, ItemDisplayContext ctx, boolean leftHand) { }
 }

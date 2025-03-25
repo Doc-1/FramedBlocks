@@ -8,8 +8,6 @@ import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
 import xfacthd.framedblocks.api.block.FramedProperties;
-import xfacthd.framedblocks.api.model.item.TranslatedItemModelInfo;
-import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 
 public class FramedSlopeSlabGeometry extends Geometry
@@ -32,7 +30,7 @@ public class FramedSlopeSlabGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction face = quad.getDirection();
+        Direction face = quad.direction();
         boolean offset = top != topHalf;
 
         if (!ySlope && face == facing.getOpposite())
@@ -72,11 +70,5 @@ public class FramedSlopeSlabGeometry extends Geometry
                     .apply(Modifiers.setPosition(.5F))
                     .export(quadMap.get(null));
         }
-    }
-
-    @Override
-    public ItemModelInfo getItemModelInfo()
-    {
-        return TranslatedItemModelInfo.HAND_Y_HALF_UP;
     }
 }

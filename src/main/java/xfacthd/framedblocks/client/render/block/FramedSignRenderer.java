@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import xfacthd.framedblocks.api.render.Quaternions;
@@ -43,7 +44,8 @@ public class FramedSignRenderer implements BlockEntityRenderer<FramedSignBlockEn
             PoseStack poseStack,
             MultiBufferSource buffer,
             int light,
-            int overlay
+            int overlay,
+            Vec3 cameraPos
     )
     {
         BlockState state = sign.getBlockState();

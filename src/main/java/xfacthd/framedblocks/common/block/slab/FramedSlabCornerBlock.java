@@ -78,7 +78,7 @@ public class FramedSlabCornerBlock extends FramedBlock
     @Override
     public BlockState getItemModelSource()
     {
-        return defaultBlockState();
+        return defaultBlockState().setValue(FramedProperties.FACING_HOR, Direction.SOUTH);
     }
 
     @Override

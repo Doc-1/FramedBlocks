@@ -8,8 +8,6 @@ import xfacthd.framedblocks.api.model.geometry.Geometry;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
-import xfacthd.framedblocks.api.model.item.TranslatedItemModelInfo;
-import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.property.CompoundDirection;
@@ -34,7 +32,7 @@ public class FramedSlopedPrismGeometry extends Geometry
         boolean yFacing = Utils.isY(facing);
         boolean yOrient = Utils.isY(orientation);
         Direction orientOpp = orientation.getOpposite();
-        Direction quadFace = quad.getDirection();
+        Direction quadFace = quad.direction();
 
         if (quadFace == orientOpp && !yOrient)
         {
@@ -136,11 +134,5 @@ public class FramedSlopedPrismGeometry extends Geometry
                     .apply(Modifiers.makeVerticalSlope(facing, 45))
                     .export(quadMap.get(null));
         }
-    }
-
-    @Override
-    public ItemModelInfo getItemModelInfo()
-    {
-        return TranslatedItemModelInfo.HAND_Y_HALF_UP;
     }
 }

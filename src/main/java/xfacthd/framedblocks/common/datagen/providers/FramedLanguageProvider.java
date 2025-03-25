@@ -7,6 +7,7 @@ import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import xfacthd.framedblocks.api.block.IFramedBlock;
+import xfacthd.framedblocks.api.blueprint.BlueprintData;
 import xfacthd.framedblocks.api.camo.CamoContainerFactory;
 import xfacthd.framedblocks.api.camo.block.SimpleBlockCamoContainerFactory;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
@@ -24,8 +25,6 @@ import xfacthd.framedblocks.client.screen.overlay.SplitLineOverlay;
 import xfacthd.framedblocks.client.screen.overlay.StateLockOverlay;
 import xfacthd.framedblocks.client.screen.overlay.ToggleWaterloggableOverlay;
 import xfacthd.framedblocks.client.screen.overlay.ToggleYSlopeOverlay;
-import xfacthd.framedblocks.common.block.cube.FramedTankBlock;
-import xfacthd.framedblocks.common.block.slopeslab.FramedSlopeSlabBlock;
 import xfacthd.framedblocks.common.blockentity.special.FramedHopperBlockEntity;
 import xfacthd.framedblocks.common.compat.atlasviewer.AtlasViewerCompat;
 import xfacthd.framedblocks.common.compat.jade.JadeCompat;
@@ -44,6 +43,8 @@ import xfacthd.framedblocks.common.datagen.GeneratorHandler;
 import xfacthd.framedblocks.common.item.FramedBlueprintItem;
 import xfacthd.framedblocks.common.blockentity.special.FramedChestBlockEntity;
 import xfacthd.framedblocks.common.item.PhantomPasteItem;
+import xfacthd.framedblocks.common.item.block.FramedMirroringBlockItem;
+import xfacthd.framedblocks.common.item.block.FramedTankBlockItem;
 
 import java.util.Objects;
 
@@ -392,24 +393,24 @@ public final class FramedLanguageProvider extends LanguageProvider
 
     private void addTooltipTranslations()
     {
-        add(FramedBlueprintItem.CONTAINED_BLOCK, "Contained Block: %s");
-        add(FramedBlueprintItem.CAMO_BLOCK, "Camo Block: %s");
-        add(FramedBlueprintItem.IS_ILLUMINATED, "Illuminated: %s");
-        add(FramedBlueprintItem.IS_INTANGIBLE, "Intangible: %s");
-        add(FramedBlueprintItem.IS_REINFORCED, "Reinforced: %s");
-        add(FramedBlueprintItem.IS_EMISSIVE, "Emissive: %s");
-        add(FramedBlueprintItem.MISSING_MATERIALS, "[Framed Blueprint] Missing required materials:");
-        add(FramedBlueprintItem.BLOCK_NONE, "None");
-        add(FramedBlueprintItem.BLOCK_INVALID, "Invalid");
-        add(FramedBlueprintItem.FALSE, "false");
-        add(FramedBlueprintItem.TRUE, "true");
-        add(FramedBlueprintItem.CANT_COPY, "[Framed Blueprint] This block can currently not be copied!");
+        add(BlueprintData.CONTAINED_BLOCK, "Contained Block: %s");
+        add(BlueprintData.CAMO_BLOCK, "Camo Block: %s");
+        add(BlueprintData.IS_ILLUMINATED, "Illuminated: %s");
+        add(BlueprintData.IS_INTANGIBLE, "Intangible: %s");
+        add(BlueprintData.IS_REINFORCED, "Reinforced: %s");
+        add(BlueprintData.IS_EMISSIVE, "Emissive: %s");
+        add(BlueprintData.MISSING_MATERIALS, "[Framed Blueprint] Missing required materials:");
+        add(BlueprintData.BLOCK_NONE, "None");
+        add(BlueprintData.BLOCK_INVALID, "Invalid");
+        add(BlueprintData.FALSE, "false");
+        add(BlueprintData.TRUE, "true");
+        add(BlueprintData.CANT_COPY, "[Framed Blueprint] This block can currently not be copied!");
         add(FramedBlueprintItem.CANT_PLACE_FLUID_CAMO, "[Framed Blueprint] Copying blocks with fluid camos is currently not possible!");
         add(IFramedBlock.CAMO_LABEL, "Camo: %s");
         add(PhantomPasteItem.FEATURE_DISABLED, "The intangibility feature is disabled, this item therefor has no function!");
-        add(FramedTankBlock.TANK_CONTENTS, "Stored Fluid: %s");
-        add(FramedTankBlock.EMPTY_FLUID, "Empty");
-        add(FramedSlopeSlabBlock.PLACE_UPSIDE_DOWN, "Hold sneak key to place upside down");
+        add(FramedTankBlockItem.TANK_CONTENTS, "Stored Fluid: %s");
+        add(FramedTankBlockItem.EMPTY_FLUID, "Empty");
+        add(FramedMirroringBlockItem.PLACE_UPSIDE_DOWN, "Hold sneak key to place upside down");
     }
 
     private void addOverlayTranslations()
@@ -501,10 +502,10 @@ public final class FramedLanguageProvider extends LanguageProvider
         add(ClientConfig.TRANSLATION_DETAILED_CULLING, "Detailed culling");
         add(ClientConfig.TRANSLATION_USE_DISCRETE_UV_STEPS, "Use discrete UV steps");
         add(ClientConfig.TRANSLATION_CON_TEX_MODE, "Connected textures mode");
-        add(ClientConfig.TRANSLATION_CON_TEX_DISABLE_LIST, "Disable connected textures support");
         add(ClientConfig.TRANSLATION_CAMO_MESSAGE_VERBOSITY, "Disallowed camo message verbosity");
         add(ClientConfig.TRANSLATION_FORCE_AO_ON_GLOWING_BLOCKS, "Force ambient occlusion on glowing framed blocks");
         add(ClientConfig.TRANSLATION_RENDER_ITEM_MODELS_WITH_CAMO, "Render item models with camo");
+        add(ClientConfig.TRANSLATION_SUPPORT_WEIGHTED_VARIANTS, "Support weighted variant models");
         add(ClientConfig.TRANSLATION_SHOW_ALL_RECIPE_PERMUTATIONS_IN_EMI, "Show all Framing Saw recipe permutations in EMI");
         add(ClientConfig.TRANSLATION_SOLID_FRAME_MODE, "Solid frame mode");
         add(ClientConfig.TRANSLATION_SHOW_BUTTON_PLATE_OVERLAY, "Show button and pressure plate type overlay");

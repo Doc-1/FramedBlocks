@@ -14,13 +14,12 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.IFramedBlock;
-import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.block.cache.StateCache;
 import xfacthd.framedblocks.api.block.render.ParticleHelper;
+import xfacthd.framedblocks.api.blueprint.BlueprintData;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
 import xfacthd.framedblocks.api.util.CamoList;
@@ -30,9 +29,7 @@ import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockStateCache;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
-import xfacthd.framedblocks.common.item.FramedBlueprintItem;
 
-import java.util.Objects;
 import java.util.Optional;
 
 public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFramedDoubleBlock
@@ -46,16 +43,6 @@ public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFram
             return be.getSoundType();
         }
         return state.getSoundType();
-    }
-
-    @Override
-    default boolean isCamoEmissiveRendering(BlockState state, BlockGetter level, BlockPos pos)
-    {
-        ModelData modelData = level.getModelData(pos);
-        if (modelData == ModelData.EMPTY) return false;
-
-        return IFramedBlock.isCamoEmissiveRendering(modelData.get(IFramedDoubleBlockEntity.DATA_ONE)) ||
-               IFramedBlock.isCamoEmissiveRendering(modelData.get(IFramedDoubleBlockEntity.DATA_TWO));
     }
 
     @Override
@@ -164,21 +151,6 @@ public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFram
     }
 
     @Override
-    default ModelData unpackNestedModelData(ModelData data, BlockState state, BlockState componentState)
-    {
-        DoubleBlockParts parts = getParts(state);
-        if (componentState == parts.stateOne())
-        {
-            return Objects.requireNonNullElse(data.get(IFramedDoubleBlockEntity.DATA_ONE), ModelData.EMPTY);
-        }
-        if (componentState == parts.stateTwo())
-        {
-            return Objects.requireNonNullElse(data.get(IFramedDoubleBlockEntity.DATA_TWO), ModelData.EMPTY);
-        }
-        return ModelData.EMPTY;
-    }
-
-    @Override
     default boolean addRunningEffects(BlockState state, Level level, BlockPos pos, Entity entity)
     {
         if (level.getBlockEntity(pos) instanceof FramedDoubleBlockEntity be)
@@ -247,6 +219,6 @@ public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFram
         {
             return camoContainer.getContent().getCamoName().withStyle(ChatFormatting.WHITE);
         }
-        return FramedBlueprintItem.BLOCK_NONE.copy();
+        return BlueprintData.BLOCK_NONE.copy();
     }
 }

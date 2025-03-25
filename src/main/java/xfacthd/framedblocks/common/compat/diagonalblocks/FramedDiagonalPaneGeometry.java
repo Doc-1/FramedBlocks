@@ -38,7 +38,7 @@ class FramedDiagonalPaneGeometry extends FramedPaneGeometry
     {
         super.transformQuad(quadMap, quad);
 
-        Direction face = quad.getDirection();
+        Direction face = quad.direction();
         if (Utils.isY(face))
         {
             if (northEast)
@@ -112,7 +112,7 @@ class FramedDiagonalPaneGeometry extends FramedPaneGeometry
     {
         QuadModifier.of(quad)
                 .apply(Modifiers.cutSideLeftRight(9F/16F))
-                .apply(rotate(quad.getDirection()))
+                .apply(rotate(quad.direction()))
                 .export(quadMap.get(null));
     }
 

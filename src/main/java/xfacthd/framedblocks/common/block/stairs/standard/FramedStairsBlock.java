@@ -1,7 +1,6 @@
 package xfacthd.framedblocks.common.block.stairs.standard;
 
 import net.minecraft.core.*;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -32,6 +31,8 @@ import java.util.Set;
 
 public class FramedStairsBlock extends StairBlock implements IFramedBlock
 {
+    public static final StateMerger STATE_MERGER = new StairStateMerger();
+
     private final BlockType type;
 
     public FramedStairsBlock(BlockType type, Properties props)
@@ -140,12 +141,6 @@ public class FramedStairsBlock extends StairBlock implements IFramedBlock
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, List<Component> lines, TooltipFlag flag)
-    {
-        appendCamoHoverText(stack, lines);
-    }
-
-    @Override
     public boolean doesBlockOccludeBeaconBeam(BlockState state, LevelReader level, BlockPos pos)
     {
         return true;
@@ -177,7 +172,7 @@ public class FramedStairsBlock extends StairBlock implements IFramedBlock
 
 
 
-    public static final class StairStateMerger implements StateMerger
+    private static final class StairStateMerger implements StateMerger
     {
         private final StateMerger ignoringMerger = StateMerger.ignoring(WrapHelper.IGNORE_DEFAULT_LOCK);
 

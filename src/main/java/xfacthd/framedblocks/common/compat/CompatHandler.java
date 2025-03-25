@@ -3,7 +3,6 @@ package xfacthd.framedblocks.common.compat;
 import net.neoforged.bus.api.IEventBus;
 import xfacthd.framedblocks.common.compat.ae2.AppliedEnergisticsCompat;
 import xfacthd.framedblocks.common.compat.amendments.AmendmentsCompat;
-import xfacthd.framedblocks.common.compat.athena.AthenaCompat;
 import xfacthd.framedblocks.common.compat.atlasviewer.AtlasViewerCompat;
 import xfacthd.framedblocks.common.compat.buildinggadgets.BuildingGadgetsCompat;
 import xfacthd.framedblocks.common.compat.create.CreateCompat;
@@ -16,10 +15,8 @@ public final class CompatHandler
     {
         AppliedEnergisticsCompat.init(modBus);
         AmendmentsCompat.init();
-        AthenaCompat.init();
         AtlasViewerCompat.init(modBus);
         BuildingGadgetsCompat.init(modBus);
-        CreateCompat.init();
         DiagonalBlocksCompat.init(modBus);
         SearchablesCompat.init();
     }

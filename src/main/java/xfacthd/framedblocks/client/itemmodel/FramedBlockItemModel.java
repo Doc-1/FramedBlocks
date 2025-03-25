@@ -1,6 +1,7 @@
 package xfacthd.framedblocks.client.itemmodel;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Suppliers;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -12,12 +13,16 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.item.BlockModelWrapper;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -25,14 +30,18 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.EmptyBlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.RenderTypeHelper;
+import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.model.AbstractFramedBlockModel;
-import xfacthd.framedblocks.api.model.DataAwareItemModel;
 import xfacthd.framedblocks.api.model.ErrorModel;
+import xfacthd.framedblocks.api.model.ModelPartCollectionFakeLevel;
 import xfacthd.framedblocks.api.model.item.AbstractFramedBlockItemModel;
 import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.model.item.FramedBlockItemTintProvider;
@@ -47,6 +56,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
 {
@@ -55,12 +65,33 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
 
     private final Map<CamoList, ModelSet> itemModelCache = new Object2ObjectOpenHashMap<>();
     private final BlockState state;
+    private final Supplier<BlockStateModel> modelSupplier;
     private final DynamicItemTintProvider tintProvider;
+    private final ItemTransforms itemTransforms;
+    private final Supplier<Vector3f[]> extents;
 
-    private FramedBlockItemModel(BlockState state, DynamicItemTintProvider tintProvider)
+    private FramedBlockItemModel(BlockState state, DynamicItemTintProvider tintProvider, ItemTransforms itemTransforms)
     {
         this.state = state;
+        this.modelSupplier = Suppliers.memoize(() -> Minecraft.getInstance().getBlockRenderer().getBlockModel(state));
         this.tintProvider = tintProvider;
+        this.itemTransforms = itemTransforms;
+        this.extents = Suppliers.memoize(() ->
+        {
+            BlockStateModel model = modelSupplier.get();
+            ItemModelInfo modelInfo = ItemModelInfo.DEFAULT;
+            if (model instanceof AbstractFramedBlockModel blockModel)
+            {
+                modelInfo = Objects.requireNonNullElse(blockModel.getItemModelInfo(), ItemModelInfo.DEFAULT);
+            }
+            ModelSet modelSet = getOrCreateModelSet(ItemStack.EMPTY, CamoList.EMPTY, modelInfo);
+            ArrayList<BakedQuad> allQuads = new ArrayList<>();
+            for (ModelEntry modelEntry : modelSet.models)
+            {
+                Utils.copyAll(modelEntry.quads, allQuads);
+            }
+            return BlockModelWrapper.computeExtents(allQuads);
+        });
     }
 
     @Override
@@ -74,49 +105,34 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
             int seed
     )
     {
-        BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(state);
+        BlockStateModel model = modelSupplier.get();
         ItemModelInfo itemModelInfo;
         if (!(model instanceof AbstractFramedBlockModel blockModel) || (itemModelInfo = blockModel.getItemModelInfo()) == null)
         {
-            renderState.newLayer().setupBlockModel(ErrorModel.get(), Sheets.solidBlockSheet());
+            ErrorModel.setupForItem(renderState.newLayer(), ctx);
             return;
         }
 
-        boolean dataRequired = itemModelInfo.isDataRequired();
         boolean showCamo = ConfigView.Client.INSTANCE.shouldRenderItemModelsWithCamo();
-        if (!dataRequired && !showCamo)
-        {
-            renderState.newLayer().setupBlockModel(model, Sheets.cutoutBlockSheet());
-            return;
-        }
-
         CamoList camos = showCamo ? stack.getOrDefault(Utils.DC_TYPE_CAMO_LIST, CamoList.EMPTY) : CamoList.EMPTY;
-        if (!dataRequired && camos.isEmpty())
+
+        ModelSet modelSet;
+        try
         {
-            renderState.newLayer().setupBlockModel(model, Sheets.cutoutBlockSheet());
+            modelSet = getOrCreateModelSet(stack, camos, itemModelInfo);
+        }
+        catch (Throwable ignored)
+        {
+            ErrorModel.setupForItem(renderState.newLayer(), ctx);
             return;
         }
-
-        ModelSet modelSet = itemModelCache.get(camos);
-        if (modelSet == null)
-        {
-            ModelData data = itemModelInfo.buildItemModelData(state, camos);
-            List<DataAwareItemModel> models = new ArrayList<>();
-            RANDOM.setSeed(42);
-            IntSet tintIndices = new IntOpenHashSet();
-            for (RenderType renderType : model.getRenderTypes(state, RANDOM, data))
-            {
-                DataAwareItemModel itemModel = new DataAwareItemModel(model, data, renderType);
-                collectTintIndices(tintIndices, itemModel, state, data, renderType);
-                models.add(itemModel);
-            }
-            modelSet = new ModelSet(models, collectTintValues(tintIndices, tintProvider, stack, camos));
-            itemModelCache.put(camos, modelSet);
-        }
-        for (BakedModel layerModel : modelSet.models)
+        for (ModelEntry layerModel : modelSet.models)
         {
             ItemStackRenderState.LayerRenderState layer = renderState.newLayer();
-            layer.setupBlockModel(layerModel, layerModel.getRenderType(stack));
+            layer.setExtents(extents);
+            layer.prepareQuadList().addAll(layerModel.quads);
+            layer.setRenderType(layerModel.renderType);
+            modelSet.properties.applyToLayer(layer, ctx);
             if (modelSet.tintValues != null)
             {
                 ((IDynamicTintableItemStackRenderStateLayer) layer).framedblocks$setDynamicItemTintValues(modelSet.tintValues);
@@ -124,19 +140,44 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
         }
     }
 
-    private static void collectTintIndices(IntSet tintIndices, DataAwareItemModel itemModel, BlockState state, ModelData data, RenderType renderType)
+    private ModelSet getOrCreateModelSet(ItemStack stack, CamoList camos, ItemModelInfo itemModelInfo)
     {
-        for (Direction face : DIRECTIONS)
+        ModelSet modelSet = itemModelCache.get(camos);
+        if (modelSet == null)
         {
-            for (BakedQuad quad : itemModel.getQuads(state, face, RANDOM, data, renderType))
+            BlockStateModel model = modelSupplier.get();
+            ModelData data = itemModelInfo.isDataRequired() || !camos.isEmpty() ? itemModelInfo.buildItemModelData(state, camos) : ModelData.EMPTY;
+            BlockAndTintGetter level = new ModelPartCollectionFakeLevel(state, data);
+
+            List<ModelEntry> models = new ArrayList<>();
+            IntSet tintIndices = new IntOpenHashSet();
+
+            RANDOM.setSeed(42);
+            for (BlockModelPart modelPart : model.collectParts(level, BlockPos.ZERO, state, RANDOM))
             {
-                int tintIndex = quad.getTintIndex();
-                if (tintIndex != -1)
+                ArrayList<BakedQuad> allQuads = new ArrayList<>();
+                for (Direction face : DIRECTIONS)
                 {
-                    tintIndices.add(tintIndex);
+                    RANDOM.setSeed(42);
+                    Utils.copyAll(modelPart.getQuads(face), allQuads);
                 }
+                for (BakedQuad quad : allQuads)
+                {
+                    int tintIndex = quad.tintIndex();
+                    if (tintIndex != -1)
+                    {
+                        tintIndices.add(tintIndex);
+                    }
+                }
+                RenderType renderType = modelPart.getRenderType(state);
+                models.add(new ModelEntry(allQuads, RenderTypeHelper.getEntityRenderType(renderType)));
             }
+
+            ModelRenderProperties renderProps = new ModelRenderProperties(true, model.particleIcon(EmptyBlockAndTintGetter.INSTANCE, BlockPos.ZERO, state), itemTransforms);
+            modelSet = new ModelSet(models, collectTintValues(tintIndices, tintProvider, stack, camos), renderProps);
+            itemModelCache.put(camos, modelSet);
         }
+        return modelSet;
     }
 
     @Nullable
@@ -152,6 +193,11 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
         return tintValues;
     }
 
+    public ItemTransforms getItemTransforms()
+    {
+        return itemTransforms;
+    }
+
     @Override
     public void clearCache()
     {
@@ -160,23 +206,19 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
 
 
 
-    private record ModelSet(List<DataAwareItemModel> models, @Nullable Int2IntMap tintValues) { }
+    private record ModelSet(List<ModelEntry> models, @Nullable Int2IntMap tintValues, ModelRenderProperties properties) { }
+
+    private record ModelEntry(List<BakedQuad> quads, RenderType renderType) { }
 
 
 
-    public record Unbaked(Block block, DynamicItemTintProvider tintProvider) implements ItemModel.Unbaked
+    public record Unbaked(Block block, DynamicItemTintProvider tintProvider, ResourceLocation baseModel) implements ItemModel.Unbaked
     {
         public static final ResourceLocation ID = Utils.rl("block");
         public static final MapCodec<FramedBlockItemModel.Unbaked> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-                BuiltInRegistries.BLOCK.byNameCodec().fieldOf("block").validate(block ->
-                {
-                    if (block instanceof IFramedBlock)
-                    {
-                        return DataResult.success(block);
-                    }
-                    return DataResult.error(() -> "Expected IFramedBlock, got " + block);
-                }).forGetter(FramedBlockItemModel.Unbaked::block),
-                DynamicItemTintProviders.CODEC.optionalFieldOf("tint_provider", FramedBlockItemTintProvider.INSTANCE_SINGLE).forGetter(Unbaked::tintProvider)
+                BuiltInRegistries.BLOCK.byNameCodec().fieldOf("block").validate(FramedBlockItemModel.Unbaked::validateBlock).forGetter(FramedBlockItemModel.Unbaked::block),
+                DynamicItemTintProviders.CODEC.optionalFieldOf("tint_provider", FramedBlockItemTintProvider.INSTANCE_SINGLE).forGetter(FramedBlockItemModel.Unbaked::tintProvider),
+                ResourceLocation.CODEC.fieldOf("base_model").forGetter(FramedBlockItemModel.Unbaked::baseModel)
         ).apply(inst, FramedBlockItemModel.Unbaked::new));
 
         public Unbaked
@@ -185,19 +227,32 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
         }
 
         @Override
-        public ItemModel bake(BakingContext context)
+        public FramedBlockItemModel bake(BakingContext context)
         {
             BlockState state = ((IFramedBlock) block).getItemModelSource();
-            return new FramedBlockItemModel(Objects.requireNonNull(state), tintProvider);
+            ItemTransforms transforms = context.blockModelBaker().getModel(baseModel).getTopTransforms();
+            return new FramedBlockItemModel(Objects.requireNonNull(state), tintProvider, transforms);
         }
 
         @Override
-        public void resolveDependencies(Resolver resolver) { }
+        public void resolveDependencies(Resolver resolver)
+        {
+            resolver.markDependency(baseModel);
+        }
 
         @Override
         public MapCodec<? extends ItemModel.Unbaked> type()
         {
             return CODEC;
+        }
+
+        private static DataResult<Block> validateBlock(Block block)
+        {
+            if (block instanceof IFramedBlock)
+            {
+                return DataResult.success(block);
+            }
+            return DataResult.error(() -> "Expected IFramedBlock, got " + block);
         }
     }
 }

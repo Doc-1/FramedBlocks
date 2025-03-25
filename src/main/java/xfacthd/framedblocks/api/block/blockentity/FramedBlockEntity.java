@@ -4,11 +4,13 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -32,10 +34,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -51,6 +51,7 @@ import xfacthd.framedblocks.api.camo.CamoContainerFactory;
 import xfacthd.framedblocks.api.camo.CamoContainerHelper;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.component.FrameConfig;
+import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.blueprint.BlueprintData;
@@ -143,7 +144,7 @@ public class FramedBlockEntity extends BlockEntity
         {
             return applyReinforcement(player, stack);
         }
-        else if (reinforced && canRemoveReinforcement(stack))
+        else if (reinforced && stack.isCorrectToolForDrops(Blocks.OBSIDIAN.defaultBlockState()))
         {
             return removeReinforcement(player, stack, hand);
         }
@@ -172,15 +173,6 @@ public class FramedBlockEntity extends BlockEntity
             return false;
         }
         return stack.is(Utils.PHANTOM_PASTE) && getBlockType().allowMakingIntangible();
-    }
-
-    private static boolean canRemoveReinforcement(ItemStack stack)
-    {
-        if (stack.getItem().canPerformAction(stack, ItemAbilities.PICKAXE_DIG))
-        {
-            return stack.isCorrectToolForDrops(Blocks.OBSIDIAN.defaultBlockState());
-        }
-        return false;
     }
 
     private InteractionResult setCamo(Player player, ItemStack stack, CamoContainerFactory<?> factory, boolean secondary)
@@ -877,7 +869,7 @@ public class FramedBlockEntity extends BlockEntity
         boolean needUpdate = false;
         boolean needCullingUpdate = false;
 
-        CamoContainer<?, ?> newCamo = CamoContainerHelper.readFromNetwork(nbt.getCompound(CAMO_NBT_KEY));
+        CamoContainer<?, ?> newCamo = CamoContainerHelper.readFromNetwork(nbt.getCompoundOrEmpty(CAMO_NBT_KEY));
         if (!newCamo.equals(camoContainer))
         {
             int oldLight = getLightValue();
@@ -891,7 +883,7 @@ public class FramedBlockEntity extends BlockEntity
             needCullingUpdate = true;
         }
 
-        byte flags = nbt.getByte("flags");
+        byte flags = nbt.getByteOr("flags", (byte) 0);
 
         boolean newGlow = readFlag(flags, FLAG_GLOWING);
         if (newGlow != glowing)
@@ -951,7 +943,7 @@ public class FramedBlockEntity extends BlockEntity
             cullStateDirty = true;
         }
 
-        byte flags = nbt.getByte("flags");
+        byte flags = nbt.getByteOr("flags", (byte) 0);
         glowing = readFlag(flags, FLAG_GLOWING);
         intangible = readFlag(flags, FLAG_INTANGIBLE);
         reinforced = readFlag(flags, FLAG_REINFORCED);
@@ -962,7 +954,7 @@ public class FramedBlockEntity extends BlockEntity
 
     protected boolean readCamoFromUpdateTag(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        CamoContainer<?, ?> newCamo = CamoContainerHelper.readFromNetwork(nbt.getCompound(CAMO_NBT_KEY));
+        CamoContainer<?, ?> newCamo = CamoContainerHelper.readFromNetwork(nbt.getCompoundOrEmpty(CAMO_NBT_KEY));
         if (!newCamo.equals(camoContainer))
         {
             camoContainer = newCamo;
@@ -1004,13 +996,21 @@ public class FramedBlockEntity extends BlockEntity
     /**
      * @param includeCullInfo Whether culling data should be included
      */
-    public ModelData getModelData(boolean includeCullInfo)
+    public final ModelData getModelData(boolean includeCullInfo)
     {
-        boolean[] cullData = includeCullInfo ? culledFaces : FramedBlockData.NO_CULLED_FACES;
-        FramedBlockData modelData = new FramedBlockData(camoContainer, cullData, false, isReinforced(), isEmissive());
-        ModelData.Builder builder = ModelData.builder().with(FramedBlockData.PROPERTY, modelData);
+        AbstractFramedBlockData modelData = computeBlockData(includeCullInfo);
+        ModelData.Builder builder = ModelData.builder().with(AbstractFramedBlockData.PROPERTY, modelData);
         attachAdditionalModelData(builder);
         return builder.build();
+    }
+
+    /**
+     * @param includeCullInfo Whether culling data should be included
+     */
+    protected AbstractFramedBlockData computeBlockData(boolean includeCullInfo)
+    {
+        boolean[] cullData = includeCullInfo ? culledFaces : FramedBlockData.NO_CULLED_FACES;
+        return new FramedBlockData(camoContainer, cullData, false, isReinforced(), isEmissive());
     }
 
     protected void attachAdditionalModelData(ModelData.Builder builder) { }
@@ -1095,7 +1095,7 @@ public class FramedBlockEntity extends BlockEntity
     protected void collectMiscComponents(DataComponentMap.Builder builder) { }
 
     @Override
-    protected final void applyImplicitComponents(DataComponentInput input)
+    protected final void applyImplicitComponents(DataComponentGetter input)
     {
         applyCamoComponents(input);
         applyMiscComponents(input);
@@ -1103,12 +1103,12 @@ public class FramedBlockEntity extends BlockEntity
         input.getOrDefault(Utils.DC_TYPE_FRAME_CONFIG, FrameConfig.DEFAULT).apply(this);
     }
 
-    protected void applyCamoComponents(DataComponentInput input)
+    protected void applyCamoComponents(DataComponentGetter input)
     {
         setCamo(input.getOrDefault(Utils.DC_TYPE_CAMO_LIST, CamoList.EMPTY).getCamo(0), false);
     }
 
-    protected void applyMiscComponents(DataComponentInput input) { }
+    protected void applyMiscComponents(DataComponentGetter input) { }
 
     /*
      * NBT stuff
@@ -1133,10 +1133,10 @@ public class FramedBlockEntity extends BlockEntity
         super.loadAdditional(nbt, provider);
 
         camoContainer = loadAndValidateCamo(nbt, CAMO_NBT_KEY);
-        glowing = nbt.getBoolean("glowing");
-        intangible = nbt.getBoolean("intangible");
-        reinforced = nbt.getBoolean("reinforced");
-        emissive = nbt.getBoolean("emissive");
+        glowing = nbt.getBooleanOr("glowing", false);
+        intangible = nbt.getBooleanOr("intangible", false);
+        reinforced = nbt.getBooleanOr("reinforced", false);
+        emissive = nbt.getBooleanOr("emissive", false);
 
         if (glowing)
         {
@@ -1146,7 +1146,7 @@ public class FramedBlockEntity extends BlockEntity
 
     protected final CamoContainer<?, ?> loadAndValidateCamo(CompoundTag tag, String key)
     {
-        CamoContainer<?, ?> camo = CamoContainerHelper.readFromDisk(tag.getCompound(key));
+        CamoContainer<?, ?> camo = CamoContainerHelper.readFromDisk(tag.getCompoundOrEmpty(key));
         if (!CamoContainerHelper.validateCamo(camo))
         {
             recheckStates = true;
@@ -1160,7 +1160,7 @@ public class FramedBlockEntity extends BlockEntity
             return EmptyCamoContainer.EMPTY;
         }
         forceLightUpdate |= camo.getContent().getLightEmission() > 0;
-        recheckStates |= tag.getByte("updated") < DATA_VERSION;
+        recheckStates |= tag.getByteOr("updated", (byte) 0) < DATA_VERSION;
         return camo;
     }
 }

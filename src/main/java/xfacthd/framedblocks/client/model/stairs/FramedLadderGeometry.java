@@ -32,7 +32,7 @@ public class FramedLadderGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (Utils.isY(quadDir))
         {
             QuadModifier capMod = QuadModifier.of(quad)
@@ -52,7 +52,7 @@ public class FramedLadderGeometry extends Geometry
 
             for (int i = 0; i < 4; i++)
             {
-                float height = quad.getDirection() == Direction.DOWN ? 1F - RUNGS[i] : RUNGS[i] + RUNG_DEPTH;
+                float height = quad.direction() == Direction.DOWN ? 1F - RUNGS[i] : RUNGS[i] + RUNG_DEPTH;
                 rungMod.derive().apply(Modifiers.setPosition(height))
                         .export(quadMap.get(null));
             }
@@ -71,7 +71,7 @@ public class FramedLadderGeometry extends Geometry
                     .applyIf(Modifiers.setPosition(LEG_DEPTH), opposite)
                     .export(quadMap.get(opposite ? null : quadDir));
 
-            float pos = quad.getDirection() == dir ? (1F - RUNG_OFFSET) : (RUNG_DEPTH + RUNG_OFFSET);
+            float pos = quad.direction() == dir ? (1F - RUNG_OFFSET) : (RUNG_DEPTH + RUNG_OFFSET);
 
             for (int i = 0; i < 4; i++)
             {

@@ -2,17 +2,15 @@ package xfacthd.framedblocks.common.block.interactive;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -124,19 +122,13 @@ public class FramedHopperBlock extends HopperBlock implements IFramedBlock
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, List<Component> lines, TooltipFlag flag)
-    {
-        appendCamoHoverText(stack, lines);
-    }
-
-    @Override
     public boolean doesBlockOccludeBeaconBeam(BlockState state, LevelReader level, BlockPos pos)
     {
         return true;
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity)
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier)
     {
         if (level.getBlockEntity(pos) instanceof FramedHopperBlockEntity hopper)
         {

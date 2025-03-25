@@ -273,7 +273,7 @@ public class FramedHopperBlockEntity extends FramedBlockEntity implements Hopper
     {
         super.loadAdditional(tag, registries);
         ContainerHelper.loadAllItems(tag, items, registries);
-        cooldownTime = tag.getInt(COOLDOWN_NBT_KEY);
+        cooldownTime = tag.getIntOr(COOLDOWN_NBT_KEY, 0);
     }
 
     @Override

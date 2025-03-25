@@ -33,9 +33,9 @@ public final class OverlayQuadGenerator
         Set<OverlayCacheKey> uniqueKeys = new HashSet<>(srcQuads.size());
         for (BakedQuad quad : srcQuads)
         {
-            if (!filter.test(quad.getDirection())) continue;
+            if (!filter.test(quad.direction())) continue;
 
-            TextureAtlasSprite sprite = spriteGetter.apply(quad.getDirection());
+            TextureAtlasSprite sprite = spriteGetter.apply(quad.direction());
             OverlayCacheKey key = buildCacheKey(quad, sprite);
             if (uniqueKeys.add(key))
             {
@@ -90,7 +90,7 @@ public final class OverlayQuadGenerator
 
     private static OverlayCacheKey buildCacheKey(BakedQuad quad, TextureAtlasSprite sprite)
     {
-        int[] vertexData = quad.getVertices();
+        int[] vertexData = quad.vertices();
         int[] keyData = new int[(3 + 1) * 4];
         for (int i = 0; i < 4; i++)
         {
@@ -99,7 +99,7 @@ public final class OverlayQuadGenerator
             System.arraycopy(vertexData, srcPos + IQuadTransformer.POSITION, keyData, destPos, 3);
             keyData[destPos + 3] = vertexData[srcPos + IQuadTransformer.NORMAL];
         }
-        return new OverlayCacheKey(quad.getDirection(), keyData, sprite);
+        return new OverlayCacheKey(quad.direction(), keyData, sprite);
     }
 
     public static void onResourceReload(@SuppressWarnings("unused") ResourceManager resourceManager)

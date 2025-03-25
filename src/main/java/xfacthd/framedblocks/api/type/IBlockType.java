@@ -1,7 +1,7 @@
 package xfacthd.framedblocks.api.type;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -74,7 +74,7 @@ public interface IBlockType
      * camos applied.
      *
      * @apiNote if a block's type returns true from this method, its {@link BlockEntity} must implement
-     * {@link IFramedDoubleBlockEntity}. The {@link Block} and {@link BakedModel} are not required to extend or implement
+     * {@link IFramedDoubleBlockEntity}. The {@link Block} and {@link BlockStateModel} are not required to extend or implement
      * any specific class
      */
     default boolean isDoubleBlock()

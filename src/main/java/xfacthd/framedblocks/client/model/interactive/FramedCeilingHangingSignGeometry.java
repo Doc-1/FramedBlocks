@@ -1,31 +1,36 @@
 package xfacthd.framedblocks.client.model.interactive;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
+import xfacthd.framedblocks.api.model.geometry.PartConsumer;
+import xfacthd.framedblocks.api.model.geometry.QuadListModifier;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
-import xfacthd.framedblocks.api.model.util.ModelUtils;
-import xfacthd.framedblocks.api.util.Utils;
-
-import java.util.List;
 
 public class FramedCeilingHangingSignGeometry extends Geometry
 {
+    private static final BlockState AUX_SHADER_STATE = Blocks.OAK_HANGING_SIGN.defaultBlockState();
+
     private final BlockState state;
-    private final BakedModel baseModel;
+    private final BlockStateModel baseModel;
     private final Direction dir;
     private final float rotDegrees;
     private final boolean attached;
+    @Nullable
+    private final QuadListModifier chainModifier;
 
     public FramedCeilingHangingSignGeometry(GeometryFactory.Context ctx)
     {
@@ -35,12 +40,17 @@ public class FramedCeilingHangingSignGeometry extends Geometry
         this.dir = Direction.from2DDataValue(rotation / 4);
         this.rotDegrees = (float) (rotation % 4) * -22.5F;
         this.attached = ctx.state().getValue(BlockStateProperties.ATTACHED);
+        this.chainModifier = !attached ? null : QuadListModifier.replacing(quad ->
+                QuadModifier.of(quad)
+                        .apply(Modifiers.rotateCentered(Direction.Axis.Y, rotDegrees, false))
+                        .exportDirect()
+        );
     }
 
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (quadDir.getAxis() == dir.getAxis())
         {
             QuadModifier.of(quad)
@@ -72,26 +82,8 @@ public class FramedCeilingHangingSignGeometry extends Geometry
     }
 
     @Override
-    public ChunkRenderTypeSet getAdditionalRenderTypes(RandomSource rand, ModelData extraData)
+    public void collectAdditionalPartsCached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data, QuadCacheKey cacheKey)
     {
-        return ModelUtils.CUTOUT;
-    }
-
-    @Override
-    public void getAdditionalQuads(QuadMap quadMap, RandomSource rand, ModelData data, RenderType renderType)
-    {
-        if (renderType == RenderType.cutout())
-        {
-            Utils.forAllDirections(dir ->
-            {
-                List<BakedQuad> quads = quadMap.get(dir);
-                for (BakedQuad quad : baseModel.getQuads(state, dir, rand, data, renderType))
-                {
-                    QuadModifier.of(quad)
-                            .applyIf(Modifiers.rotateCentered(Direction.Axis.Y, rotDegrees, false), attached)
-                            .export(quads);
-                }
-            });
-        }
+        consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, AUX_SHADER_STATE, chainModifier);
     }
 }

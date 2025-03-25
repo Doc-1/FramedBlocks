@@ -107,7 +107,7 @@ public abstract class SimpleBlockCamoContainerFactory extends AbstractBlockCamoC
     @Override
     protected final SimpleBlockCamoContainer readFromNetwork(CompoundTag tag)
     {
-        return new SimpleBlockCamoContainer(Block.stateById(tag.getInt("state")), this);
+        return new SimpleBlockCamoContainer(Block.stateById(tag.getIntOr("state", -1)), this);
     }
 
     @Override

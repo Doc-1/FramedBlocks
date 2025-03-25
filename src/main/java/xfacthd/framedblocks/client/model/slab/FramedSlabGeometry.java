@@ -22,17 +22,18 @@ public class FramedSlabGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, final BakedQuad quad)
     {
-        if ((top && quad.getDirection() == Direction.DOWN) || (!top && quad.getDirection() == Direction.UP))
+        Direction quadDir = quad.direction();
+        if ((top && quadDir == Direction.DOWN) || (!top && quadDir == Direction.UP))
         {
             QuadModifier.of(quad)
                     .apply(Modifiers.setPosition(.5F))
                     .export(quadMap.get(null));
         }
-        else if (!Utils.isY(quad.getDirection()))
+        else if (!Utils.isY(quadDir))
         {
             QuadModifier.of(quad)
                     .apply(Modifiers.cutSideUpDown(top, .5F))
-                    .export(quadMap.get(quad.getDirection()));
+                    .export(quadMap.get(quadDir));
         }
     }
 }

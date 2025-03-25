@@ -45,7 +45,7 @@ class FramedDiagonalFenceGeometry extends FramedFenceGeometry
             return;
         }
 
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
 
         if (Utils.isY(quadDir))
         {

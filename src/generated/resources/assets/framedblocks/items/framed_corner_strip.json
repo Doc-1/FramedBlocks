@@ -1,6 +1,7 @@
 {
   "model": {
     "type": "framedblocks:block",
+    "base_model": "framedblocks:item/framed_corner_strip",
     "block": "framedblocks:framed_corner_strip"
   }
 }

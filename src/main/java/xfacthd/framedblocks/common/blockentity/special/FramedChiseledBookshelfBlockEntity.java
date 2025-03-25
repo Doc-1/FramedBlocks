@@ -107,7 +107,7 @@ public class FramedChiseledBookshelfBlockEntity extends FramedBlockEntity
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
         super.loadAdditional(nbt, provider);
-        itemHandler.deserializeNBT(provider, nbt.getCompound(INVENTORY_NBT_KEY));
-        lastInteractedSlot = nbt.getInt(LAST_SLOT_NBT_KEY);
+        itemHandler.deserializeNBT(provider, nbt.getCompoundOrEmpty(INVENTORY_NBT_KEY));
+        lastInteractedSlot = nbt.getIntOr(LAST_SLOT_NBT_KEY, -1);
     }
 }

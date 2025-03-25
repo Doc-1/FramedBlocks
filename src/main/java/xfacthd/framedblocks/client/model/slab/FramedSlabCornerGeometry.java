@@ -24,7 +24,7 @@ public class FramedSlabCornerGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (Utils.isY(quadDir))
         {
             boolean inset = (!top && quadDir == Direction.UP) || (top && quadDir == Direction.DOWN);

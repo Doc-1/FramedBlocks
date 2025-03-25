@@ -21,7 +21,7 @@ import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.FramedBlock;
 import xfacthd.framedblocks.common.data.BlockType;
-import xfacthd.framedblocks.common.item.VerticalAndWallBlockItem;
+import xfacthd.framedblocks.common.item.block.VerticalAndWallBlockItem;
 
 public class FramedExtendedCornerSlopePanelBlock extends FramedBlock
 {

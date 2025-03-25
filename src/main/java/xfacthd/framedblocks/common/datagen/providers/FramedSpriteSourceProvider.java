@@ -3,7 +3,7 @@ package xfacthd.framedblocks.common.datagen.providers;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.data.SpriteSourceProvider;
+import net.neoforged.neoforge.client.data.SpriteSourceProvider;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.render.util.AnimationSplitterSource;

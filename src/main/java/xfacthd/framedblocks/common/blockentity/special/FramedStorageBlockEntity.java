@@ -3,7 +3,6 @@ package xfacthd.framedblocks.common.blockentity.special;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -146,14 +145,11 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries)
     {
-        super.loadAdditional(nbt, provider);
-        itemHandler.deserializeNBT(provider, nbt.getCompound(INVENTORY_NBT_KEY));
-        if (nbt.contains("custom_name", Tag.TAG_STRING))
-        {
-            customName = Component.Serializer.fromJson(nbt.getString("custom_name"), provider);
-        }
+        super.loadAdditional(nbt, registries);
+        itemHandler.deserializeNBT(registries, nbt.getCompoundOrEmpty(INVENTORY_NBT_KEY));
+        customName = parseCustomNameSafe(nbt.get("custom_name"), registries);
     }
 
     protected Component getDefaultName()

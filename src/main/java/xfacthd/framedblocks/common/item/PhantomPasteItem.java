@@ -3,10 +3,11 @@ package xfacthd.framedblocks.common.item;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.CommonColors;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.TooltipDisplay;
 import xfacthd.framedblocks.api.util.ConfigView;
 import xfacthd.framedblocks.api.util.Utils;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public final class PhantomPasteItem extends Item
 {
@@ -18,11 +19,12 @@ public final class PhantomPasteItem extends Item
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> lines, TooltipFlag flag)
+    @SuppressWarnings("deprecation")
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, TooltipDisplay display, Consumer<Component> lines, TooltipFlag flag)
     {
         if (!ConfigView.Server.INSTANCE.enableIntangibility())
         {
-            lines.add(FEATURE_DISABLED);
+            lines.accept(FEATURE_DISABLED);
         }
     }
 }

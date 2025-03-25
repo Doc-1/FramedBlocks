@@ -2,6 +2,7 @@ package xfacthd.framedblocks.common.blockentity.special;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.DyeColor;
@@ -59,10 +60,7 @@ public class FramedTargetBlockEntity extends FramedBlockEntity
     public void handleUpdateTag(CompoundTag nbt, HolderLookup.Provider provider)
     {
         super.handleUpdateTag(nbt, provider);
-        if (nbt.contains("overlay_color"))
-        {
-            overlayColor = DyeColor.byId(nbt.getInt("overlay_color"));
-        }
+        overlayColor = DyeColor.byId(nbt.getIntOr("overlay_color", DEFAULT_COLOR.getId()));
     }
 
     @Override
@@ -78,7 +76,7 @@ public class FramedTargetBlockEntity extends FramedBlockEntity
         boolean colored = false;
         if (nbt.contains("overlay_color"))
         {
-            DyeColor color = DyeColor.byId(nbt.getInt("overlay_color"));
+            DyeColor color = DyeColor.byId(nbt.getIntOr("overlay_color", DEFAULT_COLOR.getId()));
             if (overlayColor != color)
             {
                 overlayColor = color;
@@ -104,13 +102,20 @@ public class FramedTargetBlockEntity extends FramedBlockEntity
     }
 
     @Override
+    public void removeComponentsFromTag(CompoundTag tag)
+    {
+        super.removeComponentsFromTag(tag);
+        tag.remove("overlay_color");
+    }
+
+    @Override
     protected void collectMiscComponents(DataComponentMap.Builder builder)
     {
         builder.set(FBContent.DC_TYPE_TARGET_COLOR, new TargetColor(overlayColor));
     }
 
     @Override
-    protected void applyMiscComponents(DataComponentInput input)
+    protected void applyMiscComponents(DataComponentGetter input)
     {
         TargetColor color = input.getOrDefault(FBContent.DC_TYPE_TARGET_COLOR, TargetColor.DEFAULT);
         overlayColor = color.color();
@@ -127,9 +132,6 @@ public class FramedTargetBlockEntity extends FramedBlockEntity
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
     {
         super.loadAdditional(tag, provider);
-        if (tag.contains("overlay_color"))
-        {
-            overlayColor = DyeColor.byId(tag.getInt("overlay_color"));
-        }
+        overlayColor = DyeColor.byId(tag.getIntOr("overlay_color", DEFAULT_COLOR.getId()));
     }
 }

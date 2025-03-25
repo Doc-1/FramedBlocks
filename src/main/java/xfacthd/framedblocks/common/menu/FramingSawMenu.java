@@ -88,7 +88,7 @@ public class FramingSawMenu extends AbstractContainerMenu implements IFramingSaw
 
             if (index == SLOT_RESULT)
             {
-                stack.getItem().onCraftedBy(stack, player.level(), player);
+                stack.getItem().onCraftedBy(stack, player);
                 if (!moveItemStackTo(stack, SLOT_INV_FIRST, slots.size(), true))
                 {
                     return ItemStack.EMPTY;
@@ -348,7 +348,7 @@ public class FramingSawMenu extends AbstractContainerMenu implements IFramingSaw
         @Override
         public void onTake(Player player, ItemStack stack)
         {
-            stack.onCraftedBy(player.level(), player, stack.getCount());
+            stack.onCraftedBy(player, stack.getCount());
             menu.resultContainer.awardUsedRecipes(player, List.of(
                     menu.inputSlot.getItem(),
                     menu.additiveSlots[0].getItem(),

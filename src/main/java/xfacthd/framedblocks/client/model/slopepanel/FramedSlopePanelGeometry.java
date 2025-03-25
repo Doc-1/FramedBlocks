@@ -10,8 +10,6 @@ import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
 import xfacthd.framedblocks.api.block.FramedProperties;
-import xfacthd.framedblocks.api.model.item.TranslatedItemModelInfo;
-import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.property.HorizontalRotation;
@@ -41,7 +39,7 @@ public class FramedSlopePanelGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction face = quad.getDirection();
+        Direction face = quad.direction();
         boolean yAxis = Utils.isY(orientation);
         if (face == orientation.getOpposite())
         {
@@ -105,12 +103,6 @@ public class FramedSlopePanelGeometry extends Geometry
                         .export(quadMap.get(face));
             }
         }
-    }
-
-    @Override
-    public ItemModelInfo getItemModelInfo()
-    {
-        return TranslatedItemModelInfo.HAND_Y_HALF_UP;
     }
 
 

@@ -8,7 +8,6 @@ import xfacthd.framedblocks.api.model.geometry.Geometry;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
-import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.client.model.slopepanel.FramedSlopePanelGeometry;
 
 public class FramedSmallInnerCornerSlopePanelGeometry extends Geometry
@@ -27,7 +26,7 @@ public class FramedSmallInnerCornerSlopePanelGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (quadDir == dir || quadDir == dir.getCounterClockWise())
         {
             Direction cutDir = quadDir == dir ? dir.getClockWise() : dir.getOpposite();
@@ -73,11 +72,5 @@ public class FramedSmallInnerCornerSlopePanelGeometry extends Geometry
                     .apply(Modifiers.cutTopBottom(dir.getClockWise(), .5F))
                     .export(quadMap.get(quadDir));
         }
-    }
-
-    @Override
-    public ItemModelInfo getItemModelInfo()
-    {
-        return SmallInnerCornerSlopePanelItemModelInfo.INSTANCE;
     }
 }

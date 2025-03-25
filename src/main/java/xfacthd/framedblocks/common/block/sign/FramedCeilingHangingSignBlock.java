@@ -34,7 +34,7 @@ import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.blockentity.special.FramedSignBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
-import xfacthd.framedblocks.common.item.FramedHangingSignItem;
+import xfacthd.framedblocks.common.item.block.FramedHangingSignItem;
 
 import java.util.Optional;
 

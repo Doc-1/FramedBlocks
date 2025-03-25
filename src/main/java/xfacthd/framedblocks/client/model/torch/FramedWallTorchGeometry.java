@@ -1,29 +1,30 @@
 package xfacthd.framedblocks.client.model.torch;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
 import org.joml.Vector3f;
+import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
-import xfacthd.framedblocks.api.model.util.ModelUtils;
+import xfacthd.framedblocks.api.model.geometry.PartConsumer;
+import xfacthd.framedblocks.api.model.geometry.QuadListModifier;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
 import xfacthd.framedblocks.api.util.ClientUtils;
 import xfacthd.framedblocks.api.util.Utils;
 
-import java.util.List;
-
 public class FramedWallTorchGeometry extends Geometry
 {
+    private static final QuadListModifier HEAD_MODIFIER = QuadListModifier.filtering(ClientUtils::isDummyTexture);
     private static final Vector3f ROTATION_ORIGIN = new Vector3f(0, 3.5F/16F, 8F/16F);
     private static final float MIN = 7F/16F;
     private static final float MAX = 9F/16F;
@@ -31,35 +32,22 @@ public class FramedWallTorchGeometry extends Geometry
     private static final float BOTTOM = 12.5F/16F;
 
     private final BlockState state;
-    private final BakedModel baseModel;
+    private final BlockStateModel baseModel;
     private final float yAngle;
-    private final BlockState sourceTorchState;
+    private final BlockState auxShaderState;
 
-    private FramedWallTorchGeometry(GeometryFactory.Context ctx, BlockState sourceTorchState)
+    private FramedWallTorchGeometry(GeometryFactory.Context ctx, BlockState auxShaderState)
     {
         this.state = ctx.state();
         this.baseModel = ctx.baseModel();
         this.yAngle = 270F - ctx.state().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot();
-        this.sourceTorchState = sourceTorchState;
+        this.auxShaderState = auxShaderState;
     }
 
     @Override
-    public ChunkRenderTypeSet getAdditionalRenderTypes(RandomSource rand, ModelData extraData)
+    public void collectAdditionalPartsCached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data, QuadCacheKey cacheKey)
     {
-        return ModelUtils.getRenderTypes(sourceTorchState, rand, extraData);
-    }
-
-    @Override
-    public void getAdditionalQuads(QuadMap quadMap, RandomSource rand, ModelData extraData, RenderType renderType)
-    {
-        List<BakedQuad> quads = baseModel.getQuads(state, null, rand, extraData, renderType);
-        for (BakedQuad quad : quads)
-        {
-            if (!ClientUtils.isDummyTexture(quad))
-            {
-                quadMap.get(null).add(quad);
-            }
-        }
+        consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, auxShaderState, HEAD_MODIFIER);
     }
 
     @Override
@@ -71,7 +59,7 @@ public class FramedWallTorchGeometry extends Geometry
         "rotation": {"angle": -22.5, "axis": "z", "origin": [0, 3.5, 8]},
         */
 
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (Utils.isY(quadDir))
         {
             QuadModifier.of(quad)
@@ -109,15 +97,13 @@ public class FramedWallTorchGeometry extends Geometry
                         Modifiers.rotateCentered(Direction.Axis.Y, yAngle, false).accept(data);
     }
 
-
-
     public static FramedWallTorchGeometry normal(GeometryFactory.Context ctx)
     {
-        return new FramedWallTorchGeometry(ctx, Blocks.WALL_TORCH.defaultBlockState());
+        return new FramedWallTorchGeometry(ctx, Blocks.TORCH.defaultBlockState());
     }
 
     public static FramedWallTorchGeometry soul(GeometryFactory.Context ctx)
     {
-        return new FramedWallTorchGeometry(ctx, Blocks.SOUL_WALL_TORCH.defaultBlockState());
+        return new FramedWallTorchGeometry(ctx, Blocks.SOUL_TORCH.defaultBlockState());
     }
 }

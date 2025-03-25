@@ -1,34 +1,37 @@
 package xfacthd.framedblocks.api.model;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.DelegateBakedModel;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.EmptyBlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.client.model.DelegateBlockStateModel;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 
-public abstract class AbstractFramedBlockModel extends DelegateBakedModel
+import java.util.List;
+
+public abstract class AbstractFramedBlockModel extends DelegateBlockStateModel
 {
+    private final BlockState state;
     @Nullable
     private final ItemModelInfo itemModelInfo;
 
-    protected AbstractFramedBlockModel(BakedModel baseModel, BlockState state, ItemModelInfo itemModelInfo)
+    protected AbstractFramedBlockModel(BlockStateModel baseModel, BlockState state, ItemModelInfo itemModelInfo)
     {
         super(baseModel);
+        this.state = state;
         boolean isItemModel = state.getBlock() instanceof IFramedBlock block && block.getItemModelSource() == state;
         this.itemModelInfo = isItemModel ? itemModelInfo : null;
     }
 
     @Override
-    public void applyTransform(ItemDisplayContext ctx, PoseStack poseStack, boolean leftHand)
+    @SuppressWarnings("deprecation")
+    public void collectParts(RandomSource random, List<BlockModelPart> parts)
     {
-        super.applyTransform(ctx, poseStack, leftHand);
-        if (itemModelInfo != null)
-        {
-            itemModelInfo.applyItemTransform(poseStack, ctx, leftHand);
-        }
+        collectParts(EmptyBlockAndTintGetter.INSTANCE, BlockPos.ZERO, state, random, parts);
     }
 
     public void clearCache() { }

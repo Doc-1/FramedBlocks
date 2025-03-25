@@ -212,7 +212,7 @@ public class PoweredFramingSawMenu extends AbstractContainerMenu implements IFra
 
             if (index == FramingSawMenu.SLOT_RESULT)
             {
-                stack.getItem().onCraftedBy(stack, player.level(), player);
+                stack.getItem().onCraftedBy(stack, player);
                 if (!moveItemStackTo(stack, FramingSawMenu.SLOT_INV_FIRST, slots.size(), true))
                 {
                     return ItemStack.EMPTY;

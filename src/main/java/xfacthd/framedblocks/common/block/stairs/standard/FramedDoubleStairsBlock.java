@@ -3,7 +3,7 @@ package xfacthd.framedblocks.common.block.stairs.standard;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -97,7 +97,7 @@ public class FramedDoubleStairsBlock extends FramedStairsBlock implements IFrame
     }
 
     @Override
-    public boolean canPlaceLiquid(@Nullable Player player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid)
+    public boolean canPlaceLiquid(@Nullable LivingEntity entity, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid)
     {
         return false;
     }
@@ -109,7 +109,7 @@ public class FramedDoubleStairsBlock extends FramedStairsBlock implements IFrame
     }
 
     @Override
-    public ItemStack pickupBlock(@Nullable Player player, LevelAccessor level, BlockPos pos, BlockState state)
+    public ItemStack pickupBlock(@Nullable LivingEntity entity, LevelAccessor level, BlockPos pos, BlockState state)
     {
         return ItemStack.EMPTY;
     }
@@ -127,6 +127,11 @@ public class FramedDoubleStairsBlock extends FramedStairsBlock implements IFrame
         StairsShape shape = state.getValue(SHAPE);
         boolean top = state.getValue(BlockStateProperties.HALF) == Half.TOP;
 
+        BlockState partOne = FBContent.BLOCK_FRAMED_STAIRS.value()
+                .defaultBlockState()
+                .setValue(BlockStateProperties.HORIZONTAL_FACING, facing)
+                .setValue(BlockStateProperties.STAIRS_SHAPE, shape)
+                .setValue(BlockStateProperties.HALF, top ? Half.TOP : Half.BOTTOM);
         BlockState partTwo = switch (shape)
         {
             case STRAIGHT -> FBContent.BLOCK_FRAMED_SLAB_EDGE.value()
@@ -151,14 +156,7 @@ public class FramedDoubleStairsBlock extends FramedStairsBlock implements IFrame
                     .setValue(FramedProperties.TOP, !top);
         };
 
-        return new DoubleBlockParts(
-                FBContent.BLOCK_FRAMED_STAIRS.value()
-                        .defaultBlockState()
-                        .setValue(BlockStateProperties.HORIZONTAL_FACING, facing)
-                        .setValue(BlockStateProperties.STAIRS_SHAPE, shape)
-                        .setValue(BlockStateProperties.HALF, top ? Half.TOP : Half.BOTTOM),
-                partTwo
-        );
+        return new DoubleBlockParts(FramedStairsBlock.STATE_MERGER.apply(partOne), partTwo);
     }
 
     @Override

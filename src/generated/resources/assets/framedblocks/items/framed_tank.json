@@ -3,6 +3,7 @@
     "type": "framedblocks:tank",
     "base": {
       "type": "framedblocks:block",
+      "base_model": "framedblocks:block/framed_cube",
       "block": "framedblocks:framed_tank"
     },
     "renderer": {

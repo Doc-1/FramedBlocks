@@ -32,6 +32,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jetbrains.annotations.ApiStatus;
@@ -82,6 +83,8 @@ public final class Utils
      * Providing by tools for configuring blocks (respected for camo rotation)
      */
     public static final ItemAbility ACTION_WRENCH_CONFIGURE = ItemAbility.get("wrench_configure");
+
+    public static final Holder<Block> FRAMED_CUBE = DeferredBlock.createBlock(Utils.rl("framed_cube"));
 
     public static final Holder<Item> FRAMED_HAMMER = DeferredItem.createItem(Utils.rl("framed_hammer"));
     public static final Holder<Item> FRAMED_WRENCH = DeferredItem.createItem(Utils.rl("framed_wrench"));
@@ -301,6 +304,8 @@ public final class Utils
     @SuppressWarnings({ "UseBulkOperation", "ForLoopReplaceableByForEach" })
     public static <T> ArrayList<T> copyAll(List<T> src, ArrayList<T> dest)
     {
+        if (src.isEmpty()) return dest;
+
         dest.ensureCapacity(dest.size() + src.size());
         for (int i = 0; i < src.size(); i++)
         {
@@ -312,6 +317,8 @@ public final class Utils
     @SuppressWarnings("ForLoopReplaceableByForEach")
     public static <T> ArrayList<T> copyAllWithModifier(List<T> src, ArrayList<T> dest, UnaryOperator<T> modifier)
     {
+        if (src.isEmpty()) return dest;
+
         dest.ensureCapacity(dest.size() + src.size());
         for (int i = 0; i < src.size(); i++)
         {

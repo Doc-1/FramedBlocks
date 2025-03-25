@@ -21,6 +21,7 @@ import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.AbstractFramedDoubleBlock;
 import xfacthd.framedblocks.common.block.ExtPlacementStateBuilder;
+import xfacthd.framedblocks.common.block.stairs.standard.FramedStairsBlock;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
@@ -134,11 +135,11 @@ public class FramedStackedInnerCornerSlopeEdgeBlock extends AbstractFramedDouble
         boolean ySlope = state.getValue(FramedProperties.Y_SLOPE);
         StairsShape shape = type.isRight() ? StairsShape.INNER_RIGHT : StairsShape.INNER_LEFT;
         return new DoubleBlockParts(
-                FBContent.BLOCK_FRAMED_STAIRS.value()
+                FramedStairsBlock.STATE_MERGER.apply(FBContent.BLOCK_FRAMED_STAIRS.value()
                         .defaultBlockState()
                         .setValue(BlockStateProperties.HORIZONTAL_FACING, dir)
                         .setValue(BlockStateProperties.HALF, type.isTop() ? Half.TOP : Half.BOTTOM)
-                        .setValue(BlockStateProperties.STAIRS_SHAPE, shape),
+                        .setValue(BlockStateProperties.STAIRS_SHAPE, shape)),
                 FBContent.BLOCK_FRAMED_INNER_CORNER_SLOPE_EDGE.value()
                         .defaultBlockState()
                         .setValue(FramedProperties.FACING_HOR, dir)

@@ -1,15 +1,19 @@
 package xfacthd.framedblocks.api.model.wrapping;
 
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
+import org.jetbrains.annotations.Nullable;
 
 public interface ModelLookup
 {
-    BakedModel getBlockStateModel(ModelResourceLocation id);
+    BlockStateModel getBlockStateModel(BlockState state);
 
-    BakedModel getStandaloneModel(ResourceLocation id);
+    @Nullable
+    <T> T getStandaloneModel(StandaloneModelKey<T> id);
+
+    BlockStateModel getMissingBlockModel();
 
 
 
@@ -18,15 +22,22 @@ public interface ModelLookup
         return new ModelLookup()
         {
             @Override
-            public BakedModel getBlockStateModel(ModelResourceLocation id)
+            public BlockStateModel getBlockStateModel(BlockState state)
             {
-                return bakingResult.blockStateModels().get(id);
+                return bakingResult.blockStateModels().get(state);
             }
 
             @Override
-            public BakedModel getStandaloneModel(ResourceLocation id)
+            @Nullable
+            public <T> T getStandaloneModel(StandaloneModelKey<T> id)
             {
                 return bakingResult.standaloneModels().get(id);
+            }
+
+            @Override
+            public BlockStateModel getMissingBlockModel()
+            {
+                return bakingResult.missingModels().block();
             }
         };
     }

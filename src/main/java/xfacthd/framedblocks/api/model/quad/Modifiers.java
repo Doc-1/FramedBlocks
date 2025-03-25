@@ -65,7 +65,7 @@ public final class Modifiers
 
     private static boolean cut(QuadData data, Direction cutDir, float lengthRightTop, float lengthLeftBottom)
     {
-        Direction quadDir = data.quad().getDirection();
+        Direction quadDir = data.quad().direction();
         Preconditions.checkArgument(quadDir.getAxis() != cutDir.getAxis(), "Cut direction must be prependicular to the quad direction");
 
         if (Utils.isY(quadDir))
@@ -110,7 +110,7 @@ public final class Modifiers
 
     private static boolean cutTopBottom(QuadData data, Direction cutDir, float lengthR, float lengthL)
     {
-        Direction quadDir = data.quad().getDirection();
+        Direction quadDir = data.quad().direction();
         Preconditions.checkArgument(Utils.isY(quadDir), "Quad direction must be vertical");
         Preconditions.checkArgument(quadDir.getAxis() != cutDir.getAxis(), "Cut direction must be perpendicular to the quad direction");
 
@@ -162,7 +162,7 @@ public final class Modifiers
         }
 
         boolean rotated = data.uvRotated();
-        TextureAtlasSprite sprite = data.quad().getSprite();
+        TextureAtlasSprite sprite = data.quad().sprite();
 
         if (xAxis)
         {
@@ -217,7 +217,7 @@ public final class Modifiers
 
     private static boolean cutSideUpDown(QuadData data, boolean downwards, float lengthRight, float lengthLeft)
     {
-        Direction quadDir = data.quad().getDirection();
+        Direction quadDir = data.quad().direction();
         Preconditions.checkArgument(!Utils.isY(quadDir), "Quad direction must be horizontal");
 
         Direction quadDirRot = quadDir.getCounterClockWise();
@@ -255,7 +255,7 @@ public final class Modifiers
         }
 
         boolean rotated = data.uvRotated();
-        TextureAtlasSprite sprite = data.quad().getSprite();
+        TextureAtlasSprite sprite = data.quad().sprite();
         ModelUtils.remapUV(sprite, data, data.pos(1, 1), data.pos(0, 1), toY1, 0, 1, idx1, true, rotated);
         ModelUtils.remapUV(sprite, data, data.pos(2, 1), data.pos(3, 1), toY2, 3, 2, idx2, true, rotated);
 
@@ -286,7 +286,7 @@ public final class Modifiers
         Preconditions.checkArgument(!Utils.isY(cutDir), "Cut direction must be horizontal");
         return data ->
         {
-            Direction quadDir = data.quad().getDirection();
+            Direction quadDir = data.quad().direction();
             Preconditions.checkArgument(quadDir.getAxis() != cutDir.getAxis(), "Cut direction must be perpendicular to the quad direction");
             return cutSideLeftRight(data, cutDir == quadDir.getClockWise(), lengthTop, lengthBottom);
         };
@@ -324,7 +324,7 @@ public final class Modifiers
 
     private static boolean cutSideLeftRight(QuadData data, boolean towardsRight, float lengthTop, float lengthBot)
     {
-        Direction quadDir = data.quad().getDirection();
+        Direction quadDir = data.quad().direction();
         Preconditions.checkArgument(!Utils.isY(quadDir), "Quad direction must be horizontal");
 
         boolean positive = Utils.isPositive(towardsRight ? quadDir.getCounterClockWise() : quadDir.getClockWise());
@@ -359,7 +359,7 @@ public final class Modifiers
         }
 
         boolean rotated = data.uvRotated();
-        TextureAtlasSprite sprite = data.quad().getSprite();
+        TextureAtlasSprite sprite = data.quad().sprite();
         ModelUtils.remapUV(sprite, data, data.pos(0, coordIdx), data.pos(3, coordIdx), toXZ1, 0, 3, idx1, false, rotated);
         ModelUtils.remapUV(sprite, data, data.pos(1, coordIdx), data.pos(2, coordIdx), toXZ2, 1, 2, idx2, false, rotated);
 
@@ -382,7 +382,7 @@ public final class Modifiers
     {
         return data ->
         {
-            Direction quadDir = data.quad().getDirection();
+            Direction quadDir = data.quad().direction();
             Preconditions.checkArgument(Utils.isY(quadDir), "Quad direction must be vertical");
 
             return cutTopBottom(data, Direction.WEST, 1F - minX, 1F - minX) &&
@@ -401,7 +401,7 @@ public final class Modifiers
     {
         return data ->
         {
-            Direction quadDir = data.quad().getDirection();
+            Direction quadDir = data.quad().direction();
             Preconditions.checkArgument(Utils.isY(quadDir), "Quad direction must be vertical");
             Preconditions.checkArgument(quadDir.getAxis() != cutAxis, "Cutting axis must be perpendicular to quad axis");
 
@@ -424,7 +424,7 @@ public final class Modifiers
     {
         return data ->
         {
-            Direction quadDir = data.quad().getDirection();
+            Direction quadDir = data.quad().direction();
             Preconditions.checkArgument(!Utils.isY(quadDir), "Quad direction must be horizontal");
 
             boolean rightPositive = Utils.isPositive(quadDir.getClockWise());
@@ -448,7 +448,7 @@ public final class Modifiers
     {
         return data ->
         {
-            Direction quadDir = data.quad().getDirection();
+            Direction quadDir = data.quad().direction();
             Preconditions.checkArgument(!Utils.isY(quadDir), "Quad direction must be horizontal");
             Preconditions.checkArgument(quadDir.getAxis() != cutDir.getAxis(), "Cut direction must be prependicular to the quad direction");
 
@@ -481,7 +481,7 @@ public final class Modifiers
     {
         return data ->
         {
-            Direction quadDir = data.quad().getDirection();
+            Direction quadDir = data.quad().direction();
             Preconditions.checkArgument(!Utils.isY(quadDir), "Quad direction must not be on the Y axis");
 
             boolean leftCut = cutSideLeftRight(data, false, up ? .5F : 1, up ? 1 : .5F);
@@ -514,7 +514,7 @@ public final class Modifiers
         Preconditions.checkArgument(!Utils.isY(cutDir), "Cut direction must be horizontal");
         return data ->
         {
-            Direction quadDir = data.quad().getDirection();
+            Direction quadDir = data.quad().direction();
             Preconditions.checkArgument(Utils.isY(quadDir), "Quad direction must be on the Y axis");
 
             boolean leftCut = cutTopBottom(data, cutDir.getCounterClockWise(), .5F, 1);
@@ -556,7 +556,7 @@ public final class Modifiers
     {
         return data ->
         {
-            Direction quadDir = data.quad().getDirection();
+            Direction quadDir = data.quad().direction();
             Preconditions.checkArgument(!Utils.isY(quadDir) || !Utils.isY(cutDir), "Cut direction cannot be along the Y axis for quads pointing along the Y axis");
 
             if (!cut(data, cutDir, .5F, .5F))
@@ -605,7 +605,7 @@ public final class Modifiers
     {
         return data ->
         {
-            Direction dir = data.quad().getDirection();
+            Direction dir = data.quad().direction();
             if (!rightEdge)
             {
                 dir = dir.getClockWise();
@@ -642,7 +642,7 @@ public final class Modifiers
     {
         return data ->
         {
-            Direction dir = data.quad().getDirection();
+            Direction dir = data.quad().direction();
 
             Direction.Axis axis = dir.getClockWise().getAxis();
             Vector3f origin = VERTICAL_ORIGINS[dir.ordinal() - 2 + (topEdge ? 4 : 0)];
@@ -664,7 +664,7 @@ public final class Modifiers
     {
         return data ->
         {
-            Direction dir = data.quad().getDirection();
+            Direction dir = data.quad().direction();
             boolean top = dir == Direction.UP;
             Preconditions.checkArgument(Utils.isY(dir), "Quad direction must be on the Y axis");
             Preconditions.checkArgument(!Utils.isY(edge), "Edge direction must be horizontal");
@@ -725,8 +725,8 @@ public final class Modifiers
 
         return data ->
         {
-            int idx = data.quad().getDirection().getAxis().ordinal();
-            float value = Utils.isPositive(data.quad().getDirection()) ? posTarget : 1F - posTarget;
+            int idx = data.quad().direction().getAxis().ordinal();
+            float value = Utils.isPositive(data.quad().direction()) ? posTarget : 1F - posTarget;
 
             for (int i = 0; i < 4; i++)
             {
@@ -749,7 +749,7 @@ public final class Modifiers
 
         return data ->
         {
-            Direction dir = data.quad().getDirection();
+            Direction dir = data.quad().direction();
             int idx = dir.getAxis().ordinal();
             boolean positive = Utils.isPositive(dir);
             boolean y = Utils.isY(dir);
@@ -903,7 +903,7 @@ public final class Modifiers
     {
         return data ->
         {
-            Vector3f scaleVec = switch (data.quad().getDirection().getAxis())
+            Vector3f scaleVec = switch (data.quad().direction().getAxis())
             {
                 case X -> new Vector3f(0.0F, 1.0F, 1.0F);
                 case Y -> new Vector3f(1.0F, 0.0F, 1.0F);

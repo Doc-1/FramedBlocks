@@ -2,14 +2,11 @@ package xfacthd.framedblocks.common.block.interactive;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -99,12 +96,6 @@ public class FramedLeverBlock extends LeverBlock implements IFramedBlock
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, List<Component> lines, TooltipFlag flag)
-    {
-        appendCamoHoverText(stack, lines);
-    }
-
-    @Override
     public BlockType getBlockType()
     {
         return BlockType.FRAMED_LEVER;
@@ -127,11 +118,5 @@ public class FramedLeverBlock extends LeverBlock implements IFramedBlock
     public float getJadeRenderScale(BlockState state)
     {
         return 1.6F;
-    }
-
-    @Override
-    public boolean shouldApplyGuiTransformFromModel()
-    {
-        return false;
     }
 }

@@ -28,7 +28,7 @@ public class FramedHalfPillarGeometry extends Geometry
             return;
         }
 
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (quadDir == face)
         {
             mod.export(quadMap.get(face));

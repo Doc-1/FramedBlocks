@@ -12,13 +12,10 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.IFramedBlock;
@@ -27,6 +24,7 @@ import xfacthd.framedblocks.api.block.render.FramedBlockRenderProperties;
 import xfacthd.framedblocks.api.model.ErrorModel;
 import xfacthd.framedblocks.api.model.item.FramedBlockItemTintProvider;
 import xfacthd.framedblocks.api.model.item.RegisterItemTintProvidersEvent;
+import xfacthd.framedblocks.api.model.util.StandaloneModels;
 import xfacthd.framedblocks.api.model.wrapping.RegisterModelWrappersEvent;
 import xfacthd.framedblocks.api.model.wrapping.TextureLookup;
 import xfacthd.framedblocks.api.model.wrapping.WrapHelper;
@@ -37,7 +35,6 @@ import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.data.BlockOutlineRenderers;
-import xfacthd.framedblocks.client.data.ConTexDataHandler;
 import xfacthd.framedblocks.client.data.GhostRenderBehaviours;
 import xfacthd.framedblocks.client.data.extensions.block.NoEffectsClientBlockExtensions;
 import xfacthd.framedblocks.client.data.extensions.block.OneWayWindowClientBlockExtensions;
@@ -63,7 +60,6 @@ import xfacthd.framedblocks.client.model.slopeslab.*;
 import xfacthd.framedblocks.client.model.stairs.*;
 import xfacthd.framedblocks.client.model.torch.*;
 import xfacthd.framedblocks.client.modelwrapping.ModelWrappingManager;
-import xfacthd.framedblocks.client.modelwrapping.StateLocationCache;
 import xfacthd.framedblocks.client.overlaygen.OverlayQuadGenerator;
 import xfacthd.framedblocks.client.render.block.FramedChestRenderer;
 import xfacthd.framedblocks.client.render.block.FramedHangingSignRenderer;
@@ -83,6 +79,7 @@ import xfacthd.framedblocks.client.render.special.BlockOutlineRenderer;
 import xfacthd.framedblocks.client.render.special.CollapsibleBlockIndicatorRenderer;
 import xfacthd.framedblocks.client.render.special.GhostBlockRenderer;
 import xfacthd.framedblocks.client.render.util.AnimationSplitterSource;
+import xfacthd.framedblocks.client.render.util.FramedRenderPipelines;
 import xfacthd.framedblocks.client.screen.FramedStorageScreen;
 import xfacthd.framedblocks.client.screen.FramingSawScreen;
 import xfacthd.framedblocks.client.screen.PoweredFramingSawScreen;
@@ -124,8 +121,6 @@ public final class FBClient
         modBus.addListener(FBClient::onRegisterItemModels);
         modBus.addListener(FBClient::onRegisterSpecialModelRenderers);
         modBus.addListener(FBClient::onRegisterMenuScreens);
-        modBus.addListener(FBClient::onImcMessageReceived);
-        modBus.addListener(FBClient::onLoadComplete);
         modBus.addListener(FBClient::onRegisterKeyMappings);
         modBus.addListener(FBClient::onAttachDebugRenderers);
         modBus.addListener(FBClient::onRegisterRenderers);
@@ -138,6 +133,7 @@ public final class FBClient
         modBus.addListener(FBClient::onModifyBakingResult);
         modBus.addListener(FBClient::onModelsLoaded);
         modBus.addListener(FBClient::onRegisterReloadListener);
+        modBus.addListener(FBClient::onInitClientRegistries);
         modBus.addListener(FBClient::onRegisterSpriteSources);
         modBus.addListener(FBClient::onTexturesStitched);
         modBus.addListener(FBClient::onRegisterParticleProviders);
@@ -145,6 +141,7 @@ public final class FBClient
         modBus.addListener(FBClient::onRegisterClientTooltipComponentFactories);
         modBus.addListener(BlockOutlineRenderers::onRegisterOutlineRenderers);
         modBus.addListener(GhostRenderBehaviours::onRegisterGhostRenderBehaviours);
+        modBus.addListener(FramedRenderPipelines::onRegisterRenderPipelines);
 
         NeoForge.EVENT_BUS.addListener(ClientTaskQueue::onClientTick);
         NeoForge.EVENT_BUS.addListener(BlockOutlineRenderer::onRenderBlockHighlight);
@@ -179,22 +176,6 @@ public final class FBClient
         event.register(FBContent.MENU_TYPE_FRAMED_DOUBLE_CHEST.value(), FramedStorageScreen::new);
         event.register(FBContent.MENU_TYPE_FRAMING_SAW.value(), FramingSawScreen::create);
         event.register(FBContent.MENU_TYPE_POWERED_FRAMING_SAW.value(), PoweredFramingSawScreen::new);
-    }
-
-    private static void onImcMessageReceived(final InterModProcessEvent event)
-    {
-        event.getIMCStream(FramedConstants.IMC_METHOD_ADD_PROPERTY::equals).forEach(msg ->
-        {
-            if (msg.messageSupplier().get() instanceof ModelProperty<?> prop)
-            {
-                ConTexDataHandler.addConTexProperty(msg.senderModId(), prop);
-            }
-        });
-    }
-
-    private static void onLoadComplete(final FMLLoadCompleteEvent event)
-    {
-        ConTexDataHandler.lockRegistration();
     }
 
     private static void onRegisterKeyMappings(final RegisterKeyMappingsEvent event)
@@ -300,7 +281,7 @@ public final class FBClient
         wrapDoubleModel(FBContent.BLOCK_FRAMED_DIVIDED_PANEL_HOR, NullCullPredicate.NEVER, WrapHelper.IGNORE_DEFAULT);
         wrapDoubleModel(FBContent.BLOCK_FRAMED_DIVIDED_PANEL_VERT, NullCullPredicate.NEVER, WrapHelper.IGNORE_DEFAULT);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_CORNER_PILLAR, FramedCornerPillarGeometry::new, WrapHelper.IGNORE_WATERLOGGED);
-        WrapHelper.wrap(FBContent.BLOCK_FRAMED_STAIRS, FramedStairsGeometry::new, new FramedStairsBlock.StairStateMerger());
+        WrapHelper.wrap(FBContent.BLOCK_FRAMED_STAIRS, FramedStairsGeometry::new, FramedStairsBlock.STATE_MERGER);
         wrapDoubleModel(FBContent.BLOCK_FRAMED_DOUBLE_STAIRS, NullCullPredicate.ALWAYS, WrapHelper.IGNORE_SOLID_LOCK);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_HALF_STAIRS, FramedHalfStairsGeometry::new, WrapHelper.IGNORE_WATERLOGGED);
         wrapDoubleModel(FBContent.BLOCK_FRAMED_DIVIDED_STAIRS, NullCullPredicate.NEVER, WrapHelper.IGNORE_DEFAULT_LOCK);
@@ -365,9 +346,9 @@ public final class FBClient
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_DETECTOR_RAIL_SLOPE, FramedRailSlopeGeometry::detector, WrapHelper.IGNORE_DEFAULT);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_ACTIVATOR_RAIL_SLOPE, FramedRailSlopeGeometry::activator, WrapHelper.IGNORE_DEFAULT);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_FANCY_RAIL, FramedFancyRailGeometry::normal, WrapHelper.IGNORE_WATERLOGGED);
-        WrapHelper.wrap(FBContent.BLOCK_FRAMED_FANCY_POWERED_RAIL, FramedFancyRailGeometry::straight, WrapHelper.IGNORE_WATERLOGGED);
-        WrapHelper.wrap(FBContent.BLOCK_FRAMED_FANCY_DETECTOR_RAIL, FramedFancyRailGeometry::straight, WrapHelper.IGNORE_WATERLOGGED);
-        WrapHelper.wrap(FBContent.BLOCK_FRAMED_FANCY_ACTIVATOR_RAIL, FramedFancyRailGeometry::straight, WrapHelper.IGNORE_WATERLOGGED);
+        WrapHelper.wrap(FBContent.BLOCK_FRAMED_FANCY_POWERED_RAIL, FramedFancyRailGeometry::powered, WrapHelper.IGNORE_WATERLOGGED);
+        WrapHelper.wrap(FBContent.BLOCK_FRAMED_FANCY_DETECTOR_RAIL, FramedFancyRailGeometry::detector, WrapHelper.IGNORE_WATERLOGGED);
+        WrapHelper.wrap(FBContent.BLOCK_FRAMED_FANCY_ACTIVATOR_RAIL, FramedFancyRailGeometry::activator, WrapHelper.IGNORE_WATERLOGGED);
         wrapDoubleModel(FBContent.BLOCK_FRAMED_FANCY_RAIL_SLOPE, NullCullPredicate.NEVER, WrapHelper.IGNORE_DEFAULT);
         wrapDoubleModel(FBContent.BLOCK_FRAMED_FANCY_POWERED_RAIL_SLOPE, NullCullPredicate.NEVER, WrapHelper.IGNORE_DEFAULT);
         wrapDoubleModel(FBContent.BLOCK_FRAMED_FANCY_DETECTOR_RAIL_SLOPE, NullCullPredicate.NEVER, WrapHelper.IGNORE_DEFAULT);
@@ -389,7 +370,7 @@ public final class FBClient
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_SLOPE_SLAB, FramedSlopeSlabGeometry::new, WrapHelper.IGNORE_DEFAULT);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_ELEVATED_SLOPE_SLAB, FramedElevatedSlopeSlabGeometry::new, WrapHelper.IGNORE_DEFAULT);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_COMPOUND_SLOPE_SLAB, FramedCompoundSlopeSlabGeometry::new, WrapHelper.IGNORE_DEFAULT);
-        wrapDoubleModel(FBContent.BLOCK_FRAMED_DOUBLE_SLOPE_SLAB, FramedDoubleSlopeSlabBlock.NULL_CULL_PREDICATE, DoubleBlockItemModelInfo.Y_HALF_UP, WrapHelper.IGNORE_DEFAULT);
+        wrapDoubleModel(FBContent.BLOCK_FRAMED_DOUBLE_SLOPE_SLAB, FramedDoubleSlopeSlabBlock.NULL_CULL_PREDICATE, WrapHelper.IGNORE_DEFAULT);
         wrapDoubleModel(FBContent.BLOCK_FRAMED_INVERSE_DOUBLE_SLOPE_SLAB, NullCullPredicate.NEVER, WrapHelper.IGNORE_DEFAULT);
         wrapDoubleModel(FBContent.BLOCK_FRAMED_ELEVATED_DOUBLE_SLOPE_SLAB, NullCullPredicate.ALWAYS, WrapHelper.IGNORE_SOLID);
         wrapDoubleModel(FBContent.BLOCK_FRAMED_STACKED_SLOPE_SLAB, NullCullPredicate.ONLY_LEFT, WrapHelper.IGNORE_DEFAULT);
@@ -397,7 +378,7 @@ public final class FBClient
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_FLAT_INNER_SLOPE_SLAB_CORNER, FramedFlatInnerSlopeSlabCornerGeometry::new, WrapHelper.IGNORE_DEFAULT);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_FLAT_ELEVATED_SLOPE_SLAB_CORNER, FramedFlatElevatedSlopeSlabCornerGeometry::new, WrapHelper.IGNORE_DEFAULT);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_FLAT_ELEVATED_INNER_SLOPE_SLAB_CORNER, FramedFlatElevatedInnerSlopeSlabCornerGeometry::new, WrapHelper.IGNORE_DEFAULT);
-        wrapDoubleModel(FBContent.BLOCK_FRAMED_FLAT_DOUBLE_SLOPE_SLAB_CORNER, FramedFlatDoubleSlopeSlabCornerBlock.NULL_CULL_PREDICATE, DoubleBlockItemModelInfo.Y_HALF_UP, WrapHelper.IGNORE_DEFAULT);
+        wrapDoubleModel(FBContent.BLOCK_FRAMED_FLAT_DOUBLE_SLOPE_SLAB_CORNER, FramedFlatDoubleSlopeSlabCornerBlock.NULL_CULL_PREDICATE, WrapHelper.IGNORE_DEFAULT);
         wrapDoubleModel(FBContent.BLOCK_FRAMED_FLAT_INVERSE_DOUBLE_SLOPE_SLAB_CORNER, NullCullPredicate.NEVER, WrapHelper.IGNORE_DEFAULT);
         wrapDoubleModel(FBContent.BLOCK_FRAMED_FLAT_ELEVATED_DOUBLE_SLOPE_SLAB_CORNER, NullCullPredicate.ALWAYS, WrapHelper.IGNORE_SOLID);
         wrapDoubleModel(FBContent.BLOCK_FRAMED_FLAT_ELEVATED_INNER_DOUBLE_SLOPE_SLAB_CORNER, NullCullPredicate.ALWAYS, WrapHelper.IGNORE_SOLID);
@@ -414,8 +395,8 @@ public final class FBClient
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_FLAT_INNER_SLOPE_PANEL_CORNER, FramedFlatInnerSlopePanelCornerGeometry::new, WrapHelper.IGNORE_DEFAULT);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_FLAT_EXTENDED_SLOPE_PANEL_CORNER, FramedFlatExtendedSlopePanelCornerGeometry::new, WrapHelper.IGNORE_DEFAULT);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_FLAT_EXTENDED_INNER_SLOPE_PANEL_CORNER, FramedFlatExtendedInnerSlopePanelCornerGeometry::new, WrapHelper.IGNORE_DEFAULT);
-        wrapDoubleModel(FBContent.BLOCK_FRAMED_FLAT_DOUBLE_SLOPE_PANEL_CORNER, FramedDoubleSlopePanelBlock.NULL_CULL_PREDICATE, DoubleBlockItemModelInfo.Y_HALF_UP, WrapHelper.IGNORE_DEFAULT);
-        wrapDoubleModel(FBContent.BLOCK_FRAMED_FLAT_INVERSE_DOUBLE_SLOPE_PANEL_CORNER, NullCullPredicate.NEVER, DoubleBlockItemModelInfo.Y_HALF_UP, WrapHelper.IGNORE_DEFAULT);
+        wrapDoubleModel(FBContent.BLOCK_FRAMED_FLAT_DOUBLE_SLOPE_PANEL_CORNER, FramedDoubleSlopePanelBlock.NULL_CULL_PREDICATE, WrapHelper.IGNORE_DEFAULT);
+        wrapDoubleModel(FBContent.BLOCK_FRAMED_FLAT_INVERSE_DOUBLE_SLOPE_PANEL_CORNER, NullCullPredicate.NEVER, WrapHelper.IGNORE_DEFAULT);
         wrapDoubleModel(FBContent.BLOCK_FRAMED_FLAT_EXTENDED_DOUBLE_SLOPE_PANEL_CORNER, NullCullPredicate.ALWAYS, WrapHelper.IGNORE_SOLID);
         wrapDoubleModel(FBContent.BLOCK_FRAMED_FLAT_EXTENDED_INNER_DOUBLE_SLOPE_PANEL_CORNER, NullCullPredicate.ALWAYS, WrapHelper.IGNORE_SOLID);
         wrapDoubleModel(FBContent.BLOCK_FRAMED_FLAT_STACKED_SLOPE_PANEL_CORNER, NullCullPredicate.ONLY_LEFT, WrapHelper.IGNORE_DEFAULT);
@@ -475,22 +456,21 @@ public final class FBClient
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_HOPPER, FramedHopperGeometry::new, WrapHelper.IGNORE_ALWAYS);
     }
 
-    private static void onModelRegister(final ModelEvent.RegisterAdditional event)
+    private static void onModelRegister(final ModelEvent.RegisterStandalone event)
     {
-        event.register(FluidModel.BARE_MODEL);
-        event.register(ReinforcementModel.LOCATION);
-        event.register(FramedMarkedCubeGeometry.SLIME_FRAME_LOCATION);
-        event.register(FramedMarkedCubeGeometry.REDSTONE_FRAME_LOCATION);
-        event.register(FramedTargetGeometry.OVERLAY_LOCATION);
-        event.register(FramedCollapsibleBlockGeometry.ALT_BASE_MODEL_LOC);
-        event.register(FramedCollapsibleCopycatBlockGeometry.ALT_BASE_MODEL_LOC);
-        event.register(FramedLanternGeometry.STANDING_CHAIN_LOCATION);
-        event.register(FramedLanternGeometry.HANGING_CHAIN_LOCATION);
-        event.register(ErrorModel.LOCATION);
+        event.register(FluidModel.BARE_MODEL_KEY, FluidModel.DUMMY_STANDALONE_BAKER);
+        event.register(FluidModel.BARE_MODEL_SINGLE_KEY, FluidModel.DUMMY_STANDALONE_BAKER);
+        event.register(ReinforcementModel.MODEL_KEY, StandaloneModels.QUAD_COLLECTION_STANDALONE_BAKER);
+        event.register(FramedMarkedCubeGeometry.SLIME_FRAME_KEY, StandaloneModels.BLOCK_PART_STANDALONE_BAKER);
+        event.register(FramedMarkedCubeGeometry.REDSTONE_FRAME_KEY, StandaloneModels.BLOCK_PART_STANDALONE_BAKER);
+        event.register(FramedTargetGeometry.OVERLAY_KEY, StandaloneModels.BLOCK_PART_STANDALONE_BAKER);
+        event.register(FramedCollapsibleBlockGeometry.ALT_BASE_MODEL_KEY, StandaloneModels.BLOCK_STATE_STANDALONE_BAKER);
+        event.register(FramedCollapsibleCopycatBlockGeometry.ALT_BASE_MODEL_KEY, StandaloneModels.BLOCK_STATE_STANDALONE_BAKER);
+        event.register(ErrorModel.MODEL_KEY, ErrorModel.MODEL_BAKER);
 
         if (AmendmentsCompat.isLoaded())
         {
-            event.register(AmendmentsCompat.Client.HANGING_MODEL_LOCATION);
+            event.register(AmendmentsCompat.Client.HANGING_MODEL_KEY, StandaloneModels.BLOCK_PART_STANDALONE_BAKER);
         }
 
         ModelWrappingManager.reset();
@@ -506,7 +486,6 @@ public final class FBClient
 
     private static void onModelsLoaded(final ModelEvent.BakingCompleted event)
     {
-        StateLocationCache.clear();
         FluidCamoClientHandler.clearModelCache();
         FramedChestRenderer.onModelsLoaded(event.getBakingResult());
         ReinforcementModel.reload(event.getBakingResult().standaloneModels());
@@ -517,7 +496,10 @@ public final class FBClient
     {
         event.addListener(BlockInteractOverlayLayer.LISTENER_ID, (ResourceManagerReloadListener) BlockInteractOverlayLayer::onResourceReload);
         event.addListener(OverlayQuadGenerator.LISTENER_ID, (ResourceManagerReloadListener) OverlayQuadGenerator::onResourceReload);
+    }
 
+    private static void onInitClientRegistries(final InitializeClientRegistriesEvent event)
+    {
         ModelWrappingManager.fireRegistration();
         FramedBlockDebugRenderer.init();
         BlockOutlineRenderer.init();
@@ -525,9 +507,9 @@ public final class FBClient
         DynamicItemTintProviders.init();
     }
 
-    private static void onRegisterSpriteSources(final RegisterSpriteSourceTypesEvent event)
+    private static void onRegisterSpriteSources(final RegisterSpriteSourcesEvent event)
     {
-        event.register(Utils.rl("anim_splitter"), AnimationSplitterSource.TYPE);
+        event.register(Utils.rl("anim_splitter"), AnimationSplitterSource.CODEC);
     }
 
     private static void onTexturesStitched(final TextureAtlasStitchedEvent event)

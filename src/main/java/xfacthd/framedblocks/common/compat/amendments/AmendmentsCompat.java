@@ -1,10 +1,12 @@
 package xfacthd.framedblocks.common.compat.amendments;
 
 import net.mehvahdjukaar.amendments.Amendments;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.LevelReader;
 import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 import xfacthd.framedblocks.FramedBlocks;
 import xfacthd.framedblocks.api.util.Utils;
 
@@ -63,7 +65,8 @@ public final class AmendmentsCompat
 
     public static final class Client
     {
-        public static final ResourceLocation HANGING_MODEL_LOCATION = Utils.rl(MOD_ID, "block/hanging_flower_pot_rope");
+        private static final ResourceLocation HANGING_MODEL_LOCATION = Utils.rl(MOD_ID, "block/hanging_flower_pot_rope");
+        public static final StandaloneModelKey<BlockModelPart> HANGING_MODEL_KEY = new StandaloneModelKey<>(HANGING_MODEL_LOCATION);
 
 
 

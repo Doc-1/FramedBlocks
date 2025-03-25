@@ -1,25 +1,24 @@
 package xfacthd.framedblocks.client.model.rail;
 
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.*;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.RailShape;
+import net.neoforged.neoforge.model.data.ModelData;
 import xfacthd.framedblocks.api.block.FramedProperties;
-import xfacthd.framedblocks.api.model.data.QuadMap;
+import xfacthd.framedblocks.api.model.geometry.PartConsumer;
 import xfacthd.framedblocks.api.model.util.ModelUtils;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.client.model.slope.FramedSlopeGeometry;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.util.FramedUtils;
-
-import java.util.*;
 
 public class FramedRailSlopeGeometry extends FramedSlopeGeometry
 {
@@ -34,30 +33,10 @@ public class FramedRailSlopeGeometry extends FramedSlopeGeometry
     }
 
     @Override
-    public void getAdditionalQuads(
-            QuadMap quadMap,
-            RandomSource rand,
-            ModelData data,
-            RenderType renderType
-    )
+    public void collectAdditionalPartsUncached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data)
     {
-        quadMap.get(null).addAll(getRailQuads(null, rand, renderType));
-
-        for (Direction side : Direction.values())
-        {
-            quadMap.get(side).addAll(getRailQuads(side, rand, renderType));
-        }
-    }
-
-    @Override
-    public ChunkRenderTypeSet getAdditionalRenderTypes(RandomSource rand, ModelData extraData)
-    {
-        return ModelUtils.getRenderTypes(railState, rand, ModelData.EMPTY);
-    }
-
-    private List<BakedQuad> getRailQuads(@Nullable Direction side, RandomSource rand, RenderType layer)
-    {
-        return ModelUtils.getModel(railState).getQuads(railState, side, rand, ModelData.EMPTY, layer);
+        BlockStateModel model = ModelUtils.getModel(railState);
+        consumer.acceptAll(model, level, pos, random, railState, true, false, false, false, railState, null);
     }
 
     private static BlockState getSlopeState(BlockState state)

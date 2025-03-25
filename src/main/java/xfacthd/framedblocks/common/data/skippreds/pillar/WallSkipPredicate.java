@@ -83,10 +83,10 @@ public final class WallSkipPredicate implements SideSkipPredicate
     {
         return switch (dir)
         {
-            case NORTH -> state.getValue(WallBlock.NORTH_WALL);
-            case EAST -> state.getValue(WallBlock.EAST_WALL);
-            case SOUTH -> state.getValue(WallBlock.SOUTH_WALL);
-            case WEST -> state.getValue(WallBlock.WEST_WALL);
+            case NORTH -> state.getValue(WallBlock.NORTH);
+            case EAST -> state.getValue(WallBlock.EAST);
+            case SOUTH -> state.getValue(WallBlock.SOUTH);
+            case WEST -> state.getValue(WallBlock.WEST);
             default -> throw new IllegalArgumentException("Invalid wall arm direction");
         };
     }

@@ -28,13 +28,13 @@ public class FramedStairsGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if ((top && quadDir == Direction.DOWN) || (!top && quadDir == Direction.UP))
         {
             createCenterQuads(quadMap.get(null), quad);
             createTopBottomQuads(quadMap.get(quadDir), quad);
         }
-        else if (!Utils.isY(quad.getDirection()))
+        else if (!Utils.isY(quadDir))
         {
             QuadModifier.of(quad)
                     .apply(Modifiers.cutSideUpDown(top, .5F))

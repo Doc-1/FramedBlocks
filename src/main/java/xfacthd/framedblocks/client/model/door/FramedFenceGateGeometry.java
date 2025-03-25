@@ -28,7 +28,7 @@ public class FramedFenceGateGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         float yOff = inWall ? 3F/16F : 0F;
         if (Utils.isY(quadDir))
         {
@@ -88,7 +88,7 @@ public class FramedFenceGateGeometry extends Geometry
 
     private void createGateClosed(List<BakedQuad> quadList, BakedQuad quad, float yOff)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (quadDir == dir || quadDir == dir.getOpposite())
         {
             QuadModifier.of(quad)
@@ -144,7 +144,7 @@ public class FramedFenceGateGeometry extends Geometry
 
     private void createGateOpen(QuadMap quadMap, BakedQuad quad, float yOff)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (quadDir == dir.getClockWise() || quadDir == dir.getCounterClockWise())
         {
             QuadModifier mod = QuadModifier.of(quad)

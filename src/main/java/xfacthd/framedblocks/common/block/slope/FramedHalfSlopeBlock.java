@@ -20,7 +20,7 @@ import xfacthd.framedblocks.common.block.ExtPlacementStateBuilder;
 import xfacthd.framedblocks.common.block.FramedBlock;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
-import xfacthd.framedblocks.common.item.VerticalAndWallBlockItem;
+import xfacthd.framedblocks.common.item.block.VerticalAndWallBlockItem;
 
 public class FramedHalfSlopeBlock extends FramedBlock
 {

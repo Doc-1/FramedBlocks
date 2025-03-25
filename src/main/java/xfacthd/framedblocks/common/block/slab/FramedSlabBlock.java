@@ -16,7 +16,7 @@ import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.FramedBlock;
 import xfacthd.framedblocks.common.data.BlockType;
-import xfacthd.framedblocks.common.item.FramedSpecialDoubleBlockItem;
+import xfacthd.framedblocks.common.item.block.FramedSpecialDoubleBlockItem;
 
 public class FramedSlabBlock extends FramedBlock
 {

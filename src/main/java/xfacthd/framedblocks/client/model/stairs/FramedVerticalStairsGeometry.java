@@ -34,7 +34,7 @@ public class FramedVerticalStairsGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (vertical && (quadDir == dir.getOpposite() || quadDir == dir.getClockWise()))
         {
             Direction cutDir = quadDir == dir.getOpposite() ? dir.getClockWise() : dir.getOpposite();

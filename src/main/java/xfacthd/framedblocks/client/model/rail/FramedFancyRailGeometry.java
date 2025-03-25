@@ -2,25 +2,32 @@ package xfacthd.framedblocks.client.model.rail;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.Util;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.*;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.properties.RailShape;
+import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
+import xfacthd.framedblocks.api.model.geometry.PartConsumer;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
 import xfacthd.framedblocks.api.util.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class FramedFancyRailGeometry extends Geometry
 {
@@ -43,17 +50,19 @@ public class FramedFancyRailGeometry extends Geometry
     });
 
     private final BlockState state;
-    private final BakedModel baseModel;
+    private final BlockStateModel baseModel;
     private final RailShape shape;
     private final Direction mainDir;
     @Nullable
     private final Direction secDir;
+    private final BlockState auxShaderState;
 
-    private FramedFancyRailGeometry(GeometryFactory.Context ctx, Property<RailShape> shapeProperty)
+    private FramedFancyRailGeometry(GeometryFactory.Context ctx, Property<RailShape> shapeProperty, BlockState auxShaderState)
     {
         this.state = ctx.state();
         this.baseModel = ctx.baseModel();
-        this.shape = state.getValue(shapeProperty);
+        this.auxShaderState = auxShaderState;
+        this.shape = ctx.state().getValue(shapeProperty);
         this.mainDir = getDirectionFromRailShape(shape);
         this.secDir = getSecondaryDirectionFromRailShape(shape);
     }
@@ -82,7 +91,7 @@ public class FramedFancyRailGeometry extends Geometry
         List<BakedQuad> result = new ArrayList<>(SLEEPER_COUNT);
         Direction targetDir;
 
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (Utils.isY(quadDir))
         {
             targetDir = quadDir == Direction.UP ? null : quadDir;
@@ -148,7 +157,7 @@ public class FramedFancyRailGeometry extends Geometry
         List<BakedQuad> result = new ArrayList<>(SLEEPER_COUNT_CURVE);
         Direction targetDir;
 
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (Utils.isY(quadDir))
         {
             targetDir = quadDir == Direction.UP ? null : quadDir;
@@ -232,20 +241,9 @@ public class FramedFancyRailGeometry extends Geometry
     }
 
     @Override
-    public ChunkRenderTypeSet getAdditionalRenderTypes(RandomSource rand, ModelData extraData)
+    public void collectAdditionalPartsCached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data, QuadCacheKey cacheKey)
     {
-        return baseModel.getRenderTypes(state, rand, extraData);
-    }
-
-    @Override
-    public void getAdditionalQuads(
-            QuadMap quadMap,
-            RandomSource rand,
-            ModelData data,
-            RenderType renderType
-    )
-    {
-        Utils.forAllDirections(dir -> quadMap.get(dir).addAll(baseModel.getQuads(state, dir, rand, data, renderType)));
+        consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, auxShaderState, null);
     }
 
     @Override
@@ -285,12 +283,22 @@ public class FramedFancyRailGeometry extends Geometry
 
     public static FramedFancyRailGeometry normal(GeometryFactory.Context ctx)
     {
-        return new FramedFancyRailGeometry(ctx, BlockStateProperties.RAIL_SHAPE);
+        return new FramedFancyRailGeometry(ctx, BlockStateProperties.RAIL_SHAPE, Blocks.RAIL.defaultBlockState());
     }
 
-    public static FramedFancyRailGeometry straight(GeometryFactory.Context ctx)
+    public static FramedFancyRailGeometry powered(GeometryFactory.Context ctx)
     {
-        return new FramedFancyRailGeometry(ctx, BlockStateProperties.RAIL_SHAPE_STRAIGHT);
+        return new FramedFancyRailGeometry(ctx, BlockStateProperties.RAIL_SHAPE_STRAIGHT, Blocks.POWERED_RAIL.defaultBlockState());
+    }
+
+    public static FramedFancyRailGeometry detector(GeometryFactory.Context ctx)
+    {
+        return new FramedFancyRailGeometry(ctx, BlockStateProperties.RAIL_SHAPE_STRAIGHT, Blocks.DETECTOR_RAIL.defaultBlockState());
+    }
+
+    public static FramedFancyRailGeometry activator(GeometryFactory.Context ctx)
+    {
+        return new FramedFancyRailGeometry(ctx, BlockStateProperties.RAIL_SHAPE_STRAIGHT, Blocks.ACTIVATOR_RAIL.defaultBlockState());
     }
 
     @FunctionalInterface

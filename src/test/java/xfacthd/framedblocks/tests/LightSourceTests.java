@@ -8,7 +8,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.gametest.GameTestHolder;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.util.FramedConstants;
@@ -21,13 +20,13 @@ import xfacthd.framedblocks.common.data.property.HorizontalRotation;
 
 import java.util.*;
 
-@GameTestHolder(FramedConstants.MOD_ID)
+//@GameTestHolder(FramedConstants.MOD_ID)
 public final class LightSourceTests
 {
     private static final String BATCH_NAME = "lightsource";
     private static final String STRUCTURE_NAME = FramedConstants.MOD_ID + ":lightsourcetests.box";
 
-    @GameTestGenerator
+    /*@GameTestGenerator
     public static Collection<TestFunction> generateLightSourceTests()
     {
         return Arrays.stream(BlockType.values())
@@ -46,7 +45,7 @@ public final class LightSourceTests
                         helper -> TestUtils.testBlockLightEmission(helper, state)
                 ))
                 .toList();
-    }
+    }*/
 
     private static boolean isNotSelfEmitting(BlockType type)
     {

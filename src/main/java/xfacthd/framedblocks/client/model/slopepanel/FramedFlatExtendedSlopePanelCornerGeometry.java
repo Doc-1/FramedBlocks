@@ -35,7 +35,7 @@ public class FramedFlatExtendedSlopePanelCornerGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction face = quad.getDirection();
+        Direction face = quad.direction();
         if (face == orientation.getOpposite())
         {
             FramedFlatSlopePanelCornerGeometry.createSideTriangle(quadMap, quad, facing, rotRotation, true, true);

@@ -1,6 +1,6 @@
 package xfacthd.framedblocks.client.modelwrapping;
 
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 public final class ModelWrappingHandler
 {
-    private final Map<BlockState, BakedModel> visitedStates = new IdentityHashMap<>();
+    private final Map<BlockState, BlockStateModel> visitedStates = new IdentityHashMap<>();
     private final Holder<Block> block;
     private final ModelFactory blockModelFactory;
     private final StateMerger stateMerger;
@@ -28,8 +28,8 @@ public final class ModelWrappingHandler
         this.stateMerger = stateMerger;
     }
 
-    public synchronized BakedModel wrapBlockModel(
-            BakedModel srcModel, BlockState state, ModelLookup modelLookup, TextureLookup textureLookup, @Nullable ModelCounter counter
+    public synchronized BlockStateModel wrapBlockModel(
+            BlockStateModel srcModel, BlockState state, ModelLookup modelLookup, TextureLookup textureLookup, @Nullable ModelCounter counter
     )
     {
         BlockState mergedState = stateMerger.apply(state);

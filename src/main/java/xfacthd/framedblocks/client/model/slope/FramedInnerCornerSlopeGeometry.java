@@ -39,7 +39,7 @@ public class FramedInnerCornerSlopeGeometry extends Geometry
 
     private void createHorizontalCorner(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         boolean top = type.isTop();
         boolean right = type.isRight();
 
@@ -83,7 +83,7 @@ public class FramedInnerCornerSlopeGeometry extends Geometry
 
     private void createVerticalCorner(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         boolean top = type.isTop();
 
         if (quadDir == dir.getClockWise())

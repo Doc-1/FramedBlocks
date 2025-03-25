@@ -28,7 +28,7 @@ import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
-import xfacthd.framedblocks.common.item.VerticalAndWallBlockItem;
+import xfacthd.framedblocks.common.item.block.VerticalAndWallBlockItem;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
 
 public class FramedInverseDoubleCornerSlopePanelBlock extends AbstractFramedDoubleBlock

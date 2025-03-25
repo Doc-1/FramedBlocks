@@ -8,7 +8,6 @@ import xfacthd.framedblocks.api.model.geometry.Geometry;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
-import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 
@@ -32,7 +31,7 @@ public class FramedLargeButtonGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (Utils.isY(facing))
         {
             generateVerticalButton(quadMap, quad, quadDir);
@@ -94,12 +93,6 @@ public class FramedLargeButtonGeometry extends Geometry
     public boolean useBaseModel()
     {
         return useBaseModel;
-    }
-
-    @Override
-    public ItemModelInfo getItemModelInfo()
-    {
-        return FramedButtonGeometry.ITEM_MODEL_INFO;
     }
 
 

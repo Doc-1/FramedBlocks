@@ -2,6 +2,7 @@ package xfacthd.framedblocks.common.blockentity.special;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -10,8 +11,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelProperty;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
 import xfacthd.framedblocks.common.FBContent;
@@ -78,7 +79,7 @@ public class FramedFlowerPotBlockEntity extends FramedBlockEntity
     @Override
     protected boolean readFromDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
     {
-        Block flower = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(nbt.getString("flower")));
+        Block flower = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(nbt.getStringOr("flower", "")));
 
         boolean update = flower != flowerBlock;
         if (update)
@@ -104,7 +105,7 @@ public class FramedFlowerPotBlockEntity extends FramedBlockEntity
     {
         super.handleUpdateTag(nbt, provider);
 
-        Block flower = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(nbt.getString("flower")));
+        Block flower = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(nbt.getStringOr("flower", "")));
         if (flower != flowerBlock)
         {
             flowerBlock = flower;
@@ -127,6 +128,13 @@ public class FramedFlowerPotBlockEntity extends FramedBlockEntity
     }
 
     @Override
+    public void removeComponentsFromTag(CompoundTag tag)
+    {
+        super.removeComponentsFromTag(tag);
+        tag.remove("flower");
+    }
+
+    @Override
     protected void collectMiscComponents(DataComponentMap.Builder builder)
     {
         if (hasFlowerBlock())
@@ -136,7 +144,7 @@ public class FramedFlowerPotBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    protected void applyMiscComponents(DataComponentInput input)
+    protected void applyMiscComponents(DataComponentGetter input)
     {
         PottedFlower flower = input.getOrDefault(FBContent.DC_TYPE_POTTED_FLOWER, PottedFlower.EMPTY);
         if (!flower.isEmpty())
@@ -156,6 +164,6 @@ public class FramedFlowerPotBlockEntity extends FramedBlockEntity
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
         super.loadAdditional(nbt, provider);
-        flowerBlock = BuiltInRegistries.BLOCK.getValue(ResourceLocation.tryParse(nbt.getString("flower")));
+        flowerBlock = BuiltInRegistries.BLOCK.getValue(ResourceLocation.tryParse(nbt.getStringOr("flower", "")));
     }
 }

@@ -1,7 +1,7 @@
 package xfacthd.framedblocks.api.ghost;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -13,9 +13,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.IFramedBlock;
+import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.util.CamoList;
 import xfacthd.framedblocks.api.util.Utils;
@@ -200,7 +201,7 @@ public interface GhostRenderBehaviour
      * @param ctx The {@link BlockPlaceContext} to use for determining the resulting
      * @param renderState The {@code BlockState} to render
      * @param renderPass The current render pass index
-     * @param camo The prepared {@code ModelData} to be given to the {@link BakedModel} that is to be rendered
+     * @param camo The prepared {@code ModelData} to be given to the {@link BlockStateModel} that is to be rendered
      * @return The {@code ModelData} with any necessary modifications applied to it
      */
     default ModelData buildModelData(
@@ -212,7 +213,7 @@ public interface GhostRenderBehaviour
             CamoList camo
     )
     {
-        return ModelData.builder().with(FramedBlockData.PROPERTY, new FramedBlockData(camo.getCamo(0), false)).build();
+        return ModelData.of(AbstractFramedBlockData.PROPERTY, new FramedBlockData(camo.getCamo(0), false));
     }
 
     /**
@@ -223,7 +224,7 @@ public interface GhostRenderBehaviour
      * @param ctx The {@link BlockPlaceContext} to use for determining the resulting
      * @param renderState The {@code BlockState} to render
      * @param renderPass The current render pass index
-     * @param data The prepared {@code ModelData} to be given to the {@link BakedModel} that is to be rendered
+     * @param data The prepared {@code ModelData} to be given to the {@link BlockStateModel} that is to be rendered
      * @return The {@code ModelData} with any necessary modifications applied to it
      */
     default ModelData appendModelData(

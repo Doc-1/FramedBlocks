@@ -365,10 +365,10 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
         super.loadAdditional(tag, provider);
         if (tag.contains("recipe"))
         {
-            ResourceLocation recipe = ResourceLocation.tryParse(tag.getString("recipe"));
+            ResourceLocation recipe = ResourceLocation.tryParse(tag.getStringOr("recipe", ""));
             selectedRecipeId = recipe != null ? ResourceKey.create(Registries.RECIPE, recipe) : null;
         }
-        itemHandler.deserializeNBT(provider, tag.getCompound("inventory"));
-        energyStorage.deserializeNBT(provider, tag.getCompound("energy"));
+        itemHandler.deserializeNBT(provider, tag.getCompoundOrEmpty("inventory"));
+        energyStorage.deserializeNBT(provider, tag.getCompoundOrEmpty("energy"));
     }
 }

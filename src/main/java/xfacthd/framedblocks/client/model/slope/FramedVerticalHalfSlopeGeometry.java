@@ -8,8 +8,6 @@ import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
 import xfacthd.framedblocks.api.block.FramedProperties;
-import xfacthd.framedblocks.api.model.item.TranslatedItemModelInfo;
-import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.util.Utils;
 
 public class FramedVerticalHalfSlopeGeometry extends Geometry
@@ -28,7 +26,7 @@ public class FramedVerticalHalfSlopeGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
 
         if (!ySlope && quadDir == dir.getOpposite())
         {
@@ -59,11 +57,5 @@ public class FramedVerticalHalfSlopeGeometry extends Geometry
                     .apply(Modifiers.cutSideUpDown(top, .5F))
                     .export(quadMap.get(quadDir));
         }
-    }
-
-    @Override
-    public ItemModelInfo getItemModelInfo()
-    {
-        return TranslatedItemModelInfo.HAND_Y_HALF_UP;
     }
 }

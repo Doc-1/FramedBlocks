@@ -9,26 +9,19 @@ import xfacthd.framedblocks.api.model.geometry.Geometry;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
-import xfacthd.framedblocks.api.model.item.ItemModelInfo;
-import xfacthd.framedblocks.api.model.item.TranslatedItemModelInfo;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.common.FBContent;
 
 public class FramedDoorGeometry extends Geometry
 {
-    private static final TranslatedItemModelInfo ITEM_MODEL_INFO = TranslatedItemModelInfo.handOrGui(0F, 0F, -.5F);
-
     private final Direction dir;
     private final boolean hingeRight;
     private final boolean open;
-    private final boolean gate;
 
     public FramedDoorGeometry(GeometryFactory.Context ctx)
     {
         this.dir = ctx.state().getValue(BlockStateProperties.HORIZONTAL_FACING);
         this.hingeRight = ctx.state().getValue(BlockStateProperties.DOOR_HINGE) == DoorHingeSide.RIGHT;
         this.open = ctx.state().getValue(BlockStateProperties.OPEN);
-        this.gate = ctx.state().is(FBContent.BLOCK_FRAMED_GATE) || ctx.state().is(FBContent.BLOCK_FRAMED_IRON_GATE);
     }
 
     @Override
@@ -37,7 +30,7 @@ public class FramedDoorGeometry extends Geometry
         Direction faceDir = dir;
         if (open) { faceDir = hingeRight ? faceDir.getCounterClockWise() : faceDir.getClockWise(); }
 
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (Utils.isY(quadDir))
         {
             QuadModifier.of(quad)
@@ -59,11 +52,5 @@ public class FramedDoorGeometry extends Geometry
                         .export(quadMap.get(quadDir));
             }
         }
-    }
-
-    @Override
-    public ItemModelInfo getItemModelInfo()
-    {
-        return gate ? ITEM_MODEL_INFO : super.getItemModelInfo();
     }
 }

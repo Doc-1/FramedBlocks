@@ -3,15 +3,12 @@ package xfacthd.framedblocks.tests;
 import com.google.common.base.Preconditions;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.gametest.framework.GameTestGenerator;
-import net.minecraft.gametest.framework.TestFunction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.gametest.GameTestHolder;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.util.FramedConstants;
@@ -24,7 +21,7 @@ import xfacthd.framedblocks.common.data.property.*;
 
 import java.util.*;
 
-@GameTestHolder(FramedConstants.MOD_ID)
+//@GameTestHolder(FramedConstants.MOD_ID)
 public final class BeaconTintTests
 {
     private static final String BATCH_NAME = "beacon_tint";
@@ -99,7 +96,7 @@ public final class BeaconTintTests
             BlockType.FRAMED_SOUL_LANTERN
     );
 
-    @GameTestGenerator
+    /*@GameTestGenerator
     public static Collection<TestFunction> generateBeaconTintTests()
     {
         return Arrays.stream(BlockType.values())
@@ -118,7 +115,7 @@ public final class BeaconTintTests
                         helper -> TestUtils.testBeaconBeamTinting(helper, state)
                 ))
                 .toList();
-    }
+    }*/
 
     private static BlockState getTestState(Block block)
     {

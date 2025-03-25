@@ -3,7 +3,6 @@ package xfacthd.framedblocks.common.block.torch;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.*;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +22,7 @@ import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.data.BlockType;
+import xfacthd.framedblocks.common.item.block.FramedStandingAndWallBlockItem;
 
 import java.util.List;
 
@@ -93,12 +93,6 @@ public class FramedTorchBlock extends TorchBlock implements IFramedBlock
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, List<Component> lines, TooltipFlag flag)
-    {
-        appendCamoHoverText(stack, lines);
-    }
-
-    @Override
     public BlockType getBlockType()
     {
         return BlockType.FRAMED_TORCH;
@@ -107,7 +101,7 @@ public class FramedTorchBlock extends TorchBlock implements IFramedBlock
     @Override
     public BlockItem createBlockItem(Item.Properties props)
     {
-        return new StandingAndWallBlockItem(
+        return new FramedStandingAndWallBlockItem(
                 FBContent.BLOCK_FRAMED_TORCH.value(),
                 FBContent.BLOCK_FRAMED_WALL_TORCH.value(),
                 Direction.DOWN,

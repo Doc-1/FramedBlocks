@@ -1,6 +1,7 @@
 {
   "model": {
     "type": "framedblocks:block",
+    "base_model": "minecraft:block/template_orientable_trapdoor_bottom",
     "block": "framedblocks:framed_trapdoor"
   }
 }

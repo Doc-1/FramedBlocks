@@ -20,7 +20,7 @@ public class FramedBarsGeometry extends FramedPaneGeometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction face = quad.getDirection();
+        Direction face = quad.direction();
         if (Utils.isY(face))
         {
             createTopBottomCenterQuad(quadMap, quad, false);
@@ -126,7 +126,7 @@ public class FramedBarsGeometry extends FramedPaneGeometry
         {
             offset = perpNeg ? 9F/16F : (perpPos ? 7F/16F : .5F);
 
-            if (Utils.isPositive(quad.getDirection()))
+            if (Utils.isPositive(quad.direction()))
             {
                 offset = 1F - offset;
             }

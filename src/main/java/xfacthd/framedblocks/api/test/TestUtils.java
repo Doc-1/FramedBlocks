@@ -7,9 +7,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestAssertPosException;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -22,7 +22,6 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -60,10 +59,7 @@ public final class TestUtils
 
     public static void applyCamo(GameTestHelper helper, BlockPos pos, Block camo)
     {
-        if (!(helper.getBlockEntity(pos) instanceof FramedBlockEntity be))
-        {
-            throw new GameTestAssertPosException("Expected FramedBlockEntity", helper.absolutePos(pos), pos, helper.getTick());
-        }
+        FramedBlockEntity be = helper.getBlockEntity(pos, FramedBlockEntity.class);
 
         CamoContainer<?, ?> camoContainer;
         if (camo == Blocks.AIR)
@@ -76,14 +72,16 @@ public final class TestUtils
             CamoContainerFactory<?> camoFactory = CamoContainerHelper.findCamoFactory(stack);
             if (camoFactory == null)
             {
-                throw new GameTestAssertException(String.format("No camo factory for %s", camo));
+                helper.fail(Component.literal(String.format("No camo factory for %s", camo)));
+                return;
             }
 
             Player player = helper.makeMockPlayer(GameType.SURVIVAL);
             camoContainer = camoFactory.applyCamo(helper.getLevel(), helper.absolutePos(pos), player, stack);
             if (camoContainer == null)
             {
-                throw new GameTestAssertException(String.format("No camo container produced for %s", camo));
+                helper.fail(Component.literal(String.format("No camo container produced for %s", camo)));
+                return;
             }
         }
         be.setCamo(camoContainer, false);
@@ -128,7 +126,7 @@ public final class TestUtils
 
         if (!result.consumesAction())
         {
-            helper.fail(String.format("Interaction with block '%s' on side '%s' failed with result '%s'", helper.getBlockState(pos), side, result), pos);
+            helper.fail(Component.literal(String.format("Interaction with block '%s' on side '%s' failed with result '%s'", helper.getBlockState(pos), side, result)), pos);
         }
     }
 
@@ -169,27 +167,11 @@ public final class TestUtils
         return delay;
     }
 
-    public static <T extends BlockEntity> T getBlockEntity(GameTestHelper helper, BlockPos relPos, Class<T> beClass)
-    {
-        BlockEntity be = helper.getBlockEntity(relPos);
-        if (!beClass.isInstance(be))
-        {
-            throw new GameTestAssertPosException(
-                    String.format("Expected %s, got %s", beClass.getSimpleName(), be.getClass().getSimpleName()),
-                    helper.absolutePos(relPos),
-                    relPos,
-                    helper.getTick()
-            );
-        }
-
-        return beClass.cast(be);
-    }
-
     public static void assertTrue(GameTestHelper helper, BlockPos relPos, boolean value, Supplier<String> message)
     {
         if (!value)
         {
-            throw new GameTestAssertPosException(message.get(), helper.absolutePos(relPos), relPos, helper.getTick());
+            throw new GameTestAssertPosException(Component.literal(message.get()), helper.absolutePos(relPos), relPos, (int) helper.getTick());
         }
     }
 
@@ -240,10 +222,10 @@ public final class TestUtils
         {
             BlockState state = helper.getBlockState(blockPos);
             throw new GameTestAssertPosException(
-                    String.format("Incorrect light emission for %s, expected %d, got %d", state, light, emission),
+                    Component.literal(String.format("Incorrect light emission for %s, expected %d, got %d", state, light, emission)),
                     helper.absolutePos(lightPos),
                     lightPos,
-                    helper.getTick()
+                    (int) helper.getTick()
             );
         }
 
@@ -257,10 +239,10 @@ public final class TestUtils
         {
             BlockState state = helper.getBlockState(blockPos);
             throw new GameTestAssertPosException(
-                    String.format("Incorrect light level for %s, expected %d, got %d", state, light, actualLight),
+                    Component.literal(String.format("Incorrect light level for %s, expected %d, got %d", state, light, actualLight)),
                     helper.absolutePos(lightPos),
                     lightPos,
-                    helper.getTick()
+                    (int) helper.getTick()
             );
         }
     }
@@ -271,14 +253,15 @@ public final class TestUtils
     {
         if (!ConfigView.Server.INSTANCE.enableIntangibility())
         {
-            helper.fail("Intangibility is not enabled in the ServerConfig");
+            helper.fail(Component.literal("Intangibility is not enabled in the ServerConfig"));
+            return;
         }
 
         chainTasks(helper, List.of(
                 () -> helper.setBlock(INTANGIBILITY_BLOCK, state),
                 () ->
                 {
-                    FramedBlockEntity be = getBlockEntity(helper, INTANGIBILITY_BLOCK, FramedBlockEntity.class);
+                    FramedBlockEntity be = helper.getBlockEntity(INTANGIBILITY_BLOCK, FramedBlockEntity.class);
                     assertTrue(
                             helper,
                             INTANGIBILITY_BLOCK,
@@ -298,7 +281,7 @@ public final class TestUtils
                 () -> clickWithItem(helper, INTANGIBILITY_BLOCK, Utils.PHANTOM_PASTE.value()),
                 () ->
                 {
-                    FramedBlockEntity be = getBlockEntity(helper, INTANGIBILITY_BLOCK, FramedBlockEntity.class);
+                    FramedBlockEntity be = helper.getBlockEntity(INTANGIBILITY_BLOCK, FramedBlockEntity.class);
                     assertTrue(
                             helper,
                             INTANGIBILITY_BLOCK,
@@ -359,7 +342,7 @@ public final class TestUtils
                 () -> clickWithItem(helper, INTANGIBILITY_BLOCK, Utils.FRAMED_SCREWDRIVER.value(), true),
                 () ->
                 {
-                    FramedBlockEntity be = getBlockEntity(helper, INTANGIBILITY_BLOCK, FramedBlockEntity.class);
+                    FramedBlockEntity be = helper.getBlockEntity(INTANGIBILITY_BLOCK, FramedBlockEntity.class);
                     assertTrue(
                             helper,
                             INTANGIBILITY_BLOCK,
@@ -405,7 +388,7 @@ public final class TestUtils
             }
             catch (Throwable e)
             {
-                helper.fail(String.format("Error while testing particle overrides, likely caused by a misconfigured particle override:\n%s", e));
+                helper.fail(Component.literal(String.format("Error while testing particle overrides, likely caused by a misconfigured particle override:\n%s", e)));
             }
 
             assertTrue(helper, INTANGIBILITY_BLOCK, hit, () -> String.format("Block '%s' doesn't handle hit particles", state.getBlock()));
@@ -429,7 +412,7 @@ public final class TestUtils
     private static void assertBeaconTint(GameTestHelper helper, Block camo, Predicate<Integer> predicate, String expected)
     {
         BlockState state = helper.getBlockState(BEACON_TINT_BLOCK);
-        helper.assertBlock(BEACON_TINT_BLOCK, IFramedBlock.class::isInstance, "Expected instance of IFramedBlock");
+        helper.assertBlock(BEACON_TINT_BLOCK, IFramedBlock.class::isInstance, block -> Component.literal(String.format("Expected instance of IFramedBlock, got %s", block)));
 
         Integer tint = state.getBeaconColorMultiplier(
                 helper.getLevel(),

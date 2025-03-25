@@ -1,55 +1,65 @@
 package xfacthd.framedblocks.client.model.cube;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.model.data.ModelData;
+import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import xfacthd.framedblocks.api.camo.CamoContent;
 import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
+import xfacthd.framedblocks.api.model.util.StandaloneModels;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
 import xfacthd.framedblocks.api.util.Utils;
+import xfacthd.framedblocks.common.blockentity.PackedCollapsibleBlockOffsets;
 import xfacthd.framedblocks.common.blockentity.special.FramedCollapsibleBlockEntity;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 
 public class FramedCollapsibleBlockGeometry extends Geometry
 {
-    public static final ResourceLocation ALT_BASE_MODEL_LOC = Utils.rl("block/framed_collapsible_block_alt");
+    private static final ResourceLocation ALT_BASE_MODEL_LOC = Utils.rl("block/framed_collapsible_block_alt");
+    public static final StandaloneModelKey<BlockStateModel> ALT_BASE_MODEL_KEY = new StandaloneModelKey<>(ALT_BASE_MODEL_LOC);
     private static final float MIN_DEPTH = .001F;
 
+    private final BlockState state;
     @Nullable
     private final Direction collapsedFace;
     private final boolean rotSplitLine;
-    private final BakedModel altBaseModel;
+    private final BlockStateModel altBaseModel;
 
     public FramedCollapsibleBlockGeometry(GeometryFactory.Context ctx)
     {
+        this.state = ctx.state();
         this.collapsedFace = ctx.state().getValue(PropertyHolder.NULLABLE_FACE).toNullableDirection();
         this.rotSplitLine = ctx.state().getValue(PropertyHolder.ROTATE_SPLIT_LINE);
-        this.altBaseModel = ctx.modelLookup().getStandaloneModel(ALT_BASE_MODEL_LOC);
+        this.altBaseModel = StandaloneModels.getBlockModel(ctx.modelLookup(), ALT_BASE_MODEL_KEY);
     }
 
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData data)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (collapsedFace == null || quadDir == collapsedFace.getOpposite())
         {
             quadMap.get(quadDir).add(quad);
             return;
         }
 
-        Integer offsets = data.get(FramedCollapsibleBlockEntity.OFFSETS);
+        int offsets = PackedCollapsibleBlockOffsets.get(data, state);
         float[] vertexPos = new float[] { 1F, 1F, 1F, 1F };
         boolean allSame = true;
-        if (offsets != null && offsets != 0)
+        if (offsets != 0)
         {
             byte[] relOff = FramedCollapsibleBlockEntity.unpackOffsets(offsets);
             allSame = relOff[0] == relOff[1] && relOff[0] == relOff[2] && relOff[0] == relOff[3];
@@ -143,7 +153,7 @@ public class FramedCollapsibleBlockGeometry extends Geometry
             }
             else if (Utils.isY(quadDir))
             {
-                boolean top = quad.getDirection() == Direction.UP;
+                boolean top = quad.direction() == Direction.UP;
                 float posOne = vertexPos[top ? 0 : 1];
                 float posTwo = vertexPos[top ? 3 : 2];
 
@@ -174,20 +184,20 @@ public class FramedCollapsibleBlockGeometry extends Geometry
     }
 
     @Override
-    public BakedModel getBaseModel(BakedModel baseModel, boolean useAltModel)
+    public BlockStateModel getBaseModel(BlockStateModel baseModel, boolean useAltModel)
     {
         return useAltModel ? altBaseModel : baseModel;
     }
 
     @Override
-    public QuadCacheKey makeCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, ModelData data)
+    public QuadCacheKey makeCacheKey(BlockAndTintGetter level, BlockPos pos, RandomSource random, CamoContent<?> camo, @Nullable Object ctCtx, boolean emissive, ModelData data)
     {
-        Integer packedOffsets = data.get(FramedCollapsibleBlockEntity.OFFSETS);
-        if (packedOffsets != null && packedOffsets != 0)
+        int packedOffsets = PackedCollapsibleBlockOffsets.get(data, state);
+        if (packedOffsets != 0)
         {
-            return new CollapsibleBlockQuadCacheKey(camo, ctCtx, packedOffsets);
+            return new CollapsibleBlockQuadCacheKey(camo, ctCtx, emissive, packedOffsets);
         }
-        return super.makeCacheKey(camo, ctCtx, data);
+        return super.makeCacheKey(level, pos, random, camo, ctCtx, emissive, data);
     }
 
     private int getYCollapsedIndexOffset(Direction quadFace)
@@ -203,5 +213,5 @@ public class FramedCollapsibleBlockGeometry extends Geometry
         };
     }
 
-    private record CollapsibleBlockQuadCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, @Nullable Integer packedOffsets) implements QuadCacheKey { }
+    private record CollapsibleBlockQuadCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, boolean emissive, @Nullable Integer packedOffsets) implements QuadCacheKey { }
 }

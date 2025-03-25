@@ -85,12 +85,7 @@ public class FramedWallHangingSignBlock extends AbstractFramedHangingSignBlock
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx)
     {
-        return switch (state.getValue(FramedProperties.FACING_HOR))
-        {
-            case NORTH, SOUTH -> WallHangingSignBlock.SHAPE_NORTHSOUTH;
-            case EAST, WEST -> WallHangingSignBlock.SHAPE_EASTWEST;
-            default -> throw new IncompatibleClassChangeError();
-        };
+        return WallHangingSignBlock.SHAPES.get(state.getValue(FramedProperties.FACING_HOR).getAxis());
     }
 
     @Override
@@ -108,12 +103,7 @@ public class FramedWallHangingSignBlock extends AbstractFramedHangingSignBlock
     @Override
     protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx)
     {
-        return switch (state.getValue(FramedProperties.FACING_HOR))
-        {
-            case NORTH, SOUTH -> WallHangingSignBlock.PLANK_NORTHSOUTH;
-            case EAST, WEST -> WallHangingSignBlock.PLANK_EASTWEST;
-            default -> throw new IncompatibleClassChangeError();
-        };
+        return WallHangingSignBlock.SHAPES_PLANK.get(state.getValue(FramedProperties.FACING_HOR).getAxis());
     }
 
     @Override

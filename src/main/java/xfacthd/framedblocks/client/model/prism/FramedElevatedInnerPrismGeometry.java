@@ -31,7 +31,7 @@ public class FramedElevatedInnerPrismGeometry extends Geometry
     {
         boolean yFacing = Utils.isY(facing);
         boolean yAxis = axis == Direction.Axis.Y;
-        Direction quadFace = quad.getDirection();
+        Direction quadFace = quad.direction();
         boolean quadOnFacingAxis = quadFace.getAxis() == facing.getAxis();
         boolean quadOnAxis = quadFace.getAxis() == axis;
 

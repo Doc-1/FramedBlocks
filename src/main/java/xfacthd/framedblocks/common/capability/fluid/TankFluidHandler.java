@@ -120,7 +120,7 @@ public final class TankFluidHandler implements IFluidHandler
 
     public void load(CompoundTag tag, HolderLookup.Provider provider)
     {
-        fluid = FluidStack.parseOptional(provider, tag.getCompound(FLUID_NBT_KEY));
+        fluid = FluidStack.parseOptional(provider, tag.getCompoundOrEmpty(FLUID_NBT_KEY));
     }
 
     public void save(CompoundTag nbt, HolderLookup.Provider provider)

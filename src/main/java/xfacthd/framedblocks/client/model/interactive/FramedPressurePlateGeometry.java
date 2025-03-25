@@ -29,7 +29,7 @@ public class FramedPressurePlateGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         float height = pressed ? .5F / 16F : 1F / 16F;
 
         if (Utils.isY(quadDir))

@@ -1,8 +1,8 @@
 package xfacthd.framedblocks.client.itemmodel;
 
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ItemModelResolver;
@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.item.ItemModels;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderers;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -21,14 +20,12 @@ import xfacthd.framedblocks.api.util.CamoList;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 
-import java.util.Objects;
-
 public final class TankItemModel<T> implements ItemModel
 {
-    private final ItemModel baseModel;
+    private final FramedBlockItemModel baseModel;
     private final SpecialModelRenderer<T> renderer;
 
-    private TankItemModel(ItemModel baseModel, SpecialModelRenderer<T> renderer)
+    private TankItemModel(FramedBlockItemModel baseModel, SpecialModelRenderer<T> renderer)
     {
         this.baseModel = baseModel;
         this.renderer = renderer;
@@ -50,21 +47,19 @@ public final class TankItemModel<T> implements ItemModel
             {
                 specialLayer.setFoilType(ItemStackRenderState.FoilType.STANDARD);
             }
-            BakedModel model = Objects.requireNonNullElseGet(
-                    state.firstLayer().model,
-                    () -> Minecraft.getInstance().getModelManager().getMissingModel()
-            );
-            specialLayer.setupSpecialModel(renderer, renderer.extractArgument(stack), model);
+            specialLayer.setUsesBlockLight(true);
+            specialLayer.setTransform(baseModel.getItemTransforms().getTransform(ctx));
+            specialLayer.setupSpecialModel(renderer, renderer.extractArgument(stack));
         }
     }
 
 
 
-    public record Unbaked(ItemModel.Unbaked base, SpecialModelRenderer.Unbaked specialModel) implements ItemModel.Unbaked
+    public record Unbaked(FramedBlockItemModel.Unbaked base, SpecialModelRenderer.Unbaked specialModel) implements ItemModel.Unbaked
     {
         public static final ResourceLocation ID = Utils.rl("tank");
         public static final MapCodec<TankItemModel.Unbaked> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-                ItemModels.CODEC.fieldOf("base").forGetter(TankItemModel.Unbaked::base),
+                ItemModels.CODEC.fieldOf("base").flatXmap(TankItemModel.Unbaked::validateBaseModel, DataResult::success).forGetter(TankItemModel.Unbaked::base),
                 SpecialModelRenderers.CODEC.fieldOf("renderer").forGetter(TankItemModel.Unbaked::specialModel)
         ).apply(inst, TankItemModel.Unbaked::new));
 
@@ -89,6 +84,15 @@ public final class TankItemModel<T> implements ItemModel
         public MapCodec<? extends ItemModel.Unbaked> type()
         {
             return CODEC;
+        }
+
+        private static DataResult<FramedBlockItemModel.Unbaked> validateBaseModel(ItemModel.Unbaked baseModel)
+        {
+            if (baseModel instanceof FramedBlockItemModel.Unbaked unbaked)
+            {
+                return DataResult.success(unbaked);
+            }
+            return DataResult.error(() -> "Base model must be a FramedBlockItemModel");
         }
     }
 }

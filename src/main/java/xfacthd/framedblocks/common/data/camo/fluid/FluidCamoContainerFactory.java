@@ -42,7 +42,7 @@ public final class FluidCamoContainerFactory extends CamoContainerFactory<FluidC
     @Override
     protected FluidCamoContainer readFromNetwork(CompoundTag tag)
     {
-        Fluid fluid = BuiltInRegistries.FLUID.byId(tag.getInt("fluid"));
+        Fluid fluid = BuiltInRegistries.FLUID.byId(tag.getIntOr("fluid", -1));
         return new FluidCamoContainer(fluid);
     }
 

@@ -3,7 +3,6 @@ package xfacthd.framedblocks.common.block.rail.vanillaslope;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -221,12 +220,6 @@ public class FramedRailSlopeBlock extends BaseRailBlock implements IFramedBlock,
             return state.setValue(PropertyHolder.ASCENDING_RAIL_SHAPE, FramedUtils.getAscendingRailShapeFromDirection(dir));
         }
         return state;
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, List<Component> lines, TooltipFlag flag)
-    {
-        appendCamoHoverText(stack, lines);
     }
 
     @Override

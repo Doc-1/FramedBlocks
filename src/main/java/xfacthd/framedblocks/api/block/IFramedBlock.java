@@ -7,44 +7,64 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
-import net.minecraft.world.level.*;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.EmptyBlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
-import net.minecraft.world.level.material.*;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.*;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.extensions.IBlockExtension;
-import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.block.cache.IStateCacheAccessor;
 import xfacthd.framedblocks.api.block.cache.StateCache;
-import xfacthd.framedblocks.api.block.render.*;
+import xfacthd.framedblocks.api.block.item.FramedBlockItem;
+import xfacthd.framedblocks.api.block.render.CullingHelper;
+import xfacthd.framedblocks.api.block.render.ParticleHelper;
 import xfacthd.framedblocks.api.blueprint.BlueprintData;
-import xfacthd.framedblocks.api.camo.*;
+import xfacthd.framedblocks.api.camo.CamoContainer;
+import xfacthd.framedblocks.api.camo.CamoContent;
 import xfacthd.framedblocks.api.internal.InternalAPI;
-import xfacthd.framedblocks.api.model.data.FramedBlockData;
+import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
 import xfacthd.framedblocks.api.shapes.ShapeProvider;
 import xfacthd.framedblocks.api.type.IBlockType;
-import xfacthd.framedblocks.api.util.*;
+import xfacthd.framedblocks.api.util.CamoList;
+import xfacthd.framedblocks.api.util.ConfigView;
+import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.List;
 import java.util.Optional;
@@ -90,7 +110,7 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
 
     default BlockItem createBlockItem(Item.Properties props)
     {
-        return new BlockItem((Block) this, props);
+        return new FramedBlockItem((Block) this, props);
     }
 
     @ApiStatus.OverrideOnly
@@ -278,15 +298,6 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
         return state;
     }
 
-    /**
-     * Extract the nested {@link ModelData}, if any, from the given data based on the given state.
-     * Only relevant for double blocks
-     */
-    default ModelData unpackNestedModelData(ModelData data, BlockState state, BlockState componentState)
-    {
-        return data;
-    }
-
     default boolean shouldPreventNeighborCulling(
             BlockGetter level, BlockPos pos, BlockState state, BlockPos adjPos, BlockState adjState
     )
@@ -407,20 +418,8 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
 
     default boolean isCamoEmissiveRendering(@SuppressWarnings("unused") BlockState state, BlockGetter level, BlockPos pos)
     {
-        ModelData modelData = level.getModelData(pos);
-        return isCamoEmissiveRendering(modelData);
-    }
-
-    static boolean isCamoEmissiveRendering(@Nullable ModelData modelData)
-    {
-        if (modelData == ModelData.EMPTY || modelData == null) return false;
-
-        FramedBlockData fbData = modelData.get(FramedBlockData.PROPERTY);
-        if (fbData != null)
-        {
-            return fbData.getCamoContent().isEmissive();
-        }
-        return false;
+        AbstractFramedBlockData fbData = level.getModelData(pos).get(AbstractFramedBlockData.PROPERTY);
+        return fbData != null && fbData.isCamoEmissive();
     }
 
     @SuppressWarnings("deprecation")
@@ -661,15 +660,6 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
         return new FramedBlockEntity(pos, state);
     }
 
-    default void appendCamoHoverText(ItemStack stack, List<Component> lines)
-    {
-        Optional<MutableComponent> camoText = printCamoData(stack.getOrDefault(Utils.DC_TYPE_CAMO_LIST, CamoList.EMPTY), false);
-        if (camoText.isPresent())
-        {
-            lines.add(Component.translatable(CAMO_LABEL, camoText.get()).withStyle(ChatFormatting.GOLD));
-        }
-    }
-
     default Optional<MutableComponent> printCamoBlock(BlueprintData blueprintData)
     {
         return printCamoData(blueprintData.camos(), true);
@@ -730,13 +720,5 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
     default float getJadeRenderScale(BlockState state)
     {
         return 1F;
-    }
-
-    /**
-     * {@return whether this block should use the GUI transform from the model or fall back to a default transform}
-     */
-    default boolean shouldApplyGuiTransformFromModel()
-    {
-        return true;
     }
 }

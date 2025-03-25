@@ -2,6 +2,7 @@ package xfacthd.framedblocks.common.block.special;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.BlockGetter;
@@ -50,13 +51,12 @@ public class PoweredFramingSawBlock extends FramingSawBlock implements EntityBlo
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved)
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean isMoving)
     {
-        if (newState.getBlock() != state.getBlock() && level.getBlockEntity(pos) instanceof PoweredFramingSawBlockEntity be)
+        if (level.getBlockEntity(pos) instanceof PoweredFramingSawBlockEntity be)
         {
             be.dropContents(stack -> popResource(level, pos, stack));
         }
-        super.onRemove(state, level, pos, newState, moved);
     }
 
     @Override

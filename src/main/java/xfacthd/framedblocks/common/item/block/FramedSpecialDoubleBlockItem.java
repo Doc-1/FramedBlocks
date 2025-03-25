@@ -1,9 +1,8 @@
-package xfacthd.framedblocks.common.item;
+package xfacthd.framedblocks.common.item.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -11,13 +10,14 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.BlockUtils;
+import xfacthd.framedblocks.api.block.item.FramedBlockItem;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.util.CamoList;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 
-public abstract class FramedSpecialDoubleBlockItem extends BlockItem
+public abstract class FramedSpecialDoubleBlockItem extends FramedBlockItem
 {
     public FramedSpecialDoubleBlockItem(Block block, Properties props)
     {

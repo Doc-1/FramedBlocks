@@ -1,56 +1,47 @@
 package xfacthd.framedblocks.client.model.cube;
 
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.Direction;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.api.model.data.FramedBlockData;
+import net.neoforged.neoforge.model.data.ModelData;
+import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
+import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
+import xfacthd.framedblocks.api.model.geometry.PartConsumer;
+import xfacthd.framedblocks.api.model.util.StandaloneModels;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
-import xfacthd.framedblocks.api.model.util.ModelUtils;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.config.ClientConfig;
-
-import java.util.ArrayList;
 
 public class FramedMarkedCubeGeometry extends FramedCubeGeometry
 {
     public static final ResourceLocation SLIME_FRAME_LOCATION = Utils.rl("block/slime_frame");
     public static final ResourceLocation REDSTONE_FRAME_LOCATION = Utils.rl("block/redstone_frame");
+    public static final StandaloneModelKey<BlockModelPart> SLIME_FRAME_KEY = new StandaloneModelKey<>(SLIME_FRAME_LOCATION);
+    public static final StandaloneModelKey<BlockModelPart> REDSTONE_FRAME_KEY = new StandaloneModelKey<>(REDSTONE_FRAME_LOCATION);
 
     private final BlockState state;
-    private final BakedModel frameModel;
+    private final BlockModelPart frameModel;
+    private final BlockState frameShaderState;
 
-    private FramedMarkedCubeGeometry(GeometryFactory.Context ctx, ResourceLocation frameLocation)
+    private FramedMarkedCubeGeometry(GeometryFactory.Context ctx, StandaloneModelKey<BlockModelPart> frameKey, BlockState frameShaderState)
     {
         super(ctx);
         this.state = ctx.state();
-        this.frameModel = ctx.modelLookup().getStandaloneModel(frameLocation);
+        this.frameModel = StandaloneModels.getBlockModelPart(ctx.modelLookup(), ctx.textureLookup(), frameKey);
+        this.frameShaderState = frameShaderState;
     }
 
     @Override
-    public ChunkRenderTypeSet getAdditionalRenderTypes(RandomSource rand, ModelData extraData)
+    public void collectAdditionalPartsUncached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data)
     {
-        FramedBlockData fbData = extraData.get(FramedBlockData.PROPERTY);
-        if (fbData != null && !fbData.getCamoContent().isEmpty())
+        AbstractFramedBlockData fbData = data.get(AbstractFramedBlockData.PROPERTY);
+        if (fbData != null && !fbData.unwrap(false).getCamoContent().isEmpty())
         {
-            return ModelUtils.CUTOUT;
-        }
-        return ChunkRenderTypeSet.none();
-    }
-
-    @Override
-    public void getAdditionalQuads(ArrayList<BakedQuad> quads, @Nullable Direction side, RandomSource rand, ModelData data, RenderType renderType)
-    {
-        FramedBlockData fbData = data.get(FramedBlockData.PROPERTY);
-        if (fbData != null && !fbData.getCamoContent().isEmpty())
-        {
-            Utils.copyAll(frameModel.getQuads(state, side, rand, data, renderType), quads);
+            consumer.accept(frameModel, state, false, false, true, false, frameShaderState, null);
         }
     }
 
@@ -60,7 +51,7 @@ public class FramedMarkedCubeGeometry extends FramedCubeGeometry
     {
         if (ClientConfig.VIEW.showSpecialCubeOverlay())
         {
-            return new FramedMarkedCubeGeometry(ctx, SLIME_FRAME_LOCATION);
+            return new FramedMarkedCubeGeometry(ctx, SLIME_FRAME_KEY, Blocks.SLIME_BLOCK.defaultBlockState());
         }
         return new FramedCubeGeometry(ctx);
     }
@@ -69,7 +60,7 @@ public class FramedMarkedCubeGeometry extends FramedCubeGeometry
     {
         if (ClientConfig.VIEW.showSpecialCubeOverlay())
         {
-            return new FramedMarkedCubeGeometry(ctx, REDSTONE_FRAME_LOCATION);
+            return new FramedMarkedCubeGeometry(ctx, REDSTONE_FRAME_KEY, Blocks.REDSTONE_BLOCK.defaultBlockState());
         }
         return new FramedCubeGeometry(ctx);
     }

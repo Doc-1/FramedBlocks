@@ -35,7 +35,7 @@ public class FramedSmallInnerCornerSlopePanelWallGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         boolean cw = horRotDir == dir.getClockWise();
         boolean up = vertRotDir == Direction.UP;
         if (quadDir == dir)

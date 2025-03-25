@@ -1,0 +1,55 @@
+package xfacthd.framedblocks.api.model.wrapping;
+
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Direction;
+import net.minecraft.util.TriState;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.model.ExtendedBlockModelPart;
+
+import java.util.List;
+
+public interface DelegateBlockModelPart extends ExtendedBlockModelPart
+{
+    ExtendedBlockModelPart wrapped();
+
+    @Override
+    default List<BakedQuad> getQuads(@Nullable Direction side)
+    {
+        return wrapped().getQuads(side);
+    }
+
+    @Override
+    default RenderType getRenderType(BlockState state)
+    {
+        return wrapped().getRenderType(state);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    default boolean useAmbientOcclusion()
+    {
+        return wrapped().useAmbientOcclusion();
+    }
+
+    @Override
+    default TriState ambientOcclusion()
+    {
+        return wrapped().ambientOcclusion();
+    }
+
+    @Override
+    default TextureAtlasSprite particleIcon()
+    {
+        return wrapped().particleIcon();
+    }
+
+    @Nullable
+    @Override
+    default BlockState getBlockAppearance()
+    {
+        return wrapped().getBlockAppearance();
+    }
+}

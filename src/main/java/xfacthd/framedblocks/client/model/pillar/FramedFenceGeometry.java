@@ -28,7 +28,7 @@ public class FramedFenceGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (Utils.isY(quadDir))
         {
             QuadModifier.of(quad)
@@ -57,7 +57,7 @@ public class FramedFenceGeometry extends Geometry
             return;
         }
 
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (Utils.isY(quadDir))
         {
             QuadModifier mod = QuadModifier.of(quad)

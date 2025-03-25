@@ -2,8 +2,8 @@ package xfacthd.framedblocks.common.blockentity.special;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -49,20 +49,13 @@ public class FramedOwnableBlockEntity extends FramedBlockEntity
     protected void writeToDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
     {
         super.writeToDataPacket(nbt, lookupProvider);
-        if (owner != null)
-        {
-            nbt.put("owner", NbtUtils.createUUID(owner));
-        }
+        nbt.storeNullable("owner", UUIDUtil.CODEC, owner);
     }
 
     @Override
     protected boolean readFromDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
     {
-        if (nbt.contains("owner"))
-        {
-            //noinspection ConstantConditions
-            owner = NbtUtils.loadUUID(nbt.get("owner"));
-        }
+        owner = nbt.read("owner", UUIDUtil.CODEC).orElse(null);
         return super.readFromDataPacket(nbt, lookupProvider);
     }
 
@@ -70,10 +63,7 @@ public class FramedOwnableBlockEntity extends FramedBlockEntity
     public CompoundTag getUpdateTag(HolderLookup.Provider provider)
     {
         CompoundTag tag = super.getUpdateTag(provider);
-        if (owner != null)
-        {
-            tag.putUUID("owner", owner);
-        }
+        tag.storeNullable("owner", UUIDUtil.CODEC, owner);
         return tag;
     }
 
@@ -81,29 +71,20 @@ public class FramedOwnableBlockEntity extends FramedBlockEntity
     public void handleUpdateTag(CompoundTag nbt, HolderLookup.Provider provider)
     {
         super.handleUpdateTag(nbt, provider);
-        if (nbt.contains("owner"))
-        {
-            owner = nbt.getUUID("owner");
-        }
+        owner = nbt.read("owner", UUIDUtil.CODEC).orElse(null);
     }
 
     @Override
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider)
     {
         super.saveAdditional(tag, provider);
-        if (owner != null)
-        {
-            tag.putUUID("owner", owner);
-        }
+        tag.storeNullable("owner", UUIDUtil.CODEC, owner);
     }
 
     @Override
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
     {
         super.loadAdditional(tag, provider);
-        if (tag.contains("owner"))
-        {
-            owner = tag.getUUID("owner");
-        }
+        owner = tag.read("owner", UUIDUtil.CODEC).orElse(null);
     }
 }

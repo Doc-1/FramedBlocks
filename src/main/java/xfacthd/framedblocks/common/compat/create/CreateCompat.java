@@ -9,19 +9,14 @@ import com.simibubi.create.content.contraptions.behaviour.DoorMovingInteraction;
 import com.simibubi.create.content.contraptions.behaviour.FenceGateMovingInteraction;
 import com.simibubi.create.content.contraptions.behaviour.LeverMovingInteraction;
 import com.simibubi.create.content.contraptions.behaviour.TrapdoorMovingInteraction;
-import com.simibubi.create.foundation.block.connected.CTModel;
 import net.minecraft.core.Holder;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.neoforged.fml.util.ObfuscationReflectionHelper;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.loading.FMLEnvironment;
 import xfacthd.framedblocks.FramedBlocks;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.util.registration.DeferredBlockEntity;
-import xfacthd.framedblocks.client.data.ConTexDataHandler;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.api.compat.create.FramedBlockSafeNbtWriter;
 import xfacthd.framedblocks.api.compat.create.FramedBlockEntityItemRequirement;
@@ -40,28 +35,6 @@ import java.util.Map;
 
 public final class CreateCompat
 {
-    // The Create CT property is currently not safe to use (not comparable and does not work correctly with the appearance API)
-    private static final boolean REGISTER_CT_PROPERTY = false;
-
-    public static void init()
-    {
-        if (ModList.get().isLoaded("create"))
-        {
-            // Safeguard against potential changes in Create since the ct context property is not exposed as API
-            try
-            {
-                if (FMLEnvironment.dist.isClient())
-                {
-                    GuardedClientAccess.init();
-                }
-            }
-            catch (Throwable e)
-            {
-                FramedBlocks.LOGGER.warn("An error occured while initializing client-only Create integration!", e);
-            }
-        }
-    }
-
     public static void commonSetup()
     {
         if (ModList.get().isLoaded("create"))
@@ -162,18 +135,6 @@ public final class CreateCompat
         private static void registerStateFilter(Holder<Block> block, SchematicStateFilterRegistry.StateFilter filter)
         {
             SchematicStateFilterRegistry.REGISTRY.register(block.value(), filter);
-        }
-    }
-
-    private static final class GuardedClientAccess
-    {
-        public static void init()
-        {
-            //if (REGISTER_CT_PROPERTY)
-            //{
-            //    ModelProperty<?> ctProperty = ObfuscationReflectionHelper.getPrivateValue(CTModel.class, null, "CT_PROPERTY");
-            //    ConTexDataHandler.addConTexProperty("create", ctProperty);
-            //}
         }
     }
 

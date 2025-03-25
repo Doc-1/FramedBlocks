@@ -5,15 +5,12 @@ import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -158,9 +155,9 @@ public abstract class AbstractFramedBlock extends Block implements IFramedBlock,
     }
 
     @Override
-    public boolean canPlaceLiquid(@Nullable Player player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid)
+    public boolean canPlaceLiquid(@Nullable LivingEntity entity, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid)
     {
-        return isWaterLoggable() && SimpleWaterloggedBlock.super.canPlaceLiquid(player, level, pos, state, fluid);
+        return isWaterLoggable() && SimpleWaterloggedBlock.super.canPlaceLiquid(entity, level, pos, state, fluid);
     }
 
     @Override
@@ -170,25 +167,19 @@ public abstract class AbstractFramedBlock extends Block implements IFramedBlock,
     }
 
     @Override
-    public ItemStack pickupBlock(@Nullable Player player, LevelAccessor level, BlockPos pos, BlockState state)
+    public ItemStack pickupBlock(@Nullable LivingEntity entity, LevelAccessor level, BlockPos pos, BlockState state)
     {
         if (!isWaterLoggable())
         {
             return ItemStack.EMPTY;
         }
-        return SimpleWaterloggedBlock.super.pickupBlock(player, level, pos, state);
+        return SimpleWaterloggedBlock.super.pickupBlock(entity, level, pos, state);
     }
 
     @Override
     protected List<ItemStack> getDrops(BlockState state, LootParams.Builder builder)
     {
         return getCamoDrops(super.getDrops(state, builder), builder);
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, List<Component> lines, TooltipFlag flag)
-    {
-        appendCamoHoverText(stack, lines);
     }
 
     /**

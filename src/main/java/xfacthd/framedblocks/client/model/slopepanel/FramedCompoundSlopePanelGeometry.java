@@ -33,7 +33,7 @@ public class FramedCompoundSlopePanelGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (quadDir == orientation)
         {
             if (Utils.isY(quadDir))

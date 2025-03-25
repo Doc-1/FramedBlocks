@@ -1,25 +1,21 @@
 package xfacthd.framedblocks.api.model.geometry;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.extensions.IBakedModelExtension;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.client.extensions.BlockModelPartExtension;
+import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.api.FramedBlocksClientAPI;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
-import xfacthd.framedblocks.api.camo.*;
+import xfacthd.framedblocks.api.camo.CamoContent;
 import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.cache.SimpleQuadCacheKey;
+import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
@@ -27,10 +23,9 @@ import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.predicate.fullface.FullFacePredicate;
 import xfacthd.framedblocks.api.util.ConfigView;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
+@SuppressWarnings("MethodMayBeStatic")
 public abstract class Geometry
 {
     /**
@@ -91,10 +86,10 @@ public abstract class Geometry
     }
 
     /**
-     * {@return the {@link BakedModel} to use as the base model when no camo is applied}
+     * {@return the {@link BlockStateModel} to use as the base model when no camo is applied}
      * @apiNote Only called if {@link #useBaseModel()} returns {@code true}
      */
-    public BakedModel getBaseModel(BakedModel baseModel, boolean useAltModel)
+    public BlockStateModel getBaseModel(BlockStateModel baseModel, boolean useAltModel)
     {
         return baseModel;
     }
@@ -109,59 +104,46 @@ public abstract class Geometry
     }
 
     /**
-     * Return {@link RenderType}s which contain additional quads (i.e. non-camo quads read from other models)
-     * or {@link ChunkRenderTypeSet#none()} when no additional render types are present
-     */
-    public ChunkRenderTypeSet getAdditionalRenderTypes(RandomSource rand, ModelData extraData)
-    {
-        return ChunkRenderTypeSet.none();
-    }
-
-    /**
-     * Add additional quads to faces that return {@code true} from {@link FullFacePredicate#test(BlockState, Direction)}<br>
+     * Add additional {@link BlockModelPart}s which should not be cached.
      * The result of this method will NOT be cached, execution should therefore be as fast as possible
+     * <p>
+     * The parts usually need to be shallow-copied to ensure that they return the correct render type and AO setting
      */
-    public void getAdditionalQuads(ArrayList<BakedQuad> quads, @Nullable Direction side, RandomSource rand, ModelData data, RenderType renderType) { }
+    public void collectAdditionalPartsUncached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data) { }
 
     /**
-     * Add additional quads to faces that return {@code false} from {@link FullFacePredicate#test(BlockState, Direction)}<br>
+     * Add additional {@link BlockModelPart}s which should be cached.
      * The result of this method will be cached, processing time is therefore not critical
      */
-    public void getAdditionalQuads(QuadMap quadMap, RandomSource rand, ModelData data, RenderType renderType) { }
-
-    /**
-     * Return {@link RenderType}s which contain overlay quads generated in {@link #getGeneratedOverlayQuads(QuadMap, RandomSource, ModelData, RenderType)}
-     * or {@link ChunkRenderTypeSet#none()} when no overlay quads are used
-     */
-    public ChunkRenderTypeSet getOverlayRenderTypes(RandomSource rand, ModelData extraData)
-    {
-        return ChunkRenderTypeSet.none();
-    }
+    public void collectAdditionalPartsCached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data, QuadCacheKey cacheKey) { }
 
     /**
      * Add additional generated quads based on the full set of previously generated quads to avoid z-fighting with the
      * other quads below the overlay on faces that return {@code false} from {@link FullFacePredicate#test(BlockState, Direction)}
      *
-     * @param quadMap The {@link QuadMap} containing all transformed quads
-     * @param layer The {@link RenderType} for which overlay quads are being requested
-     * @see FramedBlocksClientAPI#generateOverlayQuads(QuadMap, Direction, TextureAtlasSprite)
-     * @see FramedBlocksClientAPI#generateOverlayQuads(QuadMap, Direction, TextureAtlasSprite, Predicate)
+     * @param generator The {@link OverlayPartGenerator} used to generate the overlay parts
+     * @param cacheKey  The {@link QuadCacheKey} used to cache the generated parts together with other geometry
      */
-    public void getGeneratedOverlayQuads(QuadMap quadMap, RandomSource rand, ModelData data, RenderType layer) { }
+    public void generateOverlayParts(OverlayPartGenerator generator, RandomSource rand, ModelData data, QuadCacheKey cacheKey) { }
 
     /**
      * Return a custom {@link QuadCacheKey} that holds additional metadata which influences the resulting quads.
-     * @implNote The resulting object must at least store the given {@link BlockState} and connected textures context object
-     * and should either be a record or have an otherwise properly implemented {@code hashCode()} and {@code equals()}
-     * implementation
-     * @param camo The {@link CamoContent} of the camo applied to the block
-     * @param ctCtx The current connected textures context object, may be null
-     * @param data The {@link ModelData} from the {@link FramedBlockEntity}
+     *
+     * @param level    The {@linkplain BlockAndTintGetter level} the block is being rendered in
+     * @param pos      The {@link BlockPos} the block is being rendered at
+     * @param random   The {@link RandomSource} to use for randomization
+     * @param camo     The {@link CamoContent} of the camo applied to the block
+     * @param ctCtx    The current connected textures context object, may be null
+     * @param emissive Whether the generated quads should be emissive
+     * @param data     The {@link ModelData} from the {@link FramedBlockEntity}
+     * @implNote The resulting object must at least store the given {@link BlockState}, connected textures context object
+     * and emissivity state and should either be a record or have an otherwise properly implemented {@code hashCode()}
+     * and {@code equals()} implementation
      */
-    public QuadCacheKey makeCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, ModelData data)
+    public QuadCacheKey makeCacheKey(BlockAndTintGetter level, BlockPos pos, RandomSource random, CamoContent<?> camo, @Nullable Object ctCtx, boolean emissive, ModelData data)
     {
         // Avoid allocating a key if the CT context is null
-        return ctCtx != null ? new SimpleQuadCacheKey(camo, ctCtx) : camo;
+        return ctCtx != null || emissive ? new SimpleQuadCacheKey(camo, ctCtx, emissive) : camo;
     }
 
     /**
@@ -174,39 +156,30 @@ public abstract class Geometry
     }
 
     /**
-     * Controls the AO behavior for all quads of this model.
-     * @see IBakedModelExtension#useAmbientOcclusion(BlockState, ModelData, RenderType)
+     * Compute the default AO behaviour which is used unless the source {@link BlockModelPart} specifies something else
+     * @see BlockModelPartExtension#ambientOcclusion()
      */
-    public TriState useAmbientOcclusion(BlockState state, ModelData data, RenderType renderType)
+    public DefaultAO computeDefaultAmbientOcclusion(BlockState state, ModelData data)
     {
-        FramedBlockData fbData = data.get(FramedBlockData.PROPERTY);
+        FramedBlockData fbData = AbstractFramedBlockData.getOrDefault(data, state, null);
         if (fbData != null)
         {
             if (fbData.isEmissive())
             {
-                return TriState.FALSE;
+                return DefaultAO.FORCE_DISABLE;
             }
 
             CamoContent<?> camoContent = fbData.getCamoContent();
-            if (!camoContent.isEmpty())
+            if (!camoContent.isEmpty() && (camoContent.getLightEmission() != 0 || camoContent.isEmissive()))
             {
-                BakedModel model = CamoContainerHelper.Client.getOrCreateModel(camoContent);
-                TriState camoAO = model.useAmbientOcclusion(camoContent.getAppearanceState(), ModelData.EMPTY, renderType);
-                if (camoAO != TriState.DEFAULT)
-                {
-                    return camoAO;
-                }
-                if (camoContent.getLightEmission() != 0 || camoContent.isEmissive())
-                {
-                    return TriState.FALSE;
-                }
+                return DefaultAO.DISABLE;
             }
         }
         if (ConfigView.Client.INSTANCE.shouldForceAmbientOcclusionOnGlowingBlocks())
         {
-            return TriState.TRUE;
+            return DefaultAO.ENABLE;
         }
-        return TriState.DEFAULT;
+        return DefaultAO.DEFAULT;
     }
 
     /**
@@ -215,19 +188,5 @@ public abstract class Geometry
     public ItemModelInfo getItemModelInfo()
     {
         return ItemModelInfo.DEFAULT;
-    }
-
-    /**
-     * Resolve additional model data such as CT data for a model used for additional quads
-     * @param level The level holding the block being rendered
-     * @param pos The position of the block being rendered
-     * @param state The state of the block being rendered
-     * @param tileData The model data provided by the {@link BlockEntity}
-     * @return the auxiliary model data or {@link ModelData#EMPTY} if no additional data is needed
-     * @apiNote The data returned from this method is accessible in all quad-related methods via {@link FramedBlockData#AUX_DATA}
-     */
-    public ModelData getAuxModelData(BlockAndTintGetter level, BlockPos pos, BlockState state, ModelData tileData)
-    {
-        return ModelData.EMPTY;
     }
 }

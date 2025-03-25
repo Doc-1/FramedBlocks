@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -33,14 +32,15 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class FramedWallBlock extends WallBlock implements IFramedBlock
 {
     private static final Map<Direction, EnumProperty<WallSide>> PROPERTY_BY_DIRECTION = Map.of(
-            Direction.NORTH, NORTH_WALL,
-            Direction.EAST, EAST_WALL,
-            Direction.SOUTH, SOUTH_WALL,
-            Direction.WEST, WEST_WALL
+            Direction.NORTH, NORTH,
+            Direction.EAST, EAST,
+            Direction.SOUTH, SOUTH,
+            Direction.WEST, WEST
     );
     private final ShapeProvider shapes = makeShapeProvider(states -> generateShapes(states, 14F, 16F));
     private final ShapeProvider collisionShapes = makeShapeProvider(states -> generateShapes(states, 24F, 24F));
@@ -147,12 +147,6 @@ public class FramedWallBlock extends WallBlock implements IFramedBlock
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, List<Component> lines, TooltipFlag flag)
-    {
-        appendCamoHoverText(stack, lines);
-    }
-
-    @Override
     public boolean doesBlockOccludeBeaconBeam(BlockState state, LevelReader level, BlockPos pos)
     {
         return true;
@@ -167,20 +161,20 @@ public class FramedWallBlock extends WallBlock implements IFramedBlock
     @Override
     public BlockState getItemModelSource()
     {
-        return defaultBlockState().setValue(EAST_WALL, WallSide.LOW).setValue(WEST_WALL, WallSide.LOW);
+        return defaultBlockState().setValue(EAST, WallSide.LOW).setValue(WEST, WallSide.LOW);
     }
 
     @Override
     public BlockState getJadeRenderState(BlockState state)
     {
-        return defaultBlockState().setValue(EAST_WALL, WallSide.LOW).setValue(WEST_WALL, WallSide.LOW);
+        return defaultBlockState().setValue(EAST, WallSide.LOW).setValue(WEST, WallSide.LOW);
     }
 
     @Override
-    protected Map<BlockState, VoxelShape> makeShapes(float pWidth, float pDepth, float pWallPostHeight, float pWallMinY, float pWallLowHeight, float pWallTallHeight)
+    protected Function<BlockState, VoxelShape> makeShapes(float a, float b)
     {
         // Effectively NO-OP to conserve memory, the shape building is taken over below
-        return Map.of();
+        return state -> Shapes.empty();
     }
 
     private ShapeProvider makeShapeProvider(ShapeGenerator generator)
@@ -213,13 +207,13 @@ public class FramedWallBlock extends WallBlock implements IFramedBlock
         VoxelShape[] wallTallShapes = sameHeight ? wallLowShapes : ShapeUtils.makeHorizontalRotations(wallTallShape, Direction.NORTH);
 
         VoxelShape[] shapes = new VoxelShape[512];
-        for (WallSide north : NORTH_WALL.getPossibleValues())
+        for (WallSide north : NORTH.getPossibleValues())
         {
-            for (WallSide east : EAST_WALL.getPossibleValues())
+            for (WallSide east : EAST.getPossibleValues())
             {
-                for (WallSide south : SOUTH_WALL.getPossibleValues())
+                for (WallSide south : SOUTH.getPossibleValues())
                 {
-                    for (WallSide west : WEST_WALL.getPossibleValues())
+                    for (WallSide west : WEST.getPossibleValues())
                     {
                         int noUpKey = makeShapeKey(false, north, east, south, west);
                         int upKey = makeShapeKey(true, north, east, south, west);
@@ -251,10 +245,10 @@ public class FramedWallBlock extends WallBlock implements IFramedBlock
         {
             int key = makeShapeKey(
                     state.getValue(UP),
-                    state.getValue(NORTH_WALL),
-                    state.getValue(EAST_WALL),
-                    state.getValue(SOUTH_WALL),
-                    state.getValue(WEST_WALL)
+                    state.getValue(NORTH),
+                    state.getValue(EAST),
+                    state.getValue(SOUTH),
+                    state.getValue(WEST)
             );
             builder.put(state, shapes[key]);
         }

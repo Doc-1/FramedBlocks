@@ -4,15 +4,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.TerrainParticle;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.data.ModelData;
 import xfacthd.framedblocks.api.FramedBlocksAPI;
 import xfacthd.framedblocks.api.camo.CamoClientHandler;
-import xfacthd.framedblocks.api.model.util.ModelUtils;
 
 final class EmptyCamoClientHandler extends CamoClientHandler<EmptyCamoContent>
 {
@@ -21,13 +17,7 @@ final class EmptyCamoClientHandler extends CamoClientHandler<EmptyCamoContent>
     private EmptyCamoClientHandler() { }
 
     @Override
-    public ChunkRenderTypeSet getRenderTypes(EmptyCamoContent camo, RandomSource random, ModelData data)
-    {
-        return ModelUtils.CUTOUT;
-    }
-
-    @Override
-    public BakedModel getOrCreateModel(EmptyCamoContent camo)
+    public BlockStateModel getOrCreateModel(EmptyCamoContent camo)
     {
         return Minecraft.getInstance().getBlockRenderer().getBlockModel(FramedBlocksAPI.INSTANCE.getDefaultModelState());
     }

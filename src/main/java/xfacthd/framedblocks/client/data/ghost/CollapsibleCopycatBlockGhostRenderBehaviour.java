@@ -4,10 +4,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.ghost.GhostRenderBehaviour;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.blockentity.PackedCollapsibleBlockOffsets;
 import xfacthd.framedblocks.common.blockentity.special.FramedCollapsibleCopycatBlockEntity;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.component.CollapsibleCopycatBlockData;
@@ -48,7 +49,8 @@ public final class CollapsibleCopycatBlockGhostRenderBehaviour implements GhostR
         CollapsibleCopycatBlockData blockData = stack.get(FBContent.DC_TYPE_COLLAPSIBLE_COPYCAT_BLOCK_DATA);
         if (blockData != null)
         {
-            return data.derive().with(FramedCollapsibleCopycatBlockEntity.OFFSETS, blockData.offsets()).build();
+            PackedCollapsibleBlockOffsets.Single offsets = new PackedCollapsibleBlockOffsets.Single(blockData.offsets());
+            return data.derive().with(PackedCollapsibleBlockOffsets.PROPERTY, offsets).build();
         }
         return data;
     }

@@ -1,15 +1,7 @@
 package xfacthd.framedblocks.client.screen;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -23,15 +15,11 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.RenderTypeHelper;
-import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.UnknownNullability;
 import org.joml.Matrix4f;
@@ -44,15 +32,16 @@ import xfacthd.framedblocks.common.net.payload.ServerboundSignUpdatePayload;
 import xfacthd.framedblocks.common.blockentity.special.FramedSignBlockEntity;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 public class FramedSignScreen extends Screen
 {
     private static final Component TITLE_NORMAL = Component.translatable("sign.edit");
     private static final Component TITLE_HANGING = Component.translatable("hanging_sign.edit");
-    private static final SignConfig CFG_STANDING = new SignConfig(90F, 56F, 95F, 0F, 1F);
-    private static final SignConfig CFG_WALL = new SignConfig(90F, 56F, 95F, 30F, 1F);
-    private static final SignConfig CFG_HANGING = new SignConfig(100F, 30F, 75F, 26F, 1F);
+    private static final SignConfig CFG_STANDING = new SignConfig(90F, 56F, 95F, -1F, 1F, 10);
+    private static final SignConfig CFG_WALL = new SignConfig(90F, 56F, 95F, 30F, 1F, 10);
+    private static final SignConfig CFG_HANGING = new SignConfig(100F, 30F, 75F, 27F, 1F, 9);
 
     private final AbstractFramedSignBlock signBlock;
     private final FramedSignBlockEntity sign;
@@ -213,30 +202,22 @@ public class FramedSignScreen extends Screen
         BlockRenderDispatcher renderer = minecraft.getBlockRenderer();
         graphics.drawSpecial(buffer ->
         {
-            PoseStack.Pose pose = poseStack.last();
-            BakedModel model = renderer.getBlockModel(state);
-            ModelData modelData = sign.getModelData();
-
             int color = minecraft.getBlockColors().getColor(state, minecraft.level, sign.getBlockPos(), 0);
             float red = ARGB.red(color) / 255F;
             float green = ARGB.green(color) / 255F;
             float blue = ARGB.blue(color) / 255F;
 
-            for (RenderType renderType : model.getRenderTypes(state, RandomSource.create(42), modelData))
-            {
-                VertexConsumer consumer = buffer.getBuffer(RenderTypeHelper.getEntityRenderType(renderType));
-                renderer.getModelRenderer().renderModel(
-                        pose,
-                        consumer,
-                        state,
-                        model,
-                        red, green, blue,
-                        LightTexture.FULL_BRIGHT,
-                        OverlayTexture.NO_OVERLAY,
-                        modelData,
-                        renderType
-                );
-            }
+            renderer.getModelRenderer().renderModel(
+                    poseStack.last(),
+                    buffer,
+                    renderer.getBlockModel(state),
+                    red, green, blue,
+                    LightTexture.FULL_BRIGHT,
+                    OverlayTexture.NO_OVERLAY,
+                    Objects.requireNonNull(sign.getLevel()),
+                    sign.getBlockPos(),
+                    state
+            );
 
         });
     }
@@ -255,16 +236,21 @@ public class FramedSignScreen extends Screen
     private void drawLines(Matrix4f matrix, MultiBufferSource.BufferSource buffer, String[] lines)
     {
         int color = text.hasGlowingText() ? text.getColor().getTextColor() : SignRenderer.getDarkColor(text);
+        int lineHeight = signConfig.lineHeight;
+        int centerY = 4 * lineHeight / 2;
 
         for (int line = 0; line < lines.length; line++)
         {
             String text = lines[line];
             if (text != null)
             {
-                if (font.isBidirectional()) { text = font.bidirectionalShaping(text); }
+                if (font.isBidirectional())
+                {
+                    text = font.bidirectionalShaping(text);
+                }
 
                 float textX = -font.width(text) / 2F;
-                font.drawInBatch(text, textX, line * 10 - 20, color, false, matrix, buffer, Font.DisplayMode.NORMAL, 0, 0xF000F0);
+                font.drawInBatch(text, textX, line * lineHeight - centerY, color, false, matrix, buffer, Font.DisplayMode.NORMAL, 0, 0xF000F0);
             }
         }
 
@@ -277,7 +263,9 @@ public class FramedSignScreen extends Screen
         int color = text.hasGlowingText() ? text.getColor().getTextColor() : SignRenderer.getDarkColor(text);
         boolean blink = blinkCounter / 6 % 2 == 0;
         int dir = font.isBidirectional() ? -1 : 1;
-        int y = currLine * 10 - 20;
+        int lineHeight = signConfig.lineHeight;
+        int centerY = 4 * lineHeight / 2;
+        int y = currLine * lineHeight - centerY;
 
         for (int i = 0; i < lines.length; ++i)
         {
@@ -292,7 +280,7 @@ public class FramedSignScreen extends Screen
                 {
                     if (inputUtil.getCursorPos() < line.length())
                     {
-                        graphics.fill(cursorX, y - 1, cursorX + 1, y + 9, 0xFF000000 | color);
+                        graphics.fill(cursorX, y - 1, cursorX + 1, y + lineHeight, 0xFF000000 | color);
                     }
                     else
                     {
@@ -304,25 +292,15 @@ public class FramedSignScreen extends Screen
                 if (inputUtil.getSelectionPos() != inputUtil.getCursorPos())
                 {
                     int x1 = (font.width(line.substring(0, inputUtil.getSelectionPos())) - hw) * dir;
-                    int x2 =   (font.width(line.substring(0, inputUtil.getCursorPos()  )) - hw) * dir;
+                    int x2 = (font.width(line.substring(0, inputUtil.getCursorPos()   )) - hw) * dir;
                     int xStart = Math.min(x1, x2);
                     int xEnd = Math.max(x1, x2);
 
-                    RenderSystem.enableColorLogicOp();
-                    RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-
-                    BufferBuilder tessBuffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-                    tessBuffer.addVertex(matrix, xStart, y + 9F, 0.0F).setColor(0, 0, 255, 255);
-                    tessBuffer.addVertex(matrix,   xEnd, y + 9F, 0.0F).setColor(0, 0, 255, 255);
-                    tessBuffer.addVertex(matrix,   xEnd, y - 1F, 0.0F).setColor(0, 0, 255, 255);
-                    tessBuffer.addVertex(matrix, xStart, y - 1F, 0.0F).setColor(0, 0, 255, 255);
-                    BufferUploader.drawWithShader(tessBuffer.buildOrThrow());
-
-                    RenderSystem.disableColorLogicOp();
+                    graphics.fill(RenderType.guiTextHighlight(), xStart, y, xEnd, y + lineHeight, 0xFF0000FF);
                 }
             }
         }
     }
 
-    private record SignConfig(float baseYOff, float addYOff, float signScale, float textYOff, float textScale) { }
+    private record SignConfig(float baseYOff, float addYOff, float signScale, float textYOff, float textScale, int lineHeight) { }
 }

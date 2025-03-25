@@ -28,10 +28,10 @@ public class FramedSlopeGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (type == SlopeType.HORIZONTAL)
         {
-            if (!ySlope && quad.getDirection() == dir.getOpposite())
+            if (!ySlope && quad.direction() == dir.getOpposite())
             {
                 QuadModifier.of(quad)
                         .apply(Modifiers.makeHorizontalSlope(false, 45))

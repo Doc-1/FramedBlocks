@@ -41,7 +41,7 @@ public class FramedCornerSlopeGeometry extends Geometry
     @SuppressWarnings("ConstantConditions")
     private void createHorizontalCornerSlope(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         boolean top = type.isTop();
         boolean right = type.isRight();
 
@@ -82,7 +82,7 @@ public class FramedCornerSlopeGeometry extends Geometry
 
     private void createVerticalCornerSlope(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         boolean yQuad = Utils.isY(quadDir);
         if (!ySlope && yQuad)
         {

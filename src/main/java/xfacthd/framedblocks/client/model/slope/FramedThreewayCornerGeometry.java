@@ -25,7 +25,7 @@ public class FramedThreewayCornerGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if ((quadDir == Direction.UP && top) || (quadDir == Direction.DOWN && !top))
         {
             QuadModifier.of(quad)

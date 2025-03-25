@@ -1,13 +1,10 @@
 package xfacthd.framedblocks.common.block.slopeslab;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -23,14 +20,10 @@ import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.block.FramedBlock;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
-
-import java.util.List;
+import xfacthd.framedblocks.common.item.block.FramedMirroringBlockItem;
 
 public class FramedSlopeSlabBlock extends FramedBlock
 {
-    public static final Component PLACE_UPSIDE_DOWN = Utils.translate("desc", "slope_slab.place_upside_down")
-            .withStyle(ChatFormatting.ITALIC);
-
     public FramedSlopeSlabBlock(Properties props)
     {
         super(BlockType.FRAMED_SLOPE_SLAB, props);
@@ -99,10 +92,9 @@ public class FramedSlopeSlabBlock extends FramedBlock
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext ctx, List<Component> lines, TooltipFlag flag)
+    public BlockItem createBlockItem(Item.Properties props)
     {
-        lines.add(PLACE_UPSIDE_DOWN);
-        super.appendHoverText(stack, ctx, lines, flag);
+        return new FramedMirroringBlockItem(this, props);
     }
 
     @Override

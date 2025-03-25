@@ -1,32 +1,33 @@
 package xfacthd.framedblocks.client.model.interactive;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
+import xfacthd.framedblocks.api.model.geometry.PartConsumer;
+import xfacthd.framedblocks.api.model.geometry.QuadListModifier;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
-import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.api.util.ClientUtils;
-import xfacthd.framedblocks.api.model.util.ModelUtils;
+import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.data.PropertyHolder;
-
-import java.util.List;
 
 public class FramedItemFrameGeometry extends Geometry
 {
     private static final int GLOWING_BRIGHTNESS = 5;
 
     private final BlockState state;
-    private final BakedModel baseModel;
+    private final BlockStateModel baseModel;
     private final Direction facing;
     private final boolean leather;
     private final boolean mapFrame;
@@ -37,6 +38,8 @@ public class FramedItemFrameGeometry extends Geometry
     private final float innerMax;
     private final float outerMin;
     private final float outerMax;
+    @Nullable
+    private final QuadListModifier leatherModifier;
 
     private FramedItemFrameGeometry(GeometryFactory.Context ctx, boolean glowing)
     {
@@ -53,12 +56,29 @@ public class FramedItemFrameGeometry extends Geometry
         this.innerMax = mapFrame ? 15F/16F : 13F/16F;
         this.outerMin = mapFrame ? 0F : 2F/16F;
         this.outerMax = mapFrame ? 1F : 14F/16F;
+        this.leatherModifier = leather ? makeLeatherModifier(glowing) : null;
+    }
+
+    private static QuadListModifier makeLeatherModifier(boolean glowing)
+    {
+        if (glowing)
+        {
+            return (quadMap, quads, side) ->
+            {
+                quads.removeIf(ClientUtils::isDummyTexture);
+                for (BakedQuad quad : quads)
+                {
+                    QuadModifier.of(quad).apply(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0)).modifyInPlace();
+                }
+            };
+        }
+        return QuadListModifier.filtering(ClientUtils::isDummyTexture);
     }
 
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadFace = quad.getDirection();
+        Direction quadFace = quad.direction();
         if (Utils.isY(facing))
         {
             makeVerticalFrame(quadMap, quad, quadFace);
@@ -246,34 +266,11 @@ public class FramedItemFrameGeometry extends Geometry
     }
 
     @Override
-    public ChunkRenderTypeSet getAdditionalRenderTypes(RandomSource rand, ModelData extraData)
+    public void collectAdditionalPartsCached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data, QuadCacheKey cacheKey)
     {
         if (leather)
         {
-            return ModelUtils.SOLID;
-        }
-        return ChunkRenderTypeSet.none();
-    }
-
-    @Override
-    public void getAdditionalQuads(QuadMap quadMap, RandomSource rand, ModelData data, RenderType renderType)
-    {
-        if (leather)
-        {
-            List<BakedQuad> quads = baseModel.getQuads(state, null, rand, data, renderType);
-            for (BakedQuad quad : quads)
-            {
-                if (!ClientUtils.isDummyTexture(quad))
-                {
-                    if (glowing)
-                    {
-                        QuadModifier.of(quad)
-                                .apply(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0))
-                                .modifyInPlace();
-                    }
-                    quadMap.get(null).add(quad);
-                }
-            }
+            consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, null, leatherModifier);
         }
     }
 

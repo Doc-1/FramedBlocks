@@ -2,6 +2,7 @@ package xfacthd.framedblocks.common.blockentity.special;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -90,7 +91,14 @@ public class FramedTankBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    protected void applyMiscComponents(DataComponentInput input)
+    public void removeComponentsFromTag(CompoundTag tag)
+    {
+        super.removeComponentsFromTag(tag);
+        tag.remove(TankFluidHandler.FLUID_NBT_KEY);
+    }
+
+    @Override
+    protected void applyMiscComponents(DataComponentGetter input)
     {
         FluidStack contents = input.getOrDefault(FBContent.DC_TYPE_TANK_CONTENTS, SimpleFluidContent.EMPTY).copy();
         if (!contents.isEmpty())

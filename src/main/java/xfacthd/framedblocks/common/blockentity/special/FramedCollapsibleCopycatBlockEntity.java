@@ -3,6 +3,7 @@ package xfacthd.framedblocks.common.blockentity.special;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
@@ -10,11 +11,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.model.data.ModelData;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.blockentity.PackedCollapsibleBlockOffsets;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.component.CollapsibleCopycatBlockData;
 
@@ -25,7 +26,6 @@ public class FramedCollapsibleCopycatBlockEntity extends FramedBlockEntity imple
     private static final Direction[] DIRECTIONS = Direction.values();
     private static final Direction[] HORIZONTAL_DIRECTIONS = Direction.Plane.HORIZONTAL.stream().toArray(Direction[]::new);
     private static final int MAX_OFFSET_BEACON_OCCLUSION = 5;
-    public static final ModelProperty<Integer> OFFSETS = new ModelProperty<>();
 
     private int packedOffsets = 0;
     private boolean occludesBeacon = true;
@@ -125,7 +125,8 @@ public class FramedCollapsibleCopycatBlockEntity extends FramedBlockEntity imple
     @Override
     protected void attachAdditionalModelData(ModelData.Builder builder)
     {
-        builder.with(OFFSETS, getPackedOffsets(getBlockState()));
+        int offsets = getPackedOffsets(getBlockState());
+        builder.with(PackedCollapsibleBlockOffsets.PROPERTY, new PackedCollapsibleBlockOffsets.Single(offsets));
     }
 
     @Override
@@ -141,7 +142,7 @@ public class FramedCollapsibleCopycatBlockEntity extends FramedBlockEntity imple
     {
         boolean needUpdate = super.readFromDataPacket(nbt, lookupProvider);
 
-        int packed = nbt.getInt("offsets");
+        int packed = nbt.getIntOr("offsets", 0);
         if (packed != packedOffsets)
         {
             packedOffsets = packed;
@@ -150,7 +151,7 @@ public class FramedCollapsibleCopycatBlockEntity extends FramedBlockEntity imple
             updateCulling(true, false);
         }
 
-        occludesBeacon = nbt.getBoolean("occludesBeacon");
+        occludesBeacon = nbt.getBooleanOr("occludesBeacon", true);
 
         return needUpdate;
     }
@@ -167,8 +168,8 @@ public class FramedCollapsibleCopycatBlockEntity extends FramedBlockEntity imple
     @Override
     public void handleUpdateTag(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        packedOffsets = nbt.getInt("offsets");
-        occludesBeacon = nbt.getBoolean("occludesBeacon");
+        packedOffsets = nbt.getIntOr("offsets", 0);
+        occludesBeacon = nbt.getBooleanOr("occludesBeacon", true);
 
         super.handleUpdateTag(nbt, provider);
     }
@@ -189,13 +190,20 @@ public class FramedCollapsibleCopycatBlockEntity extends FramedBlockEntity imple
     }
 
     @Override
+    public void removeComponentsFromTag(CompoundTag tag)
+    {
+        super.removeComponentsFromTag(tag);
+        tag.remove("offsets");
+    }
+
+    @Override
     protected void collectMiscComponents(DataComponentMap.Builder builder)
     {
         builder.set(FBContent.DC_TYPE_COLLAPSIBLE_COPYCAT_BLOCK_DATA, new CollapsibleCopycatBlockData(packedOffsets));
     }
 
     @Override
-    protected void applyMiscComponents(DataComponentInput input)
+    protected void applyMiscComponents(DataComponentGetter input)
     {
         CollapsibleCopycatBlockData blockData = input.get(FBContent.DC_TYPE_COLLAPSIBLE_COPYCAT_BLOCK_DATA);
         if (blockData != null)
@@ -217,7 +225,7 @@ public class FramedCollapsibleCopycatBlockEntity extends FramedBlockEntity imple
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
         super.loadAdditional(nbt, provider);
-        packedOffsets = nbt.getInt("offsets");
+        packedOffsets = nbt.getIntOr("offsets", 0);
         updateBeaconOcclusion();
     }
 

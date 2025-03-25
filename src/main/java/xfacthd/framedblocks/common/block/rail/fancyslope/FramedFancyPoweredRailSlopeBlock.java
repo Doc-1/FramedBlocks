@@ -6,11 +6,9 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.RailShape;
-import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.block.FramedProperties;
-import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
@@ -26,7 +24,6 @@ import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.data.property.SlopeType;
 import xfacthd.framedblocks.common.util.FramedUtils;
 
-import java.util.Objects;
 import java.util.function.BiFunction;
 
 public class FramedFancyPoweredRailSlopeBlock extends FramedPoweredRailSlopeBlock implements IFramedDoubleBlock, ISlopeBlock.IRailSlopeBlock
@@ -60,12 +57,6 @@ public class FramedFancyPoweredRailSlopeBlock extends FramedPoweredRailSlopeBloc
             return slopeState;
         }
         return null;
-    }
-
-    @Override
-    public ModelData unpackNestedModelData(ModelData data, BlockState state, BlockState componentState)
-    {
-        return Objects.requireNonNullElse(data.get(IFramedDoubleBlockEntity.DATA_ONE), ModelData.EMPTY);
     }
 
     @Override

@@ -29,7 +29,7 @@ public class FramedTrapDoorGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         if (open)
         {
             if (quadDir == dir)
@@ -53,13 +53,13 @@ public class FramedTrapDoorGeometry extends Geometry
         }
         else
         {
-            if ((top && quad.getDirection() == Direction.DOWN) || (!top && quad.getDirection() == Direction.UP))
+            if ((top && quad.direction() == Direction.DOWN) || (!top && quad.direction() == Direction.UP))
             {
                 QuadModifier.of(quad)
                         .apply(Modifiers.setPosition(DEPTH))
                         .export(quadMap.get(null));
             }
-            else if (!Utils.isY(quad.getDirection()))
+            else if (!Utils.isY(quad.direction()))
             {
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutSideUpDown(top, DEPTH))

@@ -1,29 +1,32 @@
 package xfacthd.framedblocks.client.model.interactive;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
+import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
-import xfacthd.framedblocks.api.model.util.ModelUtils;
+import xfacthd.framedblocks.api.model.geometry.PartConsumer;
+import xfacthd.framedblocks.api.model.geometry.QuadListModifier;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
-import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.api.util.ClientUtils;
-
-import java.util.List;
+import xfacthd.framedblocks.api.util.Utils;
 
 public class FramedLeverGeometry extends Geometry
 {
+    private static final QuadListModifier HANDLE_FILTER = QuadListModifier.filtering(ClientUtils::isDummyTexture);
+    private static final BlockState AUX_SHADER_STATE = Blocks.LEVER.defaultBlockState();
+
     private static final float MIN_SMALL = 5F/16F;
     private static final float MAX_SMALL = 11F/16F;
     private static final float MIN_LARGE = 4F/16F;
@@ -31,7 +34,7 @@ public class FramedLeverGeometry extends Geometry
     private static final float HEIGHT = 3F/16F;
 
     private final BlockState state;
-    private final BakedModel baseModel;
+    private final BlockStateModel baseModel;
     private final Direction dir;
     private final AttachFace face;
 
@@ -44,28 +47,15 @@ public class FramedLeverGeometry extends Geometry
     }
 
     @Override
-    public ChunkRenderTypeSet getAdditionalRenderTypes(RandomSource rand, ModelData extraData)
+    public void collectAdditionalPartsCached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data, QuadCacheKey cacheKey)
     {
-        return ModelUtils.getRenderTypes(Blocks.LEVER.defaultBlockState(), rand, extraData);
-    }
-
-    @Override
-    public void getAdditionalQuads(QuadMap quadMap, RandomSource rand, ModelData data, RenderType renderType)
-    {
-        List<BakedQuad> quads = baseModel.getQuads(state, null, rand, data, renderType);
-        for (BakedQuad quad : quads)
-        {
-            if (!ClientUtils.isDummyTexture(quad))
-            {
-                quadMap.get(null).add(quad);
-            }
-        }
+        consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, AUX_SHADER_STATE, HANDLE_FILTER);
     }
 
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction quadDir = quad.getDirection();
+        Direction quadDir = quad.direction();
         Direction facing = getFacing();
         boolean quadInDir = quadDir == facing;
 

@@ -1,17 +1,21 @@
 package xfacthd.framedblocks.api.datagen.models;
 
 import com.google.common.base.Preconditions;
+import com.mojang.math.Quadrant;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
+import net.minecraft.client.data.models.MultiVariant;
+import net.minecraft.client.data.models.blockstates.ConditionBuilder;
 import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
-import net.minecraft.client.data.models.blockstates.Variant;
-import net.minecraft.client.data.models.blockstates.VariantProperties;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.client.renderer.block.model.multipart.CombinedCondition;
+import net.minecraft.client.renderer.block.model.multipart.Condition;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
@@ -23,35 +27,40 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.client.model.generators.template.ExtendedModelTemplateBuilder;
 import net.neoforged.neoforge.common.util.TransformationHelper;
-import xfacthd.framedblocks.api.block.IFramedBlock;
-import xfacthd.framedblocks.api.internal.InternalClientAPI;
-import xfacthd.framedblocks.api.model.item.DynamicItemTintProvider;
-import xfacthd.framedblocks.api.model.item.FramedBlockItemTintProvider;
+import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 @SuppressWarnings("SameParameterValue")
 public abstract class AbstractFramedBlockModelProvider extends ModelProvider
 {
+    protected static final ResourceLocation FRAMED_CUBE_MODEL = ModelLocationUtils.getModelLocation(Utils.FRAMED_CUBE.value());
     protected static final TextureSlot SLOT_FRAME = TextureSlot.create("frame");
     protected static final TextureSlot SLOT_UNDERLAY = TextureSlot.create("underlay");
+    protected static final PropertyDispatch<VariantMutator> ROTATION_FACING_ALT = PropertyDispatch.modify(BlockStateProperties.FACING)
+            .select(Direction.DOWN, BlockModelGenerators.X_ROT_270)
+            .select(Direction.UP, BlockModelGenerators.X_ROT_90)
+            .select(Direction.NORTH, BlockModelGenerators.Y_ROT_180)
+            .select(Direction.SOUTH, BlockModelGenerators.NOP)
+            .select(Direction.WEST, BlockModelGenerators.Y_ROT_90)
+            .select(Direction.EAST, BlockModelGenerators.Y_ROT_270);
 
     protected AbstractFramedBlockModelProvider(PackOutput output, String modId)
     {
         super(output, modId);
     }
 
-    protected static MultiVariantGenerator variant(BlockModelGenerators blockModels, Holder<Block> block)
+    protected static void variant(BlockModelGenerators blockModels, Holder<Block> block, Function<MultiVariantGenerator.Empty, MultiVariantGenerator> generator)
     {
-        return variant(blockModels, block, Variant.variant());
+        blockModels.blockStateOutput.accept(generator.apply(MultiVariantGenerator.dispatch(block.value())));
     }
 
-    protected static MultiVariantGenerator variant(BlockModelGenerators blockModels, Holder<Block> block, Variant... baseVariants)
+    protected static void variant(BlockModelGenerators blockModels, Holder<Block> block, MultiVariant baseVariant, UnaryOperator<MultiVariantGenerator> generator)
     {
-        MultiVariantGenerator generator = MultiVariantGenerator.multiVariant(block.value(), baseVariants);
-        blockModels.blockStateOutput.accept(generator);
-        return generator;
+        blockModels.blockStateOutput.accept(generator.apply(MultiVariantGenerator.dispatch(block.value(), baseVariant)));
     }
 
     protected static MultiPartGenerator multiPart(BlockModelGenerators blockModels, Holder<Block> block)
@@ -68,7 +77,7 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
 
     protected static void simpleBlock(BlockModelGenerators blockModels, Holder<Block> block, ResourceLocation model)
     {
-        blockModels.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block.value(), model));
+        blockModels.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block.value(), BlockModelGenerators.plainVariant(model)));
     }
 
     protected static void simpleBlockWithItem(BlockModelGenerators blockModels, Holder<Block> block, ResourceLocation model)
@@ -77,10 +86,10 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
         framedBlockItemModel(blockModels, block);
     }
 
-    protected static void simpleBlockWithItem(BlockModelGenerators blockModels, Holder<Block> block, ResourceLocation model, DynamicItemTintProvider tintProvider)
+    protected static void simpleBlockWithItem(BlockModelGenerators blockModels, Holder<Block> block, ResourceLocation model, Consumer<FramedItemModelBuilder> builderConsumer)
     {
         simpleBlock(blockModels, block, model);
-        framedBlockItemModel(blockModels, block, tintProvider);
+        framedBlockItemModel(blockModels, block, builderConsumer);
     }
 
     protected static void blockFromTemplate(BlockModelGenerators blockModels, Holder<Block> block, ModelTemplate template, TextureMapping textures)
@@ -96,26 +105,22 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
 
     protected static void framedBlockItemModel(BlockModelGenerators blockModels, Holder<Block> block)
     {
-        if (!(block.value() instanceof IFramedBlock framedBlock))
-        {
-            throw new IllegalArgumentException("Expected IFramedBlock, got " + block.value());
-        }
-        framedBlockItemModel(blockModels, block, FramedBlockItemTintProvider.of(framedBlock));
+        framedBlockItemModel(blockModels, block, builder -> { });
     }
 
-    protected static void framedBlockItemModel(BlockModelGenerators blockModels, Holder<Block> block, DynamicItemTintProvider tintProvider)
+    protected static void framedBlockItemModel(BlockModelGenerators blockModels, Holder<Block> block, Consumer<FramedItemModelBuilder> builderConsumer)
     {
-        if (!(block.value() instanceof IFramedBlock framedBlock))
-        {
-            throw new IllegalArgumentException("Expected IFramedBlock, got " + block.value());
-        }
-        if (framedBlock.getItemModelSource() == null)
-        {
-            throw new IllegalArgumentException("IFramed Block " + block.value() + " does not provide an item model source state");
-        }
         Item item = block.value().asItem();
         Preconditions.checkArgument(item != Items.AIR, "Cannot generate item model for block %s without item", block.value());
-        blockModels.itemModelOutput.accept(item, InternalClientAPI.INSTANCE.createFramedBlockItemModel(block.value(), tintProvider));
+
+        FramedItemModelBuilder builder = new FramedItemModelBuilder(block);
+        builderConsumer.accept(builder);
+        blockModels.itemModelOutput.accept(item, builder.build());
+    }
+
+    protected static FramedItemModelBuilder nestedFramedBlockItemModel(Holder<Block> block)
+    {
+        return new FramedItemModelBuilder(block);
     }
 
     protected static void blockItemFromTemplate(BlockModelGenerators blockModels, Holder<Block> block, ModelTemplate template, TextureMapping textures)
@@ -176,43 +181,32 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
         builder.build().create(name, TextureMapping.singleSlot(TextureSlot.ALL, texture), blockModels.modelOutput);
     }
 
-    protected static Variant rotationToVariant(int rotation)
+    protected static VariantMutator rotationToVariant(int rotation)
     {
         return horDirToVariant(Direction.from2DDataValue(rotation / 4));
     }
 
-    protected static Variant horDirToVariant(Direction dir)
+    protected static VariantMutator horDirToVariant(Direction dir)
     {
-        VariantProperties.Rotation rotValue = switch (dir)
+        Quadrant rotValue = switch (dir)
         {
-            case NORTH -> VariantProperties.Rotation.R180;
-            case SOUTH -> VariantProperties.Rotation.R0;
-            case WEST -> VariantProperties.Rotation.R90;
-            case EAST -> VariantProperties.Rotation.R270;
+            case NORTH -> Quadrant.R180;
+            case SOUTH -> Quadrant.R0;
+            case WEST -> Quadrant.R90;
+            case EAST -> Quadrant.R270;
             default -> throw new IllegalArgumentException("Invalid direction for Y rotation: " + dir);
         };
-        Variant variant = Variant.variant();
-        if (rotValue != VariantProperties.Rotation.R0)
-        {
-            variant.with(VariantProperties.Y_ROT, rotValue);
-        }
-        return variant;
+        return VariantMutator.Y_ROT.withValue(rotValue);
     }
 
-    protected static VariantProperties.Rotation rotByIdx(int idx)
+    protected static Quadrant rotByIdx(int idx)
     {
-        return VariantProperties.Rotation.values()[idx];
+        return Quadrant.values()[idx];
     }
 
-    protected static PropertyDispatch createFacingDispatchAlt()
+    protected static Condition and(ConditionBuilder... conditions)
     {
-        return PropertyDispatch.property(BlockStateProperties.FACING)
-                .select(Direction.DOWN, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R270))
-                .select(Direction.UP, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90))
-                .select(Direction.NORTH, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180))
-                .select(Direction.SOUTH, Variant.variant())
-                .select(Direction.WEST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
-                .select(Direction.EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270));
+        return new CombinedCondition(CombinedCondition.Operation.AND, Stream.of(conditions).map(ConditionBuilder::build).toList());
     }
 
     @Override

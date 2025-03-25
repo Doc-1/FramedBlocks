@@ -1,9 +1,8 @@
 package xfacthd.framedblocks.client.modelwrapping;
 
 import com.google.common.base.Stopwatch;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -28,22 +27,20 @@ public final class ModelWrappingManager
     {
         Stopwatch stopwatch = Stopwatch.createStarted();
 
-        Map<ModelResourceLocation, BakedModel> models = bakingResult.blockStateModels();
+        Map<BlockState, BlockStateModel> models = bakingResult.blockStateModels();
         ModelLookup accessor = ModelLookup.bind(bakingResult);
         ModelCounter counter = new ModelCounter();
 
         for (Map.Entry<ResourceKey<Block>, ModelWrappingHandler> entry : HANDLERS.entrySet())
         {
-            ResourceLocation blockId = entry.getKey().location();
             ModelWrappingHandler handler = entry.getValue();
             Block block = handler.getBlock();
 
             for (BlockState state : block.getStateDefinition().getPossibleStates())
             {
-                ModelResourceLocation location = StateLocationCache.getLocationFromState(state, blockId);
-                BakedModel baseModel = models.get(location);
-                BakedModel replacement = handler.wrapBlockModel(baseModel, state, accessor, textureLookup, counter);
-                models.put(location, replacement);
+                BlockStateModel baseModel = models.get(state);
+                BlockStateModel replacement = handler.wrapBlockModel(baseModel, state, accessor, textureLookup, counter);
+                models.put(state, replacement);
             }
         }
 
@@ -54,7 +51,7 @@ public final class ModelWrappingManager
         );
     }
 
-    public static BakedModel handle(ModelResourceLocation id, BakedModel model, ModelLookup modelLookup, TextureLookup textureLookup)
+    /*public static BlockStateModel handle(ModelResourceLocation id, BlockStateModel model, ModelLookup modelLookup, TextureLookup textureLookup)
     {
         ResourceKey<Block> blockId = ResourceKey.create(Registries.BLOCK, id.id());
         ModelWrappingHandler handler = HANDLERS.get(blockId);
@@ -70,7 +67,7 @@ public final class ModelWrappingManager
             return handler.wrapBlockModel(model, state, modelLookup, textureLookup, null);
         }
         return model;
-    }
+    }*/
 
     public static void fireRegistration()
     {

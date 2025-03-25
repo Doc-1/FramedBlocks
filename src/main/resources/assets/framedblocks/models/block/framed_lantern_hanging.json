@@ -1,6 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
+	"render_type": "minecraft:cutout",
 	"textures": {
 		"lantern": "block/lantern",
 		"particle": "#lantern"

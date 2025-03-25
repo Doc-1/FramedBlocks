@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.*;
@@ -215,13 +216,13 @@ public class FramedItemFrameBlockEntity extends FramedBlockEntity
 
     private void readFromNetwork(CompoundTag tag, HolderLookup.Provider provider)
     {
-        heldItem = ItemStack.parseOptional(provider, tag.getCompound(ITEM_NBT_KEY));
-        rotation = tag.getByte("rotation");
+        heldItem = tag.read(ITEM_NBT_KEY, ItemStack.OPTIONAL_CODEC, provider.createSerializationContext(NbtOps.INSTANCE)).orElse(ItemStack.EMPTY);
+        rotation = tag.getByteOr("rotation", (byte) 0);
     }
 
     private void writeToNetwork(CompoundTag tag, HolderLookup.Provider provider)
     {
-        tag.put(ITEM_NBT_KEY, heldItem.saveOptional(provider));
+        tag.store(ITEM_NBT_KEY, ItemStack.OPTIONAL_CODEC, provider.createSerializationContext(NbtOps.INSTANCE), heldItem);
         tag.putByte("rotation", (byte) rotation);
     }
 
@@ -261,9 +262,9 @@ public class FramedItemFrameBlockEntity extends FramedBlockEntity
     {
         super.loadAdditional(tag, provider);
 
-        heldItem = ItemStack.parseOptional(provider, tag.getCompound(ITEM_NBT_KEY));
-        rotation = tag.getByte("rotation");
-        mapTickOffset = tag.getInt("map_tick_offset");
+        heldItem = tag.read(ITEM_NBT_KEY, ItemStack.OPTIONAL_CODEC, provider.createSerializationContext(NbtOps.INSTANCE)).orElse(ItemStack.EMPTY);
+        rotation = tag.getByteOr("rotation", (byte) 0);
+        mapTickOffset = tag.getIntOr("map_tick_offset", 0);
     }
 
     @Override
@@ -271,7 +272,7 @@ public class FramedItemFrameBlockEntity extends FramedBlockEntity
     {
         super.saveAdditional(tag, provider);
 
-        tag.put(ITEM_NBT_KEY, heldItem.saveOptional(provider));
+        tag.store(ITEM_NBT_KEY, ItemStack.OPTIONAL_CODEC, provider.createSerializationContext(NbtOps.INSTANCE), heldItem);
         tag.putByte("rotation", (byte) rotation);
         tag.putInt("map_tick_offset", mapTickOffset);
     }

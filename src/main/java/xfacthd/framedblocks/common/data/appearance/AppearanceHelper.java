@@ -6,13 +6,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 import org.slf4j.Logger;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.cache.StateCache;
+import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.predicate.contex.ConTexMode;
 import xfacthd.framedblocks.api.type.IBlockType;
@@ -99,7 +100,7 @@ public final class AppearanceHelper
                         return AIR;
                     }
 
-                    FramedBlockData modelData = getModelData(level, pos, componentState, false);
+                    FramedBlockData modelData = getModelData(level, pos, componentState);
                     return modelData != null ? modelData.getCamoContent().getAppearanceState() : AIR;
                 }
 
@@ -118,7 +119,7 @@ public final class AppearanceHelper
             return AIR;
         }
 
-        FramedBlockData modelData = getModelData(level, pos, state, true);
+        FramedBlockData modelData = getModelData(level, pos, state);
         if (modelData == null)
         {
             // If the model data is inaccessible then there's no camo, so there's no point in continuing
@@ -320,7 +321,7 @@ public final class AppearanceHelper
     }
 
     @Nullable
-    private static FramedBlockData getModelData(BlockGetter level, BlockPos pos, BlockState componentState, boolean mayBeSingle)
+    private static FramedBlockData getModelData(BlockGetter level, BlockPos pos, BlockState componentState)
     {
         ModelData data = level.getModelData(pos);
         if (data == ModelData.EMPTY)
@@ -328,21 +329,8 @@ public final class AppearanceHelper
             return null;
         }
 
-        if (mayBeSingle)
-        {
-            FramedBlockData fbData = data.get(FramedBlockData.PROPERTY);
-            if (fbData != null)
-            {
-                return fbData;
-            }
-        }
-
-        BlockState state = level.getBlockState(pos);
-        if (state.getBlock() instanceof IFramedBlock block)
-        {
-            return block.unpackNestedModelData(data, state, componentState).get(FramedBlockData.PROPERTY);
-        }
-        return null;
+        AbstractFramedBlockData fbData = data.get(AbstractFramedBlockData.PROPERTY);
+        return fbData != null ? fbData.unwrap(componentState) : null;
     }
 
 

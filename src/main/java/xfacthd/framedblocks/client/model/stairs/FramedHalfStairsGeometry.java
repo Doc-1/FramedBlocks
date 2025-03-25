@@ -27,7 +27,7 @@ public class FramedHalfStairsGeometry extends Geometry
     @Override
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
-        Direction face = quad.getDirection();
+        Direction face = quad.direction();
         Direction vertCut = right ? dir.getCounterClockWise() : dir.getClockWise();
 
         if (face == dir)
