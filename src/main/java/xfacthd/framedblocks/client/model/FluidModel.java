@@ -96,7 +96,13 @@ public final class FluidModel
                 "side", new Material(BLOCK_ATLAS, flowingTexture),
                 "particle", new Material(BLOCK_ATLAS, stillTexture)
         ));
-        QuadCollection fluidQuads = bareModel.bakeTopGeometry(textures, baker, BlockModelRotation.X0_Y0);
+        QuadCollection fluidQuads = bareModel.getTopGeometry().bake(
+                textures,
+                baker,
+                BlockModelRotation.X0_Y0,
+                bareModel,
+                bareModel.getTopAdditionalProperties()
+        );
         Preconditions.checkNotNull(fluidQuads, "Failed to bake fluid model for fluid %s", fluid);
         RenderType layer = ItemBlockRenderTypes.getRenderLayer(fluid.defaultFluidState());
 

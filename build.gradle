@@ -207,7 +207,7 @@ dependencies {
 
     compileOnly("snownee.jade:Jade-NeoForge:${jade_mc_version}-${jade_version}")
 
-    compileOnly("curse.maven:atlasviewer-633577:${atlasviewer_coord}")
+    implementation("curse.maven:atlasviewer-633577:${atlasviewer_coord}")
 
     compileOnly("com.blamejared.searchables:Searchables-neoforge-${searchables_mc_version}:${searchables_version}")
 }

@@ -47,7 +47,6 @@ public record FramedBlockModelPart(
         return renderType;
     }
 
-    // TODO: validate that this works as expected
     @Nullable
     @Override
     public BlockState getBlockAppearance()
