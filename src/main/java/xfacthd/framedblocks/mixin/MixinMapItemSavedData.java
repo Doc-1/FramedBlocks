@@ -1,8 +1,6 @@
 package xfacthd.framedblocks.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -17,15 +15,12 @@ import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm.Opcodes;
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xfacthd.framedblocks.FramedBlocks;
 import xfacthd.framedblocks.common.FBContent;
@@ -36,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-@Debug(export = true)
 @Mixin(MapItemSavedData.class)
 @SuppressWarnings("MethodMayBeStatic")
 public abstract class MixinMapItemSavedData implements FramedMap.MarkerRemover
@@ -76,23 +70,21 @@ public abstract class MixinMapItemSavedData implements FramedMap.MarkerRemover
         }
     }
 
-    @WrapOperation(
+    @ModifyExpressionValue(
             method = "<clinit>",
-            at = @At(value = "FIELD", opcode = Opcodes.PUTSTATIC),
-            slice = @Slice(from = @At(
+            at = @At(
                     value = "INVOKE",
                     target = "Lcom/mojang/serialization/codecs/RecordCodecBuilder;create(Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;"
-            ))
+            )
     )
-    private static void framedblocks$wrapCodec(Codec<MapItemSavedData> originalCodec, Operation<Void> operation)
+    private static Codec<MapItemSavedData> framedblocks$wrapCodec(Codec<MapItemSavedData> originalCodec)
     {
         if (originalCodec instanceof MapCodec.MapCodecCodec<MapItemSavedData>(MapCodec<MapItemSavedData> codec))
         {
-            Codec<MapItemSavedData> newCodec = RecordCodecBuilder.create(inst -> inst.group(
+            return RecordCodecBuilder.create(inst -> inst.group(
                     codec.forGetter(Function.identity()),
                     FramedMap.CODEC.listOf().optionalFieldOf("framedblocks:frames", List.of()).forGetter(MixinMapItemSavedData::framedblocks$getFramedMaps)
             ).apply(inst, MixinMapItemSavedData::framedblocks$applyFramedMaps));
-            operation.call(newCodec);
         }
         else
         {
@@ -101,7 +93,7 @@ public abstract class MixinMapItemSavedData implements FramedMap.MarkerRemover
             {
                 throw new RuntimeException("Failed to wrap MapItemSavedData.CODEC");
             }
-            operation.call(originalCodec);
+            return originalCodec;
         }
     }
 
