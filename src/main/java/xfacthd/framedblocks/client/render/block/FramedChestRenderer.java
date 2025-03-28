@@ -26,7 +26,7 @@ import xfacthd.framedblocks.api.model.wrapping.TextureLookup;
 import xfacthd.framedblocks.api.render.RenderUtils;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.model.FramedBlockModel;
-import xfacthd.framedblocks.client.model.cube.FramedChestLidGeometry;
+import xfacthd.framedblocks.client.model.geometry.cube.FramedChestLidGeometry;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.cube.FramedChestBlock;
 import xfacthd.framedblocks.common.blockentity.special.FramedChestBlockEntity;

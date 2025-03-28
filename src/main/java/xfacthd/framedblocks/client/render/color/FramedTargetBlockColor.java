@@ -5,7 +5,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.render.FramedBlockColor;
-import xfacthd.framedblocks.client.model.cube.FramedTargetGeometry;
+import xfacthd.framedblocks.client.model.geometry.cube.FramedTargetGeometry;
 import xfacthd.framedblocks.common.blockentity.special.FramedTargetBlockEntity;
 
 public final class FramedTargetBlockColor extends FramedBlockColor

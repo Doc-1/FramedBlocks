@@ -1,0 +1,36 @@
+package xfacthd.framedblocks.client.model.geometry.slab;
+
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.model.data.ModelData;
+import xfacthd.framedblocks.client.model.DoubleBlockItemModelInfo;
+import xfacthd.framedblocks.common.blockentity.PackedCollapsibleBlockOffsets;
+import xfacthd.framedblocks.common.blockentity.doubled.slab.FramedAdjustableDoubleBlockEntity;
+
+public final class AdjustableDoubleBlockItemModelInfo extends DoubleBlockItemModelInfo
+{
+    public static final AdjustableDoubleBlockItemModelInfo STANDARD = new AdjustableDoubleBlockItemModelInfo(
+            FramedAdjustableDoubleBlockEntity::getPackedOffsetsStandard
+    );
+    public static final AdjustableDoubleBlockItemModelInfo COPYCAT = new AdjustableDoubleBlockItemModelInfo(
+            FramedAdjustableDoubleBlockEntity::getPackedOffsetsCopycat
+    );
+
+    private final FramedAdjustableDoubleBlockEntity.OffsetPacker offsetPacker;
+
+    private AdjustableDoubleBlockItemModelInfo(FramedAdjustableDoubleBlockEntity.OffsetPacker offsetPacker)
+    {
+        this.offsetPacker = offsetPacker;
+    }
+
+    @Override
+    public boolean isDataRequired()
+    {
+        return true;
+    }
+
+    @Override
+    protected void appendItemModelData(ModelData.Builder builder, BlockState state)
+    {
+        builder.with(PackedCollapsibleBlockOffsets.PROPERTY, offsetPacker.packDouble(state, FramedAdjustableDoubleBlockEntity.CENTER_PART_HEIGHT));
+    }
+}

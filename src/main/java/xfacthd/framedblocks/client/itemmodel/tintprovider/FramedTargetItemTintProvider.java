@@ -4,7 +4,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import xfacthd.framedblocks.api.model.item.FramedBlockItemTintProvider;
 import xfacthd.framedblocks.api.util.CamoList;
-import xfacthd.framedblocks.client.model.cube.FramedTargetGeometry;
+import xfacthd.framedblocks.client.model.geometry.cube.FramedTargetGeometry;
 
 public final class FramedTargetItemTintProvider extends FramedBlockItemTintProvider
 {
