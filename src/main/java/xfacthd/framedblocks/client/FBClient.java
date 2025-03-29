@@ -21,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.render.FramedBlockColor;
 import xfacthd.framedblocks.api.block.render.FramedBlockRenderProperties;
-import xfacthd.framedblocks.api.model.ErrorModel;
 import xfacthd.framedblocks.api.model.item.FramedBlockItemTintProvider;
 import xfacthd.framedblocks.api.model.item.RegisterItemTintProvidersEvent;
 import xfacthd.framedblocks.api.model.util.StandaloneModels;
@@ -464,7 +463,6 @@ public final class FBClient
         event.register(FluidModel.BARE_MODEL_KEY, FluidModel.DUMMY_STANDALONE_BAKER);
         event.register(FluidModel.BARE_MODEL_SINGLE_KEY, FluidModel.DUMMY_STANDALONE_BAKER);
         event.register(ReinforcementModel.MODEL_KEY, StandaloneModels.QUAD_COLLECTION_STANDALONE_BAKER);
-        event.register(ErrorModel.MODEL_KEY, ErrorModel.MODEL_BAKER);
     }
 
     private static void onModelsLoaded(final ModelEvent.BakingCompleted event)
@@ -472,7 +470,6 @@ public final class FBClient
         FluidCamoClientHandler.clearModelCache();
         FramedChestRenderer.onModelsLoaded(event.getBakingResult());
         ReinforcementModel.reload(event.getBakingResult().standaloneModels());
-        ErrorModel.reload(event.getBakingResult().standaloneModels());
 
         ModelWrappingManager.printWrappingInfo(event.getBakingResult().blockStateModels());
     }

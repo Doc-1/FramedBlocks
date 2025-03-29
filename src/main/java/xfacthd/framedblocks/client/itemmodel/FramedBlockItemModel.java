@@ -17,11 +17,15 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
 import net.minecraft.client.renderer.item.BlockModelWrapper;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.client.resources.model.BlockModelRotation;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.ResolvedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -40,7 +44,6 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.model.AbstractFramedBlockModel;
-import xfacthd.framedblocks.api.model.ErrorModel;
 import xfacthd.framedblocks.api.model.ModelPartCollectionFakeLevel;
 import xfacthd.framedblocks.api.model.item.AbstractFramedBlockItemModel;
 import xfacthd.framedblocks.api.model.item.ItemModelInfo;
@@ -62,20 +65,23 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
 {
     private static final RandomSource RANDOM = RandomSource.create();
     private static final Direction[] DIRECTIONS = Arrays.copyOf(Direction.values(), 7);
+    private static final ResourceLocation ERROR_MODEL_LOCATION = Utils.rl("item/error");
 
     private final Map<CamoList, ModelSet> itemModelCache = new Object2ObjectOpenHashMap<>();
     private final BlockState state;
     private final Supplier<BlockStateModel> modelSupplier;
     private final DynamicItemTintProvider tintProvider;
     private final ItemTransforms itemTransforms;
+    private final ItemModel errorModel;
     private final Supplier<Vector3f[]> extents;
 
-    private FramedBlockItemModel(BlockState state, DynamicItemTintProvider tintProvider, ItemTransforms itemTransforms)
+    private FramedBlockItemModel(BlockState state, DynamicItemTintProvider tintProvider, ItemTransforms itemTransforms, ItemModel errorModel)
     {
         this.state = state;
         this.modelSupplier = Suppliers.memoize(() -> Minecraft.getInstance().getBlockRenderer().getBlockModel(state));
         this.tintProvider = tintProvider;
         this.itemTransforms = itemTransforms;
+        this.errorModel = errorModel;
         this.extents = Suppliers.memoize(() ->
         {
             BlockStateModel model = modelSupplier.get();
@@ -109,7 +115,7 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
         ItemModelInfo itemModelInfo;
         if (!(model instanceof AbstractFramedBlockModel blockModel) || (itemModelInfo = blockModel.getItemModelInfo()) == null)
         {
-            ErrorModel.setupForItem(renderState.newLayer(), ctx);
+            errorModel.update(renderState, stack, resolver, ctx, level, entity, seed);
             return;
         }
 
@@ -123,7 +129,7 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
         }
         catch (Throwable ignored)
         {
-            ErrorModel.setupForItem(renderState.newLayer(), ctx);
+            errorModel.update(renderState, stack, resolver, ctx, level, entity, seed);
             return;
         }
         for (ModelEntry layerModel : modelSet.models)
@@ -220,6 +226,18 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
                 DynamicItemTintProviders.CODEC.optionalFieldOf("tint_provider", FramedBlockItemTintProvider.INSTANCE_SINGLE).forGetter(FramedBlockItemModel.Unbaked::tintProvider),
                 ResourceLocation.CODEC.fieldOf("base_model").forGetter(FramedBlockItemModel.Unbaked::baseModel)
         ).apply(inst, FramedBlockItemModel.Unbaked::new));
+        @SuppressWarnings("Convert2Lambda")
+        private static final ModelBaker.SharedOperationKey<ItemModel> ERROR_MODEL_KEY = new ModelBaker.SharedOperationKey<>()
+        {
+            @Override
+            public ItemModel compute(ModelBaker baker)
+            {
+                ResolvedModel model = baker.getModel(ERROR_MODEL_LOCATION);
+                SimpleModelWrapper bakedModel = SimpleModelWrapper.bake(baker, ERROR_MODEL_LOCATION, BlockModelRotation.X0_Y0);
+                ModelRenderProperties renderProps = ModelRenderProperties.fromResolvedModel(baker, model, model.getTopTextureSlots());
+                return new BlockModelWrapper(List.of(), bakedModel.quads().getAll(), renderProps);
+            }
+        };
 
         public Unbaked
         {
@@ -231,13 +249,15 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
         {
             BlockState state = ((IFramedBlock) block).getItemModelSource();
             ItemTransforms transforms = context.blockModelBaker().getModel(baseModel).getTopTransforms();
-            return new FramedBlockItemModel(Objects.requireNonNull(state), tintProvider, transforms);
+            ItemModel errorModel = context.blockModelBaker().compute(ERROR_MODEL_KEY);
+            return new FramedBlockItemModel(Objects.requireNonNull(state), tintProvider, transforms, errorModel);
         }
 
         @Override
         public void resolveDependencies(Resolver resolver)
         {
             resolver.markDependency(baseModel);
+            resolver.markDependency(ERROR_MODEL_LOCATION);
         }
 
         @Override
