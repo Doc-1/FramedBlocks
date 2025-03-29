@@ -15,16 +15,13 @@ import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
 import xfacthd.framedblocks.api.model.geometry.PartConsumer;
-import xfacthd.framedblocks.api.model.geometry.QuadListModifier;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
-import xfacthd.framedblocks.api.util.ClientUtils;
 import xfacthd.framedblocks.api.util.Utils;
 
 public class FramedWallTorchGeometry extends Geometry
 {
-    private static final QuadListModifier HEAD_MODIFIER = QuadListModifier.filtering(ClientUtils::isDummyTexture);
     private static final Vector3f ROTATION_ORIGIN = new Vector3f(0, 3.5F/16F, 8F/16F);
     private static final float MIN = 7F/16F;
     private static final float MAX = 9F/16F;
@@ -47,7 +44,7 @@ public class FramedWallTorchGeometry extends Geometry
     @Override
     public void collectAdditionalPartsCached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data, QuadCacheKey cacheKey)
     {
-        consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, auxShaderState, HEAD_MODIFIER);
+        consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, auxShaderState, null);
     }
 
     @Override

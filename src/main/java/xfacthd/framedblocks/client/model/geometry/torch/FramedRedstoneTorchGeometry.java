@@ -18,19 +18,16 @@ import xfacthd.framedblocks.api.model.geometry.QuadListModifier;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
-import xfacthd.framedblocks.api.util.ClientUtils;
 import xfacthd.framedblocks.api.util.Utils;
 
 public class FramedRedstoneTorchGeometry extends Geometry
 {
     private static final BlockState AUX_SHADER_STATE = Blocks.REDSTONE_TORCH.defaultBlockState();
 
+    // Ensure glowing torch parts have no AO even if the rest does
     static final QuadListModifier HEAD_MODIFIER = QuadListModifier.replacing(quad ->
-    {
-        if (ClientUtils.isDummyTexture(quad)) return null;
-        // Ensure glowing torch parts have no AO even if the rest does
-        return QuadModifier.of(quad).ambientOcclusion(false).exportDirect();
-    });
+            QuadModifier.of(quad).ambientOcclusion(false).exportDirect()
+    );
 
     private static final float MIN = 7F/16F;
     private static final float MAX = 9F/16F;

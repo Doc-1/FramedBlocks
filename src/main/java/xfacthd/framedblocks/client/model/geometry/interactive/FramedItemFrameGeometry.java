@@ -18,13 +18,19 @@ import xfacthd.framedblocks.api.model.geometry.QuadListModifier;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
-import xfacthd.framedblocks.api.util.ClientUtils;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 
 public class FramedItemFrameGeometry extends Geometry
 {
     private static final int GLOWING_BRIGHTNESS = 5;
+    private static final QuadListModifier GLOWING_LEATHER_MODIFIER = (quadMap, quads, side) ->
+    {
+        for (BakedQuad quad : quads)
+        {
+            QuadModifier.of(quad).apply(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0)).modifyInPlace();
+        }
+    };
 
     private final BlockState state;
     private final BlockStateModel baseModel;
@@ -56,23 +62,7 @@ public class FramedItemFrameGeometry extends Geometry
         this.innerMax = mapFrame ? 15F/16F : 13F/16F;
         this.outerMin = mapFrame ? 0F : 2F/16F;
         this.outerMax = mapFrame ? 1F : 14F/16F;
-        this.leatherModifier = leather ? makeLeatherModifier(glowing) : null;
-    }
-
-    private static QuadListModifier makeLeatherModifier(boolean glowing)
-    {
-        if (glowing)
-        {
-            return (quadMap, quads, side) ->
-            {
-                quads.removeIf(ClientUtils::isDummyTexture);
-                for (BakedQuad quad : quads)
-                {
-                    QuadModifier.of(quad).apply(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0)).modifyInPlace();
-                }
-            };
-        }
-        return QuadListModifier.filtering(ClientUtils::isDummyTexture);
+        this.leatherModifier = glowing && leather ? GLOWING_LEATHER_MODIFIER : null;
     }
 
     @Override
