@@ -21,18 +21,20 @@ import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.property.NullableDirection;
 
+import java.util.function.Supplier;
+
 public class FramedOneWayWindowGeometry extends Geometry
 {
     private static final BlockState GLASS_STATE = Blocks.TINTED_GLASS.defaultBlockState();
 
-    private final BlockStateModel tintedGlassModel;
+    private final Supplier<BlockStateModel> tintedGlassModel;
     private final NullableDirection face;
     private final QuadListModifier faceFilter;
 
     public FramedOneWayWindowGeometry(GeometryFactory.Context ctx)
     {
         this.face = ctx.state().getValue(PropertyHolder.NULLABLE_FACE);
-        this.tintedGlassModel = ctx.modelLookup().getBlockStateModel(GLASS_STATE);
+        this.tintedGlassModel = ModelUtils.getModelDeferred(GLASS_STATE);
         this.faceFilter = QuadListModifier.filteringCullFace(side -> side != face.toNullableDirection());
     }
 
@@ -45,7 +47,7 @@ public class FramedOneWayWindowGeometry extends Geometry
         if (face != NullableDirection.NONE)
         {
             boolean dynamic = cacheKey instanceof OneWayWindowCacheKey;
-            for (BlockModelPart part : ModelUtils.collectModelParts(tintedGlassModel, level, pos, GLASS_STATE, random, dynamic))
+            for (BlockModelPart part : ModelUtils.collectModelParts(tintedGlassModel.get(), level, pos, GLASS_STATE, random, dynamic))
             {
                 consumer.accept(part, GLASS_STATE, true, false, false, false, GLASS_STATE, faceFilter);
             }
@@ -55,7 +57,7 @@ public class FramedOneWayWindowGeometry extends Geometry
     @Override
     public QuadCacheKey makeCacheKey(BlockAndTintGetter level, BlockPos pos, RandomSource random, CamoContent<?> camo, @Nullable Object ctCtx, boolean emissive, ModelData data)
     {
-        Object auxCtCtx = tintedGlassModel.createGeometryKey(level, pos, GLASS_STATE, random);
+        Object auxCtCtx = tintedGlassModel.get().createGeometryKey(level, pos, GLASS_STATE, random);
         if (auxCtCtx != null)
         {
             return new OneWayWindowCacheKey(camo, ctCtx, emissive, auxCtCtx);

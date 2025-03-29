@@ -1,4 +1,5 @@
 {
+  "neoforge:definition_type": "framedblocks:wrapper",
   "variants": {
     "lit=false": {
       "model": "framedblocks:block/framed_redstone_torch_off"

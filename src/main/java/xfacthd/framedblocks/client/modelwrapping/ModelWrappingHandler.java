@@ -1,14 +1,11 @@
 package xfacthd.framedblocks.client.modelwrapping;
 
 import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.model.SingleVariant;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.wrapping.ModelFactory;
-import xfacthd.framedblocks.api.model.wrapping.ModelLookup;
-import xfacthd.framedblocks.api.model.wrapping.TextureLookup;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 
 import java.util.IdentityHashMap;
@@ -16,7 +13,7 @@ import java.util.Map;
 
 public final class ModelWrappingHandler
 {
-    private final Map<BlockState, BlockStateModel> visitedStates = new IdentityHashMap<>();
+    private final Map<BlockState, BlockStateModel.UnbakedRoot> visitedStates = new IdentityHashMap<>();
     private final Holder<Block> block;
     private final ModelFactory blockModelFactory;
     private final StateMerger stateMerger;
@@ -28,17 +25,15 @@ public final class ModelWrappingHandler
         this.stateMerger = stateMerger;
     }
 
-    public synchronized BlockStateModel wrapBlockModel(
-            BlockStateModel srcModel, BlockState state, ModelLookup modelLookup, TextureLookup textureLookup, @Nullable ModelCounter counter
+    public synchronized BlockStateModel.UnbakedRoot wrapBlockModel(
+            BlockState state,
+            BlockStateModel.UnbakedRoot srcModel,
+            Map<String, SingleVariant.Unbaked> auxModels
     )
     {
         BlockState mergedState = stateMerger.apply(state);
-        if (counter != null)
-        {
-            counter.increment(mergedState == state);
-        }
         return visitedStates.computeIfAbsent(mergedState, keyState ->
-                blockModelFactory.create(new GeometryFactory.Context(keyState, srcModel, modelLookup, textureLookup))
+                blockModelFactory.create(new ModelFactory.Context(keyState, srcModel, auxModels))
         );
     }
 

@@ -1,4 +1,5 @@
 {
+  "neoforge:definition_type": "framedblocks:wrapper",
   "variants": {
     "facing=east": {
       "model": "framedblocks:block/framed_wall_torch"

@@ -13,6 +13,9 @@ import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.renderer.block.model.BlockModelDefinition;
+import net.minecraft.client.renderer.block.model.SingleVariant;
+import net.minecraft.client.renderer.block.model.Variant;
 import net.minecraft.client.renderer.block.model.VariantMutator;
 import net.minecraft.client.renderer.block.model.multipart.CombinedCondition;
 import net.minecraft.client.renderer.block.model.multipart.Condition;
@@ -34,7 +37,7 @@ import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
-@SuppressWarnings("SameParameterValue")
+@SuppressWarnings({ "SameParameterValue", "unused", "UnusedReturnValue" })
 public abstract class AbstractFramedBlockModelProvider extends ModelProvider
 {
     protected static final ResourceLocation FRAMED_CUBE_MODEL = ModelLocationUtils.getModelLocation(Utils.FRAMED_CUBE.value());
@@ -70,37 +73,70 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
         return generator;
     }
 
-    protected static void simpleBlock(BlockModelGenerators blockModels, Holder<Block> block)
+    protected static FramedBlockModelDefinitionGenerator framedVariant(BlockModelGenerators blockModels, Holder<Block> block, Function<MultiVariantGenerator.Empty, MultiVariantGenerator> generator)
     {
-        simpleBlock(blockModels, block, ModelLocationUtils.getModelLocation(block.value()));
+        BlockModelDefinition definition = generator.apply(MultiVariantGenerator.dispatch(block.value())).create();
+        FramedBlockModelDefinitionGenerator framedDefinition = new FramedBlockModelDefinitionGenerator(block.value(), definition);
+        blockModels.blockStateOutput.accept(framedDefinition);
+        return framedDefinition;
     }
 
-    protected static void simpleBlock(BlockModelGenerators blockModels, Holder<Block> block, ResourceLocation model)
+    protected static FramedBlockModelDefinitionGenerator framedVariant(BlockModelGenerators blockModels, Holder<Block> block, MultiVariant baseVariant, UnaryOperator<MultiVariantGenerator> generator)
     {
-        blockModels.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block.value(), BlockModelGenerators.plainVariant(model)));
+        BlockModelDefinition definition = generator.apply(MultiVariantGenerator.dispatch(block.value(), baseVariant)).create();
+        FramedBlockModelDefinitionGenerator framedDefinition = new FramedBlockModelDefinitionGenerator(block.value(), definition);
+        blockModels.blockStateOutput.accept(framedDefinition);
+        return framedDefinition;
     }
 
-    protected static void simpleBlockWithItem(BlockModelGenerators blockModels, Holder<Block> block, ResourceLocation model)
+    protected static FramedBlockModelDefinitionGenerator framedMultiPart(BlockModelGenerators blockModels, Holder<Block> block, UnaryOperator<MultiPartGenerator> generator)
     {
-        simpleBlock(blockModels, block, model);
+        BlockModelDefinition definition = generator.apply(MultiPartGenerator.multiPart(block.value())).create();
+        FramedBlockModelDefinitionGenerator framedDefinition = new FramedBlockModelDefinitionGenerator(block.value(), definition);
+        blockModels.blockStateOutput.accept(framedDefinition);
+        return framedDefinition;
+    }
+
+    protected static FramedBlockModelDefinitionGenerator simpleFramedBlock(BlockModelGenerators blockModels, Holder<Block> block)
+    {
+        return simpleFramedBlock(blockModels, block, ModelLocationUtils.getModelLocation(block.value()));
+    }
+
+    protected static FramedBlockModelDefinitionGenerator simpleFramedBlock(BlockModelGenerators blockModels, Holder<Block> block, ResourceLocation model)
+    {
+        FramedBlockModelDefinitionGenerator framedDefinition = new FramedBlockModelDefinitionGenerator(block.value(), singleVariant(model));
+        blockModels.blockStateOutput.accept(framedDefinition);
+        return framedDefinition;
+    }
+
+    protected static FramedBlockModelDefinitionGenerator simpleFramedBlockWithItem(BlockModelGenerators blockModels, Holder<Block> block, ResourceLocation model)
+    {
+        FramedBlockModelDefinitionGenerator framedDefinition = simpleFramedBlock(blockModels, block, model);
         framedBlockItemModel(blockModels, block);
+        return framedDefinition;
     }
 
-    protected static void simpleBlockWithItem(BlockModelGenerators blockModels, Holder<Block> block, ResourceLocation model, Consumer<FramedItemModelBuilder> builderConsumer)
+    protected static FramedBlockModelDefinitionGenerator simpleFramedBlockWithItem(BlockModelGenerators blockModels, Holder<Block> block, ResourceLocation model, Consumer<FramedItemModelBuilder> builderConsumer)
     {
-        simpleBlock(blockModels, block, model);
+        FramedBlockModelDefinitionGenerator framedDefinition = simpleFramedBlock(blockModels, block, model);
         framedBlockItemModel(blockModels, block, builderConsumer);
+        return framedDefinition;
     }
 
-    protected static void blockFromTemplate(BlockModelGenerators blockModels, Holder<Block> block, ModelTemplate template, TextureMapping textures)
+    protected static void framedBlockFromTemplate(BlockModelGenerators blockModels, Holder<Block> block, ModelTemplate template, TextureMapping textures)
     {
-        simpleBlock(blockModels, block, blockModelFromTemplate(blockModels, block, template, textures));
+        simpleFramedBlock(blockModels, block, blockModelFromTemplate(blockModels, block, template, textures));
     }
 
     protected static ResourceLocation blockModelFromTemplate(BlockModelGenerators blockModels, Holder<Block> block, ModelTemplate template, TextureMapping textures)
     {
         ResourceLocation name = ModelLocationUtils.getModelLocation(block.value(), template.suffix.orElse(""));
         return template.create(name, textures, blockModels.modelOutput);
+    }
+
+    protected static SingleVariant.Unbaked singleVariant(ResourceLocation model)
+    {
+        return new SingleVariant.Unbaked(new Variant(model, Variant.SimpleModelState.DEFAULT));
     }
 
     protected static void framedBlockItemModel(BlockModelGenerators blockModels, Holder<Block> block)

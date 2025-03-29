@@ -5,7 +5,12 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
+import net.minecraft.client.renderer.block.model.SingleVariant;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BlockModelRotation;
+import net.minecraft.client.resources.model.MissingBlockModel;
+import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -15,6 +20,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.EmptyBlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.IQuadTransformer;
+import net.neoforged.neoforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.internal.InternalClientAPI;
 import xfacthd.framedblocks.api.model.ExtendedBlockModelPart;
@@ -25,11 +31,21 @@ import xfacthd.framedblocks.api.util.ConfigView;
 import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public final class ModelUtils
 {
     // Factor 16 is required because the relative UV of a TextureAtlasSprite is not 0-16 anymore since 1.20.2
     public static final float UV_SUBSTEP_COUNT = 16F * 8F;
+    @SuppressWarnings("Convert2Lambda")
+    public static final ModelBaker.SharedOperationKey<BlockStateModel> MISSING_MODEL_KEY = new ModelBaker.SharedOperationKey<>()
+    {
+        @Override
+        public BlockStateModel compute(ModelBaker baker)
+        {
+            return new SingleVariant(SimpleModelWrapper.bake(baker, MissingBlockModel.LOCATION, BlockModelRotation.X0_Y0));
+        }
+    };
 
     /**
      * Maps a coordinate 'coordTo' between the given coordinates 'coord1' and 'coord2'
@@ -139,6 +155,11 @@ public final class ModelUtils
     public static BlockStateModel getModel(BlockState state)
     {
         return Minecraft.getInstance().getBlockRenderer().getBlockModel(state);
+    }
+
+    public static Supplier<BlockStateModel> getModelDeferred(BlockState state)
+    {
+        return Lazy.of(() -> getModel(state));
     }
 
     public static ExtendedBlockModelPart makeModelPart(BlockModelPart srcPart, QuadMap quadMap, BlockState state, DefaultAO defaultAO, @Nullable BlockState shaderState)

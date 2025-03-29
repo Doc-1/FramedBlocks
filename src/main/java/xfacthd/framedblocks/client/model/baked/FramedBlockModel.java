@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.client.model;
+package xfacthd.framedblocks.client.model.baked;
 
 import com.google.common.base.Preconditions;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -36,6 +36,7 @@ import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.predicate.contex.ConTexMode;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.util.Utils;
+import xfacthd.framedblocks.client.model.ReinforcementModel;
 import xfacthd.framedblocks.client.overlaygen.OverlayModelPartGenerator;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.config.ClientConfig;

@@ -1,4 +1,5 @@
 {
+  "neoforge:definition_type": "framedblocks:wrapper",
   "variants": {
     "face=ceiling,facing=east,powered=false": {
       "model": "framedblocks:block/framed_lever_on",

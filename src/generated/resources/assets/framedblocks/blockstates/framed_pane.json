@@ -1,9 +1,6 @@
 {
-  "multipart": [
-    {
-      "apply": {
-        "model": "framedblocks:block/framed_cube"
-      }
-    }
-  ]
+  "neoforge:definition_type": "framedblocks:wrapper",
+  "base_model": {
+    "model": "framedblocks:block/framed_cube"
+  }
 }

@@ -1,6 +1,9 @@
 package xfacthd.framedblocks.api.internal;
 
+import com.mojang.datafixers.util.Either;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BlockModelDefinition;
+import net.minecraft.client.renderer.block.model.SingleVariant;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Holder;
@@ -19,6 +22,8 @@ import xfacthd.framedblocks.api.model.wrapping.ModelFactory;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.render.debug.BlockDebugRenderer;
 import xfacthd.framedblocks.api.util.Utils;
+
+import java.util.Map;
 
 @ApiStatus.Internal
 public interface InternalClientAPI
@@ -42,4 +47,6 @@ public interface InternalClientAPI
     ItemModel.Unbaked createFramedBlockItemModel(Block block, DynamicItemTintProvider tintProvider, ResourceLocation baseModel);
 
     ExtendedBlockModelPart makeBlockModelPart(QuadMap quadMap, TriState partAO, TextureAtlasSprite particleSprite, RenderType renderType, @Nullable BlockState shaderState);
+
+    BlockModelDefinition createFramedBlockDefinition(Either<BlockModelDefinition, SingleVariant.Unbaked> wrapped, Map<String, SingleVariant.Unbaked> auxModels);
 }

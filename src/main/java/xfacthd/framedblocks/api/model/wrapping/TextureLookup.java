@@ -4,9 +4,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelDebugName;
+import net.minecraft.client.resources.model.SpriteGetter;
 import net.minecraft.resources.ResourceLocation;
-
-import java.util.function.Function;
 
 public interface TextureLookup
 {
@@ -15,9 +15,9 @@ public interface TextureLookup
 
 
     @SuppressWarnings("deprecation")
-    static TextureLookup bindBlockAtlas(Function<Material, TextureAtlasSprite> getter)
+    static TextureLookup bindSpriteGetter(SpriteGetter getter, ModelDebugName debugName)
     {
-        return id -> getter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, id));
+        return id -> getter.get(new Material(TextureAtlas.LOCATION_BLOCKS, id), debugName);
     }
 
     /**

@@ -2,6 +2,7 @@ package xfacthd.framedblocks.api.model;
 
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.EmptyBlockAndTintGetter;
@@ -32,6 +33,13 @@ public abstract class AbstractFramedBlockModel extends DelegateBlockStateModel
     public void collectParts(RandomSource random, List<BlockModelPart> parts)
     {
         collectParts(EmptyBlockAndTintGetter.INSTANCE, BlockPos.ZERO, state, random, parts);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public TextureAtlasSprite particleIcon()
+    {
+        return particleIcon(EmptyBlockAndTintGetter.INSTANCE, BlockPos.ZERO, state);
     }
 
     public void clearCache() { }

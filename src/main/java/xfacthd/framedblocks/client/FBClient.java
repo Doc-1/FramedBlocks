@@ -26,7 +26,6 @@ import xfacthd.framedblocks.api.model.item.FramedBlockItemTintProvider;
 import xfacthd.framedblocks.api.model.item.RegisterItemTintProvidersEvent;
 import xfacthd.framedblocks.api.model.util.StandaloneModels;
 import xfacthd.framedblocks.api.model.wrapping.RegisterModelWrappersEvent;
-import xfacthd.framedblocks.api.model.wrapping.TextureLookup;
 import xfacthd.framedblocks.api.model.wrapping.WrapHelper;
 import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
@@ -59,6 +58,8 @@ import xfacthd.framedblocks.client.model.geometry.slopepanelcorner.*;
 import xfacthd.framedblocks.client.model.geometry.slopeslab.*;
 import xfacthd.framedblocks.client.model.geometry.stairs.*;
 import xfacthd.framedblocks.client.model.geometry.torch.*;
+import xfacthd.framedblocks.client.model.unbaked.FramedBlockModelDefinition;
+import xfacthd.framedblocks.client.model.unbaked.UnbakedFramedDoubleBlockModel;
 import xfacthd.framedblocks.client.modelwrapping.ModelWrappingManager;
 import xfacthd.framedblocks.client.overlaygen.OverlayQuadGenerator;
 import xfacthd.framedblocks.client.render.block.FramedChestRenderer;
@@ -103,9 +104,7 @@ import xfacthd.framedblocks.common.block.slopepanel.FramedDoubleSlopePanelBlock;
 import xfacthd.framedblocks.common.block.slopeslab.FramedDoubleSlopeSlabBlock;
 import xfacthd.framedblocks.common.block.slopeslab.FramedFlatDoubleSlopeSlabCornerBlock;
 import xfacthd.framedblocks.common.block.stairs.standard.FramedStairsBlock;
-import xfacthd.framedblocks.common.compat.amendments.AmendmentsCompat;
 import xfacthd.framedblocks.common.data.BlockType;
-import xfacthd.framedblocks.common.data.StateCacheBuilder;
 import xfacthd.framedblocks.common.data.camo.fluid.FluidCamoClientHandler;
 import xfacthd.framedblocks.common.data.doubleblock.FramedDoubleBlockRenderProperties;
 import xfacthd.framedblocks.common.data.doubleblock.NullCullPredicate;
@@ -129,8 +128,8 @@ public final class FBClient
         modBus.addListener(FBClient::onOverlayRegister);
         modBus.addListener(FBClient::onGeometryLoaderRegister);
         modBus.addListener(FBClient::onRegisterModelWrappers);
+        modBus.addListener(FBClient::onBlockStateModelRegister);
         modBus.addListener(FBClient::onModelRegister);
-        modBus.addListener(FBClient::onModifyBakingResult);
         modBus.addListener(FBClient::onModelsLoaded);
         modBus.addListener(FBClient::onRegisterReloadListener);
         modBus.addListener(FBClient::onInitClientRegistries);
@@ -455,32 +454,17 @@ public final class FBClient
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_HOPPER, FramedHopperGeometry::new, WrapHelper.IGNORE_ALWAYS);
     }
 
+    private static void onBlockStateModelRegister(final RegisterBlockStateModels event)
+    {
+        event.registerDefinition(Utils.rl("wrapper"), FramedBlockModelDefinition.CODEC);
+    }
+
     private static void onModelRegister(final ModelEvent.RegisterStandalone event)
     {
         event.register(FluidModel.BARE_MODEL_KEY, FluidModel.DUMMY_STANDALONE_BAKER);
         event.register(FluidModel.BARE_MODEL_SINGLE_KEY, FluidModel.DUMMY_STANDALONE_BAKER);
         event.register(ReinforcementModel.MODEL_KEY, StandaloneModels.QUAD_COLLECTION_STANDALONE_BAKER);
-        event.register(FramedMarkedCubeGeometry.SLIME_FRAME_KEY, StandaloneModels.BLOCK_PART_STANDALONE_BAKER);
-        event.register(FramedMarkedCubeGeometry.REDSTONE_FRAME_KEY, StandaloneModels.BLOCK_PART_STANDALONE_BAKER);
-        event.register(FramedTargetGeometry.OVERLAY_KEY, StandaloneModels.BLOCK_PART_STANDALONE_BAKER);
-        event.register(FramedCollapsibleBlockGeometry.ALT_BASE_MODEL_KEY, StandaloneModels.BLOCK_STATE_STANDALONE_BAKER);
-        event.register(FramedCollapsibleCopycatBlockGeometry.ALT_BASE_MODEL_KEY, StandaloneModels.BLOCK_STATE_STANDALONE_BAKER);
         event.register(ErrorModel.MODEL_KEY, ErrorModel.MODEL_BAKER);
-
-        if (AmendmentsCompat.isLoaded())
-        {
-            event.register(AmendmentsCompat.Client.HANGING_MODEL_KEY, StandaloneModels.BLOCK_PART_STANDALONE_BAKER);
-        }
-
-        ModelWrappingManager.reset();
-    }
-
-    private static void onModifyBakingResult(final ModelEvent.ModifyBakingResult event)
-    {
-        StateCacheBuilder.ensureStateCachesInitialized();
-
-        TextureLookup textureLookup = TextureLookup.bindBlockAtlas(event.getTextureGetter());
-        ModelWrappingManager.handleAll(event.getBakingResult(), textureLookup);
     }
 
     private static void onModelsLoaded(final ModelEvent.BakingCompleted event)
@@ -489,6 +473,8 @@ public final class FBClient
         FramedChestRenderer.onModelsLoaded(event.getBakingResult());
         ReinforcementModel.reload(event.getBakingResult().standaloneModels());
         ErrorModel.reload(event.getBakingResult().standaloneModels());
+
+        ModelWrappingManager.printWrappingInfo(event.getBakingResult().blockStateModels());
     }
 
     private static void onRegisterReloadListener(final AddClientReloadListenersEvent event)
@@ -566,7 +552,7 @@ public final class FBClient
     {
         WrapHelper.wrapSpecial(
                 block,
-                ctx -> new FramedDoubleBlockModel(ctx, nullCullPredicate, itemModelInfo),
+                ctx -> new UnbakedFramedDoubleBlockModel(ctx, nullCullPredicate, itemModelInfo),
                 StateMerger.ignoring(ignoredProps)
         );
     }

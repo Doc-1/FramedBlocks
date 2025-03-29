@@ -1,6 +1,9 @@
 package xfacthd.framedblocks.client.apiimpl;
 
+import com.mojang.datafixers.util.Either;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BlockModelDefinition;
+import net.minecraft.client.renderer.block.model.SingleVariant;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Holder;
@@ -24,8 +27,9 @@ import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.render.debug.BlockDebugRenderer;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.itemmodel.FramedBlockItemModel;
-import xfacthd.framedblocks.client.model.FramedBlockModel;
-import xfacthd.framedblocks.client.modelwrapping.CopyingModelFactory;
+import xfacthd.framedblocks.client.model.unbaked.FramedBlockModelDefinition;
+import xfacthd.framedblocks.client.model.unbaked.UnbakedFramedBlockModel;
+import xfacthd.framedblocks.client.model.unbaked.UnbakedCopyingFramedBlockModel;
 import xfacthd.framedblocks.client.modelwrapping.ModelWrappingHandler;
 import xfacthd.framedblocks.client.modelwrapping.ModelWrappingManager;
 import xfacthd.framedblocks.client.render.debug.impl.ConnectionPredicateDebugRenderer;
@@ -35,6 +39,7 @@ import xfacthd.framedblocks.common.config.DevToolsConfig;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -48,7 +53,7 @@ public final class InternalClientApiImpl implements InternalClientAPI
     {
         registerSpecialModelWrapper(
                 block,
-                ctx -> new FramedBlockModel(ctx, geometryFactory.create(ctx)),
+                ctx -> new UnbakedFramedBlockModel(ctx, geometryFactory),
                 stateMerger
         );
     }
@@ -64,7 +69,11 @@ public final class InternalClientApiImpl implements InternalClientAPI
     @Override
     public void registerCopyingModelWrapper(Holder<Block> block, Holder<Block> srcBlock, StateMerger stateMerger)
     {
-        registerSpecialModelWrapper(block, new CopyingModelFactory(srcBlock), stateMerger);
+        registerSpecialModelWrapper(
+                block,
+                ctx -> new UnbakedCopyingFramedBlockModel(ctx, srcBlock.value()),
+                stateMerger
+        );
     }
 
     @Override
@@ -99,6 +108,12 @@ public final class InternalClientApiImpl implements InternalClientAPI
             shaderState = null;
         }
         return new FramedBlockModelPart(quadMap.build(), partAO, particleSprite, renderType, shaderState);
+    }
+
+    @Override
+    public BlockModelDefinition createFramedBlockDefinition(Either<BlockModelDefinition, SingleVariant.Unbaked> wrapped, Map<String, SingleVariant.Unbaked> auxModels)
+    {
+        return new BlockModelDefinition(new FramedBlockModelDefinition(wrapped, auxModels));
     }
 
 

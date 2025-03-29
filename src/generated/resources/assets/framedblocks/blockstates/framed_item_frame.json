@@ -1,4 +1,5 @@
 {
+  "neoforge:definition_type": "framedblocks:wrapper",
   "variants": {
     "facing=down,map_frame=false": {
       "model": "framedblocks:block/framed_item_frame",

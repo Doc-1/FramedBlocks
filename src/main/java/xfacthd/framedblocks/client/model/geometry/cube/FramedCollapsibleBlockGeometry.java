@@ -10,14 +10,12 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
-import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import xfacthd.framedblocks.api.camo.CamoContent;
 import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
-import xfacthd.framedblocks.api.model.util.StandaloneModels;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
@@ -28,8 +26,8 @@ import xfacthd.framedblocks.common.data.PropertyHolder;
 
 public class FramedCollapsibleBlockGeometry extends Geometry
 {
-    private static final ResourceLocation ALT_BASE_MODEL_LOC = Utils.rl("block/framed_collapsible_block_alt");
-    public static final StandaloneModelKey<BlockStateModel> ALT_BASE_MODEL_KEY = new StandaloneModelKey<>(ALT_BASE_MODEL_LOC);
+    public static final ResourceLocation ALT_BASE_MODEL_LOC = Utils.rl("block/framed_collapsible_block_alt");
+    public static final String ALT_BASE_MODEL_KEY = "alt_base";
     private static final float MIN_DEPTH = .001F;
 
     private final BlockState state;
@@ -43,7 +41,7 @@ public class FramedCollapsibleBlockGeometry extends Geometry
         this.state = ctx.state();
         this.collapsedFace = ctx.state().getValue(PropertyHolder.NULLABLE_FACE).toNullableDirection();
         this.rotSplitLine = ctx.state().getValue(PropertyHolder.ROTATE_SPLIT_LINE);
-        this.altBaseModel = StandaloneModels.getBlockModel(ctx.modelLookup(), ALT_BASE_MODEL_KEY);
+        this.altBaseModel = ctx.auxModels().getModel(ALT_BASE_MODEL_KEY);
     }
 
     @Override

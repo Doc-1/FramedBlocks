@@ -10,5 +10,11 @@ public interface GeometryFactory
 
 
 
-    record Context(BlockState state, BlockStateModel baseModel, ModelLookup modelLookup, TextureLookup textureLookup) { }
+    record Context(BlockState state, BlockStateModel baseModel, AuxModelProvider auxModels, TextureLookup textureLookup)
+    {
+        public Context withState(BlockState newState)
+        {
+            return new Context(newState, baseModel, auxModels, textureLookup);
+        }
+    }
 }

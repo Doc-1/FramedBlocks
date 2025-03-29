@@ -1,73 +1,29 @@
 package xfacthd.framedblocks.client.modelwrapping;
 
 import com.google.common.base.Stopwatch;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.ModLoader;
+import net.neoforged.fml.loading.FMLEnvironment;
 import xfacthd.framedblocks.FramedBlocks;
-import xfacthd.framedblocks.api.model.wrapping.*;
-import xfacthd.framedblocks.api.util.Utils;
+import xfacthd.framedblocks.api.model.AbstractFramedBlockModel;
+import xfacthd.framedblocks.api.model.wrapping.RegisterModelWrappersEvent;
 import xfacthd.framedblocks.common.config.DevToolsConfig;
 
-import java.util.*;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class ModelWrappingManager
 {
-    private static final Map<ResourceKey<Block>, ModelWrappingHandler> HANDLERS = new IdentityHashMap<>();
+    private static final Map<Block, ModelWrappingHandler> HANDLERS = new IdentityHashMap<>();
     private static boolean locked = true;
-
-    public static void handleAll(ModelBakery.BakingResult bakingResult, TextureLookup textureLookup)
-    {
-        Stopwatch stopwatch = Stopwatch.createStarted();
-
-        Map<BlockState, BlockStateModel> models = bakingResult.blockStateModels();
-        ModelLookup accessor = ModelLookup.bind(bakingResult);
-        ModelCounter counter = new ModelCounter();
-
-        for (Map.Entry<ResourceKey<Block>, ModelWrappingHandler> entry : HANDLERS.entrySet())
-        {
-            ModelWrappingHandler handler = entry.getValue();
-            Block block = handler.getBlock();
-
-            for (BlockState state : block.getStateDefinition().getPossibleStates())
-            {
-                BlockStateModel baseModel = models.get(state);
-                BlockStateModel replacement = handler.wrapBlockModel(baseModel, state, accessor, textureLookup, counter);
-                models.put(state, replacement);
-            }
-        }
-
-        stopwatch.stop();
-        FramedBlocks.LOGGER.debug(
-                "Wrapped {} unique block models ({} total) for {} blocks in {}",
-                counter.getDistinctCount(), counter.getTotalCount(), HANDLERS.size(), stopwatch
-        );
-    }
-
-    /*public static BlockStateModel handle(ModelResourceLocation id, BlockStateModel model, ModelLookup modelLookup, TextureLookup textureLookup)
-    {
-        ResourceKey<Block> blockId = ResourceKey.create(Registries.BLOCK, id.id());
-        ModelWrappingHandler handler = HANDLERS.get(blockId);
-        if (handler == null)
-        {
-            return model;
-        }
-
-        if (!id.getVariant().equals("inventory"))
-        {
-            Block block = Objects.requireNonNull(BuiltInRegistries.BLOCK.getValue(blockId));
-            BlockState state = StateLocationCache.getStateFromLocation(blockId.location(), block, id);
-            return handler.wrapBlockModel(model, state, modelLookup, textureLookup, null);
-        }
-        return model;
-    }*/
 
     public static void fireRegistration()
     {
@@ -100,7 +56,7 @@ public final class ModelWrappingManager
             throw new IllegalStateException("ModelWrappingHandler registration is locked");
         }
 
-        ModelWrappingHandler oldHandler = HANDLERS.put(Utils.getKeyOrThrow(block), handler);
+        ModelWrappingHandler oldHandler = HANDLERS.put(block.value(), handler);
         if (oldHandler != null)
         {
             throw new IllegalStateException("ModelWrappingHandler for '" + block + "' already registered");
@@ -114,13 +70,66 @@ public final class ModelWrappingManager
 
     public static ModelWrappingHandler getHandler(Block block)
     {
-        ResourceKey<Block> blockId = BuiltInRegistries.BLOCK.getResourceKey(block).orElseThrow();
-        ModelWrappingHandler handler = HANDLERS.get(blockId);
+        ModelWrappingHandler handler = HANDLERS.get(block);
         if (handler == null)
         {
-            throw new NullPointerException("No ModelWrappingHandler registered for block '" + blockId + "'");
+            throw new NullPointerException("No ModelWrappingHandler registered for block '" + block + "'");
         }
         return handler;
+    }
+
+    public static void printWrappingInfo(Map<BlockState, BlockStateModel> models)
+    {
+        int stateCount = 0;
+        Set<BlockStateModel> distinctModels = new ReferenceOpenHashSet<>();
+        for (Block block : HANDLERS.keySet())
+        {
+            List<BlockState> states = block.getStateDefinition().getPossibleStates();
+            for (BlockState state : states)
+            {
+                distinctModels.add(models.get(state));
+            }
+            stateCount += states.size();
+        }
+
+        FramedBlocks.LOGGER.debug(
+                "Wrapped {} unique block models ({} total) for {} blocks",
+                distinctModels.size(),
+                stateCount,
+                HANDLERS.size()
+        );
+
+        if (!FMLEnvironment.production)
+        {
+            Map<BlockStateModel, Block> nonWrappedModels = new Reference2ObjectOpenHashMap<>();
+            for (Block block : HANDLERS.keySet())
+            {
+                List<BlockState> states = block.getStateDefinition().getPossibleStates();
+                for (BlockState state : states)
+                {
+                    BlockStateModel model = models.get(state);
+                    if (!(model instanceof AbstractFramedBlockModel))
+                    {
+                        nonWrappedModels.put(model, state.getBlock());
+                    }
+                }
+                stateCount += states.size();
+            }
+            if (!nonWrappedModels.isEmpty())
+            {
+                Set<String> blocks = nonWrappedModels.values()
+                        .stream()
+                        .distinct()
+                        .map(Block::toString)
+                        .collect(Collectors.toSet());
+                FramedBlocks.LOGGER.warn(
+                        "Found {} unwrapped models for {} blocks:\n\t{}",
+                        nonWrappedModels.size(),
+                        blocks.size(),
+                        String.join("\n\t", blocks)
+                );
+            }
+        }
     }
 
 

@@ -20,12 +20,12 @@ import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import xfacthd.framedblocks.api.block.FramedProperties;
+import xfacthd.framedblocks.api.model.wrapping.AuxModelProvider;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
-import xfacthd.framedblocks.api.model.wrapping.ModelLookup;
 import xfacthd.framedblocks.api.model.wrapping.TextureLookup;
 import xfacthd.framedblocks.api.render.RenderUtils;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.client.model.FramedBlockModel;
+import xfacthd.framedblocks.client.model.baked.FramedBlockModel;
 import xfacthd.framedblocks.client.model.geometry.cube.FramedChestLidGeometry;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.cube.FramedChestBlock;
@@ -154,7 +154,7 @@ public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlock
     public static void onModelsLoaded(ModelBakery.BakingResult bakingResult)
     {
         Map<BlockState, BlockStateModel> registry = bakingResult.blockStateModels();
-        ModelLookup lookup = ModelLookup.bind(bakingResult);
+        AuxModelProvider auxModels = AuxModelProvider.empty(bakingResult);
         for (Direction dir : Direction.Plane.HORIZONTAL)
         {
             for (ChestType type : ChestType.values())
@@ -171,7 +171,7 @@ public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlock
                     {
                         model = fbModel.getBaseModel();
                     }
-                    GeometryFactory.Context ctx = new GeometryFactory.Context(state, model, lookup, TextureLookup.runtime());
+                    GeometryFactory.Context ctx = new GeometryFactory.Context(state, model, auxModels, TextureLookup.runtime());
                     LID_MODELS[makeModelIndex(dir, type, latch)] = new FramedBlockModel(ctx, new FramedChestLidGeometry(ctx));
                 }
             }

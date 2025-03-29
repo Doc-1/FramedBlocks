@@ -1,7 +1,6 @@
 package xfacthd.framedblocks.client.model.geometry.interactive;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,6 +32,8 @@ import xfacthd.framedblocks.common.data.PropertyHolder;
 
 public class FramedFlowerPotGeometry extends Geometry
 {
+    public static final ResourceLocation HANGING_MODEL_LOCATION = Utils.rl("block/hanging_pot_rope");
+    public static final String HANGING_MODEL_KEY = "flower_pot_rope";
     private static final BlockState DIRT_STATE = Blocks.DIRT.defaultBlockState();
     private static final ResourceLocation POT_TEXTURE = Utils.rl("minecraft", "block/flower_pot");
     private static final ResourceLocation DIRT_TEXTURE = Utils.rl("minecraft", "block/dirt");
@@ -58,13 +59,13 @@ public class FramedFlowerPotGeometry extends Geometry
     private final BlockState state;
     private final boolean hanging;
     @Nullable
-    private final BlockModelPart hangingPotModel;
+    private final BlockStateModel hangingPotModel;
 
     public FramedFlowerPotGeometry(GeometryFactory.Context ctx)
     {
         this.state = ctx.state();
         this.hanging = AmendmentsCompat.isLoaded() && ctx.state().getValue(PropertyHolder.HANGING);
-        this.hangingPotModel = hanging ? ctx.modelLookup().getStandaloneModel(AmendmentsCompat.Client.HANGING_MODEL_KEY) : null;
+        this.hangingPotModel = hanging ? ctx.auxModels().getModel(HANGING_MODEL_KEY) : null;
     }
 
     @Override
@@ -146,7 +147,7 @@ public class FramedFlowerPotGeometry extends Geometry
 
         if (hanging && hangingPotModel != null)
         {
-            consumer.accept(hangingPotModel, state, true, false, false, false, null, null);
+            consumer.acceptAll(hangingPotModel, level, pos, random, state, true, false, false, false, null, null);
         }
     }
 

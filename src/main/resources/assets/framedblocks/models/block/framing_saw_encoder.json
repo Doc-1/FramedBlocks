@@ -1,7 +1,7 @@
 {
 	"loader": "framedblocks:fallback",
 	"fallback": "framedblocks:block/framing_saw",
-	"conditions": [
+	"neoforge:conditions": [
 		{
 			"type": "neoforge:mod_loaded",
 			"modid": "ae2"

@@ -1,4 +1,5 @@
 {
+  "neoforge:definition_type": "framedblocks:wrapper",
   "variants": {
     "powered=false,shape=ascending_east": {
       "model": "framedblocks:block/framed_fancy_powered_rail_ascending",
