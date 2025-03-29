@@ -1,7 +1,0 @@
-{
-  "parent": "framedblocks:item/framed_fence_inventory",
-  "textures": {
-    "texture": "framedblocks:block/framed_block",
-    "underlay": "minecraft:block/stripped_dark_oak_log"
-  }
-}

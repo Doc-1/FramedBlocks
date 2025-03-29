@@ -44,6 +44,11 @@ public abstract class AbstractFramedBlockModel extends DelegateBlockStateModel
 
     public void clearCache() { }
 
+    public BlockStateModel getBaseModel()
+    {
+        return delegate;
+    }
+
     @Nullable
     public ItemModelInfo getItemModelInfo()
     {

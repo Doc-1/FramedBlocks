@@ -128,7 +128,7 @@ public class FramedFenceBlock extends FenceBlock implements IFramedBlock
     @Nullable
     public BlockState getItemModelSource()
     {
-        return null;
+        return defaultBlockState();
     }
 
     @Override

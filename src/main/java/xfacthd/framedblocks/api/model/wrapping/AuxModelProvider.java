@@ -11,4 +11,9 @@ public interface AuxModelProvider
     {
         return key -> bakingResult.missingModels().block();
     }
+
+    static AuxModelProvider invalid()
+    {
+        return key -> { throw new UnsupportedOperationException(""); };
+    }
 }

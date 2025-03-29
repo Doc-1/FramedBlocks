@@ -35,6 +35,7 @@ import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.itemmodel.FramedBlockItemModel;
 import xfacthd.framedblocks.client.itemmodel.TankItemModel;
+import xfacthd.framedblocks.client.itemmodel.modelprovider.FenceBlockItemModelProvider;
 import xfacthd.framedblocks.client.itemmodel.tintprovider.FramedTargetItemTintProvider;
 import xfacthd.framedblocks.client.loader.fallback.FallbackLoaderBuilder;
 import xfacthd.framedblocks.client.model.geometry.cube.FramedCollapsibleBlockGeometry;
@@ -338,15 +339,9 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
 
     private void registerFramedFence(BlockModelGenerators blockModels, ResourceLocation cube)
     {
-        simpleFramedBlock(blockModels, FBContent.BLOCK_FRAMED_FENCE, cube);
-
-        blockItemFromTemplate(
-                blockModels,
-                FBContent.BLOCK_FRAMED_FENCE,
-                ModelTemplates.createItem("framedblocks:framed_fence_inventory", TextureSlot.TEXTURE, SLOT_UNDERLAY),
-                new TextureMapping()
-                        .put(TextureSlot.TEXTURE, TEXTURE)
-                        .put(SLOT_UNDERLAY, TEXTURE_UNDERLAY)
+        simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_FENCE, cube, builder ->
+                builder.modelProvider(FenceBlockItemModelProvider.INSTANCE)
+                        .itemBaseModel(mcLocation("block/fence_inventory"))
         );
     }
 

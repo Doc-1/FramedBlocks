@@ -1,6 +1,7 @@
 package xfacthd.framedblocks.api.datagen.models;
 
 import com.google.common.base.Preconditions;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.core.Holder;
@@ -9,6 +10,7 @@ import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.internal.InternalClientAPI;
+import xfacthd.framedblocks.api.model.item.block.BlockItemModelProvider;
 import xfacthd.framedblocks.api.model.item.tint.DynamicItemTintProvider;
 import xfacthd.framedblocks.api.model.item.tint.FramedBlockItemTintProvider;
 
@@ -16,6 +18,7 @@ import xfacthd.framedblocks.api.model.item.tint.FramedBlockItemTintProvider;
 public final class FramedItemModelBuilder
 {
     private final Holder<Block> block;
+    private BlockItemModelProvider modelProvider = BlockItemModelProvider.DEFAULT;
     @Nullable
     private DynamicItemTintProvider tintProvider = null;
     private ResourceLocation itemBaseModel = AbstractFramedBlockModelProvider.FRAMED_CUBE_MODEL;
@@ -31,6 +34,19 @@ public final class FramedItemModelBuilder
                 "Framed block %s does not provide an item model source state", block.value()
         );
         this.block = block;
+    }
+
+    /**
+     * Specify the {@link BlockItemModelProvider} to use for retrieving the {@link BlockStateModel} which the
+     * item model will be based on.
+     * <p>
+     * Allows using dedicated block models with camo awareness when the item model looks different to all variants
+     * of the actual block model.
+     */
+    public FramedItemModelBuilder modelProvider(BlockItemModelProvider modelProvider)
+    {
+        this.modelProvider = modelProvider;
+        return this;
     }
 
     /**
@@ -57,6 +73,6 @@ public final class FramedItemModelBuilder
         {
             tintProvider = FramedBlockItemTintProvider.of((IFramedBlock) block.value());
         }
-        return InternalClientAPI.INSTANCE.createFramedBlockItemModel(block.value(), tintProvider, itemBaseModel);
+        return InternalClientAPI.INSTANCE.createFramedBlockItemModel(block.value(), modelProvider, tintProvider, itemBaseModel);
     }
 }

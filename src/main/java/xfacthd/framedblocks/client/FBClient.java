@@ -21,6 +21,8 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.render.FramedBlockColor;
 import xfacthd.framedblocks.api.block.render.FramedBlockRenderProperties;
+import xfacthd.framedblocks.api.model.item.block.BlockItemModelProvider;
+import xfacthd.framedblocks.api.model.item.block.RegisterBlockItemModelProvidersEvent;
 import xfacthd.framedblocks.api.model.item.tint.FramedBlockItemTintProvider;
 import xfacthd.framedblocks.api.model.item.tint.RegisterItemTintProvidersEvent;
 import xfacthd.framedblocks.api.model.util.StandaloneModels;
@@ -38,7 +40,9 @@ import xfacthd.framedblocks.client.data.extensions.block.NoEffectsClientBlockExt
 import xfacthd.framedblocks.client.data.extensions.block.OneWayWindowClientBlockExtensions;
 import xfacthd.framedblocks.client.itemmodel.DynamicItemTintProviders;
 import xfacthd.framedblocks.client.itemmodel.FramedBlockItemModel;
+import xfacthd.framedblocks.client.itemmodel.BlockItemModelProviders;
 import xfacthd.framedblocks.client.itemmodel.TankItemModel;
+import xfacthd.framedblocks.client.itemmodel.modelprovider.FenceBlockItemModelProvider;
 import xfacthd.framedblocks.client.itemmodel.tintprovider.FramedTargetItemTintProvider;
 import xfacthd.framedblocks.client.loader.fallback.FallbackLoader;
 import xfacthd.framedblocks.client.model.*;
@@ -123,6 +127,7 @@ public final class FBClient
         modBus.addListener(FBClient::onAttachDebugRenderers);
         modBus.addListener(FBClient::onRegisterRenderers);
         modBus.addListener(FBClient::onRegisterBlockColors);
+        modBus.addListener(FBClient::onRegisterBlockItemModelProviders);
         modBus.addListener(FBClient::onRegisterItemTintProviders);
         modBus.addListener(FBClient::onOverlayRegister);
         modBus.addListener(FBClient::onGeometryLoaderRegister);
@@ -212,6 +217,12 @@ public final class FBClient
 
         event.register(FramedFlowerPotColor.INSTANCE, FBContent.BLOCK_FRAMED_FLOWER_POT.value());
         event.register(FramedTargetBlockColor.INSTANCE, FBContent.BLOCK_FRAMED_TARGET.value());
+    }
+
+    private static void onRegisterBlockItemModelProviders(final RegisterBlockItemModelProvidersEvent event)
+    {
+        event.register(Utils.rl("default"), BlockItemModelProvider.DEFAULT);
+        event.register(Utils.rl("fence"), FenceBlockItemModelProvider.INSTANCE);
     }
 
     private static void onRegisterItemTintProviders(final RegisterItemTintProvidersEvent event)
@@ -486,6 +497,7 @@ public final class FBClient
         FramedBlockDebugRenderer.init();
         BlockOutlineRenderer.init();
         GhostBlockRenderer.init();
+        BlockItemModelProviders.init();
         DynamicItemTintProviders.init();
     }
 

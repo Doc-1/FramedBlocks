@@ -1,6 +1,8 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "framedblocks:item/framed_fence"
+    "type": "framedblocks:block",
+    "base_model": "minecraft:block/fence_inventory",
+    "block": "framedblocks:framed_fence",
+    "model_provider": "framedblocks:fence"
   }
 }

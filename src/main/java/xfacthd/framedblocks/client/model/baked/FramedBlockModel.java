@@ -358,11 +358,6 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         return CamoContainerHelper.Client.getOrCreateModel(camoContent);
     }
 
-    public BlockStateModel getBaseModel()
-    {
-        return delegate;
-    }
-
     @Override
     public void clearCache()
     {

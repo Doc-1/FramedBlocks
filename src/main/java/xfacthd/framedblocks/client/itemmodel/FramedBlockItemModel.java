@@ -10,7 +10,6 @@ import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -39,6 +38,7 @@ import net.minecraft.world.level.EmptyBlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.RenderTypeHelper;
+import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
@@ -47,6 +47,7 @@ import xfacthd.framedblocks.api.model.AbstractFramedBlockModel;
 import xfacthd.framedblocks.api.model.ModelPartCollectionFakeLevel;
 import xfacthd.framedblocks.api.model.item.AbstractFramedBlockItemModel;
 import xfacthd.framedblocks.api.model.item.ItemModelInfo;
+import xfacthd.framedblocks.api.model.item.block.BlockItemModelProvider;
 import xfacthd.framedblocks.api.model.item.tint.FramedBlockItemTintProvider;
 import xfacthd.framedblocks.api.util.CamoList;
 import xfacthd.framedblocks.api.util.ConfigView;
@@ -70,21 +71,30 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
     private final Map<CamoList, ModelSet> itemModelCache = new Object2ObjectOpenHashMap<>();
     private final BlockState state;
     private final Supplier<BlockStateModel> modelSupplier;
+    private final boolean nonStandardModelProvider;
     private final DynamicItemTintProvider tintProvider;
     private final ItemTransforms itemTransforms;
     private final ItemModel errorModel;
     private final Supplier<Vector3f[]> extents;
 
-    private FramedBlockItemModel(BlockState state, DynamicItemTintProvider tintProvider, ItemTransforms itemTransforms, ItemModel errorModel)
+    private FramedBlockItemModel(
+            BlockState state,
+            Supplier<BlockStateModel> modelSupplier,
+            boolean nonStandardModelProvider,
+            DynamicItemTintProvider tintProvider,
+            ItemTransforms itemTransforms,
+            ItemModel errorModel
+    )
     {
         this.state = state;
-        this.modelSupplier = Suppliers.memoize(() -> Minecraft.getInstance().getBlockRenderer().getBlockModel(state));
+        this.modelSupplier = Lazy.of(modelSupplier);
+        this.nonStandardModelProvider = nonStandardModelProvider;
         this.tintProvider = tintProvider;
         this.itemTransforms = itemTransforms;
         this.errorModel = errorModel;
         this.extents = Suppliers.memoize(() ->
         {
-            BlockStateModel model = modelSupplier.get();
+            BlockStateModel model = this.modelSupplier.get();
             ItemModelInfo modelInfo = ItemModelInfo.DEFAULT;
             if (model instanceof AbstractFramedBlockModel blockModel)
             {
@@ -208,6 +218,12 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
     public void clearCache()
     {
         itemModelCache.clear();
+        // Assume that models provided by non-standard providers are "freestanding" and therefore don't get caught by
+        // the clearCache() call on all AbstractFramedBlockModels in the block model "registry"
+        if (nonStandardModelProvider && modelSupplier.get() instanceof AbstractFramedBlockModel framedModel)
+        {
+            framedModel.clearCache();
+        }
     }
 
 
@@ -218,11 +234,12 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
 
 
 
-    public record Unbaked(Block block, DynamicItemTintProvider tintProvider, ResourceLocation baseModel) implements ItemModel.Unbaked
+    public record Unbaked(Block block, BlockItemModelProvider modelProvider, DynamicItemTintProvider tintProvider, ResourceLocation baseModel) implements ItemModel.Unbaked
     {
         public static final ResourceLocation ID = Utils.rl("block");
         public static final MapCodec<FramedBlockItemModel.Unbaked> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
                 BuiltInRegistries.BLOCK.byNameCodec().fieldOf("block").validate(FramedBlockItemModel.Unbaked::validateBlock).forGetter(FramedBlockItemModel.Unbaked::block),
+                BlockItemModelProviders.CODEC.optionalFieldOf("model_provider", BlockItemModelProvider.DEFAULT).forGetter(FramedBlockItemModel.Unbaked::modelProvider),
                 DynamicItemTintProviders.CODEC.optionalFieldOf("tint_provider", FramedBlockItemTintProvider.INSTANCE_SINGLE).forGetter(FramedBlockItemModel.Unbaked::tintProvider),
                 ResourceLocation.CODEC.fieldOf("base_model").forGetter(FramedBlockItemModel.Unbaked::baseModel)
         ).apply(inst, FramedBlockItemModel.Unbaked::new));
@@ -247,10 +264,12 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
         @Override
         public FramedBlockItemModel bake(BakingContext context)
         {
-            BlockState state = ((IFramedBlock) block).getItemModelSource();
+            BlockState state = Objects.requireNonNull(((IFramedBlock) block).getItemModelSource());
+            Supplier<BlockStateModel> modelSupplier = modelProvider.create(state, context.blockModelBaker());
+            boolean nonStandardModelProvider = modelProvider != BlockItemModelProvider.DEFAULT;
             ItemTransforms transforms = context.blockModelBaker().getModel(baseModel).getTopTransforms();
             ItemModel errorModel = context.blockModelBaker().compute(ERROR_MODEL_KEY);
-            return new FramedBlockItemModel(Objects.requireNonNull(state), tintProvider, transforms, errorModel);
+            return new FramedBlockItemModel(state, modelSupplier, nonStandardModelProvider, tintProvider, transforms, errorModel);
         }
 
         @Override

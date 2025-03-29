@@ -3,6 +3,7 @@ package xfacthd.framedblocks.api.internal;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BlockModelDefinition;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.SingleVariant;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.model.ExtendedBlockModelPart;
 import xfacthd.framedblocks.api.model.data.QuadMap;
+import xfacthd.framedblocks.api.model.item.block.BlockItemModelProvider;
 import xfacthd.framedblocks.api.model.item.tint.DynamicItemTintProvider;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.wrapping.ModelFactory;
@@ -24,6 +26,7 @@ import xfacthd.framedblocks.api.render.debug.BlockDebugRenderer;
 import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.Map;
+import java.util.function.Supplier;
 
 @ApiStatus.Internal
 public interface InternalClientAPI
@@ -44,9 +47,11 @@ public interface InternalClientAPI
 
     void enqueueClientTask(int delay, Runnable task);
 
-    ItemModel.Unbaked createFramedBlockItemModel(Block block, DynamicItemTintProvider tintProvider, ResourceLocation baseModel);
+    ItemModel.Unbaked createFramedBlockItemModel(Block block, BlockItemModelProvider modelProvider, DynamicItemTintProvider tintProvider, ResourceLocation baseModel);
 
     ExtendedBlockModelPart makeBlockModelPart(QuadMap quadMap, TriState partAO, TextureAtlasSprite particleSprite, RenderType renderType, @Nullable BlockState shaderState);
 
     BlockModelDefinition createFramedBlockDefinition(Either<BlockModelDefinition, SingleVariant.Unbaked> wrapped, Map<String, SingleVariant.Unbaked> auxModels);
+
+    Supplier<BlockStateModel> createBlockItemModelProviderForGeometry(BlockState state, BlockState srcState, GeometryFactory geometry);
 }
