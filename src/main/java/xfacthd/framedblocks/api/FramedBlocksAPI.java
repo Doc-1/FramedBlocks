@@ -3,10 +3,12 @@ package xfacthd.framedblocks.api;
 import net.minecraft.core.Registry;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.ApiStatus;
 import xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
 import xfacthd.framedblocks.api.camo.CamoContainerFactory;
 import xfacthd.framedblocks.api.util.Utils;
 
+@ApiStatus.NonExtendable
 @SuppressWarnings("unused")
 public interface FramedBlocksAPI
 {

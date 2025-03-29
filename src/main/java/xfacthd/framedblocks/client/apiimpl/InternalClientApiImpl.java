@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.FramedBlocks;
-import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.internal.InternalClientAPI;
 import xfacthd.framedblocks.api.model.AbstractFramedBlockModel;
 import xfacthd.framedblocks.api.model.ExtendedBlockModelPart;
@@ -30,7 +29,6 @@ import xfacthd.framedblocks.client.model.FramedBlockModelPart;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.item.tint.DynamicItemTintProvider;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
-import xfacthd.framedblocks.api.render.debug.BlockDebugRenderer;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.itemmodel.FramedBlockItemModel;
 import xfacthd.framedblocks.client.model.baked.FramedBlockModel;
@@ -39,8 +37,6 @@ import xfacthd.framedblocks.client.model.unbaked.UnbakedFramedBlockModel;
 import xfacthd.framedblocks.client.model.unbaked.UnbakedCopyingFramedBlockModel;
 import xfacthd.framedblocks.client.modelwrapping.ModelWrappingHandler;
 import xfacthd.framedblocks.client.modelwrapping.ModelWrappingManager;
-import xfacthd.framedblocks.client.render.debug.impl.ConnectionPredicateDebugRenderer;
-import xfacthd.framedblocks.client.render.debug.impl.QuadWindingDebugRenderer;
 import xfacthd.framedblocks.client.util.ClientTaskQueue;
 import xfacthd.framedblocks.common.config.DevToolsConfig;
 
@@ -82,18 +78,6 @@ public final class InternalClientApiImpl implements InternalClientAPI
                 ctx -> new UnbakedCopyingFramedBlockModel(ctx, srcBlock.value()),
                 stateMerger
         );
-    }
-
-    @Override
-    public BlockDebugRenderer<FramedBlockEntity> getConnectionDebugRenderer()
-    {
-        return ConnectionPredicateDebugRenderer.INSTANCE;
-    }
-
-    @Override
-    public BlockDebugRenderer<FramedBlockEntity> getQuadWindingDebugRenderer()
-    {
-        return QuadWindingDebugRenderer.INSTANCE;
     }
 
     @Override

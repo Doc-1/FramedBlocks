@@ -1,20 +1,16 @@
 package xfacthd.framedblocks.api.render.debug;
 
+import org.jetbrains.annotations.ApiStatus;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
-import xfacthd.framedblocks.api.internal.InternalClientAPI;
+import xfacthd.framedblocks.api.util.Utils;
 
-public final class DebugRenderers
+@ApiStatus.NonExtendable
+@SuppressWarnings("unused")
+public interface DebugRenderers
 {
-    public static final BlockDebugRenderer<FramedBlockEntity> CONNECTION_DEBUG_RENDERER;
-    public static final BlockDebugRenderer<FramedBlockEntity> QUAD_WINDING_DEBUG_RENDERER;
+    DebugRenderers INSTANCE = Utils.loadService(DebugRenderers.class);
 
+    BlockDebugRenderer<FramedBlockEntity> connectionPredicate();
 
-
-    private DebugRenderers() { }
-
-    static
-    {
-        CONNECTION_DEBUG_RENDERER = InternalClientAPI.INSTANCE.getConnectionDebugRenderer();
-        QUAD_WINDING_DEBUG_RENDERER = InternalClientAPI.INSTANCE.getQuadWindingDebugRenderer();
-    }
+    BlockDebugRenderer<FramedBlockEntity> quadWinding();
 }

@@ -14,7 +14,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.model.ExtendedBlockModelPart;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.item.block.BlockItemModelProvider;
@@ -22,7 +21,6 @@ import xfacthd.framedblocks.api.model.item.tint.DynamicItemTintProvider;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.wrapping.ModelFactory;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
-import xfacthd.framedblocks.api.render.debug.BlockDebugRenderer;
 import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.Map;
@@ -40,10 +38,6 @@ public interface InternalClientAPI
     void registerSpecialModelWrapper(Holder<Block> block, ModelFactory modelFactory, StateMerger stateMerger);
 
     void registerCopyingModelWrapper(Holder<Block> block, Holder<Block> srcBlock, StateMerger stateMerger);
-
-    BlockDebugRenderer<FramedBlockEntity> getConnectionDebugRenderer();
-
-    BlockDebugRenderer<FramedBlockEntity> getQuadWindingDebugRenderer();
 
     void enqueueClientTask(int delay, Runnable task);
 

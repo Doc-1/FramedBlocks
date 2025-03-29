@@ -1,11 +1,13 @@
 package xfacthd.framedblocks.api.util;
 
 import net.minecraft.client.renderer.RenderType;
+import org.jetbrains.annotations.ApiStatus;
 import xfacthd.framedblocks.api.predicate.contex.ConTexMode;
 
 @SuppressWarnings("unused")
 public final class ConfigView
 {
+    @ApiStatus.NonExtendable
     public interface Server
     {
         Server INSTANCE = Utils.loadService(ConfigView.Server.class);
@@ -43,6 +45,7 @@ public final class ConfigView
         boolean areBlocksFireproof();
     }
 
+    @ApiStatus.NonExtendable
     public interface Client
     {
         Client INSTANCE = Utils.loadService(ConfigView.Client.class);
@@ -102,6 +105,7 @@ public final class ConfigView
         boolean supportWeightedVariants();
     }
 
+    @ApiStatus.NonExtendable
     public interface DevTools
     {
         DevTools INSTANCE = Utils.loadService(DevTools.class);
