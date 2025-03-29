@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
-import xfacthd.framedblocks.api.util.CamoList;
+import xfacthd.framedblocks.api.camo.CamoList;
 
 import java.util.List;
 

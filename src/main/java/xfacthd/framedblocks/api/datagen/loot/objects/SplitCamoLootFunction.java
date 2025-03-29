@@ -11,7 +11,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
-import xfacthd.framedblocks.api.util.CamoList;
+import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.List;

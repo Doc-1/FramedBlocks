@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
-import xfacthd.framedblocks.api.util.CamoList;
+import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.common.FBContent;
 
 public class FramedDoorBlockEntity extends FramedBlockEntity

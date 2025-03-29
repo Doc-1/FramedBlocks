@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.blueprint.BlueprintCopyBehaviour;
 import xfacthd.framedblocks.api.blueprint.BlueprintData;
-import xfacthd.framedblocks.api.util.CamoList;
+import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.common.block.door.FramedDoorBlock;
 import xfacthd.framedblocks.common.data.blueprint.auxdata.DoorAuxBlueprintData;
 

@@ -4,7 +4,7 @@ import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemStack;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.model.util.ModelUtils;
-import xfacthd.framedblocks.api.util.CamoList;
+import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.api.util.ConfigView;
 
 public class FramedBlockItemTintProvider implements DynamicItemTintProvider

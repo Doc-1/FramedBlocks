@@ -49,7 +49,7 @@ import xfacthd.framedblocks.api.model.item.AbstractFramedBlockItemModel;
 import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.model.item.block.BlockItemModelProvider;
 import xfacthd.framedblocks.api.model.item.tint.FramedBlockItemTintProvider;
-import xfacthd.framedblocks.api.util.CamoList;
+import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.api.util.ConfigView;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.api.model.item.tint.DynamicItemTintProvider;

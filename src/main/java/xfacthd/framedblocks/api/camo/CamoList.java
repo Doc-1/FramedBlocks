@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.api.util;
+package xfacthd.framedblocks.api.camo;
 
 import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.ObjectArrays;
@@ -6,9 +6,8 @@ import it.unimi.dsi.fastutil.objects.ObjectIterators;
 import it.unimi.dsi.fastutil.objects.ObjectSpliterators;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import xfacthd.framedblocks.api.camo.CamoContainer;
-import xfacthd.framedblocks.api.camo.CamoContainerHelper;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
+import xfacthd.framedblocks.api.util.FramedByteBufCodecs;
 
 import java.util.Arrays;
 import java.util.Iterator;

@@ -1,7 +1,7 @@
 package xfacthd.framedblocks.api.model.item.tint;
 
 import net.minecraft.world.item.ItemStack;
-import xfacthd.framedblocks.api.util.CamoList;
+import xfacthd.framedblocks.api.camo.CamoList;
 
 public interface DynamicItemTintProvider
 {

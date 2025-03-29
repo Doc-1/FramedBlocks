@@ -8,15 +8,23 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CustomRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import xfacthd.framedblocks.api.block.IFramedBlock;
-import xfacthd.framedblocks.api.camo.*;
+import xfacthd.framedblocks.api.camo.CamoContainer;
+import xfacthd.framedblocks.api.camo.CamoContainerFactory;
+import xfacthd.framedblocks.api.camo.CamoContainerHelper;
+import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
-import xfacthd.framedblocks.api.util.CamoList;
 import xfacthd.framedblocks.common.FBContent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public final class CamoApplicationRecipe extends CustomRecipe
 {

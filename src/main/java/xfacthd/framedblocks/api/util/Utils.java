@@ -37,6 +37,7 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.api.component.FrameConfig;
 import xfacthd.framedblocks.api.util.registration.DeferredDataComponentType;
 

@@ -35,7 +35,7 @@ import net.neoforged.neoforge.model.data.ModelData;
 import xfacthd.framedblocks.api.ghost.GhostRenderBehaviour;
 import xfacthd.framedblocks.api.model.util.ModelUtils;
 import xfacthd.framedblocks.api.ghost.RegisterGhostRenderBehavioursEvent;
-import xfacthd.framedblocks.api.util.CamoList;
+import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.SingleBlockFakeLevel;
 import xfacthd.framedblocks.api.util.Utils;

@@ -5,7 +5,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.api.util.CamoList;
+import xfacthd.framedblocks.api.camo.CamoList;
 
 public final class StandingAndWallDoubleBlockGhostRenderBehaviour extends StandingAndWallBlockGhostRenderBehaviour
 {

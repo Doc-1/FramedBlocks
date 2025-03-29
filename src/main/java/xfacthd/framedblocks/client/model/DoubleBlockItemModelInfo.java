@@ -5,7 +5,7 @@ import net.neoforged.neoforge.model.data.ModelData;
 import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.model.item.ItemModelInfo;
-import xfacthd.framedblocks.api.util.CamoList;
+import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 
 public class DoubleBlockItemModelInfo implements ItemModelInfo

@@ -10,7 +10,7 @@ import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.blueprint.BlueprintData;
 import xfacthd.framedblocks.api.ghost.GhostRenderBehaviour;
-import xfacthd.framedblocks.api.util.CamoList;
+import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.client.render.special.GhostBlockRenderer;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.item.FramedBlueprintItem;
