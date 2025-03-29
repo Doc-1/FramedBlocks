@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.model.ExtendedBlockModelPart;
 import xfacthd.framedblocks.api.model.data.QuadMap;
-import xfacthd.framedblocks.api.model.item.DynamicItemTintProvider;
+import xfacthd.framedblocks.api.model.item.tint.DynamicItemTintProvider;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.wrapping.ModelFactory;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;

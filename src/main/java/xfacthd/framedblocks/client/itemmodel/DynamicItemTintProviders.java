@@ -4,8 +4,8 @@ import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 import net.neoforged.fml.ModLoader;
-import xfacthd.framedblocks.api.model.item.DynamicItemTintProvider;
-import xfacthd.framedblocks.api.model.item.RegisterItemTintProvidersEvent;
+import xfacthd.framedblocks.api.model.item.tint.DynamicItemTintProvider;
+import xfacthd.framedblocks.api.model.item.tint.RegisterItemTintProvidersEvent;
 
 public final class DynamicItemTintProviders
 {

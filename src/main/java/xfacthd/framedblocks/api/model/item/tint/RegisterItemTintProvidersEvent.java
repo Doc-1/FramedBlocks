@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.api.model.item;
+package xfacthd.framedblocks.api.model.item.tint;
 
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.Event;

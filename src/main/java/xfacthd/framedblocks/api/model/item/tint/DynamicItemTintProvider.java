@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.api.model.item;
+package xfacthd.framedblocks.api.model.item.tint;
 
 import net.minecraft.world.item.ItemStack;
 import xfacthd.framedblocks.api.util.CamoList;

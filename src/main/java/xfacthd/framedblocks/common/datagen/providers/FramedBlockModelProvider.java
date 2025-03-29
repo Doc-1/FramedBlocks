@@ -29,7 +29,7 @@ import net.neoforged.neoforge.client.model.generators.template.ExtendedModelTemp
 import net.neoforged.neoforge.common.conditions.NeoForgeConditions;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.datagen.models.AbstractFramedBlockModelProvider;
-import xfacthd.framedblocks.api.model.item.FramedBlockItemTintProvider;
+import xfacthd.framedblocks.api.model.item.tint.FramedBlockItemTintProvider;
 import xfacthd.framedblocks.api.util.ClientUtils;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.Utils;

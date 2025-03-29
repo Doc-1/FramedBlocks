@@ -9,8 +9,8 @@ import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.internal.InternalClientAPI;
-import xfacthd.framedblocks.api.model.item.DynamicItemTintProvider;
-import xfacthd.framedblocks.api.model.item.FramedBlockItemTintProvider;
+import xfacthd.framedblocks.api.model.item.tint.DynamicItemTintProvider;
+import xfacthd.framedblocks.api.model.item.tint.FramedBlockItemTintProvider;
 
 @SuppressWarnings({ "unused", "UnusedReturnValue" })
 public final class FramedItemModelBuilder

@@ -47,11 +47,11 @@ import xfacthd.framedblocks.api.model.AbstractFramedBlockModel;
 import xfacthd.framedblocks.api.model.ModelPartCollectionFakeLevel;
 import xfacthd.framedblocks.api.model.item.AbstractFramedBlockItemModel;
 import xfacthd.framedblocks.api.model.item.ItemModelInfo;
-import xfacthd.framedblocks.api.model.item.FramedBlockItemTintProvider;
+import xfacthd.framedblocks.api.model.item.tint.FramedBlockItemTintProvider;
 import xfacthd.framedblocks.api.util.CamoList;
 import xfacthd.framedblocks.api.util.ConfigView;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.api.model.item.DynamicItemTintProvider;
+import xfacthd.framedblocks.api.model.item.tint.DynamicItemTintProvider;
 import xfacthd.framedblocks.client.render.item.IDynamicTintableItemStackRenderStateLayer;
 
 import java.util.ArrayList;

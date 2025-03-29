@@ -2,7 +2,7 @@ package xfacthd.framedblocks.client.itemmodel.tintprovider;
 
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import xfacthd.framedblocks.api.model.item.FramedBlockItemTintProvider;
+import xfacthd.framedblocks.api.model.item.tint.FramedBlockItemTintProvider;
 import xfacthd.framedblocks.api.util.CamoList;
 import xfacthd.framedblocks.client.model.geometry.cube.FramedTargetGeometry;
 

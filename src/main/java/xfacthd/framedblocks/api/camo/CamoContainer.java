@@ -8,7 +8,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.api.model.item.DynamicItemTintProvider;
+import xfacthd.framedblocks.api.model.item.tint.DynamicItemTintProvider;
 
 /**
  * Base class for camo containers, holding a {@link CamoContent} as well as any additional metadata needed for
