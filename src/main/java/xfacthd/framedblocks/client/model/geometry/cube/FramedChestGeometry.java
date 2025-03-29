@@ -118,7 +118,7 @@ public class FramedChestGeometry extends Geometry
     @Override
     public void collectAdditionalPartsCached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data, QuadCacheKey cacheKey)
     {
-        if (closed && latch != LatchType.DEFAULT)
+        if (closed && latch == LatchType.DEFAULT)
         {
             consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, null, null);
         }
