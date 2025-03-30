@@ -168,12 +168,7 @@ public class FramedChiseledBookshelfBlock extends FramedBlock
     @Override
     protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean isMoving)
     {
-        if (level.getBlockEntity(pos) instanceof FramedChiseledBookshelfBlockEntity be)
-        {
-            be.getDrops().forEach(stack -> popResource(level, pos, stack));
-            be.clearContents();
-            level.updateNeighbourForOutputSignal(pos, this);
-        }
+        level.updateNeighbourForOutputSignal(pos, this);
     }
 
     @Override

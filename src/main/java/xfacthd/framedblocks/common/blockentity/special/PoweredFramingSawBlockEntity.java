@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
@@ -19,6 +19,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
+import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.capability.energy.EntityAwareEnergyStorage;
 import xfacthd.framedblocks.common.capability.item.ExternalItemHandler;
@@ -34,7 +35,6 @@ import xfacthd.framedblocks.common.menu.FramingSawMenu;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public class PoweredFramingSawBlockEntity extends BlockEntity
 {
@@ -294,17 +294,6 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
         return craftingDuration;
     }
 
-    public void dropContents(Consumer<ItemStack> dropper)
-    {
-        inhibitUpdate = true;
-        for (int i = 0; i < itemHandler.getSlots(); i++)
-        {
-            dropper.accept(itemHandler.getStackInSlot(i));
-            itemHandler.setStackInSlot(i, ItemStack.EMPTY);
-        }
-        inhibitUpdate = false;
-    }
-
     public boolean isInputEmpty()
     {
         for (int i = 0; i < FramingSawMenu.SLOT_RESULT; i++)
@@ -330,6 +319,18 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
                     .filter(h -> h.value() instanceof FramingSawRecipe)
                     .orElse(null);
             selectRecipe(recipe);
+        }
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state)
+    {
+        super.preRemoveSideEffects(pos, state);
+        if (level != null)
+        {
+            inhibitUpdate = true;
+            Utils.dropItemHandlerContents(level, pos, itemHandler);
+            inhibitUpdate = false;
         }
     }
 

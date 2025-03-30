@@ -23,9 +23,6 @@ import xfacthd.framedblocks.common.capability.item.IStorageBlockItemHandler;
 import xfacthd.framedblocks.common.capability.item.StorageBlockItemStackHandler;
 import xfacthd.framedblocks.common.menu.FramedStorageMenu;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuProvider, Nameable, Clearable
 {
     public static final Component TITLE = Utils.translate("title", "framed_secret_storage");
@@ -60,26 +57,20 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
         return !(player.distanceToSqr((double)worldPosition.getX() + 0.5D, (double)worldPosition.getY() + 0.5D, (double)worldPosition.getZ() + 0.5D) > 64.0D);
     }
 
-    public List<ItemStack> getDrops()
-    {
-        List<ItemStack> drops = new ArrayList<>();
-        for (int i = 0; i < itemHandler.getSlots(); i++)
-        {
-            ItemStack stack = itemHandler.getStackInSlot(i);
-            if (!stack.isEmpty())
-            {
-                drops.add(stack);
-            }
-        }
-        return drops;
-    }
-
     @Override
     public void clearContent()
     {
-        for (int i = 0; i < itemHandler.getSlots(); i++)
+        Utils.clearItemHandler(itemHandler);
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state)
+    {
+        super.preRemoveSideEffects(pos, state);
+        if (level != null)
         {
-            itemHandler.setStackInSlot(i, ItemStack.EMPTY);
+            Utils.dropItemHandlerContents(level, pos, itemHandler);
+            clearContent();
         }
     }
 

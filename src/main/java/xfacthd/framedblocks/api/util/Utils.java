@@ -20,10 +20,12 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
@@ -32,6 +34,8 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -429,6 +433,26 @@ public final class Utils
         else if (creative && !player.getInventory().contains(stack))
         {
             player.getInventory().add(stack);
+        }
+    }
+
+    public static void dropItemHandlerContents(Level level, BlockPos pos, IItemHandler itemHandler)
+    {
+        for (int i = 0; i < itemHandler.getSlots(); i++)
+        {
+            ItemStack stack = itemHandler.getStackInSlot(i);
+            if (!stack.isEmpty())
+            {
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), stack);
+            }
+        }
+    }
+
+    public static void clearItemHandler(IItemHandlerModifiable itemHandler)
+    {
+        for (int i = 0; i < itemHandler.getSlots(); i++)
+        {
+            itemHandler.setStackInSlot(i, ItemStack.EMPTY);
         }
     }
 

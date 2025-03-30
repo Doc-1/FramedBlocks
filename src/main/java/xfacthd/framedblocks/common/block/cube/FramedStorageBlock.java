@@ -50,12 +50,7 @@ public class FramedStorageBlock extends FramedBlock
     @Override
     protected void affectNeighborsAfterRemoval(BlockState p_394424_, ServerLevel level, BlockPos pos, boolean isMoving)
     {
-        if (level.getBlockEntity(pos) instanceof FramedStorageBlockEntity be)
-        {
-            be.getDrops().forEach(stack -> popResource(level, pos, stack));
-            be.clearContent();
-            level.updateNeighbourForOutputSignal(pos, this);
-        }
+        level.updateNeighbourForOutputSignal(pos, this);
     }
 
     @Override
