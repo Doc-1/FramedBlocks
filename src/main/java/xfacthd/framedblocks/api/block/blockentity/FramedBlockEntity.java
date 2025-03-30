@@ -760,9 +760,14 @@ public class FramedBlockEntity extends BlockEntity
 
     protected void addCamoDrops(List<ItemStack> drops)
     {
-        if (!camoContainer.isEmpty())
+        dropCamo(drops, camoContainer);
+    }
+
+    protected static void dropCamo(List<ItemStack> drops, CamoContainer<?, ?> camo)
+    {
+        if (!camo.isEmpty())
         {
-            ItemStack stack = CamoContainerHelper.dropCamo(camoContainer);
+            ItemStack stack = CamoContainerHelper.dropCamo(camo);
             if (!stack.isEmpty())
             {
                 drops.add(stack);
