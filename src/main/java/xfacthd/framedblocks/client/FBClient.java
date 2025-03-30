@@ -16,6 +16,7 @@ import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.client.model.standalone.StandaloneModelBaker;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.IFramedBlock;
@@ -25,7 +26,6 @@ import xfacthd.framedblocks.api.model.item.block.BlockItemModelProvider;
 import xfacthd.framedblocks.api.model.item.block.RegisterBlockItemModelProvidersEvent;
 import xfacthd.framedblocks.api.model.item.tint.FramedBlockItemTintProvider;
 import xfacthd.framedblocks.api.model.item.tint.RegisterItemTintProvidersEvent;
-import xfacthd.framedblocks.api.model.util.StandaloneModels;
 import xfacthd.framedblocks.api.model.wrapping.RegisterModelWrappersEvent;
 import xfacthd.framedblocks.api.model.wrapping.WrapHelper;
 import xfacthd.framedblocks.api.model.item.ItemModelInfo;
@@ -473,7 +473,7 @@ public final class FBClient
     {
         event.register(FluidModel.BARE_MODEL_KEY, FluidModel.DUMMY_STANDALONE_BAKER);
         event.register(FluidModel.BARE_MODEL_SINGLE_KEY, FluidModel.DUMMY_STANDALONE_BAKER);
-        event.register(ReinforcementModel.MODEL_KEY, StandaloneModels.QUAD_COLLECTION_STANDALONE_BAKER);
+        event.register(ReinforcementModel.MODEL_KEY, StandaloneModelBaker.quadCollection());
     }
 
     private static void onModelsLoaded(final ModelEvent.BakingCompleted event)
