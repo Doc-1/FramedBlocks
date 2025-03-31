@@ -2,8 +2,6 @@ package xfacthd.framedblocks.client.render.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -14,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
@@ -58,6 +57,9 @@ public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlock
             Vec3 cameraPos
     )
     {
+        Level level = be.getLevel();
+        if (level == null || be.isRemoved()) return;
+
         BlockState state = be.getBlockState();
 
         var result = FramedChestBlock.combine(be, true);
@@ -68,7 +70,7 @@ public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlock
         LatchType latch = state.getValue(PropertyHolder.LATCH_TYPE);
 
         long lastChange = result.apply(FramedChestBlock.OPENNESS_COMBINER).orElse(0L);
-        float angle = calculateAngle(be, chestState, dir, lastChange, partialTicks);
+        float angle = calculateAngle(level, chestState, dir, lastChange, partialTicks);
 
         float xOff = Utils.isX(dir) ? (Utils.isPositive(dir) ? 1F/16F : 15F/16F) : 0;
         float zOff = Utils.isZ(dir) ? (Utils.isPositive(dir) ? 1F/16F : 15F/16F) : 0;
@@ -80,48 +82,27 @@ public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlock
         poseStack.translate(-xOff, -9F/16F, -zOff);
 
         BlockStateModel model = LID_MODELS[makeModelIndex(dir, type, latch)];
-        renderLidModel(be, state, poseStack, buffer, model);
+
+        RANDOM.setSeed(42);
+        // Cannot use BlockRenderDispatcher#renderBatched() due to incorrect shading of rotated surfaces
+        RenderUtils.renderModel(
+                state,
+                level,
+                be.getBlockPos(),
+                poseStack.last(),
+                buffer,
+                model,
+                RANDOM,
+                light,
+                OverlayTexture.NO_OVERLAY
+        );
 
         poseStack.popPose();
     }
 
-    private static void renderLidModel(
-            FramedChestBlockEntity be,
-            BlockState state,
-            PoseStack matrix,
-            MultiBufferSource buffer,
-            BlockStateModel model
-    )
+    private static float calculateAngle(Level level, ChestState chestState, Direction dir, long lastChange, float partialTicks)
     {
-        int color = Minecraft.getInstance().getBlockColors().getColor(state, be.getLevel(), be.getBlockPos(), 0);
-        float red = (float)(color >> 16 & 255) / 255.0F;
-        float green = (float)(color >> 8 & 255) / 255.0F;
-        float blue = (float)(color & 255) / 255.0F;
-
-        //noinspection ConstantConditions
-        int light = LevelRenderer.getLightColor(be.getLevel(), be.getBlockPos());
-
-        RANDOM.setSeed(42);
-        RenderUtils.renderModel(
-                matrix.last(),
-                buffer,
-                be.getLevel(),
-                be.getBlockPos(),
-                state,
-                model,
-                RANDOM,
-                red, green, blue,
-                light,
-                OverlayTexture.NO_OVERLAY
-        );
-    }
-
-    private static float calculateAngle(
-            FramedChestBlockEntity be, ChestState chestState, Direction dir, long lastChange, float partialTicks
-    )
-    {
-        //noinspection ConstantConditions
-        float diff = (float) (be.getLevel().getGameTime() - lastChange) + partialTicks;
+        float diff = (float) (level.getGameTime() - lastChange) + partialTicks;
 
         float factor = Mth.lerp(diff / 10F, 0, 1);
         if (chestState == ChestState.CLOSING) { factor = 1F - factor; }
