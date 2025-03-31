@@ -3,11 +3,10 @@ package xfacthd.framedblocks.common.compat.create.schematic.requirements;
 import com.simibubi.create.api.schematic.requirement.SchematicRequirementRegistries;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.common.blockentity.special.FramedDoorBlockEntity;
 
 public final class FramedDoorBlockItemRequirement implements SchematicRequirementRegistries.BlockRequirement
 {
@@ -18,7 +17,7 @@ public final class FramedDoorBlockItemRequirement implements SchematicRequiremen
     @Override
     public ItemRequirement getRequiredItems(BlockState state, @Nullable BlockEntity blockEntity)
     {
-        if (state.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER)
+        if (!FramedDoorBlockEntity.isTopHalf(state))
         {
             return new ItemRequirement(ItemRequirement.ItemUseType.CONSUME, new ItemStack(state.getBlock()));
         }

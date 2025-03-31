@@ -8,7 +8,9 @@ import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.data.PropertyHolder;
-import xfacthd.framedblocks.common.data.property.*;
+import xfacthd.framedblocks.common.data.property.CornerType;
+import xfacthd.framedblocks.common.data.property.HorizontalRotation;
+import xfacthd.framedblocks.common.data.property.SlopeType;
 
 public final class ExtPlacementStateBuilder extends PlacementStateBuilder<ExtPlacementStateBuilder>
 {

@@ -1,7 +1,9 @@
 package xfacthd.framedblocks.common.compat.emi;
 
 import com.google.common.base.Stopwatch;
-import dev.emi.emi.api.*;
+import dev.emi.emi.api.EmiEntrypoint;
+import dev.emi.emi.api.EmiPlugin;
+import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -14,7 +16,9 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.neoforged.neoforge.common.util.Lazy;
 import xfacthd.framedblocks.FramedBlocks;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.client.screen.*;
+import xfacthd.framedblocks.client.screen.FramingSawScreen;
+import xfacthd.framedblocks.client.screen.FramingSawWithEncoderScreen;
+import xfacthd.framedblocks.client.screen.PoweredFramingSawScreen;
 import xfacthd.framedblocks.common.config.ClientConfig;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;

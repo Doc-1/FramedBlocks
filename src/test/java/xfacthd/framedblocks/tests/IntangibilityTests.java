@@ -16,7 +16,8 @@ import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.config.ServerConfig;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
 
 //@GameTestHolder(FramedConstants.MOD_ID)
 public final class IntangibilityTests

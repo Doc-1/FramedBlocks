@@ -1,7 +1,7 @@
 package xfacthd.framedblocks.common.apiimpl;
 
 import net.minecraft.core.Registry;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.state.BlockState;
 import xfacthd.framedblocks.api.FramedBlocksAPI;
 import xfacthd.framedblocks.api.blueprint.AuxBlueprintData;

@@ -1,14 +1,16 @@
 package xfacthd.framedblocks.common.compat.emi;
 
 import dev.emi.emi.api.recipe.EmiRecipe;
-import dev.emi.emi.api.recipe.handler.*;
+import dev.emi.emi.api.recipe.handler.EmiCraftContext;
+import dev.emi.emi.api.recipe.handler.StandardRecipeHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.neoforge.network.PacketDistributor;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
-import xfacthd.framedblocks.common.menu.*;
+import xfacthd.framedblocks.common.menu.FramingSawMenu;
+import xfacthd.framedblocks.common.menu.IFramingSawMenu;
 import xfacthd.framedblocks.common.net.payload.ServerboundSelectFramingSawRecipePayload;
 
 import java.util.ArrayList;

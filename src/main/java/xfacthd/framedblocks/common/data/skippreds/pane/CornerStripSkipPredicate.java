@@ -11,7 +11,9 @@ import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.property.SlopeType;
-import xfacthd.framedblocks.common.data.skippreds.*;
+import xfacthd.framedblocks.common.data.skippreds.CornerDir;
+import xfacthd.framedblocks.common.data.skippreds.CullTest;
+import xfacthd.framedblocks.common.data.skippreds.HalfDir;
 
 @CullTest(BlockType.FRAMED_CORNER_STRIP)
 public final class CornerStripSkipPredicate implements SideSkipPredicate

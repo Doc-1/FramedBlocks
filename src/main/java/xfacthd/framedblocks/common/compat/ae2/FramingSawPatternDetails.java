@@ -2,11 +2,15 @@ package xfacthd.framedblocks.common.compat.ae2;
 
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.crafting.PatternDetailsTooltip;
-import appeng.api.stacks.*;
+import appeng.api.stacks.AEItemKey;
+import appeng.api.stacks.AEKey;
+import appeng.api.stacks.GenericStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
@@ -14,7 +18,9 @@ import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeAdditive;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCalculation;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 final class FramingSawPatternDetails implements IPatternDetails
 {

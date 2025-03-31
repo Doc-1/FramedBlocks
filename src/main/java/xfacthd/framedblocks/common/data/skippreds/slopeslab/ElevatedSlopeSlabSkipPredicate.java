@@ -4,19 +4,31 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.Half;
+import net.minecraft.world.level.block.state.properties.StairsShape;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
-import xfacthd.framedblocks.common.data.property.*;
-import xfacthd.framedblocks.common.data.skippreds.*;
+import xfacthd.framedblocks.common.data.property.CornerType;
+import xfacthd.framedblocks.common.data.property.HorizontalRotation;
+import xfacthd.framedblocks.common.data.property.SlopeType;
+import xfacthd.framedblocks.common.data.skippreds.CullTest;
+import xfacthd.framedblocks.common.data.skippreds.HalfDir;
+import xfacthd.framedblocks.common.data.skippreds.HalfTriangleDir;
 import xfacthd.framedblocks.common.data.skippreds.slab.SlabEdgeSkipPredicate;
 import xfacthd.framedblocks.common.data.skippreds.slab.SlabSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopeedge.*;
-import xfacthd.framedblocks.common.data.skippreds.slopepanelcorner.*;
-import xfacthd.framedblocks.common.data.skippreds.stairs.*;
+import xfacthd.framedblocks.common.data.skippreds.slopeedge.ElevatedCornerSlopeEdgeSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopeedge.ElevatedSlopeEdgeSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopeedge.InnerCornerSlopeEdgeSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopeedge.SlopeEdgeSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopepanelcorner.ExtendedCornerSlopePanelWallSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopepanelcorner.ExtendedInnerCornerSlopePanelWallSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.stairs.SlopedStairsSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.stairs.StairsSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.stairs.VerticalHalfStairsSkipPredicate;
 
 @CullTest(BlockType.FRAMED_ELEVATED_SLOPE_SLAB)
 public final class ElevatedSlopeSlabSkipPredicate implements SideSkipPredicate

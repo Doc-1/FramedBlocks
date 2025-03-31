@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.OutlineBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -72,7 +73,7 @@ public class DoubleBlockPartDebugRenderer implements BlockDebugRenderer<FramedDo
 
         //noinspection deprecation
         VertexConsumer consumer = outlineBuffer.getBuffer(RenderType.outline(TextureAtlas.LOCATION_BLOCKS));
-        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(
+        ModelBlockRenderer.renderModel(
                 poseStack.last(),
                 type -> consumer,
                 model,

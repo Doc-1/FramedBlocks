@@ -1,7 +1,9 @@
 package xfacthd.framedblocks.api.block;
 
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 public final class FramedProperties
 {

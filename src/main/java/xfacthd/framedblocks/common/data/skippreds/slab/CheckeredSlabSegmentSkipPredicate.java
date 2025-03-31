@@ -10,12 +10,20 @@ import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
-import xfacthd.framedblocks.common.data.property.*;
-import xfacthd.framedblocks.common.data.skippreds.*;
+import xfacthd.framedblocks.common.data.property.CornerType;
+import xfacthd.framedblocks.common.data.property.HorizontalRotation;
+import xfacthd.framedblocks.common.data.property.StairsType;
+import xfacthd.framedblocks.common.data.skippreds.CornerDir;
+import xfacthd.framedblocks.common.data.skippreds.CullTest;
+import xfacthd.framedblocks.common.data.skippreds.DiagCornerDir;
 import xfacthd.framedblocks.common.data.skippreds.slopeedge.CornerSlopeEdgeSkipPredicate;
 import xfacthd.framedblocks.common.data.skippreds.slopeedge.ElevatedCornerSlopeEdgeSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopepanelcorner.*;
-import xfacthd.framedblocks.common.data.skippreds.stairs.*;
+import xfacthd.framedblocks.common.data.skippreds.slopepanelcorner.ExtendedCornerSlopePanelWallSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopepanelcorner.SmallCornerSlopePanelWallSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopepanelcorner.SmallInnerCornerSlopePanelWallSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.stairs.HalfStairsSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.stairs.VerticalHalfStairsSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.stairs.VerticalStairsSkipPredicate;
 
 @CullTest(BlockType.FRAMED_CHECKERED_SLAB_SEGMENT)
 public final class CheckeredSlabSegmentSkipPredicate implements SideSkipPredicate

@@ -2,7 +2,10 @@ package xfacthd.framedblocks.common.compat.jei;
 
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.RecipeType;
-import mezz.jei.api.recipe.transfer.*;
+import mezz.jei.api.recipe.transfer.IRecipeTransferError;
+import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
+import mezz.jei.api.recipe.transfer.IRecipeTransferHandlerHelper;
+import mezz.jei.api.recipe.transfer.IRecipeTransferInfo;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -12,7 +15,9 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
-import xfacthd.framedblocks.common.menu.*;
+import xfacthd.framedblocks.common.menu.FramingSawMenu;
+import xfacthd.framedblocks.common.menu.IFramingSawMenu;
+import xfacthd.framedblocks.common.menu.PoweredFramingSawMenu;
 import xfacthd.framedblocks.common.net.payload.ServerboundSelectFramingSawRecipePayload;
 
 import java.util.List;

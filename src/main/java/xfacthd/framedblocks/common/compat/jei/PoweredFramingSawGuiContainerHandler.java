@@ -6,7 +6,9 @@ import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.recipe.IFocusFactory;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.runtime.*;
+import mezz.jei.api.runtime.IClickableIngredient;
+import mezz.jei.api.runtime.IIngredientManager;
+import mezz.jei.api.runtime.IRecipesGui;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -14,7 +16,9 @@ import xfacthd.framedblocks.client.screen.PoweredFramingSawScreen;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 public final class PoweredFramingSawGuiContainerHandler implements IGuiContainerHandler<PoweredFramingSawScreen>
 {

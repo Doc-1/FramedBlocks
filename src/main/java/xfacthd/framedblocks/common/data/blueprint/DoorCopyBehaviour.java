@@ -6,14 +6,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.blueprint.BlueprintCopyBehaviour;
 import xfacthd.framedblocks.api.blueprint.BlueprintData;
 import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.common.block.door.FramedDoorBlock;
+import xfacthd.framedblocks.common.blockentity.special.FramedDoorBlockEntity;
 import xfacthd.framedblocks.common.data.blueprint.auxdata.DoorAuxBlueprintData;
 
 public final class DoorCopyBehaviour implements BlueprintCopyBehaviour
@@ -21,7 +20,7 @@ public final class DoorCopyBehaviour implements BlueprintCopyBehaviour
     @Override
     public BlueprintData writeToBlueprint(Level level, BlockPos pos, BlockState state, FramedBlockEntity be)
     {
-        boolean top = state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER;
+        boolean top = FramedDoorBlockEntity.isTopHalf(state);
         BlockPos posTwo = top ? pos.below() : pos.above();
 
         BlueprintData dataOne = be.writeToBlueprint();

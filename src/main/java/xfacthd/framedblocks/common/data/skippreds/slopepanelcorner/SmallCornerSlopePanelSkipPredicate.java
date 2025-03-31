@@ -12,16 +12,24 @@ import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
-import xfacthd.framedblocks.common.data.property.*;
-import xfacthd.framedblocks.common.data.skippreds.*;
+import xfacthd.framedblocks.common.data.property.CornerType;
+import xfacthd.framedblocks.common.data.property.HorizontalRotation;
+import xfacthd.framedblocks.common.data.property.StairsType;
+import xfacthd.framedblocks.common.data.skippreds.CornerDir;
+import xfacthd.framedblocks.common.data.skippreds.CullTest;
+import xfacthd.framedblocks.common.data.skippreds.HalfTriangleDir;
 import xfacthd.framedblocks.common.data.skippreds.pillar.CornerPillarSkipPredicate;
 import xfacthd.framedblocks.common.data.skippreds.pillar.ThreewayCornerPillarSkipPredicate;
 import xfacthd.framedblocks.common.data.skippreds.slab.CheckeredPanelSegmentSkipPredicate;
 import xfacthd.framedblocks.common.data.skippreds.slab.SlabCornerSkipPredicate;
 import xfacthd.framedblocks.common.data.skippreds.slopeedge.CornerSlopeEdgeSkipPredicate;
 import xfacthd.framedblocks.common.data.skippreds.slopeedge.ElevatedCornerSlopeEdgeSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopepanel.*;
-import xfacthd.framedblocks.common.data.skippreds.stairs.*;
+import xfacthd.framedblocks.common.data.skippreds.slopepanel.FlatInnerSlopePanelCornerSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopepanel.FlatSlopePanelCornerSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopepanel.SlopePanelSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.stairs.HalfStairsSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.stairs.StairsSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.stairs.VerticalStairsSkipPredicate;
 
 @CullTest(BlockType.FRAMED_SMALL_CORNER_SLOPE_PANEL)
 public final class SmallCornerSlopePanelSkipPredicate implements SideSkipPredicate

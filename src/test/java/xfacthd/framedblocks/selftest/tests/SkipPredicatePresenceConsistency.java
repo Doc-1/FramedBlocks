@@ -7,7 +7,10 @@ import xfacthd.framedblocks.selftest.SelfTestReporter;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.Set;
 
 public final class SkipPredicatePresenceConsistency
 {

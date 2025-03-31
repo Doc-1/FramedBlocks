@@ -17,9 +17,11 @@ import xfacthd.framedblocks.api.test.TestUtils;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
-import xfacthd.framedblocks.common.data.property.*;
+import xfacthd.framedblocks.common.data.property.CompoundDirection;
+import xfacthd.framedblocks.common.data.property.DirectionAxis;
+import xfacthd.framedblocks.common.data.property.HorizontalRotation;
 
-import java.util.*;
+import java.util.Set;
 
 //@GameTestHolder(FramedConstants.MOD_ID)
 public final class BeaconTintTests

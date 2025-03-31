@@ -6,7 +6,9 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public final class ClientTaskQueue
 {

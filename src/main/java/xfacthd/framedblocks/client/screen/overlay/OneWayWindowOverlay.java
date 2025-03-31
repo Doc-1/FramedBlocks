@@ -15,7 +15,9 @@ import xfacthd.framedblocks.common.block.cube.FramedOneWayWindowBlock;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.property.NullableDirection;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public final class OneWayWindowOverlay extends BlockInteractOverlay
 {

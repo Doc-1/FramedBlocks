@@ -1,10 +1,20 @@
 package xfacthd.framedblocks.tests;
 
-import net.minecraft.core.*;
-import net.minecraft.gametest.framework.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.LeverBlock;
+import net.minecraft.world.level.block.PressurePlateBlock;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.camo.block.BlockCamoContent;
@@ -12,7 +22,9 @@ import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.test.TestUtils;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.blockentity.special.*;
+import xfacthd.framedblocks.common.blockentity.special.FramedFlowerPotBlockEntity;
+import xfacthd.framedblocks.common.blockentity.special.FramedSignBlockEntity;
+import xfacthd.framedblocks.common.blockentity.special.FramedTargetBlockEntity;
 import xfacthd.framedblocks.common.data.property.LatchType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 

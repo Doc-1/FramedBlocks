@@ -12,7 +12,10 @@ import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.property.HorizontalRotation;
 import xfacthd.framedblocks.common.data.skippreds.CullTest;
 import xfacthd.framedblocks.common.data.skippreds.HalfTriangleDir;
-import xfacthd.framedblocks.common.data.skippreds.slopepanelcorner.*;
+import xfacthd.framedblocks.common.data.skippreds.slopepanelcorner.LargeCornerSlopePanelWallSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopepanelcorner.LargeInnerCornerSlopePanelWallSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopepanelcorner.SmallCornerSlopePanelWallSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopepanelcorner.SmallInnerCornerSlopePanelWallSkipPredicate;
 
 @CullTest(BlockType.FRAMED_FLAT_SLOPE_SLAB_CORNER)
 public final class FlatSlopeSlabCornerSkipPredicate implements SideSkipPredicate

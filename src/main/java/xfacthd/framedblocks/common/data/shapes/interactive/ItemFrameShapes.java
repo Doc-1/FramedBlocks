@@ -7,7 +7,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import xfacthd.framedblocks.api.shapes.*;
+import xfacthd.framedblocks.api.shapes.ShapeCache;
+import xfacthd.framedblocks.api.shapes.ShapeProvider;
+import xfacthd.framedblocks.api.shapes.ShapeUtils;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 
 public final class ItemFrameShapes

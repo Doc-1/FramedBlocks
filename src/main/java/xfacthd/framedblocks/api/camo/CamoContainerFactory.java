@@ -12,7 +12,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.api.util.*;
+import xfacthd.framedblocks.api.util.CamoMessageVerbosity;
+import xfacthd.framedblocks.api.util.ConfigView;
+import xfacthd.framedblocks.api.util.Utils;
 
 public abstract class CamoContainerFactory<T extends CamoContainer<?, T>>
 {

@@ -14,12 +14,23 @@ import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.property.CornerType;
 import xfacthd.framedblocks.common.data.property.SlopeType;
-import xfacthd.framedblocks.common.data.skippreds.*;
+import xfacthd.framedblocks.common.data.skippreds.CullTest;
+import xfacthd.framedblocks.common.data.skippreds.HalfDir;
+import xfacthd.framedblocks.common.data.skippreds.TriangleDir;
 import xfacthd.framedblocks.common.data.skippreds.slab.SlabEdgeSkipPredicate;
 import xfacthd.framedblocks.common.data.skippreds.slab.SlabSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopeedge.*;
-import xfacthd.framedblocks.common.data.skippreds.slopeslab.*;
-import xfacthd.framedblocks.common.data.skippreds.stairs.*;
+import xfacthd.framedblocks.common.data.skippreds.slopeedge.ElevatedCornerSlopeEdgeSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopeedge.ElevatedSlopeEdgeSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopeedge.InnerCornerSlopeEdgeSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopeedge.SlopeEdgeSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopeslab.CompoundSlopeSlabSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopeslab.ElevatedSlopeSlabSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopeslab.FlatElevatedSlopeSlabCornerSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopeslab.FlatInnerSlopeSlabCornerSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopeslab.SlopeSlabSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.stairs.SlopedStairsSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.stairs.StairsSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.stairs.VerticalHalfStairsSkipPredicate;
 
 @CullTest(BlockType.FRAMED_VERTICAL_HALF_SLOPE)
 public final class VerticalHalfSlopeSkipPredicate implements SideSkipPredicate

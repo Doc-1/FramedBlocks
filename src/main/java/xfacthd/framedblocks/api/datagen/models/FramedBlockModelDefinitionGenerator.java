@@ -10,6 +10,7 @@ import xfacthd.framedblocks.api.internal.InternalClientAPI;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("UnusedReturnValue")
 public final class FramedBlockModelDefinitionGenerator implements BlockModelDefinitionGenerator
 {
     private final Block block;

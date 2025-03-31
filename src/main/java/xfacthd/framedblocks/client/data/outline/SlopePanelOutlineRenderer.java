@@ -2,7 +2,7 @@ package xfacthd.framedblocks.client.data.outline;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.level.block.state.BlockState;
-import org.joml.Quaternionf;
+import org.joml.Quaternionfc;
 import xfacthd.framedblocks.api.render.Quaternions;
 import xfacthd.framedblocks.api.render.OutlineRenderer;
 import xfacthd.framedblocks.common.data.PropertyHolder;
@@ -10,7 +10,7 @@ import xfacthd.framedblocks.common.data.property.HorizontalRotation;
 
 public final class SlopePanelOutlineRenderer implements OutlineRenderer
 {
-    public static final Quaternionf[] ROTATIONS = new Quaternionf[] {
+    public static final Quaternionfc[] ROTATIONS = new Quaternionfc[] {
             Quaternions.ONE,
             Quaternions.ZP_180,
             Quaternions.ZP_90,

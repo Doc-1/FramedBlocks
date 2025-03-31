@@ -2,7 +2,9 @@ package xfacthd.framedblocks.common.compat.jade;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
-import snownee.jade.api.*;
+import snownee.jade.api.IWailaClientRegistration;
+import snownee.jade.api.IWailaPlugin;
+import snownee.jade.api.WailaPlugin;
 import xfacthd.framedblocks.api.block.AbstractFramedBlock;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.common.block.interactive.FramedItemFrameBlock;

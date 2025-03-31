@@ -3,7 +3,9 @@ package xfacthd.framedblocks.api.shapes;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.shapes.*;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.List;

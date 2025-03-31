@@ -13,13 +13,25 @@ import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
-import xfacthd.framedblocks.common.data.property.*;
-import xfacthd.framedblocks.common.data.skippreds.*;
+import xfacthd.framedblocks.common.data.property.CornerType;
+import xfacthd.framedblocks.common.data.property.HorizontalRotation;
+import xfacthd.framedblocks.common.data.property.StairsType;
+import xfacthd.framedblocks.common.data.skippreds.CullTest;
+import xfacthd.framedblocks.common.data.skippreds.HalfTriangleDir;
+import xfacthd.framedblocks.common.data.skippreds.TriangleDir;
 import xfacthd.framedblocks.common.data.skippreds.slab.MasonryCornerSegmentSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopeedge.*;
-import xfacthd.framedblocks.common.data.skippreds.slopepanel.*;
-import xfacthd.framedblocks.common.data.skippreds.slopeslab.*;
-import xfacthd.framedblocks.common.data.skippreds.stairs.*;
+import xfacthd.framedblocks.common.data.skippreds.slopeedge.ElevatedInnerCornerSlopeEdgeSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopeedge.InnerCornerSlopeEdgeSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopeedge.InnerThreewayCornerSlopeEdgeSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopepanel.FlatInnerSlopePanelCornerSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopepanel.FlatSlopePanelCornerSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopepanel.SlopePanelSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopeslab.FlatInnerSlopeSlabCornerSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopeslab.FlatSlopeSlabCornerSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slopeslab.SlopeSlabSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.stairs.HalfStairsSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.stairs.StairsSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.stairs.VerticalStairsSkipPredicate;
 
 @CullTest(BlockType.FRAMED_LARGE_CORNER_SLOPE_PANEL_W)
 public final class LargeCornerSlopePanelWallSkipPredicate implements SideSkipPredicate
