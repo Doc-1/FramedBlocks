@@ -39,8 +39,6 @@ public final class ExtConfigView
 
         boolean shouldRenderCamoInJade();
 
-        boolean useLegacySlopeEdgeModel();
-
         OverlayDisplayMode getStateLockMode();
 
         OverlayDisplayMode getToggleWaterlogMode();
