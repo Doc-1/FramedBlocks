@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.common.net.payload;
+package xfacthd.framedblocks.common.net.payload.clientbound;
 
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongSet;

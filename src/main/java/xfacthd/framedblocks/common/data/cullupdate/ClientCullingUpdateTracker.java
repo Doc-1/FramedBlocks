@@ -7,7 +7,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.client.util.ClientTaskQueue;
-import xfacthd.framedblocks.common.net.payload.ClientboundCullingUpdatePayload;
+import xfacthd.framedblocks.common.net.payload.clientbound.ClientboundCullingUpdatePayload;
 
 import java.util.Objects;
 

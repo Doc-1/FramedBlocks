@@ -28,7 +28,7 @@ import xfacthd.framedblocks.api.render.Quaternions;
 import xfacthd.framedblocks.common.block.sign.AbstractFramedHangingSignBlock;
 import xfacthd.framedblocks.common.block.sign.AbstractFramedSignBlock;
 import xfacthd.framedblocks.common.data.BlockType;
-import xfacthd.framedblocks.common.net.payload.ServerboundSignUpdatePayload;
+import xfacthd.framedblocks.common.net.payload.serverbound.ServerboundSignUpdatePayload;
 import xfacthd.framedblocks.common.blockentity.special.FramedSignBlockEntity;
 
 import java.util.Arrays;

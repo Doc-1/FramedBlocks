@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.common.net.payload;
+package xfacthd.framedblocks.common.net.payload.serverbound;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;

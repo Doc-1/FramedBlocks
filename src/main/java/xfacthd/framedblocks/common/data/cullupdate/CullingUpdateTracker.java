@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
-import xfacthd.framedblocks.common.net.payload.ClientboundCullingUpdatePayload;
+import xfacthd.framedblocks.common.net.payload.clientbound.ClientboundCullingUpdatePayload;
 
 import java.util.Map;
 

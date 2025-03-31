@@ -43,7 +43,7 @@ import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCalculation;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeMatchResult;
 import xfacthd.framedblocks.common.menu.FramingSawMenu;
-import xfacthd.framedblocks.common.net.payload.ServerboundSelectFramingSawRecipePayload;
+import xfacthd.framedblocks.common.net.payload.serverbound.ServerboundSelectFramingSawRecipePayload;
 
 import java.util.ArrayList;
 import java.util.List;

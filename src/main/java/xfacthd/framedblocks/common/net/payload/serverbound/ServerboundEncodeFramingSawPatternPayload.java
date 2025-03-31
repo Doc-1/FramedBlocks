@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.common.net.payload;
+package xfacthd.framedblocks.common.net.payload.serverbound;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;

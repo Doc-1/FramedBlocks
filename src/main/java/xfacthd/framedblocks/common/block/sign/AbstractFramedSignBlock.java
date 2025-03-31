@@ -51,7 +51,7 @@ import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.FramedBlock;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.blockentity.special.FramedSignBlockEntity;
-import xfacthd.framedblocks.common.net.payload.ClientboundOpenSignScreenPayload;
+import xfacthd.framedblocks.common.net.payload.clientbound.ClientboundOpenSignScreenPayload;
 
 import java.util.Arrays;
 import java.util.Set;
