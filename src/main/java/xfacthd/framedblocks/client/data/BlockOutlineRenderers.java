@@ -1,5 +1,6 @@
 package xfacthd.framedblocks.client.data;
 
+import xfacthd.framedblocks.api.render.OutlineRenderer;
 import xfacthd.framedblocks.api.render.RegisterOutlineRenderersEvent;
 import xfacthd.framedblocks.client.data.outline.*;
 import xfacthd.framedblocks.common.data.BlockType;
@@ -88,8 +89,8 @@ public final class BlockOutlineRenderers
         event.register(BlockType.FRAMED_STACKED_INNER_CORNER_SLOPE_PANEL_W, new ExtendedInnerCornerSlopePanelWallOutlineRenderer());
         event.register(BlockType.FRAMED_PYRAMID, new PyramidOutlineRenderer(false));
         event.register(BlockType.FRAMED_PYRAMID_SLAB, new PyramidOutlineRenderer(true));
-        event.register(BlockType.FRAMED_ITEM_FRAME, NoopOutlineRenderer.INSTANCE);
-        event.register(BlockType.FRAMED_GLOWING_ITEM_FRAME, NoopOutlineRenderer.INSTANCE);
+        event.register(BlockType.FRAMED_ITEM_FRAME, OutlineRenderer.NO_OP);
+        event.register(BlockType.FRAMED_GLOWING_ITEM_FRAME, OutlineRenderer.NO_OP);
     }
 
 

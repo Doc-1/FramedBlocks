@@ -1,15 +1,10 @@
-package xfacthd.framedblocks.client.data.outline;
+package xfacthd.framedblocks.api.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.level.block.state.BlockState;
-import xfacthd.framedblocks.api.render.OutlineRenderer;
 
-public final class NoopOutlineRenderer implements OutlineRenderer
+final class NoopOutlineRenderer implements OutlineRenderer
 {
-    public static final NoopOutlineRenderer INSTANCE = new NoopOutlineRenderer();
-
-    private NoopOutlineRenderer() { }
-
     @Override
     public void draw(BlockState state, LineDrawer drawer)
     {

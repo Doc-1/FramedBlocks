@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Quaternionf;
+import org.joml.Quaternionfc;
 import xfacthd.framedblocks.api.block.FramedProperties;
 
 /**
@@ -17,11 +18,13 @@ import xfacthd.framedblocks.api.block.FramedProperties;
  */
 public interface OutlineRenderer
 {
+    OutlineRenderer NO_OP = new NoopOutlineRenderer();
+
     /**
-     * Array of {@link Quaternionf}s for rotating around the Y axis according to the horizontal direction.<br>
+     * Array of {@link Quaternionfc}s for rotating around the Y axis according to the horizontal direction.<br>
      * Must be indexed with {@link Direction#get2DDataValue()}
      */
-    Quaternionf[] YN_DIR = makeQuaternionArray();
+    Quaternionfc[] YN_DIR = makeQuaternionArray();
 
     /**
      * Draw the outlines of the block. Provides access to the {@link BlockState}, {@link Level} and {@link BlockPos}
