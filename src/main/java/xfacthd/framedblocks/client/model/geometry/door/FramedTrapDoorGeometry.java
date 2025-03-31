@@ -18,12 +18,14 @@ public class FramedTrapDoorGeometry extends Geometry
     private final Direction dir;
     private final boolean top;
     private final boolean open;
+    private final boolean iron;
 
-    public FramedTrapDoorGeometry(GeometryFactory.Context ctx)
+    private FramedTrapDoorGeometry(GeometryFactory.Context ctx, boolean iron)
     {
         this.dir = ctx.state().getValue(BlockStateProperties.HORIZONTAL_FACING);
         this.top = ctx.state().getValue(BlockStateProperties.HALF) == Half.TOP;
         this.open = ctx.state().getValue(BlockStateProperties.OPEN);
+        this.iron = iron;
     }
 
     @Override
@@ -66,5 +68,23 @@ public class FramedTrapDoorGeometry extends Geometry
                         .export(quadMap.get(quadDir));
             }
         }
+    }
+
+    @Override
+    public boolean useBaseModel()
+    {
+        return iron;
+    }
+
+
+
+    public static FramedTrapDoorGeometry wood(GeometryFactory.Context ctx)
+    {
+        return new FramedTrapDoorGeometry(ctx, false);
+    }
+
+    public static FramedTrapDoorGeometry iron(GeometryFactory.Context ctx)
+    {
+        return new FramedTrapDoorGeometry(ctx, true);
     }
 }

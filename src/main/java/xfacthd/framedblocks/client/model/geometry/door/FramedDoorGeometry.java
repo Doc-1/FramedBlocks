@@ -16,12 +16,14 @@ public class FramedDoorGeometry extends Geometry
     private final Direction dir;
     private final boolean hingeRight;
     private final boolean open;
+    private final boolean iron;
 
-    public FramedDoorGeometry(GeometryFactory.Context ctx)
+    private FramedDoorGeometry(GeometryFactory.Context ctx, boolean iron)
     {
         this.dir = ctx.state().getValue(BlockStateProperties.HORIZONTAL_FACING);
         this.hingeRight = ctx.state().getValue(BlockStateProperties.DOOR_HINGE) == DoorHingeSide.RIGHT;
         this.open = ctx.state().getValue(BlockStateProperties.OPEN);
+        this.iron = iron;
     }
 
     @Override
@@ -52,5 +54,23 @@ public class FramedDoorGeometry extends Geometry
                         .export(quadMap.get(quadDir));
             }
         }
+    }
+
+    @Override
+    public boolean useBaseModel()
+    {
+        return iron;
+    }
+
+
+
+    public static FramedDoorGeometry wood(GeometryFactory.Context ctx)
+    {
+        return new FramedDoorGeometry(ctx, false);
+    }
+
+    public static FramedDoorGeometry iron(GeometryFactory.Context ctx)
+    {
+        return new FramedDoorGeometry(ctx, true);
     }
 }

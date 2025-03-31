@@ -25,26 +25,29 @@ public class FramedWallTorchGeometry extends Geometry
     private static final Vector3f ROTATION_ORIGIN = new Vector3f(0, 3.5F/16F, 8F/16F);
     private static final float MIN = 7F/16F;
     private static final float MAX = 9F/16F;
-    private static final float TOP = 11.5F/16F;
+    private static final float HEIGHT = 8F/16F;
+    private static final float HEIGHT_REDSTONE_LIT = 7F/16F;
     private static final float BOTTOM = 12.5F/16F;
 
     private final BlockState state;
     private final BlockStateModel baseModel;
     private final float yAngle;
     private final BlockState auxShaderState;
+    private final float height;
 
-    private FramedWallTorchGeometry(GeometryFactory.Context ctx, BlockState auxShaderState)
+    private FramedWallTorchGeometry(GeometryFactory.Context ctx, BlockState auxShaderState, float height)
     {
         this.state = ctx.state();
         this.baseModel = ctx.baseModel();
         this.yAngle = 270F - ctx.state().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot();
         this.auxShaderState = auxShaderState;
+        this.height = height;
     }
 
     @Override
     public void collectAdditionalPartsCached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data, QuadCacheKey cacheKey)
     {
-        consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, auxShaderState, null);
+        consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, auxShaderState, FramedTorchGeometry.HEAD_MODIFIER);
     }
 
     @Override
@@ -57,21 +60,21 @@ public class FramedWallTorchGeometry extends Geometry
         */
 
         Direction quadDir = quad.direction();
-        if (Utils.isY(quadDir))
+        if (quadDir == Direction.DOWN)
         {
             QuadModifier.of(quad)
                     .apply(Modifiers.cutTopBottom(MIN, MIN, MAX, MAX))
-                    .apply(Modifiers.setPosition(quadDir == Direction.UP ? TOP : BOTTOM))
+                    .apply(Modifiers.setPosition(BOTTOM))
                     .apply(Modifiers.offset(Direction.WEST, .5F))
                     .apply(applyRotation(yAngle))
                     .export(quadMap.get(null));
         }
-        else
+        else if (quadDir != Direction.UP)
         {
             boolean xAxis = Utils.isX(quadDir);
             boolean east = quadDir == Direction.EAST;
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSide(MIN, 0, MAX, .5F))
+                    .apply(Modifiers.cutSide(MIN, 0, MAX, height))
                     .applyIf(Modifiers.setPosition(east ? 1F/16F : 17F/16F), xAxis)
                     .applyIf(Modifiers.setPosition(MAX), !xAxis)
                     .applyIf(Modifiers.offset(Direction.WEST, .5F), !xAxis)
@@ -87,20 +90,28 @@ public class FramedWallTorchGeometry extends Geometry
         return true;
     }
 
-    public static QuadModifier.Modifier applyRotation(float yAngle)
+    private static QuadModifier.Modifier applyRotation(float yAngle)
     {
         return data ->
                 Modifiers.rotate(Direction.Axis.Z, ROTATION_ORIGIN, -22.5F, false).accept(data) &&
                         Modifiers.rotateCentered(Direction.Axis.Y, yAngle, false).accept(data);
     }
 
+
+
     public static FramedWallTorchGeometry normal(GeometryFactory.Context ctx)
     {
-        return new FramedWallTorchGeometry(ctx, Blocks.TORCH.defaultBlockState());
+        return new FramedWallTorchGeometry(ctx, Blocks.WALL_TORCH.defaultBlockState(), HEIGHT);
     }
 
     public static FramedWallTorchGeometry soul(GeometryFactory.Context ctx)
     {
-        return new FramedWallTorchGeometry(ctx, Blocks.SOUL_TORCH.defaultBlockState());
+        return new FramedWallTorchGeometry(ctx, Blocks.SOUL_WALL_TORCH.defaultBlockState(), HEIGHT);
+    }
+
+    public static FramedWallTorchGeometry redstone(GeometryFactory.Context ctx)
+    {
+        float topHeight = ctx.state().getValue(BlockStateProperties.LIT) ? HEIGHT_REDSTONE_LIT : HEIGHT;
+        return new FramedWallTorchGeometry(ctx, Blocks.REDSTONE_WALL_TORCH.defaultBlockState(), topHeight);
     }
 }
