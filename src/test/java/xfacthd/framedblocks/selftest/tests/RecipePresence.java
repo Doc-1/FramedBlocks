@@ -14,7 +14,6 @@ import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.common.util.Lazy;
 import org.apache.commons.lang3.mutable.MutableInt;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.util.FramedConstants;
@@ -31,11 +30,6 @@ import java.util.stream.Collectors;
 
 public final class RecipePresence
 {
-    private static final Lazy<Set<ItemLike>> EXCLUDED = Lazy.of(() -> Set.of(
-            FBContent.BLOCK_FRAMED_DOUBLE_SLAB.value().asItem(),
-            FBContent.BLOCK_FRAMED_DOUBLE_PANEL.value().asItem()
-    ));
-
     public static void checkRecipePresence(SelfTestReporter reporter, Level level)
     {
         reporter.startTest("recipe presence");
@@ -115,15 +109,12 @@ public final class RecipePresence
 
     private static Set<ItemLike> collectBlockTypedItems()
     {
-        Set<ItemLike> blockItems = Arrays.stream(BlockType.values())
+        return Arrays.stream(BlockType.values())
                 .filter(BlockType::hasBlockItem)
                 .map(FBContent::byType)
                 .map(Block::asItem)
                 .map(ItemLike.class::cast)
                 .collect(Collectors.toSet());
-
-        blockItems.removeAll(EXCLUDED.get());
-        return blockItems;
     }
 
 
