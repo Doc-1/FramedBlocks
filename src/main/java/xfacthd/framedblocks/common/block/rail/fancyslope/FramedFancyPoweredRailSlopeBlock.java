@@ -41,7 +41,7 @@ public class FramedFancyPoweredRailSlopeBlock extends FramedPoweredRailSlopeBloc
             SideSkipPredicate pred, BlockGetter level, BlockPos pos, BlockState state, BlockState adjState, Direction side
     )
     {
-        DoubleBlockParts partStates = getParts(adjState);
+        DoubleBlockParts partStates = getCache(adjState).getParts();
         return super.runOcclusionTestAndGetLookupState(pred, level, pos, state, partStates.stateOne(), side);
     }
 
@@ -51,7 +51,7 @@ public class FramedFancyPoweredRailSlopeBlock extends FramedPoweredRailSlopeBloc
             BlockGetter level, BlockPos pos, BlockState state, BlockState neighborState, Direction side
     )
     {
-        BlockState slopeState = getParts(state).stateOne();
+        BlockState slopeState = getCache(state).getParts().stateOne();
         if (IFramedDoubleBlock.testComponent(level, pos, slopeState, neighborState, side))
         {
             return slopeState;

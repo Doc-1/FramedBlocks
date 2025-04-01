@@ -6,8 +6,6 @@ import xfacthd.framedblocks.api.model.AbstractFramedBlockModel;
 import xfacthd.framedblocks.api.model.item.AbstractFramedBlockItemModel;
 import xfacthd.framedblocks.client.render.block.FramedChestRenderer;
 import xfacthd.framedblocks.common.data.camo.fluid.FluidCamoClientHandler;
-import xfacthd.framedblocks.mixin.client.AccessorBlockModelShaper;
-import xfacthd.framedblocks.mixin.client.AccessorModelManager;
 
 public final class FramedClientUtils
 {
@@ -15,7 +13,7 @@ public final class FramedClientUtils
     {
         ModelManager modelManager = Minecraft.getInstance().getModelManager();
 
-        ((AccessorBlockModelShaper) modelManager.getBlockModelShaper())
+        modelManager.getBlockModelShaper()
                 .framedblocks$getModelByStateCache()
                 .values()
                 .stream()
@@ -23,8 +21,7 @@ public final class FramedClientUtils
                 .map(AbstractFramedBlockModel.class::cast)
                 .forEach(AbstractFramedBlockModel::clearCache);
 
-        ((AccessorModelManager) modelManager)
-                .framedblocks$getBakedItemStackModels()
+        modelManager.framedblocks$getBakedItemStackModels()
                 .values()
                 .stream()
                 .filter(AbstractFramedBlockItemModel.class::isInstance)

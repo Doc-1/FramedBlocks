@@ -23,7 +23,7 @@ public class MixinLevelRenderer
     private Minecraft minecraft;
 
     @Unique
-    private GraphicsStatus framedblocks$lastGraphicsMode;
+    private GraphicsStatus framedblocks$lastGraphicsMode = GraphicsStatus.FANCY;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void framedblocks$captureInitialGraphicsMode(Minecraft mc, EntityRenderDispatcher entityRenderDispatcher, BlockEntityRenderDispatcher blockEntityRenderDispatcher, RenderBuffers buffers, CallbackInfo ci)

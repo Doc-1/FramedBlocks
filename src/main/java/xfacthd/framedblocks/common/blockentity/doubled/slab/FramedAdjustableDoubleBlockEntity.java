@@ -298,7 +298,7 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
 
         default PackedCollapsibleBlockOffsets packDouble(BlockState state, int firstHeight)
         {
-            DoubleBlockParts parts = ((IFramedDoubleBlock) state.getBlock()).getParts(state);
+            DoubleBlockParts parts = ((IFramedDoubleBlock) state.getBlock()).getCache(state).getParts();
             return new PackedCollapsibleBlockOffsets.Double(parts, pack(state, firstHeight, false), pack(state, firstHeight, true));
         }
     }

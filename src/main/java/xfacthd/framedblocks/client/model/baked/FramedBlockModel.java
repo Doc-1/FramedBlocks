@@ -86,7 +86,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         this.useBaseModel = geometry.useBaseModel();
         this.useSolidBase = geometry.useSolidNoCamoModel();
         this.uncachedPostProcess = geometry.hasUncachedPostProcessing();
-        this.stateCache = ((IFramedBlock) state.getBlock()).getCache(state);
+        this.stateCache = state.framedblocks$getCache();
         boolean isBaseCube = state.getBlock() == FBContent.BLOCK_FRAMED_CUBE.value();
         this.noCamoContents = isBaseCube ? makeNoCamoContents(state) : DEFAULT_NO_CAMO_CONTENTS;
 

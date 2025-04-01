@@ -23,7 +23,7 @@ public sealed class DoubleBlockGhostRenderBehaviour implements GhostRenderBehavi
     public static ModelData buildModelData(BlockState state, CamoList camo)
     {
         return ModelData.of(AbstractFramedBlockData.PROPERTY, new FramedDoubleBlockData(
-                ((IFramedDoubleBlock) state.getBlock()).getParts(state),
+                ((IFramedDoubleBlock) state.getBlock()).getCache(state).getParts(),
                 new FramedBlockData(camo.getCamo(0), false),
                 new FramedBlockData(camo.getCamo(1), true)
         ));

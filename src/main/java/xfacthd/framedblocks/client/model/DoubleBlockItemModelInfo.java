@@ -16,7 +16,7 @@ public class DoubleBlockItemModelInfo implements ItemModelInfo
     public final ModelData buildItemModelData(BlockState state, CamoList camos)
     {
         AbstractFramedBlockData fbData = new FramedDoubleBlockData(
-                ((IFramedDoubleBlock) state.getBlock()).getParts(state),
+                ((IFramedDoubleBlock) state.getBlock()).getCache(state).getParts(),
                 new FramedBlockData(camos.getCamo(0), false),
                 new FramedBlockData(camos.getCamo(1), true)
         );

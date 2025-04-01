@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import xfacthd.framedblocks.FramedBlocks;
 import xfacthd.framedblocks.api.block.IFramedBlock;
-import xfacthd.framedblocks.api.block.cache.IStateCacheAccessor;
 import xfacthd.framedblocks.api.block.cache.StateCache;
 import xfacthd.framedblocks.api.util.Utils;
 
@@ -56,11 +55,11 @@ public final class StateCacheBuilder
                         StateCache cache = ((IFramedBlock) state.getBlock()).initCache(state);
                         if (cache.equals(StateCache.EMPTY))
                         {
-                            ((IStateCacheAccessor) state).framedblocks$initCache(StateCache.EMPTY);
+                            state.framedblocks$initCache(StateCache.EMPTY);
                         }
                         else
                         {
-                            ((IStateCacheAccessor) state).framedblocks$initCache(
+                            state.framedblocks$initCache(
                                     Objects.requireNonNullElse(cacheDedup.putIfAbsent(cache, cache), cache)
                             );
                         }

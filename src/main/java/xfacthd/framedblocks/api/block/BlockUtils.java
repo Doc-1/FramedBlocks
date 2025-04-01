@@ -22,7 +22,6 @@ import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.mixin.AccessorStateDefinitionBuilder;
 import xfacthd.framedblocks.mixin.InvokerBlock;
 
 import java.util.Set;
@@ -148,7 +147,7 @@ public final class BlockUtils
      */
     public static boolean hasProperty(StateDefinition.Builder<Block, BlockState> builder, Property<?> property)
     {
-        return ((AccessorStateDefinitionBuilder) builder).framedblocks$getProperties().containsKey(property.getName());
+        return builder.framedblocks$hasProperty(property);
     }
 
     /**
@@ -159,7 +158,7 @@ public final class BlockUtils
      */
     public static void removeProperty(StateDefinition.Builder<Block, BlockState> builder, Property<?> property)
     {
-        ((AccessorStateDefinitionBuilder) builder).framedblocks$getProperties().remove(property.getName());
+        builder.framedblocks$removeProperty(property);
     }
 
     @Nullable

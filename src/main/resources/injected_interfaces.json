@@ -1,0 +1,17 @@
+{
+    "net/minecraft/client/multiplayer/MultiPlayerGameMode": [
+        "xfacthd/framedblocks/client/util/duck/DefaultedAccessorMultiPlayerGameMode"
+    ],
+    "net/minecraft/client/renderer/block/BlockModelShaper": [
+        "xfacthd/framedblocks/client/util/duck/DefaultedAccessorBlockModelShaper"
+    ],
+    "net/minecraft/client/resources/model/ModelManager": [
+        "xfacthd/framedblocks/client/util/duck/DefaultedAccessorModelManager"
+    ],
+    "net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase": [
+        "xfacthd/framedblocks/api/internal/duck/StateCacheAccessor"
+    ],
+    "net/minecraft/world/level/block/state/StateDefinition$Builder": [
+        "xfacthd/framedblocks/api/internal/duck/StateDefinitionBuilderAccessor"
+    ]
+}

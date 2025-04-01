@@ -45,7 +45,7 @@ public class ConnectionPredicateDebugRenderer implements BlockDebugRenderer<Fram
         poseStack.translate(.5, .5, .5);
 
         Direction face = blockHit.getDirection();
-        StateCache cache = be.getBlock().getCache(be.getBlockState());
+        StateCache cache = be.getBlockState().framedblocks$getCache();
         switch (face)
         {
             case UP ->

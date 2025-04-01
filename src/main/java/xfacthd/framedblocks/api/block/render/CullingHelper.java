@@ -51,11 +51,10 @@ public final class CullingHelper
             return false;
         }
 
-        IFramedBlock block = (IFramedBlock) state.getBlock();
-        boolean fullFace = block.getCache(state).isFullFace(side);
+        boolean fullFace = state.framedblocks$getCache().isFullFace(side);
         if (!adjFramed || fullFace || !ConfigView.Client.INSTANCE.detailedCullingEnabled())
         {
-            if (fullFace && (!adjFramed || adjBlock.getCache(adjState).isFullFace(side.getOpposite())))
+            if (fullFace && (!adjFramed || adjState.framedblocks$getCache().isFullFace(side.getOpposite())))
             {
                 if (!(level.getBlockEntity(pos) instanceof FramedBlockEntity be))
                 {
@@ -77,7 +76,7 @@ public final class CullingHelper
             return false;
         }
 
-        SideSkipPredicate pred = block.getBlockType().getSideSkipPredicate();
+        SideSkipPredicate pred = ((IFramedBlock) state.getBlock()).getBlockType().getSideSkipPredicate();
         BlockState adjTestState = adjBlock.runOcclusionTestAndGetLookupState(pred, level, pos, state, adjState, side);
         if (adjTestState != null)
         {
@@ -118,7 +117,7 @@ public final class CullingHelper
         }
         if (level.getBlockEntity(pos) instanceof FramedBlockEntity be)
         {
-            if (((IFramedBlock) state.getBlock()).getCache(state).isFullFace(side))
+            if (state.framedblocks$getCache().isFullFace(side))
             {
                 CamoContent<?> camoContent = be.getCamo(side).getContent();
                 return camoContent.occludes(adjState, level, pos, adjPos, side);

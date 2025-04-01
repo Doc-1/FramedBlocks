@@ -69,7 +69,7 @@ public final class AppearanceHelper
             return AIR;
         }
 
-        StateCache stateCache = framedBlock.getCache(state);
+        StateCache stateCache = state.framedblocks$getCache();
         if (type.isDoubleBlock())
         {
             if (recursive)
@@ -289,13 +289,13 @@ public final class AppearanceHelper
     {
         if (queryPos == null && queryState != null)
         {
-            if (queryState.getBlock() instanceof IFramedBlock queryBlock)
+            if (queryState.getBlock() instanceof IFramedBlock)
             {
-                return queryBlock.getCache(queryState).canConnectFullEdge(side, null);
+                return queryState.framedblocks$getCache().canConnectFullEdge(side, null);
             }
             return true;
         }
-        if (queryState != null && queryState.getBlock() instanceof IFramedBlock queryBlock)
+        if (queryState != null && queryState.getBlock() instanceof IFramedBlock)
         {
             int nx = queryPos.getX() - pos.getX();
             int ny = queryPos.getY() - pos.getY();
@@ -309,13 +309,13 @@ public final class AppearanceHelper
             if ((nx != 0 || ny != 0 || nz != 0) && Utils.dirByNormal(nx, ny, nz) == null)
             {
                 EdgePredicate<StateCache> predicate = (cache, testSide, testEdge) -> cache.canConnectFullEdge(testSide, testEdge.getOpposite());
-                return findFirstSuitableDirectionFromMultiCoordOffset(nx, ny, nz, side, queryBlock.getCache(queryState), predicate) != null;
+                return findFirstSuitableDirectionFromMultiCoordOffset(nx, ny, nz, side, queryState.framedblocks$getCache(), predicate) != null;
             }
             if (edge != null)
             {
                 edge = edge.getOpposite();
             }
-            return queryBlock.getCache(queryState).canConnectFullEdge(side, edge);
+            return queryState.framedblocks$getCache().canConnectFullEdge(side, edge);
         }
         return true;
     }

@@ -8,13 +8,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import xfacthd.framedblocks.api.block.IFramedBlock;
-import xfacthd.framedblocks.api.block.cache.IStateCacheAccessor;
+import xfacthd.framedblocks.api.internal.duck.StateCacheAccessor;
 import xfacthd.framedblocks.api.block.cache.StateCache;
 
 import java.util.Objects;
 
 @Mixin(BlockBehaviour.BlockStateBase.class)
-public abstract class MixinBlockStateBase implements IStateCacheAccessor
+public abstract class MixinBlockStateBase implements StateCacheAccessor
 {
     @Unique
     @Nullable

@@ -5,7 +5,6 @@ import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.core.BlockPos;
 import xfacthd.framedblocks.client.screen.FramedSignScreen;
 import xfacthd.framedblocks.common.blockentity.special.FramedSignBlockEntity;
-import xfacthd.framedblocks.mixin.client.AccessorMultiPlayerGameMode;
 
 import java.util.Objects;
 
@@ -31,7 +30,7 @@ public final class ClientAccess
         }
 
         MultiPlayerGameMode gameMode = Objects.requireNonNull(Minecraft.getInstance().gameMode);
-        ((AccessorMultiPlayerGameMode) gameMode).framedblocks$setDestroyDelay(DEFAULT_DESTROY_DELAY);
+        gameMode.framedblocks$setDestroyDelay(DEFAULT_DESTROY_DELAY);
     }
 
 

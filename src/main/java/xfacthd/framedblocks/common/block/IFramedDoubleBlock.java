@@ -60,30 +60,6 @@ public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFram
     @ApiStatus.OverrideOnly
     CamoGetter calculateCamoGetter(BlockState state, Direction side, @Nullable Direction edge);
 
-    @ApiStatus.NonExtendable
-    default DoubleBlockTopInteractionMode getTopInteractionMode(BlockState state)
-    {
-        return getCache(state).getTopInteractionMode();
-    }
-
-    @ApiStatus.NonExtendable
-    default DoubleBlockParts getParts(BlockState state)
-    {
-        return getCache(state).getParts();
-    }
-
-    @ApiStatus.NonExtendable
-    default SolidityCheck getSolidityCheck(BlockState state, Direction side)
-    {
-        return getCache(state).getSolidityCheck(side);
-    }
-
-    @ApiStatus.NonExtendable
-    default CamoGetter getCamoGetter(BlockState state, Direction side, @Nullable Direction edge)
-    {
-        return getCache(state).getCamoGetter(side, edge);
-    }
-
     @Override
     default StateCache initCache(BlockState state)
     {
@@ -93,7 +69,7 @@ public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFram
     @Override
     default DoubleBlockStateCache getCache(BlockState state)
     {
-        return (DoubleBlockStateCache) xfacthd.framedblocks.api.block.IFramedDoubleBlock.super.getCache(state);
+        return (DoubleBlockStateCache) state.framedblocks$getCache();
     }
 
     @Override
@@ -102,7 +78,7 @@ public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFram
             SideSkipPredicate pred, BlockGetter level, BlockPos pos, BlockState state, BlockState adjState, Direction side
     )
     {
-        DoubleBlockParts partStates = getParts(adjState);
+        DoubleBlockParts partStates = getCache(adjState).getParts();
         if (pred.test(level, pos, state, partStates.stateOne(), side))
         {
             return partStates.stateOne();
@@ -130,7 +106,7 @@ public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFram
             BlockGetter level, BlockPos pos, BlockState state, BlockState neighborState, Direction side
     )
     {
-        DoubleBlockParts parts = getParts(state);
+        DoubleBlockParts parts = getCache(state).getParts();
         BlockState compA = parts.stateOne();
         if (testComponent(level, pos, compA, neighborState, side))
         {
@@ -155,8 +131,9 @@ public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFram
     {
         if (level.getBlockEntity(pos) instanceof FramedDoubleBlockEntity be)
         {
-            DoubleBlockParts partStates = getParts(state);
-            switch (getTopInteractionMode(state))
+            DoubleBlockStateCache cache = getCache(state);
+            DoubleBlockParts partStates = cache.getParts();
+            switch (cache.getTopInteractionMode())
             {
                 case FIRST -> ParticleHelper.spawnRunningParticles(be.getCamo(partStates.stateOne()), level, pos, entity);
                 case SECOND -> ParticleHelper.spawnRunningParticles(be.getCamo(partStates.stateTwo()), level, pos, entity);
@@ -178,8 +155,9 @@ public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFram
     {
         if (level.getBlockEntity(pos) instanceof FramedDoubleBlockEntity be)
         {
-            DoubleBlockParts partStates = getParts(state);
-            switch (getTopInteractionMode(state))
+            DoubleBlockStateCache cache = getCache(state);
+            DoubleBlockParts partStates = cache.getParts();
+            switch (cache.getTopInteractionMode())
             {
                 case FIRST -> ParticleHelper.spawnLandingParticles(be.getCamo(partStates.stateOne()), level, pos, entity, count);
                 case SECOND -> ParticleHelper.spawnLandingParticles(be.getCamo(partStates.stateTwo()), level, pos, entity, count);

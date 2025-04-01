@@ -106,7 +106,7 @@ public class FramedBlockEntity extends BlockEntity
     public FramedBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state)
     {
         super(type, pos, state);
-        this.stateCache = ((IFramedBlock) state.getBlock()).getCache(state);
+        this.stateCache = state.framedblocks$getCache();
     }
 
     public final InteractionResult handleInteraction(Player player, InteractionHand hand, BlockHitResult hit)
@@ -834,7 +834,7 @@ public class FramedBlockEntity extends BlockEntity
     public void setBlockState(BlockState state)
     {
         super.setBlockState(state);
-        this.stateCache = ((IFramedBlock) state.getBlock()).getCache(state);
+        this.stateCache = state.framedblocks$getCache();
     }
 
     /*

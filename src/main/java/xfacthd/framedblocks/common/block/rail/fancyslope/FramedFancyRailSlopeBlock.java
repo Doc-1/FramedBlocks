@@ -39,7 +39,7 @@ public class FramedFancyRailSlopeBlock extends FramedRailSlopeBlock implements I
             SideSkipPredicate pred, BlockGetter level, BlockPos pos, BlockState state, BlockState adjState, Direction side
     )
     {
-        DoubleBlockParts parts = getParts(adjState);
+        DoubleBlockParts parts = getCache(adjState).getParts();
         return super.runOcclusionTestAndGetLookupState(pred, level, pos, state, parts.stateOne(), side);
     }
 
@@ -49,7 +49,7 @@ public class FramedFancyRailSlopeBlock extends FramedRailSlopeBlock implements I
             BlockGetter level, BlockPos pos, BlockState state, BlockState neighborState, Direction side
     )
     {
-        BlockState slopeState = getParts(state).stateOne();
+        BlockState slopeState = getCache(state).getParts().stateOne();
         if (IFramedDoubleBlock.testComponent(level, pos, slopeState, neighborState, side))
         {
             return slopeState;

@@ -200,7 +200,7 @@ public final class ModelPerformanceTest
         {
             FramedBlockData dataOne = new FramedBlockData(camo, false);
             FramedBlockData dataTwo = new FramedBlockData(camo, true);
-            fbData = new FramedDoubleBlockData(doubleBlock.getParts(state), dataOne, dataTwo);
+            fbData = new FramedDoubleBlockData(doubleBlock.getCache(state).getParts(), dataOne, dataTwo);
         }
         else
         {

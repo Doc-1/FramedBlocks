@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
 import xfacthd.framedblocks.api.block.FramedProperties;
-import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.cache.StateCache;
 import xfacthd.framedblocks.api.model.wrapping.WrapHelper;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
@@ -113,8 +112,8 @@ public final class SkipPredicateConsistency
                     {
                         if (!type.isDoubleBlock() && !adjType.isDoubleBlock())
                         {
-                            StateCache cache = ((IFramedBlock) block).getCache(state);
-                            StateCache adjCache = ((IFramedBlock) adjBlock).getCache(adjState);
+                            StateCache cache = state.framedblocks$getCache();
+                            StateCache adjCache = adjState.framedblocks$getCache();
                             if (!cache.isFullFace(side) && !adjCache.isFullFace(side.getOpposite()))
                             {
                                 try

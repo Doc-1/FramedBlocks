@@ -49,7 +49,6 @@ import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
-import xfacthd.framedblocks.api.block.cache.IStateCacheAccessor;
 import xfacthd.framedblocks.api.block.cache.StateCache;
 import xfacthd.framedblocks.api.block.item.FramedBlockItem;
 import xfacthd.framedblocks.api.block.render.CullingHelper;
@@ -121,7 +120,7 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
 
     default StateCache getCache(BlockState state)
     {
-        return ((IStateCacheAccessor) state).framedblocks$getCache();
+        return state.framedblocks$getCache();
     }
 
     default void tryApplyCamoImmediately(Level level, BlockPos pos, @Nullable LivingEntity placer, ItemStack stack)

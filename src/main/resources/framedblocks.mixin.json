@@ -4,14 +4,13 @@
     "compatibilityLevel": "JAVA_21",
     "plugin": "xfacthd.framedblocks.common.util.FramedMixinConfigPlugin",
     "mixins": [
-        "AccessorStateDefinitionBuilder",
-        "AccessorTransientCraftingContainer",
         "InvokerBlock",
         "InvokerBlockItem",
         "MixinBlockStateBase",
         "MixinHopperBlockEntity",
         "MixinMapItemSavedData",
-        "MixinStairBlock"
+        "MixinStairBlock",
+        "MixinStateDefinitionBuilder"
     ],
     "client": [
         "client.AccessorBlockModelShaper",

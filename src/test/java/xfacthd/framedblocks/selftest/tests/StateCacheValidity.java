@@ -4,7 +4,6 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.StateDefinition;
-import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.cache.StateCache;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockStateCache;
@@ -26,7 +25,7 @@ public final class StateCacheValidity
                 .map(StateDefinition::getPossibleStates)
                 .flatMap(List::stream).forEach(state ->
                 {
-                    StateCache cache = ((IFramedBlock) state.getBlock()).getCache(state);
+                    StateCache cache = state.framedblocks$getCache();
 
                     boolean anyFullFace = Arrays.stream(DIRECTIONS).anyMatch(cache::isFullFace);
                     if (anyFullFace != cache.hasAnyFullFace())
