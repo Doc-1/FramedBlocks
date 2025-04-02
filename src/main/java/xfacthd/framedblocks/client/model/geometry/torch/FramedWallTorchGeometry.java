@@ -47,7 +47,7 @@ public class FramedWallTorchGeometry extends Geometry
     @Override
     public void collectAdditionalPartsCached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data, QuadCacheKey cacheKey)
     {
-        consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, auxShaderState, FramedTorchGeometry.HEAD_MODIFIER);
+        consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, auxShaderState, null);
     }
 
     @Override

@@ -14,7 +14,6 @@ import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
 import xfacthd.framedblocks.api.model.geometry.PartConsumer;
-import xfacthd.framedblocks.api.model.geometry.QuadListModifier;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.quad.Modifiers;
 import xfacthd.framedblocks.api.model.quad.QuadModifier;
@@ -25,12 +24,6 @@ public class FramedTorchGeometry extends Geometry
     private static final float MAX = 9F/16F;
     private static final float HEIGHT = 8F/16F;
     private static final float HEIGHT_REDSTONE_LIT = 7F/16F;
-
-    // Ensure glowing torch parts have no AO even if the rest does
-    // TODO: remove when per-part AO is properly supported
-    static final QuadListModifier HEAD_MODIFIER = QuadListModifier.replacing(quad ->
-            QuadModifier.of(quad).ambientOcclusion(false).exportDirect()
-    );
 
     private final BlockState state;
     private final BlockStateModel baseModel;
@@ -48,7 +41,7 @@ public class FramedTorchGeometry extends Geometry
     @Override
     public void collectAdditionalPartsCached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data, QuadCacheKey cacheKey)
     {
-        consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, auxShaderState, HEAD_MODIFIER);
+        consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, auxShaderState, null);
     }
 
     @Override
