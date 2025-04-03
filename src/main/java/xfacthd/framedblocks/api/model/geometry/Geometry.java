@@ -23,8 +23,6 @@ import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.predicate.fullface.FullFacePredicate;
 import xfacthd.framedblocks.api.util.ConfigView;
 
-import java.util.List;
-
 @SuppressWarnings("MethodMayBeStatic")
 public abstract class Geometry
 {
@@ -49,21 +47,6 @@ public abstract class Geometry
      *             modify the quad
      */
     public abstract void transformQuad(QuadMap quadMap, BakedQuad quad);
-
-    /**
-     * {@return whether this geometry needs to perform post-processing on uncached quads}
-     */
-    public boolean hasUncachedPostProcessing()
-    {
-        return false;
-    }
-
-    /**
-     * Post-process quads on faces that return {@code false} from {@link FullFacePredicate#test(BlockState, Direction)}<br>
-     * Any additional processing done in this method should be as fast as possible and must happen in-place
-     * @apiNote Only called if {@link #hasUncachedPostProcessing()} returns {@code true}
-     */
-    public void postProcessUncachedQuads(List<BakedQuad> quads) { }
 
     /**
      * Return true if the base model loaded from JSON should be used when no camo is applied without going
@@ -106,8 +89,6 @@ public abstract class Geometry
     /**
      * Add additional {@link BlockModelPart}s which should not be cached.
      * The result of this method will NOT be cached, execution should therefore be as fast as possible
-     * <p>
-     * The parts usually need to be shallow-copied to ensure that they return the correct render type and AO setting
      */
     public void collectAdditionalPartsUncached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data) { }
 

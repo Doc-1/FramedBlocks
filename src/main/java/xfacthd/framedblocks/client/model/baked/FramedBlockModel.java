@@ -72,7 +72,6 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
     private final boolean forceUngeneratedBaseModel;
     private final boolean useBaseModel;
     private final boolean useSolidBase;
-    private final boolean uncachedPostProcess;
     private final StateCache stateCache;
     private final BlockCamoContent[] noCamoContents;
 
@@ -85,7 +84,6 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         this.forceUngeneratedBaseModel = geometry.forceUngeneratedBaseModel();
         this.useBaseModel = geometry.useBaseModel();
         this.useSolidBase = geometry.useSolidNoCamoModel();
-        this.uncachedPostProcess = geometry.hasUncachedPostProcessing();
         this.stateCache = state.framedblocks$getCache();
         boolean isBaseCube = state.getBlock() == FBContent.BLOCK_FRAMED_CUBE.value();
         this.noCamoContents = isBaseCube ? makeNoCamoContents(state) : DEFAULT_NO_CAMO_CONTENTS;
@@ -137,7 +135,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         random.setSeed(seed);
         List<BlockModelPart> srcPartsUncached = ModelUtils.collectModelParts(camoModel, level, pos, this.state, random, needCtCtxUncached);
         int uncachedFaceMask = fbData.computeFaceMask(stateCache, false);
-        PartConsumer partConsumer = makePartConsumer(partsOut, geometry, uncachedFaceMask, defaultAO, uncachedPostProcess, camoEmissive, forceEmissive, secondPart);
+        PartConsumer partConsumer = makePartConsumer(partsOut, uncachedFaceMask, defaultAO, camoEmissive, forceEmissive, secondPart);
 
         BlockState camoState = camoContent.getAsBlockState();
         for (BlockModelPart modelPart : srcPartsUncached)
@@ -169,23 +167,14 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         if (reinforce)
         {
             BlockModelPart reinforcement = ReinforcementModel.getFiltered(uncachedFaceMask, defaultAO.apply(TriState.DEFAULT));
-            if (uncachedPostProcess || forceEmissive)
-            {
-                partConsumer.accept(reinforcement, ReinforcementModel.SHADER_STATE, false, false, true, false, ReinforcementModel.SHADER_STATE, null);
-            }
-            else
-            {
-                partsOut.add(reinforcement);
-            }
+            partConsumer.accept(reinforcement, ReinforcementModel.SHADER_STATE, false, false, true, false, ReinforcementModel.SHADER_STATE, null);
         }
     }
 
     private static PartConsumer makePartConsumer(
             List<? super ExtendedBlockModelPart> destParts,
-            Geometry geometry,
             int cullMask,
             DefaultAO defaultAO,
-            boolean uncachedPostProcess,
             boolean camoEmissive,
             boolean forceEmissive,
             boolean invertTintIndex
@@ -217,7 +206,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
                     Utils.copyAll(quads, quadMap.get(side));
                 }
             }
-            if ((camoPart && camoEmissive) || forceEmissive || uncachedPostProcess || invertTintIndex)
+            if ((camoPart && camoEmissive) || forceEmissive || invertTintIndex)
             {
                 for (Direction side : DIRECTIONS_WITH_NULL)
                 {
@@ -231,10 +220,6 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
                     else if (camoPart && camoEmissive)
                     {
                         quads.replaceAll(EMISSIVE_PROCESSOR);
-                    }
-                    if (uncachedPostProcess)
-                    {
-                        geometry.postProcessUncachedQuads(quads);
                     }
                     if (invertTintIndex)
                     {
@@ -268,7 +253,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
     {
         ArrayList<ExtendedBlockModelPart> parts = new ArrayList<>();
         int cullMask = DEFAULT_DATA.computeFaceMask(stateCache, true);
-        PartConsumer partConsumer = makePartConsumer(parts, geometry, cullMask, defaultAO, false, camoEmissive, forceEmissive, secondPart);
+        PartConsumer partConsumer = makePartConsumer(parts, cullMask, defaultAO, camoEmissive, forceEmissive, secondPart);
         boolean xformAll = geometry.transformAllQuads();
 
         QuadListModifier modifier = (quadMap, quads, side) ->

@@ -19,8 +19,8 @@ public interface PartConsumer
      * @param reclaimFromNull Whether cullable faces should be recovered from uncullable quads
      * @param cullNonNull     Whether cullable faces should be culled according to the occlusion settings this {@code PartConsumer} was constructed with
      * @param camoPart        Whether the part being passed in is part of the camo ({@code true}) or additional quads ({@code false})
-     * @param shaderState     Whether the provided {@link BlockState} should be used as the "shader state" of the resulting model part
-     * @param modifier        An optional modifier to pre-process the quads with after
+     * @param shaderState     The {@link BlockState} to use as the "shader state" of the resulting model parts
+     * @param modifier        An optional modifier to pre-process the quads with after filtering and quad recovery
      */
     void accept(
             BlockModelPart part,
@@ -43,8 +43,8 @@ public interface PartConsumer
      * @param reclaimFromNull Whether cullable faces should be recovered from uncullable quads
      * @param cullNonNull     Whether cullable faces should be culled according to the occlusion settings this {@code PartConsumer} was constructed with
      * @param camoModel       Whether the parts of the model being passed in is part of the camo ({@code true}) or additional quads ({@code false})
-     * @param shaderState     Whether the provided {@link BlockState} should be used as the "shader state" of the resulting model parts
-     * @param modifier        An optional modifier to pre-process the quads with after
+     * @param shaderState     The {@link BlockState} to use as the "shader state" of the resulting model parts
+     * @param modifier        An optional modifier to pre-process the quads with after filtering and quad recovery
      */
     default void acceptAll(
             BlockStateModel model,
