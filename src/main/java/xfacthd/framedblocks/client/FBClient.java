@@ -45,7 +45,10 @@ import xfacthd.framedblocks.client.itemmodel.TankItemModel;
 import xfacthd.framedblocks.client.itemmodel.modelprovider.FenceBlockItemModelProvider;
 import xfacthd.framedblocks.client.itemmodel.tintprovider.FramedTargetItemTintProvider;
 import xfacthd.framedblocks.client.loader.fallback.FallbackLoader;
-import xfacthd.framedblocks.client.model.*;
+import xfacthd.framedblocks.client.model.DoubleBlockItemModelInfo;
+import xfacthd.framedblocks.client.model.FluidModel;
+import xfacthd.framedblocks.client.model.ReinforcementModel;
+import xfacthd.framedblocks.client.model.baked.FramedBlockModel;
 import xfacthd.framedblocks.client.model.geometry.cube.*;
 import xfacthd.framedblocks.client.model.geometry.door.*;
 import xfacthd.framedblocks.client.model.geometry.interactive.*;
@@ -481,6 +484,7 @@ public final class FBClient
         FluidCamoClientHandler.clearModelCache();
         FramedChestRenderer.onModelsLoaded(event.getBakingResult());
         ReinforcementModel.reload(event.getBakingResult().standaloneModels());
+        FramedBlockModel.collectCubeBaseModels(event.getBakingResult().blockStateModels());
 
         ModelWrappingManager.printWrappingInfo(event.getBakingResult().blockStateModels());
     }

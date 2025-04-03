@@ -11,7 +11,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.TriState;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.DelegateBlockStateModel;
 import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.IFramedBlock;
@@ -58,7 +57,8 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
     private static final int FLAG_NO_CAMO_ATL_MODEL = 0b001;
     private static final int FLAG_NO_CAMO_REINFORCED = 0b010;
     private static final int FLAG_NO_CAMO_SOLID_BG = 0b100;
-    private static final BlockCamoContent[] DEFAULT_NO_CAMO_CONTENTS = makeNoCamoContents(FBContent.BLOCK_FRAMED_CUBE.value().defaultBlockState());
+    private static final BlockCamoContent[] NO_CAMO_CONTENTS = makeNoCamoContents();
+    private static final BlockStateModel[] NO_CAMO_MODELS = new BlockStateModel[NO_CAMO_CONTENTS.length];
     private static final UnaryOperator<BakedQuad> EMISSIVE_PROCESSOR = quad ->
             new BakedQuad(quad.vertices(), quad.tintIndex(), quad.direction(), quad.sprite(), quad.shade(), 15, quad.hasAmbientOcclusion());
     private static final UnaryOperator<BakedQuad> FULL_EMISSIVE_PROCESSOR = quad ->
@@ -73,7 +73,6 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
     private final boolean useBaseModel;
     private final boolean useSolidBase;
     private final StateCache stateCache;
-    private final BlockCamoContent[] noCamoContents;
 
     public FramedBlockModel(GeometryFactory.Context ctx, Geometry geometry)
     {
@@ -85,8 +84,6 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         this.useBaseModel = geometry.useBaseModel();
         this.useSolidBase = geometry.useSolidNoCamoModel();
         this.stateCache = state.framedblocks$getCache();
-        boolean isBaseCube = state.getBlock() == FBContent.BLOCK_FRAMED_CUBE.value();
-        this.noCamoContents = isBaseCube ? makeNoCamoContents(state) : DEFAULT_NO_CAMO_CONTENTS;
 
         Preconditions.checkState(
                 this.useBaseModel || !this.forceUngeneratedBaseModel,
@@ -118,8 +115,9 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
 
         if (empty)
         {
-            camoContent = getNoCamoModelSourceContent(fbData);
-            camoModel = getCamoModel(camoContent, useBaseModel, secondPart);
+            int noCamoIdx = getNoCamoModelSourceIndex(fbData);
+            camoContent = NO_CAMO_CONTENTS[noCamoIdx];
+            camoModel = useBaseModel ? geometry.getBaseModel(delegate, secondPart) : NO_CAMO_MODELS[noCamoIdx];
             camoEmissive = false;
         }
         else
@@ -127,8 +125,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
             boolean canCt = type.supportsConnectedTextures();
             needCtCtxUncached = canCt && needCtContext(true, type.getMinimumConTexMode());
             needCtCtxCached = canCt && needCtContext(false, type.getMinimumConTexMode());
-
-            camoModel = getCamoModel(camoContent, false, false);
+            camoModel = CamoContainerHelper.Client.getOrCreateModel(camoContent);
             camoEmissive = camoContent.isEmissive();
         }
 
@@ -142,7 +139,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         {
             partConsumer.accept(modelPart, camoState, false, true, true, true, camoState, null);
         }
-        if (!(empty && forceUngeneratedBaseModel))
+        if (!empty || !forceUngeneratedBaseModel)
         {
             random.setSeed(seed);
             Object ctCtx = needCtCtxCached ? camoModel.createGeometryKey(level, pos, this.state, random) : null;
@@ -298,21 +295,21 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         return mayHaveUncachedQuads || (cfgMode.atleast(ConTexMode.FULL_EDGE) && cfgMode.atleast(minMode));
     }
 
-    private CamoContent<?> getNoCamoModelSourceContent(FramedBlockData fbData)
+    private int getNoCamoModelSourceIndex(FramedBlockData fbData)
     {
         int idx = 0;
         if (fbData.isSecondPart()) idx |= FLAG_NO_CAMO_ATL_MODEL;
         if (fbData.isReinforced()) idx |= FLAG_NO_CAMO_REINFORCED;
         if (ClientConfig.VIEW.getSolidFrameMode().useSolidFrame(useSolidBase)) idx |= FLAG_NO_CAMO_SOLID_BG;
-        return noCamoContents[idx];
+        return idx;
     }
 
-    private static BlockCamoContent[] makeNoCamoContents(BlockState state)
+    private static BlockCamoContent[] makeNoCamoContents()
     {
         BlockCamoContent[] contents = new BlockCamoContent[1 << 3];
         for (int i = 0; i < contents.length; i++)
         {
-            BlockState stateOut = state;
+            BlockState stateOut = FBContent.BLOCK_FRAMED_CUBE.value().defaultBlockState();
             if ((i & FLAG_NO_CAMO_ATL_MODEL) != 0) stateOut = stateOut.setValue(PropertyHolder.ALT, true);
             if ((i & FLAG_NO_CAMO_REINFORCED) != 0) stateOut = stateOut.setValue(PropertyHolder.REINFORCED, true);
             if ((i & FLAG_NO_CAMO_SOLID_BG) != 0) stateOut = stateOut.setValue(PropertyHolder.SOLID_BG, true);
@@ -321,33 +318,24 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         return contents;
     }
 
-    /**
-     * Return the {@link BlockStateModel} to use as the camo model for the given camoState
-     *
-     * @param camoContent The {@link CamoContent} used as camo
-     * @param useBaseModel If true, the {@link DelegateBlockStateModel#delegate} is requested instead of the model of the given state
-     * @param useAltModel Whether an alternative base model for the second component of a double model should be used
-     *                    (only has an effect if {@code useBaseModel} is true)
-     *
-     * @apiNote Most models shouldn't need to override this. If the model loaded from JSON should be used when no camo
-     * is applied, return true from {@link Geometry#useBaseModel()}. If the model loaded from JSON should be
-     * used without applying any quad modifications when no camo is applied, return true from
-     * {@link Geometry#forceUngeneratedBaseModel()} as well
-     */
-    private BlockStateModel getCamoModel(CamoContent<?> camoContent, boolean useBaseModel, boolean useAltModel)
-    {
-        if (useBaseModel)
-        {
-            return geometry.getBaseModel(delegate, useAltModel);
-        }
-        return CamoContainerHelper.Client.getOrCreateModel(camoContent);
-    }
-
     @Override
     public void clearCache()
     {
         super.clearCache();
         partCache.clear();
+    }
+
+    public static void collectCubeBaseModels(Map<BlockState, BlockStateModel> models)
+    {
+        for (int i = 0; i < NO_CAMO_CONTENTS.length; i++)
+        {
+            BlockStateModel model = models.get(NO_CAMO_CONTENTS[i].getState());
+            if (model instanceof AbstractFramedBlockModel framedModel)
+            {
+                model = framedModel.getBaseModel();
+            }
+            NO_CAMO_MODELS[i] = model;
+        }
     }
 
     private record CullableBlockModelPart(ExtendedBlockModelPart wrapped, int cullMask) implements DelegateBlockModelPart
