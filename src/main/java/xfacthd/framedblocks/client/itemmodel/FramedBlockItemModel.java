@@ -50,6 +50,7 @@ import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.model.item.block.BlockItemModelProvider;
 import xfacthd.framedblocks.api.model.item.tint.FramedBlockItemTintProvider;
 import xfacthd.framedblocks.api.camo.CamoList;
+import xfacthd.framedblocks.api.model.util.ModelUtils;
 import xfacthd.framedblocks.api.util.ConfigView;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.api.model.item.tint.DynamicItemTintProvider;
@@ -243,18 +244,13 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
                 DynamicItemTintProviders.CODEC.optionalFieldOf("tint_provider", FramedBlockItemTintProvider.INSTANCE_SINGLE).forGetter(FramedBlockItemModel.Unbaked::tintProvider),
                 ResourceLocation.CODEC.fieldOf("base_model").forGetter(FramedBlockItemModel.Unbaked::baseModel)
         ).apply(inst, FramedBlockItemModel.Unbaked::new));
-        @SuppressWarnings("Convert2Lambda")
-        private static final ModelBaker.SharedOperationKey<ItemModel> ERROR_MODEL_KEY = new ModelBaker.SharedOperationKey<>()
+        private static final ModelBaker.SharedOperationKey<ItemModel> ERROR_MODEL_KEY = ModelUtils.makeSharedOpsKey(baker ->
         {
-            @Override
-            public ItemModel compute(ModelBaker baker)
-            {
-                ResolvedModel model = baker.getModel(ERROR_MODEL_LOCATION);
-                SimpleModelWrapper bakedModel = SimpleModelWrapper.bake(baker, ERROR_MODEL_LOCATION, BlockModelRotation.X0_Y0);
-                ModelRenderProperties renderProps = ModelRenderProperties.fromResolvedModel(baker, model, model.getTopTextureSlots());
-                return new BlockModelWrapper(List.of(), bakedModel.quads().getAll(), renderProps);
-            }
-        };
+            ResolvedModel model = baker.getModel(ERROR_MODEL_LOCATION);
+            SimpleModelWrapper bakedModel = SimpleModelWrapper.bake(baker, ERROR_MODEL_LOCATION, BlockModelRotation.X0_Y0);
+            ModelRenderProperties renderProps = ModelRenderProperties.fromResolvedModel(baker, model, model.getTopTextureSlots());
+            return new BlockModelWrapper(List.of(), bakedModel.quads().getAll(), renderProps);
+        });
 
         public Unbaked
         {

@@ -31,21 +31,16 @@ import xfacthd.framedblocks.api.util.ConfigView;
 import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public final class ModelUtils
 {
     // Factor 16 is required because the relative UV of a TextureAtlasSprite is not 0-16 anymore since 1.20.2
     public static final float UV_SUBSTEP_COUNT = 16F * 8F;
-    @SuppressWarnings("Convert2Lambda")
-    public static final ModelBaker.SharedOperationKey<BlockStateModel> MISSING_MODEL_KEY = new ModelBaker.SharedOperationKey<>()
-    {
-        @Override
-        public BlockStateModel compute(ModelBaker baker)
-        {
-            return new SingleVariant(SimpleModelWrapper.bake(baker, MissingBlockModel.LOCATION, BlockModelRotation.X0_Y0));
-        }
-    };
+    public static final ModelBaker.SharedOperationKey<BlockStateModel> MISSING_MODEL_KEY = makeSharedOpsKey(
+            baker -> new SingleVariant(SimpleModelWrapper.bake(baker, MissingBlockModel.LOCATION, BlockModelRotation.X0_Y0))
+    );
 
     /**
      * Maps a coordinate 'coordTo' between the given coordinates 'coord1' and 'coord2'
@@ -243,6 +238,19 @@ public final class ModelUtils
                 quadsOut.add(quad);
             }
         }
+    }
+
+    @SuppressWarnings({ "Convert2Lambda", "Anonymous2MethodRef" })
+    public static <T> ModelBaker.SharedOperationKey<T> makeSharedOpsKey(Function<ModelBaker, T> operation)
+    {
+        return new ModelBaker.SharedOperationKey<>()
+        {
+            @Override
+            public T compute(ModelBaker baker)
+            {
+                return operation.apply(baker);
+            }
+        };
     }
 
 
