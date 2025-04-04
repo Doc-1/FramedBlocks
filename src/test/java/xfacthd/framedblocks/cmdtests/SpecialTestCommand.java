@@ -61,6 +61,11 @@ public final class SpecialTestCommand
                 .then(Commands.literal("modelperf")
                         .executes(async(ModelPerformanceTest.NAME, ModelPerformanceTest::testModelPerformance))
                 )
+                .then(Commands.literal("benchmark_cube")
+                        .then(Commands.argument("confirm", StringArgumentType.string())
+                                .executes(ModelBenchmarkCube::buildBenchmarkCube)
+                        )
+                )
         );
     }
 
