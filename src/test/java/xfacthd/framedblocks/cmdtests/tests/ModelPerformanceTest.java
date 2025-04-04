@@ -101,7 +101,9 @@ public final class ModelPerformanceTest
 
         int[] count = new int[1];
         long[] stoneAvg = new long[1];
+        long[] allEmptyAvg = new long[results.size() - 1];
         float[] allEmptyRel = new float[results.size() - 1];
+        long[] allCamoAvg = new long[results.size() - 1];
         float[] allCamoRel = new float[results.size() - 1];
         results.forEach((name, values) ->
         {
@@ -136,34 +138,45 @@ public final class ModelPerformanceTest
             float camoRel = ((float) camoAvg / (float) stoneAvg[0]);
             table.cell("%6d us".formatted(camoAvg)).cell("%6.02f".formatted(camoRel)).newRow();
 
+            allEmptyAvg[count[0] - 1] = emptyAvg;
             allEmptyRel[count[0] - 1] = emptyRel;
+            allCamoAvg[count[0] - 1] = camoAvg;
             allCamoRel[count[0] - 1] = camoRel;
             count[0]++;
         });
 
         StringBuilder data = new StringBuilder();
 
-        float minBlank = Float.MAX_VALUE;
-        float maxBlank = 0;
-        float minCamo = Float.MAX_VALUE;
-        float maxCamo = 0;
+        int minBlank = 0;
+        int maxBlank = 0;
+        int minCamo = 0;
+        int maxCamo = 0;
         for (int i = 0; i < results.size() - 1; i++)
         {
-            minBlank = Math.min(allEmptyRel[i], minBlank);
-            maxBlank = Math.max(allEmptyRel[i], maxBlank);
-            minCamo = Math.min(allCamoRel[i], minCamo);
-            maxCamo = Math.max(allCamoRel[i], maxCamo);
+            minBlank = compare(allEmptyAvg, i, minBlank, true);
+            maxBlank = compare(allEmptyAvg, i, maxBlank, false);
+            minCamo = compare(allCamoAvg, i, minCamo, true);
+            maxCamo = compare(allCamoAvg, i, maxCamo, false);
         }
 
         data.append("Relative speed:\n")
-                .append("- Min (blank): ").append("%6.2f\n".formatted(minBlank))
-                .append("- Max (blank): ").append("%6.2f\n".formatted(maxBlank))
-                .append("- Min (camo):  ").append("%6.2f\n".formatted(minCamo))
-                .append("- Max (camo):  ").append("%6.2f\n".formatted(maxCamo))
+                .append("- Min (blank): ").append("%6.2f (%6d us)\n".formatted(allEmptyRel[minBlank], allEmptyAvg[minBlank]))
+                .append("- Max (blank): ").append("%6.2f (%6d us)\n".formatted(allEmptyRel[maxBlank], allEmptyAvg[maxBlank]))
+                .append("- Min (camo):  ").append("%6.2f (%6d us)\n".formatted(allCamoRel[minCamo], allCamoAvg[minCamo]))
+                .append("- Max (camo):  ").append("%6.2f (%6d us)\n".formatted(allCamoRel[maxCamo], allCamoAvg[maxCamo]))
                 .append("\n\n").append(table.print());
 
         Component msg = SpecialTestCommand.writeResultToFile("modelperf", "md", data.toString());
         msgQueueAppender.accept(Component.literal(PREFIX).append(msg));
+    }
+
+    private static int compare(long[] data, int idx, int prevIdx, boolean min)
+    {
+        if (min ? data[idx] < data[prevIdx] : data[idx] > data[prevIdx])
+        {
+            return idx;
+        }
+        return prevIdx;
     }
 
     private static long testModel(BlockState state, ModelData data)
