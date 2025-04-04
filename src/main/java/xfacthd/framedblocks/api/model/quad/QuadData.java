@@ -121,9 +121,9 @@ public final class QuadData
         int offset = vert * IQuadTransformer.STRIDE + IQuadTransformer.NORMAL;
         int packedNormal = vertexData[offset];
         vertexData[offset] =
-                (((byte) (vals.x * 127F)) & 0xFF) |
-                ((((byte) (vals.y * 127F)) & 0xFF) << 8) |
-                ((((byte) (vals.z * 127F)) & 0xFF) << 16) |
+                (((byte) Math.round(vals.x * 127F)) & 0xFF) |
+                ((((byte) Math.round(vals.y * 127F)) & 0xFF) << 8) |
+                ((((byte) Math.round(vals.z * 127F)) & 0xFF) << 16) |
                 (packedNormal & 0xFF000000);
     }
 
