@@ -98,15 +98,13 @@ public class FramedOneWayWindowBlock extends FramedBlock
     }
 
     @Override
-    public boolean shouldPreventNeighborCulling(
-            BlockGetter level, BlockPos pos, BlockState state, BlockPos adjPos, BlockState adjState
-    )
+    public boolean canOccludeNeighbor(BlockGetter level, BlockPos pos, BlockState state, BlockPos adjPos, BlockState adjState)
     {
         if (adjState.getBlock() != FBContent.BLOCK_FRAMED_ONE_WAY_WINDOW.value())
         {
-            return true;
+            return false;
         }
-        return state.getValue(PropertyHolder.NULLABLE_FACE) != adjState.getValue(PropertyHolder.NULLABLE_FACE);
+        return state.getValue(PropertyHolder.NULLABLE_FACE) == adjState.getValue(PropertyHolder.NULLABLE_FACE);
     }
 
     @Override

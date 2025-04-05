@@ -56,6 +56,7 @@ import xfacthd.framedblocks.api.block.render.ParticleHelper;
 import xfacthd.framedblocks.api.blueprint.BlueprintData;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.CamoContent;
+import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.internal.InternalAPI;
 import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
@@ -85,9 +86,9 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
                 .instrument(NoteBlockInstrument.BASS)
                 .strength(2F)
                 .sound(SoundType.WOOD)
-                .emissiveRendering(IFramedBlock::isEmissiveRendering)
-                .isViewBlocking(IFramedBlock::isBlockSuffocating)
-                .isSuffocating(IFramedBlock::isBlockSuffocating);
+                .emissiveRendering(FramedBlockInternals::isEmissiveRendering)
+                .isViewBlocking(FramedBlockInternals::isViewBlocking)
+                .isSuffocating(FramedBlockInternals::isSuffocating);
 
         if (!type.canOccludeWithSolidCamo())
         {
@@ -95,16 +96,6 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
         }
 
         return props;
-    }
-
-    private static boolean isEmissiveRendering(BlockState state, BlockGetter level, BlockPos pos)
-    {
-        return ((IFramedBlock) state.getBlock()).isCamoEmissiveRendering(state, level, pos);
-    }
-
-    private static boolean isBlockSuffocating(BlockState state, BlockGetter level, BlockPos pos)
-    {
-        return ((IFramedBlock) state.getBlock()).isSuffocating(state, level, pos);
     }
 
     default BlockItem createBlockItem(Item.Properties props)
@@ -297,19 +288,17 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
         return state;
     }
 
-    default boolean shouldPreventNeighborCulling(
-            BlockGetter level, BlockPos pos, BlockState state, BlockPos adjPos, BlockState adjState
-    )
+    default boolean canOccludeNeighbor(BlockGetter level, BlockPos pos, BlockState state, BlockPos adjPos, BlockState adjState)
     {
         if (!ConfigView.Server.INSTANCE.enableIntangibility())
         {
-            return false;
+            return true;
         }
         if (adjState.getBlock() instanceof IFramedBlock adjBlock && adjBlock.isIntangible(adjState, level, adjPos, null))
         {
-            return false;
+            return true;
         }
-        return isIntangible(state, level, pos, null);
+        return !isIntangible(state, level, pos, null);
     }
 
     @Override
@@ -415,29 +404,6 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
         return level.getBlockEntity(pos) instanceof FramedBlockEntity be && be.isIntangible(ctx);
     }
 
-    default boolean isCamoEmissiveRendering(@SuppressWarnings("unused") BlockState state, BlockGetter level, BlockPos pos)
-    {
-        AbstractFramedBlockData fbData = level.getModelData(pos).get(AbstractFramedBlockData.PROPERTY);
-        return fbData != null && fbData.isCamoEmissive();
-    }
-
-    @SuppressWarnings("deprecation")
-    default boolean isSuffocating(BlockState state, BlockGetter level, BlockPos pos)
-    {
-        if (ConfigView.Server.INSTANCE.enableIntangibility() && getBlockType().allowMakingIntangible())
-        {
-            // The given BlockPos may be a neighboring block due to how Entity#isInWall() calls this
-            BlockState stateAtPos = level.getBlockState(pos);
-            if (state != stateAtPos || isIntangible(state, level, pos, null))
-            {
-                return false;
-            }
-        }
-
-        // Copy of the default suffocation check
-        return state.blocksMotion() && state.isCollisionShapeFullBlock(level, pos);
-    }
-
     default boolean useCamoOcclusionShapeForLightOcclusion(BlockState state)
     {
         //noinspection ConstantValue
@@ -477,11 +443,8 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
 
     default float getCamoShadeBrightness(@SuppressWarnings("unused") BlockState state, BlockGetter level, BlockPos pos, float ownShade)
     {
-        if (level.getBlockEntity(pos) instanceof FramedBlockEntity be)
-        {
-            return be.getCamoShadeBrightness(ownShade);
-        }
-        return ownShade;
+        AbstractFramedBlockData fbData = level.getModelData(pos).get(AbstractFramedBlockData.PROPERTY);
+        return fbData != null ? fbData.getCamoShadeBrightness(level, pos, ownShade) : ownShade;
     }
 
     @Override
@@ -512,6 +475,22 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
     default boolean hidesNeighborFace(BlockGetter level, BlockPos pos, BlockState state, BlockState adjState, Direction side)
     {
         return CullingHelper.hidesNeighborFace(this, level, pos, state, adjState, side);
+    }
+
+    default CamoContainer<?, ?> getCamo(BlockGetter level, BlockPos pos, BlockState state, Direction side)
+    {
+        AbstractFramedBlockData fbData = level.getModelData(pos).get(AbstractFramedBlockData.PROPERTY);
+        return fbData != null ? fbData.unwrap(false).getCamoContainer() : EmptyCamoContainer.EMPTY;
+    }
+
+    default boolean isSolidSide(BlockGetter level, BlockPos pos, BlockState state, Direction side)
+    {
+        if (state.framedblocks$getCache().isFullFace(side))
+        {
+            AbstractFramedBlockData fbData = level.getModelData(pos).get(AbstractFramedBlockData.PROPERTY);
+            return fbData != null && fbData.unwrap(false).getCamoContent().isSolid();
+        }
+        return false;
     }
 
     @Override

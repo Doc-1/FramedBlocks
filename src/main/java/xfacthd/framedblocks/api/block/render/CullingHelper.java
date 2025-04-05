@@ -37,7 +37,7 @@ public final class CullingHelper
         IFramedBlock adjBlock = null;
         if (adjState.getBlock() instanceof IFramedBlock block)
         {
-            if (block.shouldPreventNeighborCulling(level, adjPos, adjState, pos, state))
+            if (!block.canOccludeNeighbor(level, adjPos, adjState, pos, state))
             {
                 return false;
             }
@@ -111,20 +111,16 @@ public final class CullingHelper
     )
     {
         BlockPos adjPos = pos.relative(side);
-        if (block.shouldPreventNeighborCulling(level, pos, state, adjPos, adjState) || adjState.getBlock() instanceof IFramedBlock)
+        if (adjState.getBlock() instanceof IFramedBlock || !block.canOccludeNeighbor(level, pos, state, adjPos, adjState))
         {
             return false;
         }
-        if (level.getBlockEntity(pos) instanceof FramedBlockEntity be)
+        if (state.framedblocks$getCache().isFullFace(side))
         {
-            if (state.framedblocks$getCache().isFullFace(side))
-            {
-                CamoContent<?> camoContent = be.getCamo(side).getContent();
-                return camoContent.occludes(adjState, level, pos, adjPos, side);
-            }
-            return be.isSolidSide(side);
+            CamoContent<?> camoContent = block.getCamo(level, pos, state, side).getContent();
+            return camoContent.occludes(adjState, level, pos, adjPos, side);
         }
-        return false;
+        return block.isSolidSide(level, pos, state, side);
     }
 
 

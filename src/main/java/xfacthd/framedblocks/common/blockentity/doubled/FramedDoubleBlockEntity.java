@@ -292,15 +292,6 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
         return Math.min(spreadSpeedOne, spreadSpeedTwo);
     }
 
-    @Override
-    public float getCamoShadeBrightness(float ownShade)
-    {
-        return Math.max(
-                super.getCamoShadeBrightness(ownShade),
-                camoContainer.getContent().getShadeBrightness(level(), worldPosition, ownShade)
-        );
-    }
-
     public final DoubleBlockSoundType getSoundType()
     {
         return soundType;
@@ -346,12 +337,6 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     public final CamoContainer<?, ?> getCamo(Direction side, @Nullable Direction edge)
     {
         return getStateCache().getCamoGetter(side, edge).getCamo(this);
-    }
-
-    @Override
-    public final boolean isSolidSide(Direction side)
-    {
-        return getStateCache().getSolidityCheck(side).isSolid(this);
     }
 
     @Override
@@ -449,12 +434,12 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
      */
 
     @Override
-    protected AbstractFramedBlockData computeBlockData(boolean includeCullInfo)
+    protected final AbstractFramedBlockData computeBlockData(boolean includeCullInfo)
     {
+        FramedBlockData modelDataOne = (FramedBlockData) super.computeBlockData(includeCullInfo);
         boolean[] cullData = includeCullInfo ? culledFaces : FramedBlockData.NO_CULLED_FACES;
-        FramedBlockData modelData = new FramedBlockData(camoContainer, cullData, true, isReinforced(), isEmissive());
-
-        return new FramedDoubleBlockData(getParts(), (FramedBlockData) super.computeBlockData(includeCullInfo), modelData);
+        FramedBlockData modelDataTwo = new FramedBlockData(camoContainer, cullData, true, isReinforced(), isEmissive(), modelDataOne.isViewBlocking());
+        return new FramedDoubleBlockData(getParts(), modelDataOne, modelDataTwo);
     }
 
     /*

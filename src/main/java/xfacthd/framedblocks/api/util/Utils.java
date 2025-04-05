@@ -20,6 +20,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.util.TriState;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -503,6 +504,11 @@ public final class Utils
             result.append("Entity", entityHit.getEntity());
         }
         return result.toString();
+    }
+
+    public static TriState toTriState(boolean value)
+    {
+        return value ? TriState.TRUE : TriState.FALSE;
     }
 
     @ApiStatus.Internal

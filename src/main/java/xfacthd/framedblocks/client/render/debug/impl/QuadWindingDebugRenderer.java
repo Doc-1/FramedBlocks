@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.TriState;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.BlockHitResult;
@@ -34,7 +35,7 @@ public class QuadWindingDebugRenderer implements BlockDebugRenderer<FramedBlockE
     public static final QuadWindingDebugRenderer INSTANCE = new QuadWindingDebugRenderer();
     private static final RandomSource RANDOM = RandomSource.create();
     private static final FramedBlockData FRAMED_BLOCK_DATA = new FramedBlockData(
-            new SimpleBlockCamoContainer(Blocks.STONE.defaultBlockState(), FBContent.FACTORY_BLOCK.get()), new boolean[6], false, false, false
+            new SimpleBlockCamoContainer(Blocks.STONE.defaultBlockState(), FBContent.FACTORY_BLOCK.get()), new boolean[6], false, false, false, TriState.DEFAULT
     );
 
     @Override

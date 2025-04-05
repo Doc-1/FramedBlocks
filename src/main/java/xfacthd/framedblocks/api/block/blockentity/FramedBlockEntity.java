@@ -357,15 +357,6 @@ public class FramedBlockEntity extends BlockEntity
         this.camoContainer = camo;
     }
 
-    public boolean isSolidSide(Direction side)
-    {
-        if (camoContainer.isEmpty())
-        {
-            return false;
-        }
-        return stateCache.isFullFace(side) && camoContainer.getContent().isSolid();
-    }
-
     /**
      * Returns the camo for the given {@link BlockState}. Used for cases where different double blocks
      * with the same underlying shape(s) don't use the same side to return the camo for a given "sub-state".
@@ -565,11 +556,6 @@ public class FramedBlockEntity extends BlockEntity
             return 0;
         }
         return camoContainer.isEmpty() ? -1 : camoContainer.getContent().getFireSpreadSpeed(level(), worldPosition, face);
-    }
-
-    public float getCamoShadeBrightness(float ownShade)
-    {
-        return camoContainer.getContent().getShadeBrightness(level(), worldPosition, ownShade);
     }
 
     public final void setGlowing(boolean glowing)
@@ -1012,10 +998,12 @@ public class FramedBlockEntity extends BlockEntity
     /**
      * @param includeCullInfo Whether culling data should be included
      */
+    @ApiStatus.NonExtendable
     protected AbstractFramedBlockData computeBlockData(boolean includeCullInfo)
     {
         boolean[] cullData = includeCullInfo ? culledFaces : FramedBlockData.NO_CULLED_FACES;
-        return new FramedBlockData(camoContainer, cullData, false, isReinforced(), isEmissive());
+        TriState viewBlocking = Utils.toTriState(getBlockState().isSuffocating(level(), worldPosition));
+        return new FramedBlockData(camoContainer, cullData, false, isReinforced(), isEmissive(), viewBlocking);
     }
 
     protected void attachAdditionalModelData(ModelData.Builder builder) { }

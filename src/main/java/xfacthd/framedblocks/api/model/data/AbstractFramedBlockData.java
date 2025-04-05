@@ -1,5 +1,8 @@
 package xfacthd.framedblocks.api.model.data;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.TriState;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.model.data.ModelProperty;
@@ -18,6 +21,10 @@ public abstract class AbstractFramedBlockData
     public abstract FramedBlockData unwrap(boolean secondary);
 
     public abstract boolean isCamoEmissive();
+
+    public abstract float getCamoShadeBrightness(BlockGetter level, BlockPos pos, float frameShade);
+
+    public abstract TriState isViewBlocking();
 
 
 

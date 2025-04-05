@@ -1,6 +1,9 @@
 package xfacthd.framedblocks.api.model.data;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.TriState;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import xfacthd.framedblocks.api.block.cache.StateCache;
 import xfacthd.framedblocks.api.camo.CamoContainer;
@@ -12,20 +15,22 @@ public final class FramedBlockData extends AbstractFramedBlockData
     public static final boolean[] NO_CULLED_FACES = new boolean[0];
     public static final FramedBlockData EMPTY = new FramedBlockData(EmptyCamoContainer.EMPTY, false);
     private static final Direction[] DIRECTIONS = Direction.values();
+    private static final int FLAG_SECOND_PART = 1;
+    private static final int FLAG_REINFORCED = 1 << 1;
+    private static final int FLAG_EMISSIVE = 1 << 2;
 
     private final CamoContainer<?, ?> camoContainer;
     private final CamoContent<?> camoContent;
     private final byte hidden;
-    private final boolean secondPart;
-    private final boolean reinforced;
-    private final boolean emissive;
+    private final byte flags;
+    private final TriState viewBlocking;
 
     public FramedBlockData(CamoContainer<?, ?> camoContent, boolean secondPart)
     {
-        this(camoContent, NO_CULLED_FACES, secondPart, false, false);
+        this(camoContent, NO_CULLED_FACES, secondPart, false, false, TriState.DEFAULT);
     }
 
-    public FramedBlockData(CamoContainer<?, ?> camoContainer, boolean[] hidden, boolean secondPart, boolean reinforced, boolean emissive)
+    public FramedBlockData(CamoContainer<?, ?> camoContainer, boolean[] hidden, boolean secondPart, boolean reinforced, boolean emissive, TriState viewBlocking)
     {
         this.camoContainer = camoContainer;
         this.camoContent = camoContainer.getContent();
@@ -38,9 +43,12 @@ public final class FramedBlockData extends AbstractFramedBlockData
             }
         }
         this.hidden = mask;
-        this.secondPart = secondPart;
-        this.reinforced = reinforced;
-        this.emissive = emissive;
+        byte flags = 0;
+        if (secondPart) flags |= FLAG_SECOND_PART;
+        if (reinforced) flags |= FLAG_REINFORCED;
+        if (emissive) flags |= FLAG_EMISSIVE;
+        this.flags = flags;
+        this.viewBlocking = viewBlocking;
     }
 
     public CamoContainer<?, ?> getCamoContainer()
@@ -60,17 +68,17 @@ public final class FramedBlockData extends AbstractFramedBlockData
 
     public boolean isSecondPart()
     {
-        return secondPart;
+        return (flags & FLAG_SECOND_PART) != 0;
     }
 
     public boolean isReinforced()
     {
-        return reinforced;
+        return (flags & FLAG_REINFORCED) != 0;
     }
 
     public boolean isEmissive()
     {
-        return emissive;
+        return (flags & FLAG_EMISSIVE) != 0;
     }
 
     /**
@@ -110,5 +118,17 @@ public final class FramedBlockData extends AbstractFramedBlockData
     public boolean isCamoEmissive()
     {
         return camoContent.isEmissive();
+    }
+
+    @Override
+    public float getCamoShadeBrightness(BlockGetter level, BlockPos pos, float frameShade)
+    {
+        return camoContent.getShadeBrightness(level, pos, frameShade);
+    }
+
+    @Override
+    public TriState isViewBlocking()
+    {
+        return viewBlocking;
     }
 }

@@ -1,5 +1,8 @@
 package xfacthd.framedblocks.client.model;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.TriState;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
@@ -34,5 +37,20 @@ public final class FramedDoubleBlockData extends AbstractFramedBlockData
     public boolean isCamoEmissive()
     {
         return dataOne.isCamoEmissive() || dataTwo.isCamoEmissive();
+    }
+
+    @Override
+    public float getCamoShadeBrightness(BlockGetter level, BlockPos pos, float frameShade)
+    {
+        return Math.max(
+                dataOne.getCamoShadeBrightness(level, pos, frameShade),
+                dataTwo.getCamoShadeBrightness(level, pos, frameShade)
+        );
+    }
+
+    @Override
+    public TriState isViewBlocking()
+    {
+        return dataOne.isViewBlocking();
     }
 }

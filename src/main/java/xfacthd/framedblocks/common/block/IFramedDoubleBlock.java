@@ -21,6 +21,8 @@ import xfacthd.framedblocks.api.block.cache.StateCache;
 import xfacthd.framedblocks.api.block.render.ParticleHelper;
 import xfacthd.framedblocks.api.blueprint.BlueprintData;
 import xfacthd.framedblocks.api.camo.CamoContainer;
+import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
+import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
 import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
@@ -170,6 +172,20 @@ public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFram
             return true;
         }
         return false;
+    }
+
+    @Override
+    default CamoContainer<?, ?> getCamo(BlockGetter level, BlockPos pos, BlockState state, Direction side)
+    {
+        AbstractFramedBlockData fbData = level.getModelData(pos).get(AbstractFramedBlockData.PROPERTY);
+        return fbData != null ? getCache(state).getCamoGetter(side, null).getCamo(fbData) : EmptyCamoContainer.EMPTY;
+    }
+
+    @Override
+    default boolean isSolidSide(BlockGetter level, BlockPos pos, BlockState state, Direction side)
+    {
+        AbstractFramedBlockData fbData = level.getModelData(pos).get(AbstractFramedBlockData.PROPERTY);
+        return fbData != null && getCache(state).getSolidityCheck(side).isSolid(fbData);
     }
 
     @Override
