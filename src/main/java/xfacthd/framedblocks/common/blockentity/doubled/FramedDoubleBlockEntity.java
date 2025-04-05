@@ -363,6 +363,17 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
         return changed;
     }
 
+    @Override
+    public void setBlockState(BlockState state)
+    {
+        DoubleBlockStateCache prevCache = getStateCache();
+        super.setBlockState(state);
+        if (level != null && level.isClientSide() && !getStateCache().getParts().equals(prevCache.getParts()))
+        {
+            requestModelDataUpdate();
+        }
+    }
+
     /*
      * Debug rendering
      */
