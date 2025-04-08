@@ -2,6 +2,7 @@ package xfacthd.framedblocks.api.model.quad;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
+import net.neoforged.neoforge.client.ClientHooks;
 import net.neoforged.neoforge.client.model.IQuadTransformer;
 import org.joml.Vector3f;
 import xfacthd.framedblocks.api.model.util.ModelUtils;
@@ -109,24 +110,6 @@ public final class QuadData
         return ((byte) ((packedNormal >> (8 * idx)) & 0xFF)) / 127F;
     }
 
-    public void normal(int vert, int idx, float val)
-    {
-        int offset = vert * IQuadTransformer.STRIDE + IQuadTransformer.NORMAL;
-        int packedNormal = vertexData[offset];
-        vertexData[offset] = ((((byte) (val * 127F)) & 0xFF) << 8 * idx) | (packedNormal & ~(0x000000FF << (8 * idx)));
-    }
-
-    public void normal(int vert, Vector3f vals)
-    {
-        int offset = vert * IQuadTransformer.STRIDE + IQuadTransformer.NORMAL;
-        int packedNormal = vertexData[offset];
-        vertexData[offset] =
-                (((byte) Math.round(vals.x * 127F)) & 0xFF) |
-                ((((byte) Math.round(vals.y * 127F)) & 0xFF) << 8) |
-                ((((byte) Math.round(vals.z * 127F)) & 0xFF) << 16) |
-                (packedNormal & 0xFF000000);
-    }
-
     public int color(int vert, int idx)
     {
         int offset = vert * IQuadTransformer.STRIDE + IQuadTransformer.COLOR;
@@ -155,21 +138,17 @@ public final class QuadData
 
     public Direction recomputeNormals()
     {
-        Vector3f v1 = pos(3, new Vector3f());
-        Vector3f t1 = pos(1, new Vector3f());
-        Vector3f v2 = pos(2, new Vector3f());
-        Vector3f t2 = pos(0, new Vector3f());
-
-        v1.sub(t1);
-        v2.sub(t2);
-        v2.cross(v1);
-        v2.normalize();
+        int normal = ClientHooks.computeQuadNormal(vertexData);
 
         for (int vert = 0; vert < 4; vert++)
         {
-            normal(vert, v2);
+            int offset = vert * IQuadTransformer.STRIDE + IQuadTransformer.NORMAL;
+            vertexData[offset] = (normal & 0x00FFFFFF) | (vertexData[offset] & 0xFF000000);
         }
 
-        return Direction.getApproximateNearest(v2.x, v2.y, v2.z);
+        float nX = ((byte) ( normal        & 0xFF)) / 127F;
+        float nY = ((byte) ((normal >>  8) & 0xFF)) / 127F;
+        float nZ = ((byte) ((normal >> 16) & 0xFF)) / 127F;
+        return Direction.getApproximateNearest(nX, nY, nZ);
     }
 }
