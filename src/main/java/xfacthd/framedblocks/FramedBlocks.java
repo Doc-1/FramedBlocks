@@ -15,6 +15,7 @@ import xfacthd.framedblocks.common.config.DevToolsConfig;
 import xfacthd.framedblocks.common.config.ServerConfig;
 import xfacthd.framedblocks.common.data.BlueprintBehaviours;
 import xfacthd.framedblocks.common.capability.CapabilitySetup;
+import xfacthd.framedblocks.common.data.camo.block.rotator.BlockCamoRotators;
 import xfacthd.framedblocks.common.data.cullupdate.CullingUpdateTracker;
 import xfacthd.framedblocks.common.data.shapes.ShapeReloader;
 import xfacthd.framedblocks.api.util.FramedConstants;
@@ -49,18 +50,18 @@ public final class FramedBlocks
         modBus.addListener(NetworkHandler::onRegisterPayloads);
         modBus.addListener(BlueprintBehaviours::onRegisterBlueprintCopyBehaviours);
 
-        IEventBus forgeBus = NeoForge.EVENT_BUS;
-        forgeBus.addListener(EventHandler::onBlockLeftClick);
-        forgeBus.addListener(EventHandler::onServerShutdown);
-        forgeBus.addListener(CullingUpdateTracker::onServerLevelTick);
-        forgeBus.addListener(CullingUpdateTracker::onServerShutdown);
-        forgeBus.addListener(FramingSawRecipeCache::onAddReloadListener);
-        forgeBus.addListener(FramingSawRecipeCache::onDataPackSync);
-        forgeBus.addListener(FramingSawRecipeCache::onRecipesReceived);
+        NeoForge.EVENT_BUS.addListener(EventHandler::onBlockLeftClick);
+        NeoForge.EVENT_BUS.addListener(EventHandler::onServerShutdown);
+        NeoForge.EVENT_BUS.addListener(CullingUpdateTracker::onServerLevelTick);
+        NeoForge.EVENT_BUS.addListener(CullingUpdateTracker::onServerShutdown);
+        NeoForge.EVENT_BUS.addListener(FramingSawRecipeCache::onAddReloadListener);
+        NeoForge.EVENT_BUS.addListener(FramingSawRecipeCache::onDataPackSync);
+        NeoForge.EVENT_BUS.addListener(FramingSawRecipeCache::onRecipesReceived);
+        NeoForge.EVENT_BUS.addListener(BlockCamoRotators::onAddReloadListener);
 
         if (!FMLEnvironment.production)
         {
-            forgeBus.addListener(FramedBlocks::onAddDebugReloadListener);
+            NeoForge.EVENT_BUS.addListener(FramedBlocks::onAddDebugReloadListener);
         }
 
         FullFacePredicates.PREDICATES.initialize();

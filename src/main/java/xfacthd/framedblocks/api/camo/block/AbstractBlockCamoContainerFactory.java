@@ -8,6 +8,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.camo.CamoContainerFactory;
@@ -85,4 +86,10 @@ public abstract class AbstractBlockCamoContainerFactory<T extends AbstractBlockC
      * @return true to keep the camo, false to discard it
      */
     protected abstract boolean isValidBlock(BlockState camoState, BlockGetter level, BlockPos pos, @Nullable Player player);
+
+    @ApiStatus.Internal
+    public final boolean isValidBlockInternal(BlockState camoState)
+    {
+        return isValidBlock(camoState, EmptyBlockGetter.INSTANCE, BlockPos.ZERO, null);
+    }
 }

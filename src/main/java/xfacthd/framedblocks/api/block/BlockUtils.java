@@ -161,23 +161,6 @@ public final class BlockUtils
         builder.framedblocks$removeProperty(property);
     }
 
-    @Nullable
-    public static Property<?> getRotatableProperty(BlockState state)
-    {
-        for (Property<?> prop : state.getProperties())
-        {
-            if (prop.getValueClass() == Direction.Axis.class)
-            {
-                return prop;
-            }
-            else if (prop instanceof EnumProperty<?> && prop.getValueClass() == Direction.class)
-            {
-                return prop;
-            }
-        }
-        return null;
-    }
-
     public static <T extends Comparable<T>> T tryGetValue(BlockState state, Property<T> property, T _default)
     {
         return state.hasProperty(property) ? state.getValue(property) : _default;
