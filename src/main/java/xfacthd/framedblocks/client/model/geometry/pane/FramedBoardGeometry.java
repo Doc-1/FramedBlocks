@@ -3,6 +3,8 @@ package xfacthd.framedblocks.client.model.geometry.pane;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
+import net.neoforged.neoforge.model.data.ModelData;
+import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
@@ -30,17 +32,19 @@ public class FramedBoardGeometry extends Geometry
     });
 
     private final int faces;
+    private final boolean allFaces;
 
     public FramedBoardGeometry(GeometryFactory.Context ctx)
     {
         this.faces = ctx.state().getValue(PropertyHolder.FACES);
+        this.allFaces = faces == 0b00111111;
     }
 
     @Override
-    public void transformQuad(QuadMap quadMap, BakedQuad quad)
+    public void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData modelData)
     {
         Direction quadDir = quad.direction();
-        if (hasFace(quadDir.getOpposite()))
+        if (hasFace(quadDir.getOpposite()) && !canCullInner(modelData))
         {
             QuadModifier modifier = QuadModifier.of(quad)
                     .apply(Modifiers.setPosition(DEPTH));
@@ -81,9 +85,20 @@ public class FramedBoardGeometry extends Geometry
         }
     }
 
+    @Override
+    public void transformQuad(QuadMap quadMap, BakedQuad quad) { }
+
     private boolean hasFace(Direction side)
     {
         return (faces & (1 << side.ordinal())) != 0;
+    }
+
+    private boolean canCullInner(ModelData modelData)
+    {
+        if (!allFaces) return false;
+
+        AbstractFramedBlockData blockData = modelData.get(AbstractFramedBlockData.PROPERTY);
+        return blockData != null && blockData.unwrap(false).getCamoContent().isSolid();
     }
 
     @Override
