@@ -67,7 +67,7 @@ public class FramedBoardBlock extends FramedBlock
                         {
                             face = Utils.getDirByCross(face, modCtx.getClickLocation());
                         }
-                        return isFacePresent(state, face) ? null : setFacePresent(prevState, face, true);
+                        return isFacePresent(prevState, face) ? null : setFacePresent(prevState, face, true);
                     }
                     return state.setValue(PropertyHolder.FACES, 1 << face.ordinal());
                 })
