@@ -2,31 +2,29 @@ package xfacthd.framedblocks.common.data.conpreds.pane;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.predicate.contex.ConnectionPredicate;
+import xfacthd.framedblocks.common.block.pane.FramedBoardBlock;
 
 public final class BoardConnectionPredicate implements ConnectionPredicate
 {
     @Override
     public boolean canConnectFullEdge(BlockState state, Direction side, @Nullable Direction edge)
     {
-        Direction dir = state.getValue(BlockStateProperties.FACING);
-        if (side == dir)
+        if (FramedBoardBlock.isFacePresent(state, side))
         {
             return true;
         }
-        return side.getAxis() != dir.getAxis() && edge == dir;
+        return edge != null && FramedBoardBlock.isFacePresent(state, edge);
     }
 
     @Override
     public boolean canConnectDetailed(BlockState state, Direction side, Direction edge)
     {
-        Direction dir = state.getValue(BlockStateProperties.FACING);
-        if (side == dir.getOpposite())
+        if (FramedBoardBlock.isFacePresent(state, side))
         {
-            return true;
+            return false;
         }
-        return side.getAxis() != dir.getAxis() && edge.getAxis() != dir.getAxis();
+        return !FramedBoardBlock.isFacePresent(state, edge);
     }
 }

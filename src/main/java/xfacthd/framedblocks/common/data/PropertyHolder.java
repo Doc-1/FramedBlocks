@@ -38,6 +38,7 @@ public final class PropertyHolder
     public static final BooleanProperty THICK = BooleanProperty.create("thick");
 
     public static final IntegerProperty SOLID_FACES = IntegerProperty.create("solid_faces", 0b00000000, 0b00111111);
+    public static final IntegerProperty FACES = IntegerProperty.create("faces", 1, (1 << 6) - 1);
 
 
 

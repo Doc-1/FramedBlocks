@@ -5,13 +5,16 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import xfacthd.framedblocks.api.shapes.ShapeProvider;
 import xfacthd.framedblocks.api.shapes.ShapeUtils;
+import xfacthd.framedblocks.common.data.PropertyHolder;
 
 public final class BoardShapes
 {
+    private static final Direction[] DIRECTIONS = Direction.values();
+
     public static ShapeProvider generate(ImmutableList<BlockState> states)
     {
         ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
@@ -21,15 +24,29 @@ public final class BoardShapes
         VoxelShape shapeBottom = Block.box(0, 0, 0, 16, 1, 16);
         VoxelShape shapeTop = Block.box(0, 15, 0, 16, 16, 16);
 
+        VoxelShape[] allShapes = new VoxelShape[(1 << 6) - 1];
+        for (int i = 0; i < allShapes.length; i++)
+        {
+            VoxelShape merged = Shapes.empty();
+            for (Direction dir : DIRECTIONS)
+            {
+                if (((i + 1) & (1 << dir.ordinal())) == 0) continue;
+
+                VoxelShape faceShape = switch (dir)
+                {
+                    case DOWN -> shapeBottom;
+                    case UP -> shapeTop;
+                    default -> shapesHor[dir.get2DDataValue()];
+                };
+                merged = ShapeUtils.orUnoptimized(merged, faceShape);
+            }
+            allShapes[i] = merged.optimize();
+        }
+
         for (BlockState state : states)
         {
-            Direction dir = state.getValue(BlockStateProperties.FACING);
-            builder.put(state, switch (dir)
-            {
-                case DOWN -> shapeBottom;
-                case UP -> shapeTop;
-                default -> shapesHor[dir.get2DDataValue()];
-            });
+            int mask = state.getValue(PropertyHolder.FACES);
+            builder.put(state, allShapes[mask - 1]);
         }
 
         return ShapeProvider.of(builder.build());

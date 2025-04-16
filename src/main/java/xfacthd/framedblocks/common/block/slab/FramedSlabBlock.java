@@ -18,7 +18,7 @@ import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.FramedBlock;
 import xfacthd.framedblocks.common.data.BlockType;
-import xfacthd.framedblocks.common.item.block.FramedSpecialDoubleBlockItem;
+import xfacthd.framedblocks.common.item.block.FramedSpecialBlockItem;
 
 public class FramedSlabBlock extends FramedBlock
 {
@@ -69,7 +69,7 @@ public class FramedSlabBlock extends FramedBlock
     @Override
     public BlockItem createBlockItem(Item.Properties props)
     {
-        return new FramedSpecialDoubleBlockItem(this, props)
+        return new FramedSpecialBlockItem(this, true, props)
         {
             @Override
             protected BlockState getReplacementState(BlockPlaceContext ctx, BlockState originalState)

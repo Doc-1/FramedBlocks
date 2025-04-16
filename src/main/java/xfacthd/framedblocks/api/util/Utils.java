@@ -275,6 +275,46 @@ public final class Utils
         return dirByNormal(nx, ny, nz);
     }
 
+    public static Direction getDirByCross(Direction face, Vec3 hitVec)
+    {
+        hitVec = Utils.fraction(hitVec);
+
+        if (Utils.isY(face))
+        {
+            double x = hitVec.x() - .5;
+            double z = hitVec.z() - .5;
+            if (Math.max(Math.abs(x), Math.abs(z)) == Math.abs(x))
+            {
+                return x > 0 ? Direction.EAST : Direction.WEST;
+            }
+            else
+            {
+                return z > 0 ? Direction.SOUTH : Direction.NORTH;
+            }
+        }
+        else
+        {
+            double xz = (Utils.isX(face) ? hitVec.z() : hitVec.x()) - .5;
+            double y = hitVec.y() - .5;
+
+            if (Math.max(Math.abs(xz), Math.abs(y)) == Math.abs(xz))
+            {
+                if (Utils.isX(face))
+                {
+                    return xz < 0 ? Direction.NORTH : Direction.SOUTH;
+                }
+                else
+                {
+                    return (xz < 0) ? Direction.WEST : Direction.EAST;
+                }
+            }
+            else
+            {
+                return y < 0 ? Direction.DOWN : Direction.UP;
+            }
+        }
+    }
+
     public static Direction.Axis nextAxisNotEqualTo(Direction.Axis axis, Direction.Axis except)
     {
         Direction.Axis[] axes = Direction.Axis.VALUES;

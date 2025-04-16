@@ -5,11 +5,17 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.datagen.loot.FramedBlockLootSubProvider;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.data.loot.BoardAdditionalItemCountNumberProvider;
 
 import java.util.List;
 import java.util.Set;
@@ -57,6 +63,21 @@ public final class FramedLootTableProvider extends LootTableProvider
 
             dropOtherWithCamo(FBContent.BLOCK_FRAMED_VERTICAL_HALF_SLOPE.value(), FBContent.BLOCK_FRAMED_HALF_SLOPE.value());
             dropOtherWithCamo(FBContent.BLOCK_FRAMED_VERTICAL_DOUBLE_HALF_SLOPE.value(), FBContent.BLOCK_FRAMED_DOUBLE_HALF_SLOPE.value());
+
+            add(
+                    FBContent.BLOCK_FRAMED_BOARD.value(),
+                    LootTable.lootTable()
+                            .withPool(createDropWithCamoPool(FBContent.BLOCK_FRAMED_BOARD.value()))
+                            .withPool(applyExplosionCondition(
+                                    FBContent.BLOCK_FRAMED_BOARD.value(),
+                                    LootPool.lootPool()
+                                            .setRolls(ConstantValue.exactly(1.0F))
+                                            .add(applyExplosionDecay(
+                                                    FBContent.BLOCK_FRAMED_BOARD.value(),
+                                                    LootItem.lootTableItem(FBContent.BLOCK_FRAMED_BOARD.value())
+                                            ).apply(SetItemCountFunction.setCount(BoardAdditionalItemCountNumberProvider.INSTANCE)))
+                            ))
+            );
 
             dropSelfWithCamo(FBContent.BLOCK_FRAMED_TANK.value(), builder -> builder.apply(
                     CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)

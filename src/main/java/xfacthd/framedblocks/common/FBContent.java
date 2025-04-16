@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
+import net.minecraft.world.level.storage.loot.providers.number.LootNumberProviderType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
@@ -40,7 +41,6 @@ import xfacthd.framedblocks.api.component.FrameConfig;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.api.util.FramedConstants;
-import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.api.util.registration.DeferredAuxDataType;
 import xfacthd.framedblocks.api.util.registration.DeferredBlockEntity;
 import xfacthd.framedblocks.api.util.registration.DeferredDataComponentType;
@@ -97,6 +97,7 @@ import xfacthd.framedblocks.common.data.component.CollapsibleCopycatBlockData;
 import xfacthd.framedblocks.common.data.component.FramedMap;
 import xfacthd.framedblocks.common.data.component.PottedFlower;
 import xfacthd.framedblocks.common.data.component.TargetColor;
+import xfacthd.framedblocks.common.data.loot.BoardAdditionalItemCountNumberProvider;
 import xfacthd.framedblocks.common.item.FramedBlueprintItem;
 import xfacthd.framedblocks.common.item.FramedToolItem;
 import xfacthd.framedblocks.common.item.PhantomPasteItem;
@@ -140,6 +141,7 @@ public final class FBContent
     private static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = register(Registries.PARTICLE_TYPE);
     private static final DeferredRegister<LootItemConditionType> LOOT_CONDITIONS = register(Registries.LOOT_CONDITION_TYPE);
     private static final DeferredRegister<LootItemFunctionType<?>> LOOT_FUNCTIONS = register(Registries.LOOT_FUNCTION_TYPE);
+    private static final DeferredRegister<LootNumberProviderType> LOOT_NUMBER_PROVIDERS = register(Registries.LOOT_NUMBER_PROVIDER_TYPE);
     private static final DeferredRegister<CamoContainerFactory<?>> CAMO_CONTAINER_FACTORIES = register(FramedConstants.CAMO_CONTAINER_FACTORY_REGISTRY_KEY);
     private static final DeferredAuxDataTypeRegister AUX_BLUEPRINT_DATA_TYPES = DeferredAuxDataTypeRegister.create(FramedConstants.MOD_ID);
 
@@ -703,6 +705,12 @@ public final class FBContent
     );
     // endregion
 
+    // region LootNumberProviderTypes
+    public static final Holder<LootNumberProviderType> BOARD_ADDITIONAL_ITEM_COUNT_NUMBER_PROVIDER = LOOT_NUMBER_PROVIDERS.register(
+            "board", () -> new LootNumberProviderType(MapCodec.unit(BoardAdditionalItemCountNumberProvider.INSTANCE))
+    );
+    // endregion
+
     // region CamoContainer.Factories
     public static final DeferredHolder<CamoContainerFactory<?>, EmptyCamoContainerFactory> FACTORY_EMPTY = CAMO_CONTAINER_FACTORIES.register(
             "empty",
@@ -758,13 +766,11 @@ public final class FBContent
         PARTICLE_TYPES.register(modBus);
         LOOT_CONDITIONS.register(modBus);
         LOOT_FUNCTIONS.register(modBus);
+        LOOT_NUMBER_PROVIDERS.register(modBus);
         CAMO_CONTAINER_FACTORIES.register(modBus);
         AUX_BLUEPRINT_DATA_TYPES.register(modBus);
 
         DOUBLE_BLOCK_ENTITIES.add((DeferredBlockEntity<? extends FramedDoubleBlockEntity>) BE_TYPE_FRAMED_DOUBLE_BLOCK);
-
-        BLOCKS.addAlias(Utils.rl("framed_floor_board"), Utils.rl("framed_board"));
-        BLOCKS.addAlias(Utils.rl("framed_wall_board"), Utils.rl("framed_board"));
     }
 
     public static Collection<DeferredHolder<Block, ? extends Block>> getRegisteredBlocks()

@@ -62,12 +62,13 @@ public abstract class FramedBlockLootSubProvider extends BlockLootSubProvider
 
     protected final void dropDoorWithCamo(Block block)
     {
-        dropWithCamo(block, block, builder -> builder.when(LootItemBlockStatePropertyCondition
-                .hasBlockStateProperties(block)
-                .setProperties(StatePropertiesPredicate.Builder
-                        .properties()
-                        .hasProperty(DoorBlock.HALF, DoubleBlockHalf.LOWER)
-                )
+        dropWithCamo(block, block, builder -> builder.when(
+                LootItemBlockStatePropertyCondition
+                        .hasBlockStateProperties(block)
+                        .setProperties(StatePropertiesPredicate.Builder
+                                .properties()
+                                .hasProperty(DoorBlock.HALF, DoubleBlockHalf.LOWER)
+                        )
         ));
     }
 
@@ -79,6 +80,11 @@ public abstract class FramedBlockLootSubProvider extends BlockLootSubProvider
     protected final void dropWithCamo(Block block, Block drop, Consumer<LootPoolSingletonContainer.Builder<?>> itemModifier)
     {
         add(block, funcBlock -> LootTable.lootTable().withPool(createDropWithCamoPool(funcBlock, drop, itemModifier)));
+    }
+
+    protected final LootPool.Builder createDropWithCamoPool(Block block)
+    {
+        return createDropWithCamoPool(block, block, builder -> {});
     }
 
     protected final LootPool.Builder createDropWithCamoPool(Block block, Block drop, Consumer<LootPoolSingletonContainer.Builder<?>> itemModifier)

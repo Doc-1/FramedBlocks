@@ -32,6 +32,33 @@
         }
       ],
       "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:explosion_decay"
+            },
+            {
+              "add": false,
+              "count": {
+                "type": "framedblocks:board"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "framedblocks:framed_board"
+        }
+      ],
+      "rolls": 1.0
     }
   ],
   "random_sequence": "framedblocks:blocks/framed_board"

@@ -6,9 +6,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.FramedProperties;
+import xfacthd.framedblocks.common.block.pane.FramedBoardBlock;
 import xfacthd.framedblocks.common.block.sign.AbstractFramedSignBlock;
 import xfacthd.framedblocks.common.data.BlockType;
 
@@ -28,7 +28,7 @@ public final class FramedBlockMovementChecks implements
             {
                 case FRAMED_SIGN, FRAMED_FLOWER_POT -> result(side == Direction.DOWN);
                 case FRAMED_WALL_SIGN -> result(state.getValue(FramedProperties.FACING_HOR) == side.getOpposite());
-                case FRAMED_BOARD -> result(state.getValue(BlockStateProperties.FACING) == side);
+                case FRAMED_BOARD -> result(FramedBoardBlock.isFacePresent(state, side));
                 default -> BlockMovementChecks.CheckResult.PASS;
             };
         }

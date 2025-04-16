@@ -1,7 +1,7 @@
 {
   "model": {
     "type": "framedblocks:block",
-    "base_model": "framedblocks:block/framed_cube",
+    "base_model": "minecraft:block/thin_block",
     "block": "framedblocks:framed_board"
   }
 }

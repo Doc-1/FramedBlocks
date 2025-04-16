@@ -4,10 +4,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
+import xfacthd.framedblocks.common.block.pane.FramedBoardBlock;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.property.SlopeType;
@@ -53,8 +53,9 @@ public final class CornerStripSkipPredicate implements SideSkipPredicate
     @CullTest.TestTarget(BlockType.FRAMED_BOARD)
     private static boolean testAgainstWallBoard(Direction dir, SlopeType type, BlockState adjState, Direction side)
     {
-        Direction adjDir = adjState.getValue(BlockStateProperties.FACING);
-        return getHalfDir(dir, type, side).isEqualTo(BoardSkipPredicate.getHalfDir(adjDir, side.getOpposite()));
+        boolean faceAbsent = !FramedBoardBlock.isFacePresent(adjState, side.getOpposite());
+        int edgeMask = faceAbsent ? FramedBoardBlock.computeEdgeMask(adjState, side.getOpposite()) : 0;
+        return faceAbsent && getHalfDir(dir, type, side).isEqualTo(BoardSkipPredicate.getHalfDir(edgeMask, side.getOpposite()));
     }
 
 
