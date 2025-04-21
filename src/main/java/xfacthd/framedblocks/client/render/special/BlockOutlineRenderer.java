@@ -55,6 +55,8 @@ public final class BlockOutlineRenderer
 
         if (DevToolsConfig.VIEW.isOcclusionShapeDebugRenderingEnabled())
         {
+            if (ClientHooks.isInTranslucentBlockOutlinePass(level, result.getBlockPos(), state) != event.isForTranslucentBlocks()) return;
+
             VoxelShape shape = state.getOcclusionShape();
             boolean highContrast = Minecraft.getInstance().options.highContrastBlockOutline().get();
             Vec3 offset = Vec3.atLowerCornerOf(result.getBlockPos()).subtract(event.getCamera().getPosition());
