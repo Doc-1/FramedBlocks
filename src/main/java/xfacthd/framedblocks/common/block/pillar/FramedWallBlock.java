@@ -26,7 +26,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
@@ -188,11 +187,7 @@ public class FramedWallBlock extends WallBlock implements IFramedBlock
     private ShapeProvider makeShapeProvider(ShapeGenerator generator)
     {
         ImmutableList<BlockState> states = stateDefinition.getPossibleStates();
-        if (!FMLEnvironment.production)
-        {
-            return new ReloadableShapeProvider(generator, states);
-        }
-        return generator.generate(states);
+        return ReloadableShapeProvider.of(generator, states);
     }
 
 

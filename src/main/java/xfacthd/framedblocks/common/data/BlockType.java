@@ -7,7 +7,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.predicate.contex.ConTexMode;
 import xfacthd.framedblocks.api.predicate.contex.ConnectionPredicate;
@@ -339,11 +338,7 @@ public enum BlockType implements IBlockType
     @Override
     public ShapeProvider generateShapes(ImmutableList<BlockState> states)
     {
-        if (!FMLEnvironment.production)
-        {
-            return new ReloadableShapeProvider(shapeGen, states);
-        }
-        return shapeGen.generate(states);
+        return ReloadableShapeProvider.of(shapeGen, states);
     }
 
     @Override
@@ -352,11 +347,7 @@ public enum BlockType implements IBlockType
         if (separateOcclusionShapes)
         {
             SplitShapeGenerator splitShapeGen = (SplitShapeGenerator) shapeGen;
-            if (!FMLEnvironment.production)
-            {
-                return new ReloadableShapeProvider(splitShapeGen::generateOcclusionShapes, states);
-            }
-            return splitShapeGen.generateOcclusionShapes(states);
+            return ReloadableShapeProvider.of(splitShapeGen::generateOcclusionShapes, states);
         }
         return shapes;
     }
