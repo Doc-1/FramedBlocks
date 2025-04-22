@@ -11,6 +11,8 @@ import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.data.BlockType;
+import xfacthd.framedblocks.common.data.PropertyHolder;
+import xfacthd.framedblocks.common.data.property.PillarConnection;
 import xfacthd.framedblocks.common.data.skippreds.CullTest;
 
 @CullTest(BlockType.FRAMED_FENCE)
@@ -33,6 +35,9 @@ public final class FenceSkipPredicate implements SideSkipPredicate
                         adjState, side
                 );
                 case FRAMED_LATTICE_BLOCK -> testAgainstLattice(
+                        adjState, side
+                );
+                case FRAMED_PYRAMID -> testAgainstPyramid(
                         adjState, side
                 );
                 default -> false;
@@ -68,6 +73,16 @@ public final class FenceSkipPredicate implements SideSkipPredicate
     private static boolean testAgainstLattice(BlockState adjState, Direction side)
     {
         return Utils.isY(side) && adjState.getValue(FramedProperties.Y_AXIS);
+    }
+
+    @CullTest.TestTarget(BlockType.FRAMED_PYRAMID)
+    private static boolean testAgainstPyramid(BlockState adjState, Direction side)
+    {
+        if (Utils.isY(side) && adjState.getValue(BlockStateProperties.FACING) == side.getOpposite())
+        {
+            return adjState.getValue(PropertyHolder.PILLAR_CONNECTION) == PillarConnection.POST;
+        }
+        return false;
     }
 
 

@@ -12,13 +12,22 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.common.block.FramedBlock;
+import xfacthd.framedblocks.common.block.IPillarLikeBlock;
 import xfacthd.framedblocks.common.data.BlockType;
+import xfacthd.framedblocks.common.data.property.PillarConnection;
 
-public class FramedHalfPillarBlock extends FramedBlock
+public class FramedHalfPillarBlock extends FramedBlock implements IPillarLikeBlock
 {
+    private final PillarConnection pillarConnection;
+
     public FramedHalfPillarBlock(BlockType blockType, Properties props)
     {
         super(blockType, props);
+        this.pillarConnection = switch (blockType)
+        {
+            case FRAMED_HALF_PILLAR -> PillarConnection.PILLAR;
+            default -> throw new IllegalArgumentException("Unexpected BlockType in FramedHalfPillarBlock: " + blockType);
+        };
     }
 
     @Override
@@ -71,5 +80,11 @@ public class FramedHalfPillarBlock extends FramedBlock
     public BlockState getJadeRenderState(BlockState state)
     {
         return state.setValue(BlockStateProperties.FACING, Direction.DOWN);
+    }
+
+    @Override
+    public PillarConnection getPillarConnection(BlockState state, Direction side)
+    {
+        return side == state.getValue(BlockStateProperties.FACING) ? pillarConnection : PillarConnection.NONE;
     }
 }

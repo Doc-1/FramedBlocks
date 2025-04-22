@@ -9,6 +9,8 @@ import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
 import xfacthd.framedblocks.common.data.BlockType;
+import xfacthd.framedblocks.common.data.PropertyHolder;
+import xfacthd.framedblocks.common.data.property.PillarConnection;
 import xfacthd.framedblocks.common.data.skippreds.CullTest;
 
 @CullTest(BlockType.FRAMED_POST)
@@ -30,6 +32,9 @@ public final class PostSkipPredicate implements SideSkipPredicate
                 );
                 case FRAMED_LATTICE_BLOCK -> testAgainstLattice(
                         axis, adjState
+                );
+                case FRAMED_PYRAMID -> testAgainstPyramid(
+                        adjState, side
                 );
                 default -> false;
             };
@@ -58,5 +63,15 @@ public final class PostSkipPredicate implements SideSkipPredicate
             case Y -> adjState.getValue(FramedProperties.Y_AXIS);
             case Z -> adjState.getValue(FramedProperties.Z_AXIS);
         };
+    }
+
+    @CullTest.TestTarget(BlockType.FRAMED_PYRAMID)
+    private static boolean testAgainstPyramid(BlockState adjState, Direction side)
+    {
+        if (adjState.getValue(BlockStateProperties.FACING) == side.getOpposite())
+        {
+            return adjState.getValue(PropertyHolder.PILLAR_CONNECTION) == PillarConnection.POST;
+        }
+        return false;
     }
 }
