@@ -6,6 +6,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.StairsShape;
 import xfacthd.framedblocks.api.block.IFramedBlock;
@@ -26,6 +27,7 @@ import xfacthd.framedblocks.common.data.skippreds.slab.MasonryCornerSegmentSkipP
 import xfacthd.framedblocks.common.data.skippreds.slab.PanelSkipPredicate;
 import xfacthd.framedblocks.common.data.skippreds.slab.SlabEdgeSkipPredicate;
 import xfacthd.framedblocks.common.data.skippreds.slope.CornerSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slope.ElevatedPyramidSlabSkipPredicate;
 import xfacthd.framedblocks.common.data.skippreds.slope.HalfSlopeSkipPredicate;
 import xfacthd.framedblocks.common.data.skippreds.slope.InnerCornerSkipPredicate;
 import xfacthd.framedblocks.common.data.skippreds.slope.InnerThreewayCornerSkipPredicate;
@@ -125,6 +127,9 @@ public final class VerticalSlopedStairsSkipPredicate implements SideSkipPredicat
                         dir, rot, adjState, side
                 );
                 case FRAMED_FLAT_EXT_SLOPE_PANEL_CORNER -> testAgainstFlatExtendedSlopePanelCorner(
+                        dir, rot, adjState, side
+                );
+                case FRAMED_ELEVATED_PYRAMID_SLAB -> testAgainstElevatedPyramidSlab(
                         dir, rot, adjState, side
                 );
                 default -> false;
@@ -407,6 +412,15 @@ public final class VerticalSlopedStairsSkipPredicate implements SideSkipPredicat
         HorizontalRotation adjRot = adjState.getValue(PropertyHolder.ROTATION);
 
         return getHalfDir(dir, rot, side).isEqualTo(FlatExtendedSlopePanelCornerSkipPredicate.getHalfDir(adjDir, adjRot, side.getOpposite()));
+    }
+
+    @CullTest.TestTarget(BlockType.FRAMED_ELEVATED_PYRAMID_SLAB)
+    private static boolean testAgainstElevatedPyramidSlab(
+            Direction dir, HorizontalRotation rot, BlockState adjState, Direction side
+    )
+    {
+        Direction adjDir = adjState.getValue(BlockStateProperties.FACING);
+        return getHalfDir(dir, rot, side).isEqualTo(ElevatedPyramidSlabSkipPredicate.getHalfDir(adjDir, side.getOpposite()));
     }
 
 

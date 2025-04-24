@@ -19,6 +19,7 @@ import xfacthd.framedblocks.common.data.skippreds.HalfDir;
 import xfacthd.framedblocks.common.data.skippreds.HalfTriangleDir;
 import xfacthd.framedblocks.common.data.skippreds.slab.SlabEdgeSkipPredicate;
 import xfacthd.framedblocks.common.data.skippreds.slab.SlabSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.slope.ElevatedPyramidSlabSkipPredicate;
 import xfacthd.framedblocks.common.data.skippreds.slope.VerticalHalfSlopeSkipPredicate;
 import xfacthd.framedblocks.common.data.skippreds.slopeedge.ElevatedSlopeEdgeSkipPredicate;
 import xfacthd.framedblocks.common.data.skippreds.slopeedge.InnerCornerSlopeEdgeSkipPredicate;
@@ -79,6 +80,9 @@ public final class CompoundSlopeSlabSkipPredicate implements SideSkipPredicate
                         dir, adjState, side
                 );
                 case FRAMED_INNER_CORNER_SLOPE_EDGE -> testAgainstInnerCornerSlopeEdge(
+                        dir, adjState, side
+                );
+                case FRAMED_ELEVATED_PYRAMID_SLAB -> testAgainstElevatedPyramidSlab(
                         dir, adjState, side
                 );
                 default -> false;
@@ -239,6 +243,15 @@ public final class CompoundSlopeSlabSkipPredicate implements SideSkipPredicate
         boolean adjAlt = adjState.getValue(PropertyHolder.ALT_TYPE);
 
         return getHalfDir(dir, side).isEqualTo(InnerCornerSlopeEdgeSkipPredicate.getHalfDir(adjDir, adjType, adjAlt, side.getOpposite()));
+    }
+
+    @CullTest.TestTarget(BlockType.FRAMED_ELEVATED_PYRAMID_SLAB)
+    private static boolean testAgainstElevatedPyramidSlab(
+            Direction dir, BlockState adjState, Direction side
+    )
+    {
+        Direction adjDir = adjState.getValue(BlockStateProperties.FACING);
+        return getHalfDir(dir, side).isEqualTo(ElevatedPyramidSlabSkipPredicate.getHalfDir(adjDir, side.getOpposite()));
     }
 
 

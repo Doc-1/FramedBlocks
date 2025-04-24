@@ -40,7 +40,7 @@ public final class WallSkipPredicate implements SideSkipPredicate
                 case FRAMED_THICK_LATTICE -> testAgainstThickLattice(
                         up, adjState, side
                 );
-                case FRAMED_PYRAMID -> testAgainstPyramid(
+                case FRAMED_PYRAMID, FRAMED_ELEVATED_PYRAMID_SLAB -> testAgainstPyramid(
                         up, adjState, side
                 );
                 default -> false;
@@ -82,7 +82,7 @@ public final class WallSkipPredicate implements SideSkipPredicate
         return Utils.isY(side) && up && adjState.getValue(FramedProperties.Y_AXIS);
     }
 
-    @CullTest.TestTarget(BlockType.FRAMED_PYRAMID)
+    @CullTest.TestTarget({ BlockType.FRAMED_PYRAMID, BlockType.FRAMED_ELEVATED_PYRAMID_SLAB })
     private static boolean testAgainstPyramid(boolean up, BlockState adjState, Direction side)
     {
         if (up && Utils.isY(side) && adjState.getValue(BlockStateProperties.FACING) == side.getOpposite())

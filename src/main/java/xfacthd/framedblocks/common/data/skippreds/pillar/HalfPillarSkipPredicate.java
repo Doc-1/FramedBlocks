@@ -37,7 +37,7 @@ public final class HalfPillarSkipPredicate implements SideSkipPredicate
                 case FRAMED_THICK_LATTICE -> testAgainstThickLattice(
                         adjState, side
                 );
-                case FRAMED_PYRAMID -> testAgainstPyramid(
+                case FRAMED_PYRAMID, FRAMED_ELEVATED_PYRAMID_SLAB -> testAgainstPyramid(
                         adjState, side
                 );
                 default -> false;
@@ -75,10 +75,10 @@ public final class HalfPillarSkipPredicate implements SideSkipPredicate
         };
     }
 
-    @CullTest.TestTarget(BlockType.FRAMED_PYRAMID)
+    @CullTest.TestTarget({ BlockType.FRAMED_PYRAMID, BlockType.FRAMED_ELEVATED_PYRAMID_SLAB })
     private static boolean testAgainstPyramid(BlockState adjState, Direction side)
     {
-        if (Utils.isY(side) && adjState.getValue(BlockStateProperties.FACING) == side.getOpposite())
+        if (adjState.getValue(BlockStateProperties.FACING) == side.getOpposite())
         {
             return adjState.getValue(PropertyHolder.PILLAR_CONNECTION) == PillarConnection.PILLAR;
         }

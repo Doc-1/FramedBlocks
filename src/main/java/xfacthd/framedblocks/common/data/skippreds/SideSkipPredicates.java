@@ -221,6 +221,7 @@ public final class SideSkipPredicates extends BlockTypeMap<SideSkipPredicate>
         put(BlockType.FRAMED_STACKED_INNER_CORNER_SLOPE_PANEL_W, SideSkipPredicate.FALSE);
         put(BlockType.FRAMED_PYRAMID, new PyramidSkipPredicate());
         put(BlockType.FRAMED_PYRAMID_SLAB, SideSkipPredicate.FALSE);
+        put(BlockType.FRAMED_ELEVATED_PYRAMID_SLAB, new ElevatedPyramidSlabSkipPredicate());
         put(BlockType.FRAMED_TARGET, SideSkipPredicate.FALSE);
         put(BlockType.FRAMED_GATE, new GateSkipPredicate());
         put(BlockType.FRAMED_IRON_GATE, new GateSkipPredicate());

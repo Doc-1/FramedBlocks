@@ -37,7 +37,7 @@ public final class LatticeSkipPredicate implements SideSkipPredicate
                 case FRAMED_POST -> testAgainstPost(
                         xAxis, yAxis, zAxis, adjState, side
                 );
-                case FRAMED_PYRAMID -> testAgainstPyramid(
+                case FRAMED_PYRAMID, FRAMED_ELEVATED_PYRAMID_SLAB -> testAgainstPyramid(
                         xAxis, yAxis, zAxis, adjState, side
                 );
                 default -> false;
@@ -79,7 +79,7 @@ public final class LatticeSkipPredicate implements SideSkipPredicate
         };
     }
 
-    @CullTest.TestTarget(BlockType.FRAMED_PYRAMID)
+    @CullTest.TestTarget({ BlockType.FRAMED_PYRAMID, BlockType.FRAMED_ELEVATED_PYRAMID_SLAB })
     private static boolean testAgainstPyramid(
             boolean xAxis, boolean yAxis, boolean zAxis, BlockState adjState, Direction side
     )
