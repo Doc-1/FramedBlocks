@@ -2,7 +2,6 @@ package xfacthd.framedblocks.cmdtests.tests;
 
 import com.google.common.base.Preconditions;
 import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.blocks.BlockStateArgument;
 import net.minecraft.core.BlockPos;
@@ -18,11 +17,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.camo.block.SimpleBlockCamoContainer;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -80,10 +81,15 @@ public final class ChunkBanTest
         return container;
     };
 
+    @Nullable
     private static Consumer<Component> resultMsgConsumer = null;
+    @Nullable
     private static ResourceKey<Level> dimension = null;
+    @Nullable
     private static BlockState state = null;
+    @Nullable
     private static BlockPos startPos = null;
+    @Nullable
     private static BlockPos placePos = null;
     private static int blocksPlaced = 0;
 
@@ -134,6 +140,11 @@ public final class ChunkBanTest
         Level level = event.getLevel();
         if (dimension != null && level.dimension() == dimension)
         {
+            Objects.requireNonNull(state);
+            Objects.requireNonNull(startPos);
+            Objects.requireNonNull(placePos);
+
+
             for (int i = 0; i < 16; i++)
             {
                 BlockPos pos = placePos.east(i);
@@ -158,7 +169,7 @@ public final class ChunkBanTest
                 placePos = placePos.north(16).above();
                 if (placePos.getY() >= level.getMaxY())
                 {
-                    resultMsgConsumer.accept(Component.literal(
+                    Objects.requireNonNull(resultMsgConsumer).accept(Component.literal(
                             "Chunkban test preparation completed, placed " + blocksPlaced + " blocks"
                     ));
 
