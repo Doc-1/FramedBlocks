@@ -6,10 +6,10 @@ public final class SkipPredicateGenerator
 {
     public static void main(String[] args)
     {
-        // The type for which the predicate should be generated (must be defined in SkipPredicateGeneratorData.KNOWN_TYPES)
+        // The type for which the predicate should be generated (must be defined in SkipPredicateGeneratorData.KNOWN_TYPES) or null to regenerate all
         String sourceType = "FRAMED_TYPE";
 
-        SkipPredicateGeneratorImpl.generateAndExportClass(sourceType);
+        SkipPredicateGeneratorImpl.generateAndExportClasses(sourceType);
     }
 
 
