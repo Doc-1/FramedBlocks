@@ -3,7 +3,6 @@ package xfacthd.framedblocks.common.data.skippreds.slope;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Half;
@@ -11,8 +10,6 @@ import net.minecraft.world.level.block.state.properties.StairsShape;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
-import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.common.block.pillar.FramedLatticeBlock;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.property.CornerType;
@@ -21,33 +18,16 @@ import xfacthd.framedblocks.common.data.property.PillarConnection;
 import xfacthd.framedblocks.common.data.property.SlopeType;
 import xfacthd.framedblocks.common.data.property.StairsType;
 import xfacthd.framedblocks.common.data.skippreds.CullTest;
-import xfacthd.framedblocks.common.data.skippreds.HalfDir;
-import xfacthd.framedblocks.common.data.skippreds.pillar.CornerPillarSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slab.MasonryCornerSegmentSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slab.PanelSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slab.SlabEdgeSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slab.SlabSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopeedge.ElevatedCornerSlopeEdgeSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopeedge.ElevatedSlopeEdgeSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopeedge.InnerCornerSlopeEdgeSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopeedge.SlopeEdgeSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopepanel.CompoundSlopePanelSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopepanel.ExtendedSlopePanelSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopepanel.FlatExtendedSlopePanelCornerSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopepanel.FlatInnerSlopePanelCornerSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopepanel.SlopePanelSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopeslab.CompoundSlopeSlabSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopeslab.ElevatedSlopeSlabSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopeslab.FlatElevatedSlopeSlabCornerSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopeslab.FlatInnerSlopeSlabCornerSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.slopeslab.SlopeSlabSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.stairs.HalfStairsSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.stairs.SlopedStairsSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.stairs.StairsSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.stairs.VerticalHalfStairsSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.stairs.VerticalSlopedStairsSkipPredicate;
-import xfacthd.framedblocks.common.data.skippreds.stairs.VerticalStairsSkipPredicate;
+import xfacthd.framedblocks.common.data.skippreds.pillar.PillarDirs;
+import xfacthd.framedblocks.common.data.skippreds.slab.SlabDirs;
+import xfacthd.framedblocks.common.data.skippreds.slopeedge.SlopeEdgeDirs;
+import xfacthd.framedblocks.common.data.skippreds.slopepanel.SlopePanelDirs;
+import xfacthd.framedblocks.common.data.skippreds.slopeslab.SlopeSlabDirs;
+import xfacthd.framedblocks.common.data.skippreds.stairs.StairsDirs;
 
+/**
+ This class is machine-generated, any manual changes to this class will be overwritten.
+ */
 @CullTest(BlockType.FRAMED_ELEVATED_PYRAMID_SLAB)
 public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
 {
@@ -63,27 +43,6 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
             {
                 case FRAMED_ELEVATED_PYRAMID_SLAB -> testAgainstElevatedPyramidSlab(
                         dir, adjState, side
-                );
-                case FRAMED_FENCE -> testAgainstFence(
-                        dir, connection, side
-                );
-                case FRAMED_WALL -> testAgainstWall(
-                        dir, connection, adjState, side
-                );
-                case FRAMED_PILLAR -> testAgainstPillar(
-                        dir, connection, adjState, side
-                );
-                case FRAMED_HALF_PILLAR -> testAgainstHalfPillar(
-                        dir, connection, adjState, side
-                );
-                case FRAMED_POST -> testAgainstPost(
-                        dir, connection, adjState, side
-                );
-                case FRAMED_LATTICE_BLOCK -> testAgainstThinLattice(
-                        dir, connection, adjState, side
-                );
-                case FRAMED_THICK_LATTICE -> testAgainstThickLattice(
-                        dir, connection, adjState, side
                 );
                 case FRAMED_HALF_SLOPE -> testAgainstHalfSlope(
                         dir, adjState, side
@@ -133,6 +92,27 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
                 case FRAMED_VERTICAL_SLOPED_STAIRS -> testAgainstVerticalSlopedStairs(
                         dir, adjState, side
                 );
+                case FRAMED_WALL -> testAgainstWall(
+                        dir, connection, adjState, side
+                );
+                case FRAMED_FENCE -> testAgainstFence(
+                        dir, connection, side
+                );
+                case FRAMED_LATTICE_BLOCK -> testAgainstLattice(
+                        dir, connection, adjState, side
+                );
+                case FRAMED_THICK_LATTICE -> testAgainstThickLattice(
+                        dir, connection, adjState, side
+                );
+                case FRAMED_PILLAR -> testAgainstPillar(
+                        dir, connection, adjState, side
+                );
+                case FRAMED_HALF_PILLAR -> testAgainstHalfPillar(
+                        dir, connection, adjState, side
+                );
+                case FRAMED_POST -> testAgainstPost(
+                        dir, connection, adjState, side
+                );
                 case FRAMED_SLOPE_SLAB -> testAgainstSlopeSlab(
                         dir, adjState, side
                 );
@@ -173,52 +153,12 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_ELEVATED_PYRAMID_SLAB)
-    private static boolean testAgainstElevatedPyramidSlab(Direction dir, BlockState adjState, Direction side)
+    private static boolean testAgainstElevatedPyramidSlab(
+            Direction dir, BlockState adjState, Direction side
+    )
     {
         Direction adjDir = adjState.getValue(BlockStateProperties.FACING);
-        return getHalfDir(dir, side).isEqualTo(getHalfDir(adjDir, side.getOpposite()));
-    }
-
-    @CullTest.TestTarget(BlockType.FRAMED_FENCE)
-    private static boolean testAgainstFence(Direction dir, PillarConnection connection, Direction side)
-    {
-        return side == dir && connection == PillarConnection.POST && Utils.isY(dir);
-    }
-
-    @CullTest.TestTarget(BlockType.FRAMED_WALL)
-    private static boolean testAgainstWall(Direction dir, PillarConnection connection, BlockState adjState, Direction side)
-    {
-        return side == dir && connection == PillarConnection.PILLAR && Utils.isY(dir) && adjState.getValue(WallBlock.UP);
-    }
-
-    @CullTest.TestTarget(BlockType.FRAMED_PILLAR)
-    private static boolean testAgainstPillar(Direction dir, PillarConnection connection, BlockState adjState, Direction side)
-    {
-        return side == dir && connection == PillarConnection.PILLAR && adjState.getValue(BlockStateProperties.AXIS) == dir.getAxis();
-    }
-
-    @CullTest.TestTarget(BlockType.FRAMED_HALF_PILLAR)
-    private static boolean testAgainstHalfPillar(Direction dir, PillarConnection connection, BlockState adjState, Direction side)
-    {
-        return side == dir && connection == PillarConnection.PILLAR && adjState.getValue(BlockStateProperties.FACING) == dir.getOpposite();
-    }
-
-    @CullTest.TestTarget(BlockType.FRAMED_POST)
-    private static boolean testAgainstPost(Direction dir, PillarConnection connection, BlockState adjState, Direction side)
-    {
-        return side == dir && connection == PillarConnection.POST && adjState.getValue(BlockStateProperties.AXIS) == dir.getAxis();
-    }
-
-    @CullTest.TestTarget(BlockType.FRAMED_LATTICE_BLOCK)
-    private static boolean testAgainstThinLattice(Direction dir, PillarConnection connection, BlockState adjState, Direction side)
-    {
-        return side == dir && connection == PillarConnection.POST && adjState.getValue(FramedLatticeBlock.getPropFromAxis(dir));
-    }
-
-    @CullTest.TestTarget(BlockType.FRAMED_THICK_LATTICE)
-    private static boolean testAgainstThickLattice(Direction dir, PillarConnection connection, BlockState adjState, Direction side)
-    {
-        return side == dir && connection == PillarConnection.PILLAR && adjState.getValue(FramedLatticeBlock.getPropFromAxis(dir));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlopeDirs.ElevatedPyramidSlab.getHalfDir(adjDir, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_HALF_SLOPE)
@@ -230,7 +170,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         boolean adjTop = adjState.getValue(FramedProperties.TOP);
         boolean adjRight = adjState.getValue(PropertyHolder.RIGHT);
 
-        return getHalfDir(dir, side).isEqualTo(HalfSlopeSkipPredicate.getHalfDir(adjDir, adjTop, adjRight, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlopeDirs.HalfSlope.getHalfDir(adjDir, adjTop, adjRight, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_VERTICAL_HALF_SLOPE)
@@ -241,7 +181,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
         boolean adjTop = adjState.getValue(FramedProperties.TOP);
 
-        return getHalfDir(dir, side).isEqualTo(VerticalHalfSlopeSkipPredicate.getHalfDir(adjDir, adjTop, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlopeDirs.VerticalHalfSlope.getHalfDir(adjDir, adjTop, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_SLOPE_EDGE)
@@ -253,7 +193,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         SlopeType adjType = adjState.getValue(PropertyHolder.SLOPE_TYPE);
         boolean adjAlt = adjState.getValue(PropertyHolder.ALT_TYPE);
 
-        return getHalfDir(dir, side).isEqualTo(SlopeEdgeSkipPredicate.getHalfDir(adjDir, adjType, adjAlt, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlopeEdgeDirs.SlopeEdge.getHalfDir(adjDir, adjType, adjAlt, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_ELEVATED_SLOPE_EDGE)
@@ -264,7 +204,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
         SlopeType adjType = adjState.getValue(PropertyHolder.SLOPE_TYPE);
 
-        return getHalfDir(dir, side).isEqualTo(ElevatedSlopeEdgeSkipPredicate.getHalfDir(adjDir, adjType, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlopeEdgeDirs.ElevatedSlopeEdge.getHalfDir(adjDir, adjType, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_INNER_CORNER_SLOPE_EDGE)
@@ -276,7 +216,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         CornerType adjType = adjState.getValue(PropertyHolder.CORNER_TYPE);
         boolean adjAlt = adjState.getValue(PropertyHolder.ALT_TYPE);
 
-        return getHalfDir(dir, side).isEqualTo(InnerCornerSlopeEdgeSkipPredicate.getHalfDir(adjDir, adjType, adjAlt, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlopeEdgeDirs.InnerCornerSlopeEdge.getHalfDir(adjDir, adjType, adjAlt, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_ELEVATED_CORNER_SLOPE_EDGE)
@@ -287,7 +227,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
         CornerType adjType = adjState.getValue(PropertyHolder.CORNER_TYPE);
 
-        return getHalfDir(dir, side).isEqualTo(ElevatedCornerSlopeEdgeSkipPredicate.getHalfDir(adjDir, adjType, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlopeEdgeDirs.ElevatedCornerSlopeEdge.getHalfDir(adjDir, adjType, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_SLAB)
@@ -296,7 +236,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
     )
     {
         boolean adjTop = adjState.getValue(FramedProperties.TOP);
-        return getHalfDir(dir, side).isEqualTo(SlabSkipPredicate.getHalfDir(adjTop, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlabDirs.Slab.getHalfDir(adjTop, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_SLAB_EDGE)
@@ -307,7 +247,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
         boolean adjTop = adjState.getValue(FramedProperties.TOP);
 
-        return getHalfDir(dir, side).isEqualTo(SlabEdgeSkipPredicate.getHalfDir(adjDir, adjTop, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlabDirs.SlabEdge.getHalfDir(adjDir, adjTop, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_PANEL)
@@ -316,7 +256,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
     )
     {
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
-        return getHalfDir(dir, side).isEqualTo(PanelSkipPredicate.getHalfDir(adjDir, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlabDirs.Panel.getHalfDir(adjDir, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_CORNER_PILLAR)
@@ -325,7 +265,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
     )
     {
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
-        return getHalfDir(dir, side).isEqualTo(CornerPillarSkipPredicate.getHalfDir(adjDir, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(PillarDirs.CornerPillar.getHalfDir(adjDir, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_STAIRS)
@@ -337,7 +277,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         StairsShape adjShape = adjState.getValue(BlockStateProperties.STAIRS_SHAPE);
         Half adjHalf = adjState.getValue(BlockStateProperties.HALF);
 
-        return getHalfDir(dir, side).isEqualTo(StairsSkipPredicate.getHalfDir(adjDir, adjShape, adjHalf, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(StairsDirs.Stairs.getHalfDir(adjDir, adjShape, adjHalf, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_HALF_STAIRS)
@@ -349,7 +289,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         boolean adjTop = adjState.getValue(FramedProperties.TOP);
         boolean adjRight = adjState.getValue(PropertyHolder.RIGHT);
 
-        return getHalfDir(dir, side).isEqualTo(HalfStairsSkipPredicate.getHalfDir(adjDir, adjTop, adjRight, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(StairsDirs.HalfStairs.getHalfDir(adjDir, adjTop, adjRight, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_SLOPED_STAIRS)
@@ -360,7 +300,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
         boolean adjTop = adjState.getValue(FramedProperties.TOP);
 
-        return getHalfDir(dir, side).isEqualTo(SlopedStairsSkipPredicate.getHalfDir(adjDir, adjTop, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(StairsDirs.SlopedStairs.getHalfDir(adjDir, adjTop, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_VERTICAL_STAIRS)
@@ -371,7 +311,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
         StairsType adjType = adjState.getValue(PropertyHolder.STAIRS_TYPE);
 
-        return getHalfDir(dir, side).isEqualTo(VerticalStairsSkipPredicate.getHalfDir(adjDir, adjType, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(StairsDirs.VerticalStairs.getHalfDir(adjDir, adjType, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_VERTICAL_HALF_STAIRS)
@@ -382,7 +322,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
         boolean adjTop = adjState.getValue(FramedProperties.TOP);
 
-        return getHalfDir(dir, side).isEqualTo(VerticalHalfStairsSkipPredicate.getHalfDir(adjDir, adjTop, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(StairsDirs.VerticalHalfStairs.getHalfDir(adjDir, adjTop, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_VERTICAL_SLOPED_STAIRS)
@@ -393,7 +333,75 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
         HorizontalRotation adjRot = adjState.getValue(PropertyHolder.ROTATION);
 
-        return getHalfDir(dir, side).isEqualTo(VerticalSlopedStairsSkipPredicate.getHalfDir(adjDir, adjRot, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(StairsDirs.VerticalSlopedStairs.getHalfDir(adjDir, adjRot, side.getOpposite()));
+    }
+
+    @CullTest.TestTarget(BlockType.FRAMED_WALL)
+    private static boolean testAgainstWall(
+            Direction dir, PillarConnection connection, BlockState adjState, Direction side
+    )
+    {
+        boolean adjUp = adjState.getValue(BlockStateProperties.UP);
+        return (SlopeDirs.ElevatedPyramidSlab.isPillarDir(dir, connection, side) && PillarDirs.Wall.isPillarDir(adjUp, side.getOpposite()));
+    }
+
+    @CullTest.TestTarget(BlockType.FRAMED_FENCE)
+    private static boolean testAgainstFence(
+            Direction dir, PillarConnection connection, Direction side
+    )
+    {
+        return (SlopeDirs.ElevatedPyramidSlab.isPostDir(dir, connection, side) && PillarDirs.Fence.isPostDir(side.getOpposite()));
+    }
+
+    @CullTest.TestTarget(BlockType.FRAMED_LATTICE_BLOCK)
+    private static boolean testAgainstLattice(
+            Direction dir, PillarConnection connection, BlockState adjState, Direction side
+    )
+    {
+        boolean adjXAxis = adjState.getValue(FramedProperties.X_AXIS);
+        boolean adjYAxis = adjState.getValue(FramedProperties.Y_AXIS);
+        boolean adjZAxis = adjState.getValue(FramedProperties.Z_AXIS);
+
+        return (SlopeDirs.ElevatedPyramidSlab.isPostDir(dir, connection, side) && PillarDirs.Lattice.isPostDir(adjXAxis, adjYAxis, adjZAxis, side.getOpposite()));
+    }
+
+    @CullTest.TestTarget(BlockType.FRAMED_THICK_LATTICE)
+    private static boolean testAgainstThickLattice(
+            Direction dir, PillarConnection connection, BlockState adjState, Direction side
+    )
+    {
+        boolean adjXAxis = adjState.getValue(FramedProperties.X_AXIS);
+        boolean adjYAxis = adjState.getValue(FramedProperties.Y_AXIS);
+        boolean adjZAxis = adjState.getValue(FramedProperties.Z_AXIS);
+
+        return (SlopeDirs.ElevatedPyramidSlab.isPillarDir(dir, connection, side) && PillarDirs.ThickLattice.isPillarDir(adjXAxis, adjYAxis, adjZAxis, side.getOpposite()));
+    }
+
+    @CullTest.TestTarget(BlockType.FRAMED_PILLAR)
+    private static boolean testAgainstPillar(
+            Direction dir, PillarConnection connection, BlockState adjState, Direction side
+    )
+    {
+        Direction.Axis adjAxis = adjState.getValue(BlockStateProperties.AXIS);
+        return (SlopeDirs.ElevatedPyramidSlab.isPillarDir(dir, connection, side) && PillarDirs.Pillar.isPillarDir(adjAxis, side.getOpposite()));
+    }
+
+    @CullTest.TestTarget(BlockType.FRAMED_HALF_PILLAR)
+    private static boolean testAgainstHalfPillar(
+            Direction dir, PillarConnection connection, BlockState adjState, Direction side
+    )
+    {
+        Direction adjDir = adjState.getValue(BlockStateProperties.FACING);
+        return (SlopeDirs.ElevatedPyramidSlab.isPillarDir(dir, connection, side) && PillarDirs.HalfPillar.isPillarDir(adjDir, side.getOpposite()));
+    }
+
+    @CullTest.TestTarget(BlockType.FRAMED_POST)
+    private static boolean testAgainstPost(
+            Direction dir, PillarConnection connection, BlockState adjState, Direction side
+    )
+    {
+        Direction.Axis adjAxis = adjState.getValue(BlockStateProperties.AXIS);
+        return (SlopeDirs.ElevatedPyramidSlab.isPostDir(dir, connection, side) && PillarDirs.Post.isPostDir(adjAxis, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_SLOPE_SLAB)
@@ -404,7 +412,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
         boolean adjTopHalf = adjState.getValue(PropertyHolder.TOP_HALF);
 
-        return getHalfDir(dir, side).isEqualTo(SlopeSlabSkipPredicate.getHalfDir(adjDir, adjTopHalf, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlopeSlabDirs.SlopeSlab.getHalfDir(adjDir, adjTopHalf, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_ELEVATED_SLOPE_SLAB)
@@ -415,7 +423,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
         boolean adjTop = adjState.getValue(FramedProperties.TOP);
 
-        return getHalfDir(dir, side).isEqualTo(ElevatedSlopeSlabSkipPredicate.getHalfDir(adjDir, adjTop, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlopeSlabDirs.ElevatedSlopeSlab.getHalfDir(adjDir, adjTop, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_COMPOUND_SLOPE_SLAB)
@@ -424,7 +432,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
     )
     {
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
-        return getHalfDir(dir, side).isEqualTo(CompoundSlopeSlabSkipPredicate.getHalfDir(adjDir, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlopeSlabDirs.CompoundSlopeSlab.getHalfDir(adjDir, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_FLAT_INNER_SLOPE_SLAB_CORNER)
@@ -435,7 +443,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
         boolean adjTopHalf = adjState.getValue(PropertyHolder.TOP_HALF);
 
-        return getHalfDir(dir, side).isEqualTo(FlatInnerSlopeSlabCornerSkipPredicate.getHalfDir(adjDir, adjTopHalf, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlopeSlabDirs.FlatInnerSlopeSlabCorner.getHalfDir(adjDir, adjTopHalf, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_FLAT_ELEV_SLOPE_SLAB_CORNER)
@@ -446,7 +454,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
         boolean adjTop = adjState.getValue(FramedProperties.TOP);
 
-        return getHalfDir(dir, side).isEqualTo(FlatElevatedSlopeSlabCornerSkipPredicate.getHalfDir(adjDir, adjTop, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlopeSlabDirs.FlatElevatedSlopeSlabCorner.getHalfDir(adjDir, adjTop, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_SLOPE_PANEL)
@@ -458,7 +466,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         HorizontalRotation adjRot = adjState.getValue(PropertyHolder.ROTATION);
         boolean adjFront = adjState.getValue(PropertyHolder.FRONT);
 
-        return getHalfDir(dir, side).isEqualTo(SlopePanelSkipPredicate.getHalfDir(adjDir, adjRot, adjFront, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlopePanelDirs.SlopePanel.getHalfDir(adjDir, adjRot, adjFront, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_EXTENDED_SLOPE_PANEL)
@@ -469,7 +477,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
         HorizontalRotation adjRot = adjState.getValue(PropertyHolder.ROTATION);
 
-        return getHalfDir(dir, side).isEqualTo(ExtendedSlopePanelSkipPredicate.getHalfDir(adjDir, adjRot, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlopePanelDirs.ExtendedSlopePanel.getHalfDir(adjDir, adjRot, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_COMPOUND_SLOPE_PANEL)
@@ -480,7 +488,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
         HorizontalRotation adjRot = adjState.getValue(PropertyHolder.ROTATION);
 
-        return getHalfDir(dir, side).isEqualTo(CompoundSlopePanelSkipPredicate.getHalfDir(adjDir, adjRot, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlopePanelDirs.CompoundSlopePanel.getHalfDir(adjDir, adjRot, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_FLAT_INNER_SLOPE_PANEL_CORNER)
@@ -492,7 +500,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         HorizontalRotation adjRot = adjState.getValue(PropertyHolder.ROTATION);
         boolean adjFront = adjState.getValue(PropertyHolder.FRONT);
 
-        return getHalfDir(dir, side).isEqualTo(FlatInnerSlopePanelCornerSkipPredicate.getHalfDir(adjDir, adjRot, adjFront, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlopePanelDirs.FlatInnerSlopePanelCorner.getHalfDir(adjDir, adjRot, adjFront, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_FLAT_EXT_SLOPE_PANEL_CORNER)
@@ -503,7 +511,7 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
         HorizontalRotation adjRot = adjState.getValue(PropertyHolder.ROTATION);
 
-        return getHalfDir(dir, side).isEqualTo(FlatExtendedSlopePanelCornerSkipPredicate.getHalfDir(adjDir, adjRot, side.getOpposite()));
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlopePanelDirs.FlatExtendedSlopePanelCorner.getHalfDir(adjDir, adjRot, side.getOpposite()));
     }
 
     @CullTest.TestTarget(BlockType.FRAMED_MASONRY_CORNER_SEGMENT)
@@ -514,17 +522,6 @@ public final class ElevatedPyramidSlabSkipPredicate implements SideSkipPredicate
         Direction adjDir = adjState.getValue(FramedProperties.FACING_HOR);
         boolean adjTop = adjState.getValue(FramedProperties.TOP);
 
-        return getHalfDir(dir, side).isEqualTo(MasonryCornerSegmentSkipPredicate.getHalfDir(adjDir, adjTop, side.getOpposite()));
-    }
-
-
-
-    public static HalfDir getHalfDir(Direction facing, Direction side)
-    {
-        if (side.getAxis() != facing.getAxis())
-        {
-            return HalfDir.fromDirections(side, facing.getOpposite());
-        }
-        return HalfDir.NULL;
+        return SlopeDirs.ElevatedPyramidSlab.getHalfDir(dir, side).isEqualTo(SlabDirs.MasonryCornerSegment.getHalfDir(adjDir, adjTop, side.getOpposite()));
     }
 }
