@@ -53,7 +53,7 @@ public final class LatticeShapes implements ShapeGenerator
             {
                 shape = ShapeUtils.orUnoptimized(shape, zShape);
             }
-            shapes[i] = shape.optimize();
+            shapes[i] = ShapeUtils.optimize(shape);
         }
 
         for (BlockState state : states)

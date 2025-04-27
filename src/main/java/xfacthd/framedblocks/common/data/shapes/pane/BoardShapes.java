@@ -40,7 +40,7 @@ public final class BoardShapes
                 };
                 merged = ShapeUtils.orUnoptimized(merged, faceShape);
             }
-            allShapes[i] = merged.optimize();
+            allShapes[i] = ShapeUtils.optimize(merged);
         }
 
         for (BlockState state : states)
