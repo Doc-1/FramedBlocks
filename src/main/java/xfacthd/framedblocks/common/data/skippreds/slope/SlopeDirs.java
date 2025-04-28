@@ -280,6 +280,26 @@ public final class SlopeDirs
         private ElevatedPyramidSlab() { }
     }
 
+    public static final class UpperPyramidSlab
+    {
+        public static boolean testEarlyExit(Direction dir, PillarConnection connection, Direction side)
+        {
+            return side != dir || connection == PillarConnection.NONE;
+        }
+
+        public static boolean isPostDir(Direction dir, PillarConnection connection, Direction side)
+        {
+            return side == dir && connection == PillarConnection.POST;
+        }
+
+        public static boolean isPillarDir(Direction dir, PillarConnection connection, Direction side)
+        {
+            return side == dir && connection == PillarConnection.PILLAR;
+        }
+
+        private UpperPyramidSlab() { }
+    }
+
     public static final class RailSlope
     {
         public static TriangleDir getTriDir(Direction dir, Direction side)

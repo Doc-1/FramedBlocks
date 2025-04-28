@@ -5,6 +5,10 @@ import xfacthd.framedblocks.common.data.PropertyHolder;
 
 public final class ElevatedPyramidSlabOutlineRenderer extends PyramidOutlineRenderer
 {
+    public static final ElevatedPyramidSlabOutlineRenderer INSTANCE = new ElevatedPyramidSlabOutlineRenderer();
+
+    private ElevatedPyramidSlabOutlineRenderer() { }
+
     @Override
     public void drawTopPart(BlockState state, LineDrawer drawer)
     {

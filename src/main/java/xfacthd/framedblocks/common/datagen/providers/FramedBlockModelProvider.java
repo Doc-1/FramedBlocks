@@ -232,6 +232,8 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_PYRAMID, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_PYRAMID_SLAB, cube, builder -> builder.itemBaseModel(THIN_BLOCK_LOC));
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_ELEVATED_PYRAMID_SLAB, cube);
+        simpleFramedBlock(blockModels, FBContent.BLOCK_FRAMED_UPPER_PYRAMID_SLAB, cube);
+        simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_STACKED_PYRAMID_SLAB, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_GATE, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_IRON_GATE, ironCube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_MINI_CUBE, cube, builder -> builder.itemBaseModel(THIN_BLOCK_LOC));

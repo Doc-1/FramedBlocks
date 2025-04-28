@@ -1256,6 +1256,16 @@ public final class FramedRecipeProvider extends RecipeProvider
                 .unlockedBy(this, FBContent.BLOCK_FRAMED_PYRAMID_SLAB)
                 .save(output);
 
+        shapedBuildingBlock(FBContent.BLOCK_FRAMED_STACKED_PYRAMID_SLAB.value())
+                .pattern("H")
+                .pattern("P")
+                .pattern("S")
+                .define('H', FBContent.ITEM_FRAMED_HAMMER.value())
+                .define('P', FBContent.BLOCK_FRAMED_PYRAMID_SLAB.value())
+                .define('S', FBContent.BLOCK_FRAMED_SLAB.value())
+                .unlockedBy(this, FBContent.BLOCK_FRAMED_PYRAMID_SLAB)
+                .save(output);
+
         shapedBuildingBlock(FBContent.BLOCK_FRAMED_TARGET.value())
                 .pattern("FRF")
                 .pattern("RHR")
