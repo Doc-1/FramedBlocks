@@ -7,7 +7,7 @@ import it.unimi.dsi.fastutil.objects.ObjectSpliterators;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
-import xfacthd.framedblocks.api.util.FramedByteBufCodecs;
+import xfacthd.framedblocks.api.util.network.FramedByteBufCodecs;
 
 import java.util.Arrays;
 import java.util.Iterator;

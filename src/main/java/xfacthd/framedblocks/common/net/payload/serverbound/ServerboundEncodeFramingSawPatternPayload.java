@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import xfacthd.framedblocks.api.util.FramedByteBufCodecs;
+import xfacthd.framedblocks.api.util.network.FramedByteBufCodecs;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 import xfacthd.framedblocks.common.menu.FramingSawWithEncoderMenu;

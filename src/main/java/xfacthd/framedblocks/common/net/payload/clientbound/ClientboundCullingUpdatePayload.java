@@ -6,7 +6,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import xfacthd.framedblocks.api.util.FramedByteBufCodecs;
+import xfacthd.framedblocks.api.util.network.FramedByteBufCodecs;
 import xfacthd.framedblocks.api.util.Utils;
 
 public record ClientboundCullingUpdatePayload(long chunk, LongSet positions) implements CustomPacketPayload

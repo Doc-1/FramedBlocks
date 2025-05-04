@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.api.util;
+package xfacthd.framedblocks.api.util.network;
 
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.longs.LongCollection;
