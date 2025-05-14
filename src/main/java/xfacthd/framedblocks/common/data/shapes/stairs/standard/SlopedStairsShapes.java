@@ -15,6 +15,10 @@ import xfacthd.framedblocks.common.data.shapes.slope.VerticalHalfSlopeShapes;
 
 public final class SlopedStairsShapes implements SplitShapeGenerator
 {
+    public static final SlopedStairsShapes INSTANCE = new SlopedStairsShapes();
+
+    private SlopedStairsShapes() { }
+
     @Override
     public ShapeProvider generate(ImmutableList<BlockState> states)
     {

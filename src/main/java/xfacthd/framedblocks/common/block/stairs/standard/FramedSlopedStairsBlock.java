@@ -18,9 +18,9 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 public class FramedSlopedStairsBlock extends FramedBlock
 {
-    public FramedSlopedStairsBlock(Properties props)
+    public FramedSlopedStairsBlock(BlockType type, Properties props)
     {
-        super(BlockType.FRAMED_SLOPED_STAIRS, props);
+        super(type, props);
         registerDefaultState(defaultBlockState().setValue(FramedProperties.TOP, false));
     }
 
@@ -41,7 +41,7 @@ public class FramedSlopedStairsBlock extends FramedBlock
         return PlacementStateBuilder.of(this, ctx)
                 .withHalfFacing()
                 .withTop()
-                .withWater()
+                .tryWithWater()
                 .build();
     }
 

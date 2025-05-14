@@ -51,10 +51,10 @@ public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFram
     BlockEntity newBlockEntity(BlockPos pos, BlockState state);
 
     @ApiStatus.OverrideOnly
-    DoubleBlockTopInteractionMode calculateTopInteractionMode(BlockState state);
+    DoubleBlockParts calculateParts(BlockState state);
 
     @ApiStatus.OverrideOnly
-    DoubleBlockParts calculateParts(BlockState state);
+    DoubleBlockTopInteractionMode calculateTopInteractionMode(BlockState state);
 
     @ApiStatus.OverrideOnly
     SolidityCheck calculateSolidityCheck(BlockState state, Direction side);
