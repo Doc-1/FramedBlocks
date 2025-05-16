@@ -909,8 +909,7 @@ public final class FBContent
         DeferredBlockEntity<T> result = registerBlockEntity(factory, types[0].getName(), blocks, true, opOnlyNbt);
         if (!FMLEnvironment.production && Arrays.stream(types).anyMatch(BlockType::isDoubleBlock))
         {
-            //noinspection unchecked
-            DOUBLE_BLOCK_ENTITIES.add((DeferredBlockEntity<? extends FramedDoubleBlockEntity>) result);
+            storeBlockEntityType(DOUBLE_BLOCK_ENTITIES, result);
         }
         return result;
     }
@@ -929,10 +928,15 @@ public final class FBContent
         DeferredBlockEntity<T> result = BE_TYPES.registerBlockEntity(name, factory, blocks, opOnlyNbt);
         if (isFramedBE)
         {
-            //noinspection unchecked
-            FRAMED_BLOCK_ENTITIES.add((DeferredBlockEntity<? extends FramedBlockEntity>) result);
+            storeBlockEntityType(FRAMED_BLOCK_ENTITIES, result);
         }
         return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends BlockEntity> void storeBlockEntityType(List<DeferredBlockEntity<? extends T>> list, DeferredBlockEntity<?> type)
+    {
+        list.add((DeferredBlockEntity<T>) type);
     }
 
     private static <T extends AbstractContainerMenu> DeferredHolder<MenuType<?>, MenuType<T>> registerSimpleMenuType(
