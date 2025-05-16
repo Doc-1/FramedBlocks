@@ -128,6 +128,8 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_DOUBLE_HALF_STAIRS, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_SLOPED_STAIRS, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_SLOPED_DOUBLE_STAIRS, cube);
+        simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_SLICED_SLOPED_STAIRS_SLAB, cube);
+        simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_SLICED_SLOPED_STAIRS_SLOPE, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_SLICED_STAIRS_SLAB, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_SLICED_STAIRS_PANEL, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_VERTICAL_STAIRS, cube);
@@ -138,6 +140,8 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_VERTICAL_SLICED_STAIRS, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_VERTICAL_SLOPED_STAIRS, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_VERTICAL_SLOPED_DOUBLE_STAIRS, cube);
+        simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_VERTICAL_SLICED_SLOPED_STAIRS_PANEL, cube);
+        simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_VERTICAL_SLICED_SLOPED_STAIRS_SLOPE, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_THREEWAY_CORNER_PILLAR, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_DOUBLE_THREEWAY_CORNER_PILLAR, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_WALL, cube);

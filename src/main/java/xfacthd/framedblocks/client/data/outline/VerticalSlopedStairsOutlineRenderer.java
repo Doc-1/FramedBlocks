@@ -8,6 +8,10 @@ import xfacthd.framedblocks.common.data.property.HorizontalRotation;
 
 public final class VerticalSlopedStairsOutlineRenderer implements OutlineRenderer
 {
+    public static final VerticalSlopedStairsOutlineRenderer INSTANCE = new VerticalSlopedStairsOutlineRenderer();
+
+    private VerticalSlopedStairsOutlineRenderer() { }
+
     @Override
     public void draw(BlockState state, LineDrawer drawer)
     {

@@ -316,9 +316,25 @@ public final class FramedRecipeProvider extends RecipeProvider
                 .save(output);
 
         shapedBuildingBlock(FBContent.BLOCK_FRAMED_SLOPED_DOUBLE_STAIRS.value())
-                .pattern("SH")
+                .pattern("H")
+                .pattern("S")
                 .define('S', FBContent.BLOCK_FRAMED_SLOPED_STAIRS.value())
-                .define('H', FBContent.BLOCK_FRAMED_VERTICAL_HALF_SLOPE.value())
+                .define('H', FBContent.BLOCK_FRAMED_HALF_SLOPE.value())
+                .unlockedBy(this, FBContent.BLOCK_FRAMED_SLOPED_STAIRS)
+                .save(output);
+
+        shapedBuildingBlock(FBContent.BLOCK_FRAMED_SLICED_SLOPED_STAIRS_SLAB.value())
+                .pattern("H")
+                .pattern("S")
+                .define('S', FBContent.BLOCK_FRAMED_SLAB.value())
+                .define('H', FBContent.BLOCK_FRAMED_HALF_SLOPE.value())
+                .unlockedBy(this, FBContent.BLOCK_FRAMED_SLOPED_STAIRS)
+                .save(output);
+
+        shapedBuildingBlock(FBContent.BLOCK_FRAMED_SLICED_SLOPED_STAIRS_SLOPE.value())
+                .pattern("SH")
+                .define('S', FBContent.BLOCK_FRAMED_SLOPE.value())
+                .define('H', FBContent.BLOCK_FRAMED_HALF_SLOPE.value())
                 .unlockedBy(this, FBContent.BLOCK_FRAMED_SLOPED_STAIRS)
                 .save(output);
 
@@ -390,6 +406,21 @@ public final class FramedRecipeProvider extends RecipeProvider
         shapedBuildingBlock(FBContent.BLOCK_FRAMED_VERTICAL_SLOPED_DOUBLE_STAIRS.value())
                 .pattern("SH")
                 .define('S', FBContent.BLOCK_FRAMED_VERTICAL_SLOPED_STAIRS.value())
+                .define('H', FBContent.BLOCK_FRAMED_HALF_SLOPE.value())
+                .unlockedBy(this, FBContent.BLOCK_FRAMED_VERTICAL_SLOPED_STAIRS)
+                .save(output);
+
+        shapedBuildingBlock(FBContent.BLOCK_FRAMED_VERTICAL_SLICED_SLOPED_STAIRS_PANEL.value())
+                .pattern("PH")
+                .define('P', FBContent.BLOCK_FRAMED_PANEL.value())
+                .define('H', FBContent.BLOCK_FRAMED_HALF_SLOPE.value())
+                .unlockedBy(this, FBContent.BLOCK_FRAMED_VERTICAL_SLOPED_STAIRS)
+                .save(output);
+
+        shapedBuildingBlock(FBContent.BLOCK_FRAMED_VERTICAL_SLICED_SLOPED_STAIRS_SLOPE.value())
+                .pattern("H")
+                .pattern("S")
+                .define('S', FBContent.BLOCK_FRAMED_SLOPE.value())
                 .define('H', FBContent.BLOCK_FRAMED_HALF_SLOPE.value())
                 .unlockedBy(this, FBContent.BLOCK_FRAMED_VERTICAL_SLOPED_STAIRS)
                 .save(output);
