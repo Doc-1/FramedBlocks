@@ -19,6 +19,8 @@ import xfacthd.framedblocks.api.internal.InternalClientAPI;
 
 public final class ClientUtils
 {
+    @SuppressWarnings("deprecation")
+    public static final ResourceLocation BLOCK_ATLAS = TextureAtlas.LOCATION_BLOCKS;
     public static final ResourceLocation DUMMY_TEXTURE = Utils.rl("neoforge", "white");
 
     public static void enqueueClientTask(Runnable task)
@@ -68,10 +70,9 @@ public final class ClientUtils
         return ctx == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || ctx == ItemDisplayContext.THIRD_PERSON_LEFT_HAND;
     }
 
-    @SuppressWarnings("deprecation")
     public static TextureAtlasSprite getBlockSprite(ResourceLocation id)
     {
-        return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(id);
+        return Minecraft.getInstance().getTextureAtlas(BLOCK_ATLAS).apply(id);
     }
 
 

@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
 import net.minecraft.client.renderer.block.model.SingleVariant;
 import net.minecraft.client.renderer.block.model.TextureSlots;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BlockModelRotation;
 import net.minecraft.client.resources.model.Material;
@@ -37,8 +36,6 @@ public final class FluidModel
     public static final StandaloneModelKey<Void> BARE_MODEL_SINGLE_KEY = new StandaloneModelKey<>(BARE_MODEL_SINGLE);
     @SuppressWarnings("ConstantConditions")
     public static final StandaloneModelBaker<Void> DUMMY_STANDALONE_BAKER = (model, baker) -> null;
-    @SuppressWarnings("deprecation")
-    private static final ResourceLocation BLOCK_ATLAS = TextureAtlas.LOCATION_BLOCKS;
     private static final SpriteGetter TEXTURE_GETTER = new SpriteGetter()
     {
         @Override
@@ -92,9 +89,9 @@ public final class FluidModel
         Preconditions.checkNotNull(bareModel, "Bare fluid model not loaded!");
 
         TextureSlots textures = new TextureSlots(Map.of(
-                "end", new Material(BLOCK_ATLAS, stillTexture),
-                "side", new Material(BLOCK_ATLAS, flowingTexture),
-                "particle", new Material(BLOCK_ATLAS, stillTexture)
+                "end", new Material(ClientUtils.BLOCK_ATLAS, stillTexture),
+                "side", new Material(ClientUtils.BLOCK_ATLAS, flowingTexture),
+                "particle", new Material(ClientUtils.BLOCK_ATLAS, stillTexture)
         ));
         QuadCollection fluidQuads = bareModel.getTopGeometry().bake(
                 textures,

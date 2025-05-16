@@ -1,7 +1,6 @@
 package xfacthd.framedblocks.client;
 
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.Holder;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.level.block.Block;
@@ -32,6 +31,7 @@ import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.render.debug.AttachDebugRenderersEvent;
 import xfacthd.framedblocks.api.type.IBlockType;
+import xfacthd.framedblocks.api.util.ClientUtils;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.data.BlockOutlineRenderers;
@@ -518,8 +518,7 @@ public final class FBClient
 
     private static void onTexturesStitched(final TextureAtlasStitchedEvent event)
     {
-        //noinspection deprecation
-        if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS))
+        if (event.getAtlas().location().equals(ClientUtils.BLOCK_ATLAS))
         {
             ConnectionPredicateDebugRenderer.captureDummySprite(event.getAtlas());
         }

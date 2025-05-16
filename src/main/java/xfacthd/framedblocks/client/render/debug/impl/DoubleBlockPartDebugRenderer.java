@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -23,6 +22,7 @@ import xfacthd.framedblocks.api.camo.block.SimpleBlockCamoContainer;
 import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.render.debug.BlockDebugRenderer;
+import xfacthd.framedblocks.api.util.ClientUtils;
 import xfacthd.framedblocks.api.util.SingleBlockFakeLevel;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
@@ -71,8 +71,7 @@ public class DoubleBlockPartDebugRenderer implements BlockDebugRenderer<FramedDo
         ModelData modelData = be.getModelData().derive().with(AbstractFramedBlockData.PROPERTY, MODEL_DATA).build();
         BlockAndTintGetter level = new SingleBlockFakeLevel(Objects.requireNonNull(be.getLevel()), be.getBlockPos(), partState, be, modelData);
 
-        //noinspection deprecation
-        VertexConsumer consumer = outlineBuffer.getBuffer(RenderType.outline(TextureAtlas.LOCATION_BLOCKS));
+        VertexConsumer consumer = outlineBuffer.getBuffer(RenderType.outline(ClientUtils.BLOCK_ATLAS));
         ModelBlockRenderer.renderModel(
                 poseStack.last(),
                 type -> consumer,
