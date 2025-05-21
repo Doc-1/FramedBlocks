@@ -27,25 +27,18 @@ public final class DevToolsConfig
     private static final String KEY_STATE_MERGER_DEBUG_FILTER = "stateMergerDebugFilter";
     private static final String KEY_OCCLUSION_SHAPE_DEBUG = "occlusionShapeDebug";
 
-    public static final String TRANSLATION_DOUBLE_BLOCK_PART_DEBUG = translate(KEY_DOUBLE_BLOCK_PART_DEBUG);
-    public static final String TRANSLATION_CONNECTION_DEBUG = translate(KEY_CONNECTION_DEBUG);
-    public static final String TRANSLATION_QUAD_WINDING_DEBUG = translate(KEY_QUAD_WINDING_DEBUG);
-    public static final String TRANSLATION_STATE_MERGER_DEBUG = translate(KEY_STATE_MERGER_DEBUG);
-    public static final String TRANSLATION_STATE_MERGER_DEBUG_FILTER = translate(KEY_STATE_MERGER_DEBUG_FILTER);
-    public static final String TRANSLATION_OCCLUSION_SHAPE_DEBUG = translate(KEY_OCCLUSION_SHAPE_DEBUG);
-
     @Nullable
-    private static final ModConfigSpec.BooleanValue DOUBLE_BLOCK_PART_DEBUG_VALUE;
+    public static final ModConfigSpec.BooleanValue DOUBLE_BLOCK_PART_DEBUG_VALUE;
     @Nullable
-    private static final ModConfigSpec.BooleanValue CONNECTION_DEBUG_VALUE;
+    public static final ModConfigSpec.BooleanValue CONNECTION_DEBUG_VALUE;
     @Nullable
-    private static final ModConfigSpec.BooleanValue QUAD_WINDING_DEBUG_VALUE;
+    public static final ModConfigSpec.BooleanValue QUAD_WINDING_DEBUG_VALUE;
     @Nullable
-    private static final ModConfigSpec.BooleanValue STATE_MERGER_DEBUG_VALUE;
+    public static final ModConfigSpec.BooleanValue STATE_MERGER_DEBUG_VALUE;
     @Nullable
-    private static final ModConfigSpec.ConfigValue<String> STATE_MERGER_DEBUG_FILTER_VALUE;
+    public static final ModConfigSpec.ConfigValue<String> STATE_MERGER_DEBUG_FILTER_VALUE;
     @Nullable
-    private static final ModConfigSpec.BooleanValue OCCLUSION_SHAPE_DEBUG_VALUE;
+    public static final ModConfigSpec.BooleanValue OCCLUSION_SHAPE_DEBUG_VALUE;
 
     private static boolean doubleBlockPartDebug = false;
     private static boolean connectionDebug = false;
@@ -86,36 +79,36 @@ public final class DevToolsConfig
                             "Enable double-block part debug renderer for testing whether FramedBlockEntity#hitSecondary() is correctly implemented.",
                             "Only applies to FramedBlocks blocks, add-on blocks are not handled by this."
                     )
-                    .translation(TRANSLATION_DOUBLE_BLOCK_PART_DEBUG)
+                    .translation(translate(KEY_DOUBLE_BLOCK_PART_DEBUG))
                     .define(KEY_DOUBLE_BLOCK_PART_DEBUG, false);
             CONNECTION_DEBUG_VALUE = builder
                     .comment(
                             "Enable debug renderer for testing ConnectionPredicates.",
                             "BlockEntities from add-ons must be registered to the renderer via AttachDebugRenderersEvent."
                     )
-                    .translation(TRANSLATION_CONNECTION_DEBUG)
+                    .translation(translate(KEY_CONNECTION_DEBUG))
                     .define(KEY_CONNECTION_DEBUG, false);
             QUAD_WINDING_DEBUG_VALUE = builder
                     .comment(
                             "Enable quad-winding debug renderer to check for issues with quad winding on transformed quads.",
                             "BlockEntities from add-ons must be registered to the renderer via AttachDebugRenderersEvent."
                     )
-                    .translation(TRANSLATION_QUAD_WINDING_DEBUG)
+                    .translation(translate(KEY_QUAD_WINDING_DEBUG))
                     .define(KEY_QUAD_WINDING_DEBUG, false);
             STATE_MERGER_DEBUG_VALUE = builder
                     .comment("If enabled, all model wrapper registrations will print which state properties of the associated block are used as-is and which ones are handled by a StateMerger")
-                    .translation(TRANSLATION_STATE_MERGER_DEBUG)
+                    .translation(translate(KEY_STATE_MERGER_DEBUG))
                     .define(KEY_STATE_MERGER_DEBUG, false);
             STATE_MERGER_DEBUG_FILTER_VALUE = builder
                     .comment(
                             "Set the regex pattern to filter the blocks for which StateMerger debug logging is enabled.",
                             "An empty string will disable filtering"
                     )
-                    .translation(TRANSLATION_STATE_MERGER_DEBUG_FILTER)
+                    .translation(translate(KEY_STATE_MERGER_DEBUG_FILTER))
                     .define(KEY_STATE_MERGER_DEBUG_FILTER, "", DevToolsConfig::validateFilterPattern);
             OCCLUSION_SHAPE_DEBUG_VALUE = builder
                     .comment("If enabled, switches block selection shape rendering to render the occlusion shape instead of the general shape")
-                    .translation(TRANSLATION_OCCLUSION_SHAPE_DEBUG)
+                    .translation(translate(KEY_OCCLUSION_SHAPE_DEBUG))
                     .define(KEY_OCCLUSION_SHAPE_DEBUG, false);
 
             SPEC = builder.build();

@@ -5,7 +5,9 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import org.jetbrains.annotations.UnknownNullability;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.blueprint.BlueprintData;
 import xfacthd.framedblocks.api.camo.CamoContainerFactory;
@@ -489,55 +491,61 @@ public final class FramedLanguageProvider extends LanguageProvider
 
     private void addConfigTranslations()
     {
-        add("framedblocks.configuration.general", "General");
-        add("framedblocks.configuration.powered_framing_saw", "Powered Framing Saw");
-        add(ServerConfig.TRANSLATION_ALLOW_BLOCK_ENTITIES, "Allow BlockEntities");
-        add(ServerConfig.TRANSLATION_ENABLE_INTANGIBILITY, "Enable intangibility feature");
-        add(ServerConfig.TRANSLATION_ONE_WAY_WINDOW_OWNABLE, "One-Way Window ownability");
-        add(ServerConfig.TRANSLATION_CONSUME_CAMO_ITEM, "Consume camo item");
-        add(ServerConfig.TRANSLATION_GLOWSTONE_LIGHT_LEVEL, "Glowstone Light Level");
-        add(ServerConfig.TRANSLATION_FIREPROOF_BLOCKS, "Fireproof blocks");
-        add(ServerConfig.TRANSLATION_POWERED_SAW_ENERGY_CAPACITY, "Energy Capacity");
-        add(ServerConfig.TRANSLATION_POWERED_SAW_MAX_RECEIVE, "Max input");
-        add(ServerConfig.TRANSLATION_POWERED_SAW_CONSUMPTION, "Consumption");
-        add(ServerConfig.TRANSLATION_POWERED_SAW_RECIPE_DURATION, "Crafting Duration");
+        add("framedblocks.configuration.title", "FramedBlocks Configuration");
 
-        //add("framedblocks.configuration.general", "General");
-        add("framedblocks.configuration.overlay", "Overlays");
-        add(ClientConfig.TRANSLATION_SHOW_GHOST_BLOCKS, "Show ghost blocks");
-        add(ClientConfig.TRANSLATION_ALT_GHOST_RENDERER, "Use alternative placement preview renderer");
-        add(ClientConfig.TRANSLATION_GHOST_RENDER_OPACITY, "Placement preview opacity");
-        add(ClientConfig.TRANSLATION_FANCY_HITBOXES, "Fancy hitboxes");
-        add(ClientConfig.TRANSLATION_DETAILED_CULLING, "Detailed culling");
-        add(ClientConfig.TRANSLATION_USE_DISCRETE_UV_STEPS, "Use discrete UV steps");
-        add(ClientConfig.TRANSLATION_CON_TEX_MODE, "Connected textures mode");
-        add(ClientConfig.TRANSLATION_CAMO_MESSAGE_VERBOSITY, "Disallowed camo message verbosity");
-        add(ClientConfig.TRANSLATION_FORCE_AO_ON_GLOWING_BLOCKS, "Force ambient occlusion on glowing framed blocks");
-        add(ClientConfig.TRANSLATION_RENDER_ITEM_MODELS_WITH_CAMO, "Render item models with camo");
-        add(ClientConfig.TRANSLATION_SUPPORT_WEIGHTED_VARIANTS, "Support weighted variant models");
-        add(ClientConfig.TRANSLATION_SHOW_ALL_RECIPE_PERMUTATIONS_IN_EMI, "Show all Framing Saw recipe permutations in EMI");
-        add(ClientConfig.TRANSLATION_SOLID_FRAME_MODE, "Solid frame mode");
-        add(ClientConfig.TRANSLATION_SHOW_BUTTON_PLATE_OVERLAY, "Show button and pressure plate type overlay");
-        add(ClientConfig.TRANSLATION_SHOW_SPECIAL_CUBE_OVERLAY, "Show special cube type overlay");
-        add(ClientConfig.TRANSLATION_RENDER_CAMO_IN_JADE, "Render camo in Jade overlay");
-        add(ClientConfig.TRANSLATION_STATE_LOCK_MODE, "State lock overlay: Display mode");
-        add(ClientConfig.TRANSLATION_TOGGLE_WATERLOG_MODE, "Toggle waterloggable overlay: Display mode");
-        add(ClientConfig.TRANSLATION_TOGGLE_Y_SLOPE_MODE, "Toggle Y slope overlay: Display mode");
-        add(ClientConfig.TRANSLATION_REINFORCEMENT_MODE, "Reinforcement overlay: Display mode");
-        add(ClientConfig.TRANSLATION_PRISM_OFFSET_MODE, "Prism offset overlay: Display mode");
-        add(ClientConfig.TRANSLATION_SPLIT_LINES_MODE, "Collapsible block split lines overlay: Display mode");
-        add(ClientConfig.TRANSLATION_ONE_WAY_WINDOW_MODE, "One-Way Window overlay: Display mode");
-        add(ClientConfig.TRANSLATION_FRAME_BACKGROUND_MODE, "Item Frame Background overlay: Display mode");
-        add(ClientConfig.TRANSLATION_CAMO_ROTATION_MODE, "Camo Rotation overlay: Display mode");
+        add("framedblocks.configuration.section.framedblocks.server.toml", "Server Settings");
+        add("framedblocks.configuration.section.framedblocks.server.toml.title", "FramedBlocks Server Configuration");
+        addConfigCategory(ServerConfig.TRANSLATION_CATEGORY_GENERAL, "General", "General Settings", "Configure general server settings");
+        addConfigCategory(ServerConfig.TRANSLATION_CATEGORY_POWERED_FRAMING_SAW, "Powered Framing Saw", "Powered Framing Saw Settings", "Configure Powered Framing Saw settings");
+        addConfigValue(ServerConfig.ALLOW_BLOCK_ENTITIES_VALUE, "Allow BlockEntities");
+        addConfigValue(ServerConfig.ENABLE_INTANGIBILITY_VALUE, "Enable intangibility feature");
+        addConfigValue(ServerConfig.ONE_WAY_WINDOW_OWNABLE_VALUE, "One-Way Window ownability");
+        addConfigValue(ServerConfig.CONSUME_CAMO_ITEM_VALUE, "Consume camo item");
+        addConfigValue(ServerConfig.GLOWSTONE_LIGHT_LEVEL_VALUE, "Glowstone Light Level");
+        addConfigValue(ServerConfig.FIREPROOF_BLOCKS_VALUE, "Fireproof blocks");
+        addConfigValue(ServerConfig.POWERED_SAW_ENERGY_CAPACITY_VALUE, "Energy Capacity");
+        addConfigValue(ServerConfig.POWERED_SAW_MAX_RECEIVE_VALUE, "Max input");
+        addConfigValue(ServerConfig.POWERED_SAW_CONSUMPTION_VALUE, "Consumption");
+        addConfigValue(ServerConfig.POWERED_SAW_RECIPE_DURATION_VALUE, "Crafting Duration");
+
+        add("framedblocks.configuration.section.framedblocks.client.toml", "Client Settings");
+        add("framedblocks.configuration.section.framedblocks.client.toml.title", "FramedBlocks Client Configuration");
+        addConfigCategory(ClientConfig.TRANSLATION_CATEGORY_GENERAL, "General", "General Settings", "Configure general client settings");
+        addConfigCategory(ClientConfig.TRANSLATION_CATEGORY_OVERLAY, "Overlays", "Overlay Settings", "Configure overlay settings");
+        addConfigValue(ClientConfig.SHOW_GHOST_BLOCKS_VALUE, "Show ghost blocks");
+        addConfigValue(ClientConfig.ALT_GHOST_RENDERER_VALUE, "Use alternative placement preview renderer");
+        addConfigValue(ClientConfig.GHOST_RENDER_OPACITY_VALUE, "Placement preview opacity");
+        addConfigValue(ClientConfig.FANCY_HITBOXES_VALUE, "Fancy hitboxes");
+        addConfigValue(ClientConfig.DETAILED_CULLING_VALUE, "Detailed culling");
+        addConfigValue(ClientConfig.USE_DISCRETE_UV_STEPS_VALUE, "Use discrete UV steps");
+        addConfigValue(ClientConfig.CON_TEX_MODE_VALUE, "Connected textures mode");
+        addConfigValue(ClientConfig.CAMO_MESSAGE_VERBOSITY_VALUE, "Disallowed camo message verbosity");
+        addConfigValue(ClientConfig.FORCE_AO_ON_GLOWING_BLOCKS_VALUE, "Force ambient occlusion on glowing framed blocks");
+        addConfigValue(ClientConfig.RENDER_ITEM_MODELS_WITH_CAMO_VALUE, "Render item models with camo");
+        addConfigValue(ClientConfig.SUPPORT_WEIGHTED_VARIANTS_VALUE, "Support weighted variant models");
+        addConfigValue(ClientConfig.SHOW_ALL_RECIPE_PERMUTATIONS_IN_EMI_VALUE, "Show all Framing Saw recipe permutations in EMI");
+        addConfigValue(ClientConfig.SOLID_FRAME_MODE_VALUE, "Solid frame mode");
+        addConfigValue(ClientConfig.SHOW_BUTTON_PLATE_OVERLAY_VALUE, "Show button and pressure plate type overlay");
+        addConfigValue(ClientConfig.SHOW_SPECIAL_CUBE_OVERLAY_VALUE, "Show special cube type overlay");
+        addConfigValue(ClientConfig.RENDER_CAMO_IN_JADE_VALUE, "Render camo in Jade overlay");
+        addConfigValue(ClientConfig.STATE_LOCK_MODE_VALUE, "State lock overlay: Display mode");
+        addConfigValue(ClientConfig.TOGGLE_WATERLOG_MODE_VALUE, "Toggle waterloggable overlay: Display mode");
+        addConfigValue(ClientConfig.TOGGLE_Y_SLOPE_MODE_VALUE, "Toggle Y slope overlay: Display mode");
+        addConfigValue(ClientConfig.REINFORCEMENT_MODE_VALUE, "Reinforcement overlay: Display mode");
+        addConfigValue(ClientConfig.PRISM_OFFSET_MODE_VALUE, "Prism offset overlay: Display mode");
+        addConfigValue(ClientConfig.SPLIT_LINE_MODE_VALUE, "Collapsible block split lines overlay: Display mode");
+        addConfigValue(ClientConfig.ONE_WAY_WINDOW_MODE_VALUE, "One-Way Window overlay: Display mode");
+        addConfigValue(ClientConfig.FRAME_BACKGROUND_MODE_VALUE, "Item Frame Background overlay: Display mode");
+        addConfigValue(ClientConfig.CAMO_ROTATION_MODE_VALUE, "Camo Rotation overlay: Display mode");
 
         add("framedblocks.configuration.section.framedblocks.devtools.toml", "Dev Tools Settings");
         add("framedblocks.configuration.section.framedblocks.devtools.toml.title", "FramedBlocks Dev Tools Configuration");
-        add(DevToolsConfig.TRANSLATION_DOUBLE_BLOCK_PART_DEBUG, "Double-block part debug");
-        add(DevToolsConfig.TRANSLATION_CONNECTION_DEBUG, "ConnectionPredicate debug");
-        add(DevToolsConfig.TRANSLATION_QUAD_WINDING_DEBUG, "Quad-winding debug");
-        add(DevToolsConfig.TRANSLATION_STATE_MERGER_DEBUG, "StateMerger debug");
-        add(DevToolsConfig.TRANSLATION_STATE_MERGER_DEBUG_FILTER, "StateMerger debug filter");
-        add(DevToolsConfig.TRANSLATION_OCCLUSION_SHAPE_DEBUG, "Occlusion shape debug");
+        addConfigValue(DevToolsConfig.DOUBLE_BLOCK_PART_DEBUG_VALUE, "Double-block part debug");
+        addConfigValue(DevToolsConfig.CONNECTION_DEBUG_VALUE, "ConnectionPredicate debug");
+        addConfigValue(DevToolsConfig.QUAD_WINDING_DEBUG_VALUE, "Quad-winding debug");
+        addConfigValue(DevToolsConfig.STATE_MERGER_DEBUG_VALUE, "StateMerger debug");
+        addConfigValue(DevToolsConfig.STATE_MERGER_DEBUG_FILTER_VALUE, "StateMerger debug filter");
+        addConfigValue(DevToolsConfig.OCCLUSION_SHAPE_DEBUG_VALUE, "Occlusion shape debug");
     }
 
     private void add(Component key, String value)
@@ -551,5 +559,20 @@ public final class FramedLanguageProvider extends LanguageProvider
         {
             add(key.getString(), value);
         }
+    }
+
+    private void addConfigCategory(String key, String catValue, String catButtonValue, String catTooltipValue)
+    {
+        add(key, catValue);
+        add(key + ".button", catButtonValue);
+        add(key + ".tooltip", catTooltipValue);
+    }
+
+    private void addConfigValue(ModConfigSpec.@UnknownNullability ConfigValue<?> configValue, String value)
+    {
+        Objects.requireNonNull(configValue);
+        String translationKey = Objects.requireNonNull(configValue.getSpec().getTranslationKey());
+        add(translationKey, value);
+        add(translationKey + ".tooltip", Objects.requireNonNull(configValue.getSpec().getComment()));
     }
 }
