@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.util;
+package xfacthd.framedblocks.common.util;
 
 import com.google.common.base.Preconditions;
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;

@@ -27,7 +27,7 @@ import xfacthd.framedblocks.cmdtests.SpecialTestCommand;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.common.data.BlockType;
-import xfacthd.framedblocks.util.MarkdownTable;
+import xfacthd.framedblocks.common.util.MarkdownTable;
 
 import java.util.ArrayList;
 import java.util.Arrays;

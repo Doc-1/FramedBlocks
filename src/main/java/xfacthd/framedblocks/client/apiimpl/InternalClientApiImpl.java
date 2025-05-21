@@ -13,9 +13,7 @@ import net.minecraft.util.TriState;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.FramedBlocks;
 import xfacthd.framedblocks.api.internal.InternalClientAPI;
 import xfacthd.framedblocks.api.model.AbstractFramedBlockModel;
 import xfacthd.framedblocks.api.model.ExtendedBlockModelPart;
@@ -29,7 +27,6 @@ import xfacthd.framedblocks.client.model.FramedBlockModelPart;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.item.tint.DynamicItemTintProvider;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
-import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.itemmodel.FramedBlockItemModel;
 import xfacthd.framedblocks.client.model.baked.FramedBlockModel;
 import xfacthd.framedblocks.client.model.unbaked.FramedBlockModelDefinition;
@@ -38,15 +35,9 @@ import xfacthd.framedblocks.client.model.unbaked.UnbakedCopyingFramedBlockModel;
 import xfacthd.framedblocks.client.modelwrapping.ModelWrappingHandler;
 import xfacthd.framedblocks.client.modelwrapping.ModelWrappingManager;
 import xfacthd.framedblocks.client.util.ClientTaskQueue;
-import xfacthd.framedblocks.common.config.DevToolsConfig;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Supplier;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public final class InternalClientApiImpl implements InternalClientAPI
 {
@@ -55,29 +46,19 @@ public final class InternalClientApiImpl implements InternalClientAPI
     @Override
     public void registerModelWrapper(Holder<Block> block, GeometryFactory geometryFactory, StateMerger stateMerger)
     {
-        registerSpecialModelWrapper(
-                block,
-                ctx -> new UnbakedFramedBlockModel(ctx, geometryFactory),
-                stateMerger
-        );
+        registerSpecialModelWrapper(block, ctx -> new UnbakedFramedBlockModel(ctx, geometryFactory), stateMerger);
     }
 
     @Override
     public void registerSpecialModelWrapper(Holder<Block> block, ModelFactory modelFactory, StateMerger stateMerger)
     {
-        debugStateMerger(block, stateMerger);
-
         ModelWrappingManager.register(block, new ModelWrappingHandler(block, modelFactory, stateMerger));
     }
 
     @Override
     public void registerCopyingModelWrapper(Holder<Block> block, Holder<Block> srcBlock, StateMerger stateMerger)
     {
-        registerSpecialModelWrapper(
-                block,
-                ctx -> new UnbakedCopyingFramedBlockModel(ctx, srcBlock.value()),
-                stateMerger
-        );
+        registerSpecialModelWrapper(block, ctx -> new UnbakedCopyingFramedBlockModel(ctx, srcBlock.value()), stateMerger);
     }
 
     @Override
@@ -121,35 +102,5 @@ public final class InternalClientApiImpl implements InternalClientAPI
             GeometryFactory.Context ctx = new GeometryFactory.Context(state, baseModel, AuxModelProvider.invalid(), TextureLookup.runtime());
             return new FramedBlockModel(ctx, geometry.create(ctx));
         };
-    }
-
-
-
-    private static void debugStateMerger(Holder<Block> block, StateMerger stateMerger)
-    {
-        if (!DevToolsConfig.VIEW.isStateMergerDebugLoggingEnabled()) return;
-
-        Pattern debugFilterPattern = DevToolsConfig.VIEW.getStateMergerDebugFilter();
-        if (debugFilterPattern != null)
-        {
-            String key = Utils.getKeyOrThrow(block).location().toString();
-            if (!debugFilterPattern.matcher(key).matches()) return;
-        }
-
-        Set<Property<?>> props = new HashSet<>(block.value().getStateDefinition().getProperties());
-        Set<Property<?>> ignoredProps = stateMerger.getHandledProperties(block);
-
-        props.removeAll(ignoredProps);
-
-        FramedBlocks.LOGGER.info("%-70s | %-150s | %-150s".formatted(
-                block.value(), propsToString(props), propsToString(ignoredProps)
-        ));
-    }
-
-    private static String propsToString(Collection<Property<?>> properties)
-    {
-        return properties.stream()
-                .map(Property::getName)
-                .collect(Collectors.joining(", ", "[ ", " ]"));
     }
 }

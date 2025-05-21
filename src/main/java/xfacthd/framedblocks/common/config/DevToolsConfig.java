@@ -98,6 +98,7 @@ public final class DevToolsConfig
             STATE_MERGER_DEBUG_VALUE = builder
                     .comment("If enabled, all model wrapper registrations will print which state properties of the associated block are used as-is and which ones are handled by a StateMerger")
                     .translation(translate(KEY_STATE_MERGER_DEBUG))
+                    .gameRestart()
                     .define(KEY_STATE_MERGER_DEBUG, false);
             STATE_MERGER_DEBUG_FILTER_VALUE = builder
                     .comment(

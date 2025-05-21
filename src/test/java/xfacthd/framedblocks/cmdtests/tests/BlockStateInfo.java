@@ -16,7 +16,7 @@ import xfacthd.framedblocks.client.modelwrapping.ModelWrappingManager;
 import xfacthd.framedblocks.cmdtests.SpecialTestCommand;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.data.BlockType;
-import xfacthd.framedblocks.util.MarkdownTable;
+import xfacthd.framedblocks.common.util.MarkdownTable;
 
 import java.util.stream.Collectors;
 
