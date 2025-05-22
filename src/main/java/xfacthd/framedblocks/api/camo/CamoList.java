@@ -130,6 +130,11 @@ public final class CamoList implements Iterable<CamoContainer<?, ?>>
         return new CamoList(camos, fromIndex + offset, Math.min(toIndex, size) + offset);
     }
 
+    public int size()
+    {
+        return size;
+    }
+
     @Override
     public boolean equals(Object obj)
     {

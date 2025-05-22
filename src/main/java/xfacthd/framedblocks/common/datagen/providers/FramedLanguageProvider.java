@@ -11,6 +11,7 @@ import org.jetbrains.annotations.UnknownNullability;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.blueprint.BlueprintData;
 import xfacthd.framedblocks.api.camo.CamoContainerFactory;
+import xfacthd.framedblocks.api.camo.CamoPrinter;
 import xfacthd.framedblocks.api.camo.block.SimpleBlockCamoContainerFactory;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.util.FramedConstants;
@@ -405,19 +406,21 @@ public final class FramedLanguageProvider extends LanguageProvider
     private void addTooltipTranslations()
     {
         add(BlueprintData.CONTAINED_BLOCK, "Contained Block: %s");
-        add(BlueprintData.CAMO_BLOCK, "Camo Block: %s");
         add(BlueprintData.IS_ILLUMINATED, "Illuminated: %s");
         add(BlueprintData.IS_INTANGIBLE, "Intangible: %s");
         add(BlueprintData.IS_REINFORCED, "Reinforced: %s");
         add(BlueprintData.IS_EMISSIVE, "Emissive: %s");
         add(BlueprintData.MISSING_MATERIALS, "[Framed Blueprint] Missing required materials:");
-        add(BlueprintData.BLOCK_NONE, "None");
+        add(CamoPrinter.BLOCK_NONE, "None");
+        add(CamoPrinter.DOUBLE_CAMO_SEPARATOR_KEY, "%s | %s");
+        add(CamoPrinter.MULTI_CAMO_ENTRY_PREFIX_KEY, "  - %s");
         add(BlueprintData.BLOCK_INVALID, "Invalid");
         add(BlueprintData.FALSE, "false");
         add(BlueprintData.TRUE, "true");
         add(BlueprintData.CANT_COPY, "[Framed Blueprint] This block can currently not be copied!");
         add(FramedBlueprintItem.CANT_PLACE_FLUID_CAMO, "[Framed Blueprint] Copying blocks with fluid camos is currently not possible!");
         add(IFramedBlock.CAMO_LABEL, "Camo: %s");
+        add(IFramedBlock.CAMO_LABEL_MULTI, "Camos: %s");
         add(PhantomPasteItem.FEATURE_DISABLED, "The intangibility feature is disabled, this item therefor has no function!");
         add(FramedTankBlockItem.TANK_CONTENTS, "Stored Fluid: %s");
         add(FramedTankBlockItem.EMPTY_FLUID, "Empty");

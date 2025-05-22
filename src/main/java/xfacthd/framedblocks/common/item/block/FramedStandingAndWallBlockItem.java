@@ -7,7 +7,6 @@ import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.block.Block;
-import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.item.FramedBlockItem;
 
 import java.util.function.Consumer;
@@ -23,6 +22,6 @@ public class FramedStandingAndWallBlockItem extends StandingAndWallBlockItem
     @SuppressWarnings("deprecation")
     public void appendHoverText(ItemStack stack, TooltipContext ctx, TooltipDisplay display, Consumer<Component> appender, TooltipFlag flag)
     {
-        FramedBlockItem.appendCamoHoverText((IFramedBlock) getBlock(), stack, appender);
+        FramedBlockItem.appendCamoHoverText(stack, appender);
     }
 }

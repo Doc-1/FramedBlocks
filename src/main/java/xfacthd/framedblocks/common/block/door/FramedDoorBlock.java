@@ -3,7 +3,6 @@ package xfacthd.framedblocks.common.block.door;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -33,18 +32,15 @@ import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.blueprint.BlueprintData;
-import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.model.wrapping.WrapHelper;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.common.blockentity.special.FramedDoorBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.blueprint.DoorCopyBehaviour;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 public class FramedDoorBlock extends DoorBlock implements IFramedBlock
@@ -169,17 +165,9 @@ public class FramedDoorBlock extends DoorBlock implements IFramedBlock
     }
 
     @Override
-    public Optional<MutableComponent> printCamoBlock(BlueprintData blueprintData)
+    public CamoList getCamosFromBlueprint(BlueprintData blueprintData)
     {
-        CamoContainer<?, ?> camoContainer = blueprintData.camos().getCamo(0);
-        CamoContainer<?, ?> camoContainerTwo = DoorCopyBehaviour.getSecondData(blueprintData).camos().getCamo(0);
-        return IFramedDoubleBlock.printCamoData(camoContainer, camoContainerTwo, true);
-    }
-
-    @Override
-    public Optional<MutableComponent> printCamoData(CamoList camos, boolean blueprint)
-    {
-        return IFramedDoubleBlock.printCamoData(camos.getCamo(0), camos.getCamo(1), blueprint);
+        return blueprintData.camos().concat(DoorCopyBehaviour.getSecondData(blueprintData).camos());
     }
 
     @Override

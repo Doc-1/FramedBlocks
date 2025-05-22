@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.camo.CamoList;
+import xfacthd.framedblocks.api.camo.CamoPrinter;
 import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.Optional;
@@ -66,13 +67,11 @@ public record BlueprintData(
     );
     public static final BlueprintData EMPTY = new BlueprintData(Blocks.AIR, CamoList.EMPTY, false, false, false, false, BlockItemStateProperties.EMPTY, Optional.empty());
     public static final String CONTAINED_BLOCK = "desc.framedblocks.blueprint_block";
-    public static final String CAMO_BLOCK = "desc.framedblocks.blueprint_camo";
     public static final String IS_ILLUMINATED = "desc.framedblocks.blueprint_illuminated";
     public static final String IS_INTANGIBLE = "desc.framedblocks.blueprint_intangible";
     public static final String IS_REINFORCED = "desc.framedblocks.blueprint_reinforced";
     public static final String IS_EMISSIVE = "desc.framedblocks.blueprint_emissive";
     public static final String MISSING_MATERIALS = Utils.translationKey("desc", "blueprint_missing_materials");
-    public static final MutableComponent BLOCK_NONE = Utils.translate("desc", "blueprint_none").withStyle(ChatFormatting.RED);
     public static final MutableComponent BLOCK_INVALID = Utils.translate("desc", "blueprint_invalid").withStyle(ChatFormatting.RED);
     public static final MutableComponent FALSE = Utils.translate("desc", "blueprint_false").withStyle(ChatFormatting.RED);
     public static final MutableComponent TRUE = Utils.translate("desc", "blueprint_true").withStyle(ChatFormatting.GREEN);
@@ -104,28 +103,27 @@ public record BlueprintData(
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext context, Consumer<Component> appender, TooltipFlag tooltipFlag, DataComponentGetter p_399520_)
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> appender, TooltipFlag tooltipFlag, DataComponentGetter componentGetter)
     {
         if (isEmpty())
         {
-            appender.accept(Component.translatable(CONTAINED_BLOCK, BLOCK_NONE).withStyle(ChatFormatting.GOLD));
+            appender.accept(Component.translatable(CONTAINED_BLOCK, CamoPrinter.BLOCK_NONE).withStyle(ChatFormatting.GOLD));
             return;
         }
 
-        Block block = block();
         Component blockName = block == Blocks.AIR ? BLOCK_INVALID : block.getName().withStyle(ChatFormatting.WHITE);
-
-        Component camoName = !(block instanceof IFramedBlock fb) ? BLOCK_NONE : fb.printCamoBlock(this).orElse(BLOCK_NONE);
-        Component illuminated = glowing ? TRUE : FALSE;
-        Component intangible = this.intangible ? TRUE : FALSE;
-        Component reinforced = this.reinforced ? TRUE : FALSE;
-        Component emissive = this.emissive ? TRUE : FALSE;
+        CamoList camos = block instanceof IFramedBlock fb ? fb.getCamosFromBlueprint(this) : CamoList.EMPTY;
 
         appender.accept(Component.translatable(CONTAINED_BLOCK, blockName).withStyle(ChatFormatting.GOLD));
-        appender.accept(Component.translatable(CAMO_BLOCK, camoName).withStyle(ChatFormatting.GOLD));
-        appender.accept(Component.translatable(IS_ILLUMINATED, illuminated).withStyle(ChatFormatting.GOLD));
-        appender.accept(Component.translatable(IS_INTANGIBLE, intangible).withStyle(ChatFormatting.GOLD));
-        appender.accept(Component.translatable(IS_REINFORCED, reinforced).withStyle(ChatFormatting.GOLD));
-        appender.accept(Component.translatable(IS_EMISSIVE, emissive).withStyle(ChatFormatting.GOLD));
+        CamoPrinter.printCamoList(appender, camos, true);
+        appender.accept(Component.translatable(IS_ILLUMINATED, glowing ? TRUE : FALSE).withStyle(ChatFormatting.GOLD));
+        appender.accept(Component.translatable(IS_INTANGIBLE, intangible ? TRUE : FALSE).withStyle(ChatFormatting.GOLD));
+        appender.accept(Component.translatable(IS_REINFORCED, reinforced ? TRUE : FALSE).withStyle(ChatFormatting.GOLD));
+        appender.accept(Component.translatable(IS_EMISSIVE, emissive ? TRUE : FALSE).withStyle(ChatFormatting.GOLD));
+
+        if (auxData.isPresent())
+        {
+            auxData.get().addToTooltip(context, appender, tooltipFlag, componentGetter);
+        }
     }
 }

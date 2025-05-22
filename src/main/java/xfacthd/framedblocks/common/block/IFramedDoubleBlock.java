@@ -1,10 +1,7 @@
 package xfacthd.framedblocks.common.block;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,20 +16,16 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.cache.StateCache;
 import xfacthd.framedblocks.api.block.render.ParticleHelper;
-import xfacthd.framedblocks.api.blueprint.BlueprintData;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
-import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockStateCache;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
-
-import java.util.Optional;
 
 public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFramedDoubleBlock
 {
@@ -186,33 +179,5 @@ public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFram
     {
         AbstractFramedBlockData fbData = level.getModelData(pos).get(AbstractFramedBlockData.PROPERTY);
         return fbData != null && getCache(state).getSolidityCheck(side).isSolid(fbData);
-    }
-
-    @Override
-    default Optional<MutableComponent> printCamoData(CamoList camos, boolean blueprint)
-    {
-        return printCamoData(camos.getCamo(0), camos.getCamo(1), blueprint);
-    }
-
-    static Optional<MutableComponent> printCamoData(CamoContainer<?, ?> camoContainer, CamoContainer<?, ?> camoContainerTwo, boolean force)
-    {
-        if (force || !camoContainer.isEmpty() || !camoContainerTwo.isEmpty())
-        {
-            MutableComponent component = getCamoComponent(camoContainer);
-            component.append(Component.literal(" | ").withStyle(ChatFormatting.GOLD));
-            component.append(getCamoComponent(camoContainerTwo));
-
-            return Optional.of(component);
-        }
-        return Optional.empty();
-    }
-
-    static MutableComponent getCamoComponent(CamoContainer<?, ?> camoContainer)
-    {
-        if (!camoContainer.isEmpty())
-        {
-            return camoContainer.getContent().getCamoName().withStyle(ChatFormatting.WHITE);
-        }
-        return BlueprintData.BLOCK_NONE.copy();
     }
 }

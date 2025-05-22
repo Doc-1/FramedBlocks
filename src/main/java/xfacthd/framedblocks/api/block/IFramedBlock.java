@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionHand;
@@ -56,18 +55,17 @@ import xfacthd.framedblocks.api.block.render.ParticleHelper;
 import xfacthd.framedblocks.api.blueprint.BlueprintData;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.CamoContent;
+import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.internal.InternalAPI;
 import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
 import xfacthd.framedblocks.api.shapes.ShapeProvider;
 import xfacthd.framedblocks.api.type.IBlockType;
-import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.api.util.ConfigView;
 import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 public interface IFramedBlock extends EntityBlock, IBlockExtension
@@ -76,6 +74,7 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
     Component STATE_LOCKED = Utils.translate("msg", "lock_state.locked").withStyle(ChatFormatting.RED);
     Component STATE_UNLOCKED = Utils.translate("msg", "lock_state.unlocked").withStyle(ChatFormatting.GREEN);
     String CAMO_LABEL = Utils.translationKey("desc", "block.stored_camo");
+    String CAMO_LABEL_MULTI = Utils.translationKey("desc", "block.stored_camo_multi");
 
     IBlockType getBlockType();
 
@@ -638,19 +637,9 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
         return new FramedBlockEntity(pos, state);
     }
 
-    default Optional<MutableComponent> printCamoBlock(BlueprintData blueprintData)
+    default CamoList getCamosFromBlueprint(BlueprintData blueprintData)
     {
-        return printCamoData(blueprintData.camos(), true);
-    }
-
-    default Optional<MutableComponent> printCamoData(CamoList camos, boolean blueprint)
-    {
-        CamoContainer<?, ?> camoContent = camos.getCamo(0);
-        if (camoContent.isEmpty())
-        {
-            return Optional.empty();
-        }
-        return Optional.of(camoContent.getContent().getCamoName().withStyle(ChatFormatting.WHITE));
+        return blueprintData.camos();
     }
 
     static boolean toggleYSlope(BlockState state, Level level, BlockPos pos, Player player)
