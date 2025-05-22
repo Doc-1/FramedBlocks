@@ -15,7 +15,7 @@ import xfacthd.framedblocks.common.config.DevToolsConfig;
 import xfacthd.framedblocks.common.config.ServerConfig;
 import xfacthd.framedblocks.common.data.BlueprintBehaviours;
 import xfacthd.framedblocks.common.capability.CapabilitySetup;
-import xfacthd.framedblocks.common.data.camo.block.rotator.BlockCamoRotators;
+import xfacthd.framedblocks.common.data.FramedDataMaps;
 import xfacthd.framedblocks.common.data.cullupdate.CullingUpdateTracker;
 import xfacthd.framedblocks.common.data.shapes.ShapeReloader;
 import xfacthd.framedblocks.api.util.FramedConstants;
@@ -49,6 +49,7 @@ public final class FramedBlocks
         modBus.addListener(FramedBlocks::onCommonSetup);
         modBus.addListener(NetworkHandler::onRegisterPayloads);
         modBus.addListener(BlueprintBehaviours::onRegisterBlueprintCopyBehaviours);
+        modBus.addListener(FramedDataMaps::onRegisterDataMapTypes);
 
         NeoForge.EVENT_BUS.addListener(EventHandler::onBlockLeftClick);
         NeoForge.EVENT_BUS.addListener(EventHandler::onServerShutdown);
@@ -57,7 +58,7 @@ public final class FramedBlocks
         NeoForge.EVENT_BUS.addListener(FramingSawRecipeCache::onAddReloadListener);
         NeoForge.EVENT_BUS.addListener(FramingSawRecipeCache::onDataPackSync);
         NeoForge.EVENT_BUS.addListener(FramingSawRecipeCache::onRecipesReceived);
-        NeoForge.EVENT_BUS.addListener(BlockCamoRotators::onAddReloadListener);
+        NeoForge.EVENT_BUS.addListener(FramedDataMaps::onDataMapsUpdated);
 
         if (!FMLEnvironment.production)
         {
