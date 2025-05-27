@@ -33,7 +33,9 @@ import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.camo.CamoList;
+import xfacthd.framedblocks.api.util.ColorUtils;
 import xfacthd.framedblocks.api.util.Utils;
+import xfacthd.framedblocks.api.util.ValueMerger;
 import xfacthd.framedblocks.client.model.FramedDoubleBlockData;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
@@ -46,6 +48,10 @@ import java.util.List;
 
 public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFramedDoubleBlockEntity
 {
+    private static final ValueMerger<MapColor> MAP_COLOR_MERGER = new ValueMerger<>(ColorUtils::average);
+    private static final ValueMerger<Integer> BEACON_MULT_MERGER = new ValueMerger<>(ARGB::average);
+    private static final ValueMerger<Integer> FLAMMABILITY_MERGER = new ValueMerger<>(i -> i == -1, Math::min);
+
     private final boolean[] culledFaces = new boolean[6];
     private final DoubleBlockSoundType soundType = new DoubleBlockSoundType(this);
     private CamoContainer<?, ?> camoContainer = EmptyCamoContainer.EMPTY;
@@ -151,15 +157,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
         {
             case FIRST -> super.getMapColor();
             case SECOND -> camoContainer.getMapColor(level(), worldPosition);
-            case EITHER ->
-            {
-                MapColor color = super.getMapColor();
-                if (color != null)
-                {
-                    yield color;
-                }
-                yield camoContainer.getMapColor(level(), worldPosition);
-            }
+            case EITHER -> MAP_COLOR_MERGER.apply(super.getMapColor(), camoContainer.getMapColor(level(), worldPosition));
         };
     }
 
@@ -169,16 +167,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     {
         Integer superMult = super.getCamoBeaconColorMultiplier(level, pos, beaconPos);
         Integer localMult = camoContainer.getBeaconColorMultiplier(level, pos, beaconPos);
-
-        if (superMult == null)
-        {
-            return localMult;
-        }
-        if (localMult == null)
-        {
-            return superMult;
-        }
-        return ARGB.average(superMult, localMult);
+        return BEACON_MULT_MERGER.apply(superMult, localMult);
     }
 
     @Override
@@ -226,11 +215,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     @Override
     protected boolean doesCamoPropagateSkylightDown()
     {
-        if (!camoContainer.getContent().propagatesSkylightDown())
-        {
-            return false;
-        }
-        return super.doesCamoPropagateSkylightDown();
+        return camoContainer.getContent().propagatesSkylightDown() && super.doesCamoPropagateSkylightDown();
     }
 
     @Override
@@ -263,16 +248,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     {
         int flammabilityOne = super.getCamoFlammability(face);
         int flammabilityTwo = camoContainer.getContent().getFlammability(level(), worldPosition, face);
-
-        if (flammabilityOne == -1)
-        {
-            return flammabilityTwo;
-        }
-        if (flammabilityTwo == -1)
-        {
-            return flammabilityOne;
-        }
-        return Math.min(flammabilityOne, flammabilityTwo);
+        return FLAMMABILITY_MERGER.apply(flammabilityOne, flammabilityTwo);
     }
 
     @Override
@@ -280,16 +256,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     {
         int spreadSpeedOne = super.getCamoFireSpreadSpeed(face);
         int spreadSpeedTwo = camoContainer.getContent().getFireSpreadSpeed(level(), worldPosition, face);
-
-        if (spreadSpeedOne == -1)
-        {
-            return spreadSpeedOne;
-        }
-        if (spreadSpeedTwo == -1)
-        {
-            return spreadSpeedTwo;
-        }
-        return Math.min(spreadSpeedOne, spreadSpeedTwo);
+        return FLAMMABILITY_MERGER.apply(spreadSpeedOne, spreadSpeedTwo);
     }
 
     public final DoubleBlockSoundType getSoundType()
