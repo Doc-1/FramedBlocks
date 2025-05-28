@@ -6,12 +6,11 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotDrawable;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategoryExtension;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 
 import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings("removal")
 public final class CamoCraftingRecipeExtension implements ICraftingCategoryExtension<JeiCamoApplicationRecipe>
@@ -31,6 +30,13 @@ public final class CamoCraftingRecipeExtension implements ICraftingCategoryExten
     }
 
     @Override
+    public List<SlotDisplay> getIngredients(RecipeHolder<JeiCamoApplicationRecipe> recipeHolder)
+    {
+        JeiCamoApplicationRecipe recipe = recipeHolder.value();
+        return camoCraftingHelper.getIngredients(recipe);
+    }
+
+    @Override
     public int getWidth(RecipeHolder<JeiCamoApplicationRecipe> recipeHolder)
     {
         return 2;
@@ -43,18 +49,12 @@ public final class CamoCraftingRecipeExtension implements ICraftingCategoryExten
     }
 
     @Override
-    public Optional<ResourceLocation> getRegistryName(RecipeHolder<JeiCamoApplicationRecipe> recipeHolder)
-    {
-        return Optional.of(recipeHolder.id().location());
-    }
-
-    @Override
     public void onDisplayedIngredientsUpdate(RecipeHolder<JeiCamoApplicationRecipe> recipeHolder, List<IRecipeSlotDrawable> recipeSlots, IFocusGroup focuses)
     {
         // The combinations of outputs for these recipes is way too much to calculate ahead of time.
         // If the focus is on an output it will already be set, but otherwise we need to calculate it here.
 
-        if (recipeHolder.value().getResults().isEmpty())
+        if (recipeHolder.value().result().isEmpty())
         {
             IRecipeSlotDrawable frameSlot = recipeSlots.getFirst();
             IRecipeSlotDrawable inputOneSlot = recipeSlots.get(3);

@@ -9,8 +9,8 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -53,7 +53,7 @@ public final class FramingSawRecipeCategory implements IRecipeCategory<FramingSa
     }
 
     @Override
-    public RecipeType<FramingSawRecipe> getRecipeType()
+    public IRecipeType<FramingSawRecipe> getRecipeType()
     {
         return FramedJeiPlugin.FRAMING_SAW_RECIPE_TYPE;
     }
@@ -65,9 +65,15 @@ public final class FramingSawRecipeCategory implements IRecipeCategory<FramingSa
     }
 
     @Override
-    public IDrawable getBackground()
+    public int getWidth()
     {
-        return background;
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight()
+    {
+        return HEIGHT;
     }
 
     @Override
@@ -164,13 +170,13 @@ public final class FramingSawRecipeCategory implements IRecipeCategory<FramingSa
         List<List<ItemStack>> combinations = Lists.cartesianProduct(flatAdditives);
         combinations.forEach(stacks ->
         {
-            inputSlot.addItemStack(inputStack);
-            outputSlot.addItemStack(outputStack);
+            inputSlot.add(inputStack);
+            outputSlot.add(outputStack);
             if (additiveSlots != null)
             {
                 for (int i = 0; i < stacks.size(); i++)
                 {
-                    additiveSlots[i].addItemStack(stacks.get(i));
+                    additiveSlots[i].add(stacks.get(i));
                 }
             }
         });
@@ -179,6 +185,8 @@ public final class FramingSawRecipeCategory implements IRecipeCategory<FramingSa
     @Override
     public void draw(FramingSawRecipe recipe, IRecipeSlotsView slots, GuiGraphics graphics, double mouseX, double mouseY)
     {
+        background.draw(graphics);
+
         ItemStack input = slots.findSlotByName("input")
                 .orElseThrow()
                 .getDisplayedItemStack()

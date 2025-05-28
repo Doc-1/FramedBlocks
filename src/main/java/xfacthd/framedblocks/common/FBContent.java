@@ -28,11 +28,13 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraft.world.level.storage.loot.providers.number.LootNumberProviderType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.common.crafting.IngredientType;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.network.IContainerFactory;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.camo.CamoContainerFactory;
@@ -78,6 +80,7 @@ import xfacthd.framedblocks.common.blockentity.doubled.slopepanelcorner.*;
 import xfacthd.framedblocks.common.blockentity.doubled.slopeslab.*;
 import xfacthd.framedblocks.common.blockentity.doubled.stairs.*;
 import xfacthd.framedblocks.common.blockentity.special.*;
+import xfacthd.framedblocks.common.compat.jei.camo.JeiCamoApplicationDummyIngredient;
 import xfacthd.framedblocks.common.compat.jei.camo.JeiCamoApplicationRecipe;
 import xfacthd.framedblocks.common.crafting.camo.CamoApplicationRecipe;
 import xfacthd.framedblocks.common.crafting.rotation.ShapeRotationRecipe;
@@ -138,6 +141,7 @@ public final class FBContent
     private static final DeferredRecipeSerializerRegister RECIPE_SERIALIZERS = DeferredRecipeSerializerRegister.create(FramedConstants.MOD_ID);
     private static final DeferredRegister<RecipeBookCategory> RECIPE_BOOK_CATEGORIES = register(Registries.RECIPE_BOOK_CATEGORY);
     private static final DeferredRegister<RecipeDisplay.Type<?>> RECIPE_DISPLAY_TYPES = register(Registries.RECIPE_DISPLAY);
+    private static final DeferredRegister<IngredientType<?>> INGREDIENT_TYPES = register(NeoForgeRegistries.Keys.INGREDIENT_TYPES);
     private static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = register(Registries.CREATIVE_MODE_TAB);
     private static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = register(Registries.PARTICLE_TYPE);
     private static final DeferredRegister<LootItemConditionType> LOOT_CONDITIONS = register(Registries.LOOT_CONDITION_TYPE);
@@ -715,6 +719,12 @@ public final class FBContent
     );
     // endregion
 
+    // region IngredientTypes
+    public static final Holder<IngredientType<?>> INGREDIENT_TYPE_JEI_CAMO_DUMMY = INGREDIENT_TYPES.register(
+            "jei_camo_dummy", () -> new IngredientType<>(JeiCamoApplicationDummyIngredient.CODEC, JeiCamoApplicationDummyIngredient.STREAM_CODEC)
+    );
+    // endregion
+
     // region CreativeModeTabs
     public static final Holder<CreativeModeTab> MAIN_TAB = CREATIVE_TABS.register(
             "framed_blocks", FramedCreativeTab::makeTab
@@ -796,6 +806,7 @@ public final class FBContent
         RECIPE_SERIALIZERS.register(modBus);
         RECIPE_BOOK_CATEGORIES.register(modBus);
         RECIPE_DISPLAY_TYPES.register(modBus);
+        INGREDIENT_TYPES.register(modBus);
         CREATIVE_TABS.register(modBus);
         PARTICLE_TYPES.register(modBus);
         LOOT_CONDITIONS.register(modBus);

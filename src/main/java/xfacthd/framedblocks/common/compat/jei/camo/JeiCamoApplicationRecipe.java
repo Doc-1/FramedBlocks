@@ -1,93 +1,57 @@
 package xfacthd.framedblocks.common.compat.jei.camo;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.ShapedCraftingRecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
 import xfacthd.framedblocks.common.FBContent;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
-public final class JeiCamoApplicationRecipe implements CraftingRecipe
+public record JeiCamoApplicationRecipe(
+        Ingredient frame,
+        Ingredient copyTool,
+        Ingredient camoOne,
+        Ingredient camoTwo,
+        Optional<ItemStack> result
+) implements CraftingRecipe
 {
     public static final MapCodec<JeiCamoApplicationRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            Ingredient.CODEC.fieldOf("frame").forGetter(JeiCamoApplicationRecipe::getFrame),
-            Ingredient.CODEC.fieldOf("copy_tool").forGetter(JeiCamoApplicationRecipe::getCopyTool),
-            Ingredient.CODEC.fieldOf("camo_one").forGetter(JeiCamoApplicationRecipe::getCamoOne),
-            Ingredient.CODEC.fieldOf("camo_two").forGetter(JeiCamoApplicationRecipe::getCamoTwo),
-            Codec.list(ItemStack.CODEC).fieldOf("results").forGetter(JeiCamoApplicationRecipe::getResults)
+            Ingredient.CODEC.fieldOf("frame").forGetter(JeiCamoApplicationRecipe::frame),
+            Ingredient.CODEC.fieldOf("copy_tool").forGetter(JeiCamoApplicationRecipe::copyTool),
+            Ingredient.CODEC.fieldOf("camo_one").forGetter(JeiCamoApplicationRecipe::camoOne),
+            Ingredient.CODEC.fieldOf("camo_two").forGetter(JeiCamoApplicationRecipe::camoTwo),
+            ItemStack.CODEC.optionalFieldOf("result").forGetter(JeiCamoApplicationRecipe::result)
     ).apply(inst, JeiCamoApplicationRecipe::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, JeiCamoApplicationRecipe> STREAM_CODEC = StreamCodec.composite(
             Ingredient.CONTENTS_STREAM_CODEC,
-            JeiCamoApplicationRecipe::getFrame,
+            JeiCamoApplicationRecipe::frame,
             Ingredient.CONTENTS_STREAM_CODEC,
-            JeiCamoApplicationRecipe::getCopyTool,
+            JeiCamoApplicationRecipe::copyTool,
             Ingredient.CONTENTS_STREAM_CODEC,
-            JeiCamoApplicationRecipe::getCamoOne,
+            JeiCamoApplicationRecipe::camoOne,
             Ingredient.CONTENTS_STREAM_CODEC,
-            JeiCamoApplicationRecipe::getCamoTwo,
-            ItemStack.STREAM_CODEC.apply(ByteBufCodecs.collection(NonNullList::createWithCapacity)),
-            JeiCamoApplicationRecipe::getResults,
+            JeiCamoApplicationRecipe::camoTwo,
+            ByteBufCodecs.optional(ItemStack.STREAM_CODEC),
+            JeiCamoApplicationRecipe::result,
             JeiCamoApplicationRecipe::new
     );
-
-    private final Ingredient frame;
-    private final Ingredient copyTool;
-    private final Ingredient camoOne;
-    private final Ingredient camoTwo;
-    private final List<ItemStack> results;
-
-    public JeiCamoApplicationRecipe(
-            Ingredient frame,
-            Ingredient copyTool,
-            Ingredient camoOne,
-            Ingredient camoTwo,
-            List<ItemStack> results
-    )
-    {
-        this.frame = frame;
-        this.copyTool = copyTool;
-        this.camoOne = camoOne;
-        this.camoTwo = camoTwo;
-        this.results = results;
-    }
-
-    public Ingredient getFrame()
-    {
-        return frame;
-    }
-
-    public Ingredient getCopyTool()
-    {
-        return copyTool;
-    }
-
-    public Ingredient getCamoOne()
-    {
-        return camoOne;
-    }
-
-    public Ingredient getCamoTwo()
-    {
-        return camoTwo;
-    }
-
-    public List<ItemStack> getResults()
-    {
-        return results;
-    }
 
     @Override
     public CraftingBookCategory category()
@@ -111,6 +75,18 @@ public final class JeiCamoApplicationRecipe implements CraftingRecipe
     public PlacementInfo placementInfo()
     {
         return PlacementInfo.NOT_PLACEABLE;
+    }
+
+    @Override
+    public List<RecipeDisplay> display()
+    {
+        return List.of(new ShapedCraftingRecipeDisplay(
+                2,
+                2,
+                Stream.of(frame, copyTool, camoOne, camoTwo).map(Ingredient::display).toList(),
+                result.<SlotDisplay>map(SlotDisplay.ItemStackSlotDisplay::new).orElse(SlotDisplay.Empty.INSTANCE),
+                new SlotDisplay.ItemSlotDisplay(Items.CRAFTING_TABLE)
+        ));
     }
 
     @Override

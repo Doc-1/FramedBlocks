@@ -10,7 +10,7 @@ public final class FramingSawWithEncoderGuiContainerHandler extends FramingSawGu
 {
     public FramingSawWithEncoderGuiContainerHandler(IIngredientManager ingredientManager)
     {
-        super(ingredientManager);
+        super();
     }
 
     @Override

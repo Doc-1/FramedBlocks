@@ -1,11 +1,11 @@
 package xfacthd.framedblocks.common.compat.jei;
 
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandlerHelper;
 import mezz.jei.api.recipe.transfer.IRecipeTransferInfo;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -59,7 +59,7 @@ public abstract sealed class FramingSawTransferHandler<C extends AbstractContain
     }
 
     @Override
-    public RecipeType<FramingSawRecipe> getRecipeType()
+    public IRecipeType<FramingSawRecipe> getRecipeType()
     {
         return transferInfo.getRecipeType();
     }
