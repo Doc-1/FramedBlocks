@@ -33,7 +33,7 @@ import org.slf4j.Logger;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
-import xfacthd.framedblocks.api.block.render.FramedBlockRenderProperties;
+import xfacthd.framedblocks.api.block.render.FramedClientBlockExtensions;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.CamoContainerFactory;
 import xfacthd.framedblocks.api.camo.CamoContainerHelper;
@@ -371,7 +371,7 @@ public final class TestUtils
             assertTrue(
                     helper,
                     INTANGIBILITY_BLOCK,
-                    blockExt instanceof FramedBlockRenderProperties,
+                    blockExt instanceof FramedClientBlockExtensions,
                     () -> String.format("Block '%s' doesn't have required IClientBlockExtensions", state.getBlock())
             );
 

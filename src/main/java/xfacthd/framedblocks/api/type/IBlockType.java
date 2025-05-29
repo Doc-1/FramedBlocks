@@ -12,7 +12,7 @@ import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsE
 import org.jetbrains.annotations.ApiStatus;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
-import xfacthd.framedblocks.api.block.render.FramedBlockRenderProperties;
+import xfacthd.framedblocks.api.block.render.FramedClientBlockExtensions;
 import xfacthd.framedblocks.api.predicate.contex.ConTexMode;
 import xfacthd.framedblocks.api.predicate.contex.ConnectionPredicate;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
@@ -63,9 +63,8 @@ public interface IBlockType
     ConTexMode getMinimumConTexMode();
 
     /**
-     * @implNote If this method returns true, then the associated block must override {@link RegisterClientExtensionsEvent}
-     * and pass an instance of {@link FramedBlockRenderProperties} to the consumer to avoid crashing when the block is
-     * hit while it can be passed through
+     * @implNote If this method returns true, then the associated block register an instance of {@link FramedClientBlockExtensions}
+     * in {@link RegisterClientExtensionsEvent} to avoid crashing when the block is hit while it can be passed through
      */
     boolean allowMakingIntangible();
 

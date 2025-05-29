@@ -16,7 +16,7 @@ import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.event.BlockEntityTypeAddBlocksEvent;
 import xfacthd.framedblocks.FramedBlocks;
-import xfacthd.framedblocks.api.block.render.FramedBlockRenderProperties;
+import xfacthd.framedblocks.api.block.render.FramedClientBlockExtensions;
 import xfacthd.framedblocks.api.model.wrapping.RegisterModelWrappersEvent;
 import xfacthd.framedblocks.api.model.wrapping.WrapHelper;
 import xfacthd.framedblocks.api.util.Utils;
@@ -145,10 +145,10 @@ public final class DiagonalBlocksCompat
         private static void onRegisterClientExtensions(final RegisterClientExtensionsEvent event)
         {
             GuardedAccess.getBlock(DiagonalBlockTypes.FENCE, FBContent.BLOCK_FRAMED_FENCE).ifPresent(
-                    holder -> event.registerBlock(FramedBlockRenderProperties.INSTANCE, holder.value())
+                    holder -> event.registerBlock(FramedClientBlockExtensions.INSTANCE, holder.value())
             );
             GuardedAccess.getBlock(DiagonalBlockTypes.WINDOW, FBContent.BLOCK_FRAMED_PANE).ifPresent(
-                    holder -> event.registerBlock(FramedBlockRenderProperties.INSTANCE, holder.value())
+                    holder -> event.registerBlock(FramedClientBlockExtensions.INSTANCE, holder.value())
             );
         }
     }

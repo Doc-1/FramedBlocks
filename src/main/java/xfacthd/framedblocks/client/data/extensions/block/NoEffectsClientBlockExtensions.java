@@ -7,9 +7,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
-import xfacthd.framedblocks.api.block.render.FramedBlockRenderProperties;
+import xfacthd.framedblocks.api.block.render.FramedClientBlockExtensions;
 
-public final class NoEffectsClientBlockExtensions extends FramedBlockRenderProperties
+public final class NoEffectsClientBlockExtensions extends FramedClientBlockExtensions
 {
     public static final NoEffectsClientBlockExtensions INSTANCE = new NoEffectsClientBlockExtensions();
 

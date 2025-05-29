@@ -9,17 +9,17 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import xfacthd.framedblocks.api.block.render.FramedBlockRenderProperties;
+import xfacthd.framedblocks.api.block.render.FramedClientBlockExtensions;
 import xfacthd.framedblocks.api.block.render.ParticleHelper;
 import xfacthd.framedblocks.api.util.SoundUtils;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.common.data.datamaps.SoundEventGroup;
 
-public final class FramedDoubleBlockRenderProperties extends FramedBlockRenderProperties
+public final class FramedClientDoubleBlockExtensions extends FramedClientBlockExtensions
 {
-    public static final FramedDoubleBlockRenderProperties INSTANCE = new FramedDoubleBlockRenderProperties();
+    public static final FramedClientDoubleBlockExtensions INSTANCE = new FramedClientDoubleBlockExtensions();
 
-    private FramedDoubleBlockRenderProperties() { }
+    private FramedClientDoubleBlockExtensions() { }
 
     @Override
     public boolean addHitEffects(BlockState state, Level level, HitResult target, ParticleEngine engine)

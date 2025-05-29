@@ -20,7 +20,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.render.FramedBlockColor;
-import xfacthd.framedblocks.api.block.render.FramedBlockRenderProperties;
+import xfacthd.framedblocks.api.block.render.FramedClientBlockExtensions;
 import xfacthd.framedblocks.api.model.item.block.BlockItemModelProvider;
 import xfacthd.framedblocks.api.model.item.block.RegisterBlockItemModelProvidersEvent;
 import xfacthd.framedblocks.api.model.item.tint.FramedBlockItemTintProvider;
@@ -112,7 +112,7 @@ import xfacthd.framedblocks.common.block.slopeslab.FramedFlatDoubleSlopeSlabCorn
 import xfacthd.framedblocks.common.block.stairs.standard.FramedStairsBlock;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.camo.fluid.FluidCamoClientHandler;
-import xfacthd.framedblocks.common.data.doubleblock.FramedDoubleBlockRenderProperties;
+import xfacthd.framedblocks.common.data.doubleblock.FramedClientDoubleBlockExtensions;
 import xfacthd.framedblocks.common.data.doubleblock.NullCullPredicate;
 
 import java.util.Set;
@@ -542,8 +542,8 @@ public final class FBClient
                 {
                     case FramedItemFrameBlock ignored -> NoEffectsClientBlockExtensions.INSTANCE;
                     case FramedOneWayWindowBlock ignored -> new OneWayWindowClientBlockExtensions();
-                    case IFramedDoubleBlock ignored -> FramedDoubleBlockRenderProperties.INSTANCE;
-                    default -> FramedBlockRenderProperties.INSTANCE;
+                    case IFramedDoubleBlock ignored -> FramedClientDoubleBlockExtensions.INSTANCE;
+                    default -> FramedClientBlockExtensions.INSTANCE;
                 }))
                 .forEach(pair -> event.registerBlock(pair.getSecond(), pair.getFirst()));
     }

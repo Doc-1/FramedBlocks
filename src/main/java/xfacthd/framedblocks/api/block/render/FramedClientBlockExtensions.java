@@ -13,11 +13,11 @@ import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.util.SoundUtils;
 
-public class FramedBlockRenderProperties implements IClientBlockExtensions
+public class FramedClientBlockExtensions implements IClientBlockExtensions
 {
-    public static final FramedBlockRenderProperties INSTANCE = new FramedBlockRenderProperties();
+    public static final FramedClientBlockExtensions INSTANCE = new FramedClientBlockExtensions();
 
-    protected FramedBlockRenderProperties() { }
+    protected FramedClientBlockExtensions() { }
 
     @Override
     public boolean addHitEffects(BlockState state, Level level, HitResult target, ParticleEngine engine)
