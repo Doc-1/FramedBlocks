@@ -5,78 +5,48 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
+import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
+
+import java.util.function.Function;
 
 public enum CamoGetter
 {
-    NONE
+    NONE(be -> EmptyCamoContainer.EMPTY, data -> FramedBlockData.EMPTY, parts -> null),
+    FIRST(FramedDoubleBlockEntity::getCamo, data -> data.unwrap(false), DoubleBlockParts::stateOne),
+    SECOND(FramedDoubleBlockEntity::getCamoTwo, data -> data.unwrap(true), DoubleBlockParts::stateTwo),
+    ;
+
+    private final Function<FramedDoubleBlockEntity, CamoContainer<?, ?>> entityCamoGetter;
+    private final Function<AbstractFramedBlockData, FramedBlockData> modelDataUnwrapper;
+    private final Function<DoubleBlockParts, @Nullable BlockState> partGetter;
+
+    CamoGetter(
+            Function<FramedDoubleBlockEntity, CamoContainer<?, ?>> entityCamoGetter,
+            Function<AbstractFramedBlockData, FramedBlockData> modelDataUnwrapper,
+            Function<DoubleBlockParts, @Nullable BlockState> partGetter
+    )
     {
-        @Override
-        public CamoContainer<?, ?> getCamo(FramedDoubleBlockEntity be)
-        {
-            return EmptyCamoContainer.EMPTY;
-        }
+        this.entityCamoGetter = entityCamoGetter;
+        this.modelDataUnwrapper = modelDataUnwrapper;
+        this.partGetter = partGetter;
+    }
 
-        @Override
-        public CamoContainer<?, ?> getCamo(AbstractFramedBlockData data)
-        {
-            return EmptyCamoContainer.EMPTY;
-        }
-
-        @Override
-        @Nullable
-        public BlockState getComponent(DoubleBlockParts parts)
-        {
-            return null;
-        }
-    },
-    FIRST
+    public CamoContainer<?, ?> getCamo(FramedDoubleBlockEntity be)
     {
-        @Override
-        public CamoContainer<?, ?> getCamo(FramedDoubleBlockEntity be)
-        {
-            return be.getCamo();
-        }
+        return entityCamoGetter.apply(be);
+    }
 
-        @Override
-        public CamoContainer<?, ?> getCamo(AbstractFramedBlockData data)
-        {
-            return data.unwrap(false).getCamoContainer();
-        }
-
-        @Override
-        public BlockState getComponent(DoubleBlockParts parts)
-        {
-            return parts.stateOne();
-        }
-    },
-    SECOND
+    public CamoContainer<?, ?> getCamo(AbstractFramedBlockData data)
     {
-        @Override
-        public CamoContainer<?, ?> getCamo(FramedDoubleBlockEntity be)
-        {
-            return be.getCamoTwo();
-        }
-
-        @Override
-        public CamoContainer<?, ?> getCamo(AbstractFramedBlockData data)
-        {
-            return data.unwrap(true).getCamoContainer();
-        }
-
-        @Override
-        public BlockState getComponent(DoubleBlockParts parts)
-        {
-            return parts.stateTwo();
-        }
-    };
-
-    public abstract CamoContainer<?, ?> getCamo(FramedDoubleBlockEntity be);
-
-    public abstract CamoContainer<?, ?> getCamo(AbstractFramedBlockData data);
+        return modelDataUnwrapper.apply(data).getCamoContainer();
+    }
 
     @Nullable
-    public abstract BlockState getComponent(DoubleBlockParts parts);
+    public BlockState getComponent(DoubleBlockParts parts)
+    {
+        return partGetter.apply(parts);
+    }
 
 
 
