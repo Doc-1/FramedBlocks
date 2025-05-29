@@ -63,6 +63,7 @@ import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
 import xfacthd.framedblocks.api.shapes.ShapeProvider;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.util.ConfigView;
+import xfacthd.framedblocks.api.util.SoundUtils;
 import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.List;
@@ -204,18 +205,6 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
             return lightManager.getLightAt(pos);
         }
         return 0;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    default SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity)
-    {
-        if (level.getBlockEntity(pos) instanceof FramedBlockEntity be)
-        {
-            CamoContainer<?, ?> camo = be.getCamo();
-            return camo.getContent().getSoundType();
-        }
-        return state.getSoundType();
     }
 
     default List<ItemStack> getCamoDrops(List<ItemStack> drops, LootParams.Builder builder)
@@ -468,6 +457,20 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
             return true;
         }
         return false;
+    }
+
+    @Override
+    default void playStepSound(BlockState state, Level level, BlockPos pos, Entity entity, float volumeMult, float pitchMult)
+    {
+        CamoContainer<?, ?> camo = level.getBlockEntity(pos) instanceof FramedBlockEntity be ? be.getCamo() : EmptyCamoContainer.EMPTY;
+        SoundUtils.playStepSound(entity, camo.getContent().getSoundType(), volumeMult, pitchMult);
+    }
+
+    @Override
+    default void playFallSound(BlockState state, Level level, BlockPos pos, LivingEntity entity)
+    {
+        CamoContainer<?, ?> camo = level.getBlockEntity(pos) instanceof FramedBlockEntity be ? be.getCamo() : EmptyCamoContainer.EMPTY;
+        SoundUtils.playFallSound(entity, camo.getContent().getSoundType());
     }
 
     @Override

@@ -41,8 +41,6 @@ import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockStateCache;
-import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockSoundType;
-import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
 
 import java.util.List;
 
@@ -53,7 +51,6 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     private static final ValueMerger<Integer> FLAMMABILITY_MERGER = new ValueMerger<>(i -> i == -1, Math::min);
 
     private final boolean[] culledFaces = new boolean[6];
-    private final DoubleBlockSoundType soundType = new DoubleBlockSoundType(this);
     private CamoContainer<?, ?> camoContainer = EmptyCamoContainer.EMPTY;
 
     public FramedDoubleBlockEntity(BlockPos pos, BlockState state)
@@ -259,11 +256,6 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
         return FLAMMABILITY_MERGER.apply(spreadSpeedOne, spreadSpeedTwo);
     }
 
-    public final DoubleBlockSoundType getSoundType()
-    {
-        return soundType;
-    }
-
     @Override
     protected boolean hitSecondary(BlockHitResult hit, Vec3 lookVec, Vec3 eyePos)
     {
@@ -287,11 +279,6 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
         }
 
         return eyePos.distanceToSqr(clipSec.getLocation()) < eyePos.distanceToSqr(clipPri.getLocation());
-    }
-
-    public final DoubleBlockTopInteractionMode getTopInteractionMode()
-    {
-        return getStateCache().getTopInteractionMode();
     }
 
     @Override

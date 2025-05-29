@@ -1,15 +1,19 @@
 package xfacthd.framedblocks.common.data.doubleblock;
 
 import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import xfacthd.framedblocks.api.block.render.FramedBlockRenderProperties;
 import xfacthd.framedblocks.api.block.render.ParticleHelper;
-import xfacthd.framedblocks.api.camo.CamoContainer;
+import xfacthd.framedblocks.api.util.SoundUtils;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
+import xfacthd.framedblocks.common.data.datamaps.SoundEventGroup;
 
 public final class FramedDoubleBlockRenderProperties extends FramedBlockRenderProperties
 {
@@ -45,17 +49,35 @@ public final class FramedDoubleBlockRenderProperties extends FramedBlockRenderPr
     }
 
     @Override
+    public boolean playHitSound(BlockState state, Level level, BlockPos pos, Direction hitFace, SoundManager soundManager)
+    {
+        if (level.getBlockEntity(pos) instanceof FramedDoubleBlockEntity be)
+        {
+            SoundType soundOne = be.getCamo().getContent().getSoundType();
+            SoundUtils.Client.playHitSound(soundManager, pos, soundOne);
+
+            SoundType soundTwo = be.getCamoTwo().getContent().getSoundType();
+            if (!SoundEventGroup.isSameSound(soundOne, soundTwo, SoundType::getHitSound))
+            {
+                SoundUtils.Client.playHitSound(soundManager, pos, soundTwo);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public boolean playBreakSound(BlockState state, Level level, BlockPos pos)
     {
         if (level.getBlockEntity(pos) instanceof FramedDoubleBlockEntity be)
         {
-            CamoContainer<?, ?> camoOne = be.getCamo();
-            playCamoBreakSound(level, pos, camoOne);
+            SoundType soundOne = be.getCamo().getContent().getSoundType();
+            SoundUtils.Client.playBreakSound(level, pos, soundOne);
 
-            CamoContainer<?, ?> camoTwo = be.getCamoTwo();
-            if (camoTwo.getContent().getSoundType() != camoOne.getContent().getSoundType())
+            SoundType soundTwo = be.getCamoTwo().getContent().getSoundType();
+            if (!SoundEventGroup.isSameSound(soundOne, soundTwo, SoundType::getBreakSound))
             {
-                playCamoBreakSound(level, pos, camoTwo);
+                SoundUtils.Client.playBreakSound(level, pos, soundTwo);
             }
 
             return true;

@@ -43,5 +43,6 @@ public final class GeneratorHandler
         event.createProvider(FramedRecipeProvider.Runner::new);
         event.createProvider(FramingSawRecipeProvider.Runner::new);
         event.createBlockAndItemTags(FramedBlockTagProvider::new, FramedItemTagProvider::new);
+        event.createProvider(FramedDataMapProvider::new);
     }
 }

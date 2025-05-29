@@ -7,7 +7,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,7 +19,9 @@ import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
+import xfacthd.framedblocks.api.util.SoundUtils;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
+import xfacthd.framedblocks.common.data.datamaps.SoundEventGroup;
 import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockStateCache;
@@ -29,17 +30,6 @@ import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 
 public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFramedDoubleBlock
 {
-    @Override
-    @SuppressWarnings("deprecation")
-    default SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity)
-    {
-        if (level.getBlockEntity(pos) instanceof FramedDoubleBlockEntity be)
-        {
-            return be.getSoundType();
-        }
-        return state.getSoundType();
-    }
-
     @Override
     BlockEntity newBlockEntity(BlockPos pos, BlockState state);
 
@@ -126,18 +116,9 @@ public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFram
     {
         if (level.getBlockEntity(pos) instanceof FramedDoubleBlockEntity be)
         {
-            DoubleBlockStateCache cache = getCache(state);
-            DoubleBlockParts partStates = cache.getParts();
-            switch (cache.getTopInteractionMode())
-            {
-                case FIRST -> ParticleHelper.spawnRunningParticles(be.getCamo(partStates.stateOne()), level, pos, entity);
-                case SECOND -> ParticleHelper.spawnRunningParticles(be.getCamo(partStates.stateTwo()), level, pos, entity);
-                case EITHER ->
-                {
-                    ParticleHelper.spawnRunningParticles(be.getCamo(partStates.stateOne()), level, pos, entity);
-                    ParticleHelper.spawnRunningParticles(be.getCamo(partStates.stateTwo()), level, pos, entity);
-                }
-            }
+            DoubleBlockTopInteractionMode mode = getCache(state).getTopInteractionMode();
+            if (mode.applyFirst()) ParticleHelper.spawnRunningParticles(be.getCamo(), level, pos, entity);
+            if (mode.applySecond()) ParticleHelper.spawnRunningParticles(be.getCamoTwo(), level, pos, entity);
             return true;
         }
         return false;
@@ -150,21 +131,68 @@ public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFram
     {
         if (level.getBlockEntity(pos) instanceof FramedDoubleBlockEntity be)
         {
-            DoubleBlockStateCache cache = getCache(state);
-            DoubleBlockParts partStates = cache.getParts();
-            switch (cache.getTopInteractionMode())
-            {
-                case FIRST -> ParticleHelper.spawnLandingParticles(be.getCamo(partStates.stateOne()), level, pos, entity, count);
-                case SECOND -> ParticleHelper.spawnLandingParticles(be.getCamo(partStates.stateTwo()), level, pos, entity, count);
-                case EITHER ->
-                {
-                    ParticleHelper.spawnLandingParticles(be.getCamo(partStates.stateOne()), level, pos, entity, count);
-                    ParticleHelper.spawnLandingParticles(be.getCamo(partStates.stateTwo()), level, pos, entity, count);
-                }
-            }
+            DoubleBlockTopInteractionMode mode = getCache(state).getTopInteractionMode();
+            if (mode.applyFirst()) ParticleHelper.spawnLandingParticles(be.getCamo(), level, pos, entity, count);
+            if (mode.applySecond()) ParticleHelper.spawnLandingParticles(be.getCamoTwo(), level, pos, entity, count);
             return true;
         }
         return false;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    default void playStepSound(BlockState state, Level level, BlockPos pos, Entity entity, float volumeMult, float pitchMult)
+    {
+        if (!(level.getBlockEntity(pos) instanceof FramedDoubleBlockEntity be))
+        {
+            SoundUtils.playStepSound(entity, state.getSoundType(), volumeMult, pitchMult);
+            return;
+        }
+
+        DoubleBlockTopInteractionMode mode = getCache(state).getTopInteractionMode();
+
+        SoundType soundOne = null;
+        if (mode.applyFirst())
+        {
+            soundOne = be.getCamo().getContent().getSoundType();
+            SoundUtils.playStepSound(entity, soundOne, volumeMult, pitchMult);
+        }
+
+        if (!mode.applySecond()) return;
+
+        SoundType soundTwo = be.getCamoTwo().getContent().getSoundType();
+        if (soundOne == null || !SoundEventGroup.isSameSound(soundOne, soundTwo, SoundType::getStepSound))
+        {
+            SoundUtils.playStepSound(entity, soundTwo, volumeMult, pitchMult);
+        }
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    default void playFallSound(BlockState state, Level level, BlockPos pos, LivingEntity entity)
+    {
+        if (!(level.getBlockEntity(pos) instanceof FramedDoubleBlockEntity be))
+        {
+            SoundUtils.playFallSound(entity, state.getSoundType());
+            return;
+        }
+
+        DoubleBlockTopInteractionMode mode = getCache(state).getTopInteractionMode();
+
+        SoundType soundOne = null;
+        if (mode.applyFirst())
+        {
+            soundOne = be.getCamo().getContent().getSoundType();
+            SoundUtils.playFallSound(entity, soundOne);
+        }
+
+        if (!mode.applySecond()) return;
+
+        SoundType soundTwo = be.getCamoTwo().getContent().getSoundType();
+        if (soundOne == null || !SoundEventGroup.isSameSound(soundOne, soundTwo, SoundType::getStepSound))
+        {
+            SoundUtils.playFallSound(entity, soundTwo);
+        }
     }
 
     @Override

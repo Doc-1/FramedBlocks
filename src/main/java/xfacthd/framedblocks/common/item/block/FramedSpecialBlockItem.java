@@ -1,12 +1,10 @@
 package xfacthd.framedblocks.common.item.block;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.BlockUtils;
@@ -14,6 +12,7 @@ import xfacthd.framedblocks.api.block.item.FramedBlockItem;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.camo.CamoList;
+import xfacthd.framedblocks.api.util.SoundUtils;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 
@@ -58,9 +57,7 @@ public abstract class FramedSpecialBlockItem extends FramedBlockItem
                         camo = camos.getCamo(0);
                         be.setCamo(camo, !writeToCamoTwo);
                     }
-
-                    SoundType sound = camo.getContent().getSoundType();
-                    level.playSound(null, pos, sound.getPlaceSound(), SoundSource.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
+                    SoundUtils.playPlaceSound(ctx, camo.getContent().getSoundType(), true);
                 }
                 return InteractionResult.SUCCESS;
             }
