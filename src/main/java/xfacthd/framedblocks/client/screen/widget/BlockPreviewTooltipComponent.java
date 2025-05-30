@@ -50,6 +50,7 @@ public final class BlockPreviewTooltipComponent implements ClientTooltipComponen
                 LightTexture.FULL_BRIGHT,
                 OverlayTexture.NO_OVERLAY
         ));
+        Lighting.setupFor3DItems();
 
         graphics.pose().popPose();
     }
