@@ -240,7 +240,7 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
         {
             List<Component> lines = new ArrayList<>();
             FramingSawMenu.FramedRecipeHolder recipe = menu.getRecipes().get(menu.getSelectedRecipeIndex());
-            appendRecipeFailure(lines, cache, recipe.getRecipe(), encoderMatchResult, this);
+            appendRecipeFailure(lines, cache, additiveResolver, recipe.getRecipe(), encoderMatchResult, this);
             graphics.renderTooltip(font, lines, Optional.empty(), mouseX, mouseY);
         }
         else if (encoding)
@@ -351,7 +351,7 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
             List<FramingSawRecipeAdditive> additives = cache.getRecipes().get(menu.getSelectedRecipeIndex()).value().getAdditives();
             for (int i = 0; i < additives.size(); i++)
             {
-                encodingInputs[i + 1] = new ItemStack(additives.get(i).ingredient().items().findFirst().orElseThrow());
+                encodingInputs[i + 1] = additiveResolver.getFirstStack(i, additives.get(i).ingredient()).copy();
             }
         }
     }

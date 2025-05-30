@@ -1,11 +1,11 @@
 package xfacthd.framedblocks.client.screen;
 
 import net.minecraft.Optionull;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -13,10 +13,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.util.ClientUtils;
@@ -29,6 +29,7 @@ import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeMatchResult;
 import xfacthd.framedblocks.common.menu.FramingSawMenu;
 import xfacthd.framedblocks.common.menu.PoweredFramingSawMenu;
 import xfacthd.framedblocks.common.net.payload.serverbound.ServerboundSelectFramingSawRecipePayload;
+import xfacthd.framedblocks.common.util.CachingIngredientResolver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +74,7 @@ public class PoweredFramingSawScreen extends AbstractContainerScreen<PoweredFram
 
     private final FramingSawRecipeCache cache = FramingSawRecipeCache.get(true);
     private final ItemStack cubeStack = new ItemStack(FBContent.BLOCK_FRAMED_CUBE.value());
+    private final CachingIngredientResolver.Multi additiveResolver;
     private int targetStackX;
     private int targetStackY;
     private Rect2i statusTooltipArea = EMPTY;
@@ -81,8 +83,10 @@ public class PoweredFramingSawScreen extends AbstractContainerScreen<PoweredFram
     public PoweredFramingSawScreen(PoweredFramingSawMenu menu, Inventory inv, Component title)
     {
         super(menu, inv, title);
-        imageHeight = 182;
-        inventoryLabelY = imageHeight - 94;
+        this.imageHeight = 182;
+        this.inventoryLabelY = imageHeight - 94;
+        Level level = Objects.requireNonNull(Minecraft.getInstance().level);
+        this.additiveResolver = new CachingIngredientResolver.Multi(level, FramingSawRecipe.MAX_ADDITIVE_COUNT);
     }
 
     @Override
@@ -145,11 +149,11 @@ public class PoweredFramingSawScreen extends AbstractContainerScreen<PoweredFram
                 }
                 else if (!additiveSlot.hasItem())
                 {
-                    List<Holder<Item>> items = additives.get(i).ingredient().items().toList();
+                    List<ItemStack> items = additiveResolver.getStacks(i, additives.get(i).ingredient());
                     int t = (int) (System.currentTimeMillis() / 1700) % items.size();
                     int ax = leftPos + additiveSlot.x;
                     int ay = topPos + additiveSlot.y;
-                    ClientUtils.renderTransparentFakeItem(graphics, items.get(t).value().getDefaultInstance(), ax, ay);
+                    ClientUtils.renderTransparentFakeItem(graphics, items.get(t), ax, ay);
                 }
             }
 
@@ -178,7 +182,7 @@ public class PoweredFramingSawScreen extends AbstractContainerScreen<PoweredFram
         else if (match != null && !match.success())
         {
             status = status.append(MSG_STATUS_NO_MATCH);
-            statusTooltip = FramingSawScreen.appendRecipeFailure(new ArrayList<>(), cache, recipe, match, this);
+            statusTooltip = FramingSawScreen.appendRecipeFailure(new ArrayList<>(), cache, additiveResolver, recipe, match, this);
             width = font.width(MSG_STATUS_NO_MATCH);
         }
         else

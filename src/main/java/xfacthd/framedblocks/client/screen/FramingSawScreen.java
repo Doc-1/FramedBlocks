@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
@@ -26,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -44,6 +44,7 @@ import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCalculation;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeMatchResult;
 import xfacthd.framedblocks.common.menu.FramingSawMenu;
 import xfacthd.framedblocks.common.net.payload.serverbound.ServerboundSelectFramingSawRecipePayload;
+import xfacthd.framedblocks.common.util.CachingIngredientResolver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +94,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
     protected final FramingSawRecipeCache cache = FramingSawRecipeCache.get(true);
     protected final ItemStack cubeStack = new ItemStack(FBContent.BLOCK_FRAMED_CUBE.value());
     private final List<FramingSawMenu.FramedRecipeHolder> filteredRecipes = new ArrayList<>();
+    protected final CachingIngredientResolver.Multi additiveResolver;
     @UnknownNullability
     private SearchEditBox searchBox = null;
     private int firstIndex = 0;
@@ -109,6 +111,8 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
         this.imageWidth = IMAGE_WIDTH;
         this.imageHeight = IMAGE_HEIGHT;
         this.filteredRecipes.addAll(menu.getRecipes());
+        Level level = Objects.requireNonNull(Minecraft.getInstance().level);
+        this.additiveResolver = new CachingIngredientResolver.Multi(level, FramingSawRecipe.MAX_ADDITIVE_COUNT);
     }
 
     @Override
@@ -216,9 +220,9 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
     {
         if (additive.isEmpty())
         {
-            List<Holder<Item>> items = additives.get(index).ingredient().items().toList();
+            List<ItemStack> items = additiveResolver.getStacks(index, additives.get(index).ingredient());
             int t = (int) (System.currentTimeMillis() / 1700) % items.size();
-            ClientUtils.renderTransparentFakeItem(graphics, items.get(t).value().getDefaultInstance(), leftPos + 20, y);
+            ClientUtils.renderTransparentFakeItem(graphics, items.get(t), leftPos + 20, y);
             return true;
         }
         return false;
@@ -320,12 +324,13 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
 
     private void appendRecipeFailure(List<Component> components, FramingSawMenu.FramedRecipeHolder recipeHolder)
     {
-        appendRecipeFailure(components, cache, recipeHolder.getRecipe(), recipeHolder.getMatchResult(), this);
+        appendRecipeFailure(components, cache, additiveResolver, recipeHolder.getRecipe(), recipeHolder.getMatchResult(), this);
     }
 
     public static List<Component> appendRecipeFailure(
             List<Component> components,
             FramingSawRecipeCache cache,
+            CachingIngredientResolver.Multi additiveResolver,
             FramingSawRecipe recipe,
             FramingSawRecipeMatchResult matchResult,
             IFramingSawScreen screen
@@ -377,7 +382,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
                 {
                     listAdditives = matchResult.additiveSlot();
                     FramingSawRecipeAdditive additive = recipe.getAdditives().get(matchResult.additiveSlot());
-                    yield makeHaveButNeedTooltip(TOOLTIP_HAVE_ITEM_NONE, additive);
+                    yield makeHaveButNeedTooltip(TOOLTIP_HAVE_ITEM_NONE, additive, listAdditives, additiveResolver);
                 }
                 case UNEXPECTED_ADDITIVE_0, UNEXPECTED_ADDITIVE_1, UNEXPECTED_ADDITIVE_2 ->
                 {
@@ -394,7 +399,9 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
                     Item itemIn = screen.getAdditiveStack(matchResult.additiveSlot()).getItem();
                     yield makeHaveButNeedTooltip(
                             Component.translatable(itemIn.getDescriptionId()).withStyle(ChatFormatting.GOLD),
-                            recipe.getAdditives().get(matchResult.additiveSlot())
+                            recipe.getAdditives().get(matchResult.additiveSlot()),
+                            listAdditives,
+                            additiveResolver
                     );
                 }
                 case INSUFFICIENT_ADDITIVE_0, INSUFFICIENT_ADDITIVE_1, INSUFFICIENT_ADDITIVE_2 ->
@@ -421,16 +428,16 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
 
             if (listAdditives > -1)
             {
-                appendAdditiveItemOptions(components, recipe, listAdditives);
+                appendAdditiveItemOptions(components, recipe, listAdditives, additiveResolver);
             }
         }
         return components;
     }
 
-    private static void appendAdditiveItemOptions(List<Component> components, FramingSawRecipe recipe, int additiveSlot)
+    private static void appendAdditiveItemOptions(List<Component> components, FramingSawRecipe recipe, int additiveSlot, CachingIngredientResolver.Multi additiveResolver)
     {
         FramingSawRecipeAdditive additive = recipe.getAdditives().get(additiveSlot);
-        List<Holder<Item>> items = additive.ingredient().items().toList();
+        List<ItemStack> items = additiveResolver.getStacks(additiveSlot, additive.ingredient());
         if (!additive.isTagBased() && items.size() <= 1)
         {
             return;
@@ -438,9 +445,9 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
 
         if (hasShiftDown())
         {
-            for (Holder<Item> option : items)
+            for (ItemStack option : items)
             {
-                Component name = option.value().getDefaultInstance().getItemName();
+                Component name = option.getItemName();
                 components.add(Component.literal("- ").append(name).withStyle(ChatFormatting.GOLD));
             }
         }
@@ -454,7 +461,12 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
         }
     }
 
-    private static MutableComponent makeHaveButNeedTooltip(Component present, FramingSawRecipeAdditive additive)
+    private static MutableComponent makeHaveButNeedTooltip(
+            Component present,
+            FramingSawRecipeAdditive additive,
+            int index,
+            CachingIngredientResolver.Multi additiveResolver
+    )
     {
         if (additive.isTagBased())
         {
@@ -465,11 +477,11 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
             );
         }
 
-        List<Holder<Item>> options = additive.ingredient().items().toList();
+        List<ItemStack> options = additiveResolver.getStacks(index, additive.ingredient());
         return Component.translatable(
                 options.size() > 1 ? TOOLTIP_HAVE_X_BUT_NEED_Y_ITEM_MULTI : TOOLTIP_HAVE_X_BUT_NEED_Y_ITEM,
                 present,
-                options.getFirst().value().getDefaultInstance().getItemName().copy().withStyle(ChatFormatting.GOLD)
+                options.getFirst().getItemName().copy().withStyle(ChatFormatting.GOLD)
         );
     }
 
