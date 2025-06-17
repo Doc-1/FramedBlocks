@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -191,7 +191,7 @@ abstract class BlockInteractOverlay
 
     private static void drawTooltipBackground(GuiGraphics graphics, int x, int y, int width, int height)
     {
-        TooltipRenderUtil.renderTooltipBackground(graphics, x - 2, y - 2, width + 4, height + 4, 0, null);
+        TooltipRenderUtil.renderTooltipBackground(graphics, x - 2, y - 2, width + 4, height + 4, null);
     }
 
     protected record Texture(
@@ -200,7 +200,7 @@ abstract class BlockInteractOverlay
     {
         public void draw(GuiGraphics graphics, int x, int y)
         {
-            graphics.blit(RenderType::guiTextured, location, x, y, xOff, yOff, width, height, texWidth, texHeight);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, location, x, y, xOff, yOff, width, height, texWidth, texHeight);
         }
     }
 

@@ -1,12 +1,12 @@
 package xfacthd.framedblocks.common.blockentity.special;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.common.FBContent;
@@ -46,45 +46,44 @@ public class FramedOwnableBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    protected void writeToDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
+    protected void writeToDataPacket(ValueOutput valueOutput)
     {
-        super.writeToDataPacket(nbt, lookupProvider);
-        nbt.storeNullable("owner", UUIDUtil.CODEC, owner);
+        super.writeToDataPacket(valueOutput);
+        valueOutput.storeNullable("owner", UUIDUtil.CODEC, owner);
     }
 
     @Override
-    protected boolean readFromDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
+    protected boolean readFromDataPacket(ValueInput valueInput)
     {
-        owner = nbt.read("owner", UUIDUtil.CODEC).orElse(null);
-        return super.readFromDataPacket(nbt, lookupProvider);
+        owner = valueInput.read("owner", UUIDUtil.CODEC).orElse(null);
+        return super.readFromDataPacket(valueInput);
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider)
+    protected void writeUpdateTag(ValueOutput valueOutput)
     {
-        CompoundTag tag = super.getUpdateTag(provider);
-        tag.storeNullable("owner", UUIDUtil.CODEC, owner);
-        return tag;
+        super.writeUpdateTag(valueOutput);
+        valueOutput.storeNullable("owner", UUIDUtil.CODEC, owner);
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag nbt, HolderLookup.Provider provider)
+    public void handleUpdateTag(ValueInput valueInput)
     {
-        super.handleUpdateTag(nbt, provider);
-        owner = nbt.read("owner", UUIDUtil.CODEC).orElse(null);
+        super.handleUpdateTag(valueInput);
+        owner = valueInput.read("owner", UUIDUtil.CODEC).orElse(null);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput valueOutput)
     {
-        super.saveAdditional(tag, provider);
-        tag.storeNullable("owner", UUIDUtil.CODEC, owner);
+        super.saveAdditional(valueOutput);
+        valueOutput.storeNullable("owner", UUIDUtil.CODEC, owner);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput valueInput)
     {
-        super.loadAdditional(tag, provider);
-        owner = tag.read("owner", UUIDUtil.CODEC).orElse(null);
+        super.loadAdditional(valueInput);
+        owner = valueInput.read("owner", UUIDUtil.CODEC).orElse(null);
     }
 }

@@ -2,7 +2,6 @@ package xfacthd.framedblocks.api.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -62,7 +61,7 @@ public final class ClientUtils
     public static void renderTransparentFakeItem(GuiGraphics graphics, ItemStack stack, int x, int y)
     {
         graphics.renderFakeItem(stack, x, y, 0);
-        graphics.fill(RenderType.guiGhostRecipeOverlay(), x, y, x + 16, y + 16, 0x80888888);
+        graphics.fill(x, y, x + 16, y + 16, 0x80888888);
     }
 
     public static boolean isLeftHand(ItemDisplayContext ctx)

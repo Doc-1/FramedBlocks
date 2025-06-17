@@ -1,9 +1,9 @@
 package xfacthd.framedblocks.client.overlaygen;
 
 import com.google.common.base.Preconditions;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.util.TriState;
@@ -38,7 +38,7 @@ public final class OverlayModelPartGenerator implements OverlayPartGenerator
             SpriteGetter spriteGetter,
             TextureAtlasSprite primarySprite,
             Predicate<Direction> normalFilter,
-            RenderType renderType,
+            ChunkSectionLayer chunkLayer,
             @Nullable BlockState shaderState
     )
     {
@@ -54,7 +54,7 @@ public final class OverlayModelPartGenerator implements OverlayPartGenerator
                 Utils.copyAll(newQuads, quadMap.get(side));
             }
         }
-        generatedParts.add(ModelUtils.makeModelPart(quadMap, ambientOcclusion, primarySprite, renderType, shaderState));
+        generatedParts.add(ModelUtils.makeModelPart(quadMap, ambientOcclusion, primarySprite, chunkLayer, shaderState));
     }
 
     public void flush()

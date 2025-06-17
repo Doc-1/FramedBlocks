@@ -2,7 +2,6 @@ package xfacthd.framedblocks.common.capability.energy;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.neoforged.neoforge.energy.EnergyStorage;
 
 public class EntityAwareEnergyStorage extends EnergyStorage
@@ -56,7 +55,7 @@ public class EntityAwareEnergyStorage extends EnergyStorage
     }
 
     @Override
-    public Tag serializeNBT(HolderLookup.Provider provider)
+    public CompoundTag serializeNBT(HolderLookup.Provider provider)
     {
         CompoundTag tag = new CompoundTag();
         tag.putInt("energy", energy);
@@ -64,9 +63,9 @@ public class EntityAwareEnergyStorage extends EnergyStorage
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, Tag tag)
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag)
     {
-        energy = tag instanceof CompoundTag cmpTag ? cmpTag.getIntOr("energy", 0) : 0;
+        energy = tag.getIntOr("energy", 0);
         energy = Math.min(energy, capacity);
     }
 }

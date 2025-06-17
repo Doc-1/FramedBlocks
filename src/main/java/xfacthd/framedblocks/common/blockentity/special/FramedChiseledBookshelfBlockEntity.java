@@ -1,14 +1,15 @@
 package xfacthd.framedblocks.common.blockentity.special;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Clearable;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ChiseledBookShelfBlock;
 import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
@@ -17,7 +18,7 @@ import xfacthd.framedblocks.common.FBContent;
 
 public class FramedChiseledBookshelfBlockEntity extends FramedBlockEntity implements Clearable
 {
-    public static final String INVENTORY_NBT_KEY = "inventory";
+    public static final String INVENTORY_NBT_KEY = ContainerHelper.TAG_ITEMS;
     public static final String LAST_SLOT_NBT_KEY = "last_slot";
 
     private final ItemStackHandler itemHandler = new ItemStackHandler(6);
@@ -90,18 +91,18 @@ public class FramedChiseledBookshelfBlockEntity extends FramedBlockEntity implem
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput valueOutput)
     {
-        nbt.put(INVENTORY_NBT_KEY, itemHandler.serializeNBT(provider));
-        nbt.putInt(LAST_SLOT_NBT_KEY, lastInteractedSlot);
-        super.saveAdditional(nbt, provider);
+        itemHandler.serialize(valueOutput.child(INVENTORY_NBT_KEY));
+        valueOutput.putInt(LAST_SLOT_NBT_KEY, lastInteractedSlot);
+        super.saveAdditional(valueOutput);
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput valueInput)
     {
-        super.loadAdditional(nbt, provider);
-        itemHandler.deserializeNBT(provider, nbt.getCompoundOrEmpty(INVENTORY_NBT_KEY));
-        lastInteractedSlot = nbt.getIntOr(LAST_SLOT_NBT_KEY, -1);
+        super.loadAdditional(valueInput);
+        itemHandler.deserialize(valueInput.childOrEmpty(INVENTORY_NBT_KEY));
+        lastInteractedSlot = valueInput.getIntOr(LAST_SLOT_NBT_KEY, -1);
     }
 }

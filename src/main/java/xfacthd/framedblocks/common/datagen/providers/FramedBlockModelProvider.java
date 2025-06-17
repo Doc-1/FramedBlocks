@@ -763,15 +763,14 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
 
     private void registerFramedItemFrame(BlockModelGenerators blockModels)
     {
-        TextureSlot slotWood = TextureSlot.create("wood");
         ModelTemplate templateItemFrame = ModelTemplates.create(
                 "framedblocks:template_framed_item_frame",
-                TextureSlot.FRONT, TextureSlot.BACK, slotWood, TextureSlot.PARTICLE
+                TextureSlot.FRONT, TextureSlot.PARTICLE
         );
-        ModelTemplate templateMapItemFram = ModelTemplates.create(
+        ModelTemplate templateMapItemFrame = ModelTemplates.create(
                 "framedblocks:template_framed_item_frame_map",
                 "_map",
-                TextureSlot.FRONT, TextureSlot.BACK, slotWood, TextureSlot.PARTICLE
+                TextureSlot.FRONT, TextureSlot.PARTICLE
         );
 
         ResourceLocation normalFrame = blockModelFromTemplate(
@@ -780,18 +779,14 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
                 templateItemFrame,
                 new TextureMapping()
                         .put(TextureSlot.FRONT, mcLocation("block/item_frame"))
-                        .put(TextureSlot.BACK, ClientUtils.DUMMY_TEXTURE)
-                        .put(slotWood, ClientUtils.DUMMY_TEXTURE)
                         .put(TextureSlot.PARTICLE, TEXTURE)
         );
         ResourceLocation normalMapFrame = blockModelFromTemplate(
                 blockModels,
                 FBContent.BLOCK_FRAMED_ITEM_FRAME,
-                templateMapItemFram,
+                templateMapItemFrame,
                 new TextureMapping()
                         .put(TextureSlot.FRONT, mcLocation("block/item_frame"))
-                        .put(TextureSlot.BACK, ClientUtils.DUMMY_TEXTURE)
-                        .put(slotWood, ClientUtils.DUMMY_TEXTURE)
                         .put(TextureSlot.PARTICLE, TEXTURE)
         );
         ResourceLocation glowFrame = blockModelFromTemplate(
@@ -800,18 +795,14 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
                 templateItemFrame,
                 new TextureMapping()
                         .put(TextureSlot.FRONT, mcLocation("block/glow_item_frame"))
-                        .put(TextureSlot.BACK, ClientUtils.DUMMY_TEXTURE)
-                        .put(slotWood, ClientUtils.DUMMY_TEXTURE)
                         .put(TextureSlot.PARTICLE, TEXTURE)
         );
         ResourceLocation glowMapFrame = blockModelFromTemplate(
                 blockModels,
                 FBContent.BLOCK_FRAMED_GLOWING_ITEM_FRAME,
-                templateMapItemFram,
+                templateMapItemFrame,
                 new TextureMapping()
                         .put(TextureSlot.FRONT, mcLocation("block/glow_item_frame"))
-                        .put(TextureSlot.BACK, ClientUtils.DUMMY_TEXTURE)
-                        .put(slotWood, ClientUtils.DUMMY_TEXTURE)
                         .put(TextureSlot.PARTICLE, TEXTURE)
         );
 

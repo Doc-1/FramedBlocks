@@ -1,9 +1,7 @@
 package xfacthd.framedblocks.common.blockentity.special;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -14,6 +12,8 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -35,6 +35,7 @@ import xfacthd.framedblocks.common.menu.FramingSawMenu;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class PoweredFramingSawBlockEntity extends BlockEntity
 {
@@ -349,27 +350,28 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    protected void saveAdditional(ValueOutput valueOutput)
     {
-        super.saveAdditional(tag, provider);
+        super.saveAdditional(valueOutput);
         if (selectedRecipe != null)
         {
-            tag.putString("recipe", selectedRecipe.id().toString());
+            valueOutput.putString("recipe", selectedRecipe.id().toString());
         }
-        tag.put("inventory", itemHandler.serializeNBT(provider));
-        tag.put("energy", energyStorage.serializeNBT(provider));
+        itemHandler.serialize(valueOutput.child("inventory"));
+        energyStorage.serialize(valueOutput.child("energy"));
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput valueInput)
     {
-        super.loadAdditional(tag, provider);
-        if (tag.contains("recipe"))
+        super.loadAdditional(valueInput);
+        Optional<String> optRecipe = valueInput.getString("recipe");
+        if (optRecipe.isPresent())
         {
-            ResourceLocation recipe = ResourceLocation.tryParse(tag.getStringOr("recipe", ""));
+            ResourceLocation recipe = ResourceLocation.tryParse(optRecipe.get());
             selectedRecipeId = recipe != null ? ResourceKey.create(Registries.RECIPE, recipe) : null;
         }
-        itemHandler.deserializeNBT(provider, tag.getCompoundOrEmpty("inventory"));
-        energyStorage.deserializeNBT(provider, tag.getCompoundOrEmpty("energy"));
+        itemHandler.deserialize(valueInput.childOrEmpty("inventory"));
+        energyStorage.deserialize(valueInput.childOrEmpty("energy"));
     }
 }

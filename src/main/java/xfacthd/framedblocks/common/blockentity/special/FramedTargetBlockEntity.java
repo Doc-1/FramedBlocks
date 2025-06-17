@@ -1,13 +1,13 @@
 package xfacthd.framedblocks.common.blockentity.special;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
 import xfacthd.framedblocks.common.FBContent;
@@ -49,41 +49,41 @@ public class FramedTargetBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider)
+    protected void writeUpdateTag(ValueOutput valueOutput)
     {
-        CompoundTag tag = super.getUpdateTag(provider);
+        super.writeUpdateTag(valueOutput);
+        valueOutput.putInt("overlay_color", overlayColor.getId());
+    }
+
+    @Override
+    public void handleUpdateTag(ValueInput valueInput)
+    {
+        super.handleUpdateTag(valueInput);
+        overlayColor = DyeColor.byId(valueInput.getIntOr("overlay_color", DEFAULT_COLOR.getId()));
+    }
+
+    @Override
+    protected void writeToDataPacket(ValueOutput tag)
+    {
+        super.writeToDataPacket(tag);
         tag.putInt("overlay_color", overlayColor.getId());
-        return tag;
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag nbt, HolderLookup.Provider provider)
-    {
-        super.handleUpdateTag(nbt, provider);
-        overlayColor = DyeColor.byId(nbt.getIntOr("overlay_color", DEFAULT_COLOR.getId()));
-    }
-
-    @Override
-    protected void writeToDataPacket(CompoundTag tag, HolderLookup.Provider lookupProvider)
-    {
-        super.writeToDataPacket(tag, lookupProvider);
-        tag.putInt("overlay_color", overlayColor.getId());
-    }
-
-    @Override
-    protected boolean readFromDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
+    protected boolean readFromDataPacket(ValueInput valueInput)
     {
         boolean colored = false;
-        if (nbt.contains("overlay_color"))
+        Optional<Integer> optOverlayColor = valueInput.getInt("overlay_color");
+        if (optOverlayColor.isPresent())
         {
-            DyeColor color = DyeColor.byId(nbt.getIntOr("overlay_color", DEFAULT_COLOR.getId()));
+            DyeColor color = DyeColor.byId(optOverlayColor.get());
             if (overlayColor != color)
             {
                 overlayColor = color;
                 colored = true;
             }
         }
-        return super.readFromDataPacket(nbt, lookupProvider) || colored;
+        return super.readFromDataPacket(valueInput) || colored;
     }
 
     @Override
@@ -102,10 +102,10 @@ public class FramedTargetBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    public void removeComponentsFromTag(CompoundTag tag)
+    public void removeComponentsFromTag(ValueOutput valueOutput)
     {
-        super.removeComponentsFromTag(tag);
-        tag.remove("overlay_color");
+        super.removeComponentsFromTag(valueOutput);
+        valueOutput.discard("overlay_color");
     }
 
     @Override
@@ -122,16 +122,16 @@ public class FramedTargetBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput tag)
     {
-        super.saveAdditional(tag, provider);
+        super.saveAdditional(tag);
         tag.putInt("overlay_color", overlayColor.getId());
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput tag)
     {
-        super.loadAdditional(tag, provider);
+        super.loadAdditional(tag);
         overlayColor = DyeColor.byId(tag.getIntOr("overlay_color", DEFAULT_COLOR.getId()));
     }
 }

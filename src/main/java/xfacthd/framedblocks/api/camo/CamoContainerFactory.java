@@ -10,11 +10,15 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.util.CamoMessageVerbosity;
 import xfacthd.framedblocks.api.util.ConfigView;
 import xfacthd.framedblocks.api.util.Utils;
+
+import java.util.Optional;
 
 public abstract class CamoContainerFactory<T extends CamoContainer<?, T>>
 {
@@ -23,18 +27,18 @@ public abstract class CamoContainerFactory<T extends CamoContainer<?, T>>
     /**
      * Save the given the {@link CamoContainer} to the given {@link CompoundTag} for sync over the network
      *
-     * @apiNote Must be called via {@link CamoContainerHelper#writeToNetwork(CamoContainer)}
+     * @apiNote Must be called via {@link CamoContainerHelper#writeToNetwork(ValueOutput, CamoContainer)}
      */
     @ApiStatus.OverrideOnly
-    protected abstract void writeToNetwork(CompoundTag tag, T container);
+    protected abstract void writeToNetwork(ValueOutput valueOutput, T container);
 
     /**
      * Reconstruct the {@link CamoContainer} from the given {@link CompoundTag} from a network packet
      *
-     * @apiNote Must be called via {@link CamoContainerHelper#readFromNetwork(CompoundTag)}
+     * @apiNote Must be called via {@link CamoContainerHelper#readFromNetwork(Optional)}
      */
     @ApiStatus.OverrideOnly
-    protected abstract T readFromNetwork(CompoundTag tag);
+    protected abstract T readFromNetwork(ValueInput valueInput);
 
     /**
      * Construct a {@link CamoContainer} from the given {@link ItemStack} and consume the resources. Must take

@@ -202,11 +202,11 @@ public final class FramingSawRecipeCategory implements IRecipeCategory<FramingSa
 
         if (FramingSawRecipeCache.get(true).containsAdditive(input.getItem()))
         {
-            graphics.pose().pushPose();
-            graphics.pose().scale(WARNING_SCALE, WARNING_SCALE, 1F);
-            graphics.pose().translate(WARNING_X * (1F / WARNING_SCALE), WARNING_Y * (1F / WARNING_SCALE), 0);
+            graphics.pose().pushMatrix();
+            graphics.pose().scale(WARNING_SCALE, WARNING_SCALE);
+            graphics.pose().translate(WARNING_X * (1F / WARNING_SCALE), WARNING_Y * (1F / WARNING_SCALE));
             warning.draw(graphics);
-            graphics.pose().popPose();
+            graphics.pose().popMatrix();
         }
     }
 

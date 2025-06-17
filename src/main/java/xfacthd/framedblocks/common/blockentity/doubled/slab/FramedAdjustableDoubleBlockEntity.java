@@ -2,14 +2,14 @@ package xfacthd.framedblocks.common.blockentity.doubled.slab;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -151,18 +151,18 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
     }
 
     @Override
-    protected void writeToDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
+    protected void writeToDataPacket(ValueOutput valueOutput)
     {
-        super.writeToDataPacket(nbt, lookupProvider);
-        nbt.putInt("first_height", firstHeight);
+        super.writeToDataPacket(valueOutput);
+        valueOutput.putInt("first_height", firstHeight);
     }
 
     @Override
-    protected boolean readFromDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
+    protected boolean readFromDataPacket(ValueInput valueInput)
     {
-        boolean needUpdate = super.readFromDataPacket(nbt, lookupProvider);
+        boolean needUpdate = super.readFromDataPacket(valueInput);
 
-        int height = nbt.getIntOr("first_height", CENTER_PART_HEIGHT);
+        int height = valueInput.getIntOr("first_height", CENTER_PART_HEIGHT);
         if (height != firstHeight)
         {
             firstHeight = height;
@@ -175,18 +175,17 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider)
+    protected void writeUpdateTag(ValueOutput valueOutput)
     {
-        CompoundTag nbt = super.getUpdateTag(provider);
-        nbt.putInt("first_height", firstHeight);
-        return nbt;
+        super.writeUpdateTag(valueOutput);
+        valueOutput.putInt("first_height", firstHeight);
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag nbt, HolderLookup.Provider provider)
+    public void handleUpdateTag(ValueInput valueInput)
     {
-        super.handleUpdateTag(nbt, provider);
-        firstHeight = nbt.getIntOr("first_height", CENTER_PART_HEIGHT);
+        super.handleUpdateTag(valueInput);
+        firstHeight = valueInput.getIntOr("first_height", CENTER_PART_HEIGHT);
     }
 
     @Override
@@ -205,10 +204,10 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
     }
 
     @Override
-    public void removeComponentsFromTag(CompoundTag tag)
+    public void removeComponentsFromTag(ValueOutput valueOutput)
     {
-        super.removeComponentsFromTag(tag);
-        tag.remove("first_height");
+        super.removeComponentsFromTag(valueOutput);
+        valueOutput.discard("first_height");
     }
 
     @Override
@@ -228,17 +227,17 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput valueOutput)
     {
-        super.saveAdditional(nbt, provider);
-        nbt.putInt("first_height", firstHeight);
+        super.saveAdditional(valueOutput);
+        valueOutput.putInt("first_height", firstHeight);
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput valueInput)
     {
-        super.loadAdditional(nbt, provider);
-        firstHeight = nbt.getIntOr("first_height", CENTER_PART_HEIGHT);
+        super.loadAdditional(valueInput);
+        firstHeight = valueInput.getIntOr("first_height", CENTER_PART_HEIGHT);
     }
 
 

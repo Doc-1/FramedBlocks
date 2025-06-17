@@ -1,6 +1,6 @@
 package xfacthd.framedblocks.client.model.geometry.interactive;
 
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -43,7 +43,7 @@ public class FramedMarkedPressurePlateGeometry extends FramedPressurePlateGeomet
         AbstractFramedBlockData fbData = data.get(AbstractFramedBlockData.PROPERTY);
         if (fbData != null && !fbData.unwrap(state).getCamoContent().isEmpty())
         {
-            generator.generate(OVERLAY_CULL_FACES, frameSprite, Utils::isY, RenderType.cutout(), frameShaderState);
+            generator.generate(OVERLAY_CULL_FACES, frameSprite, Utils::isY, ChunkSectionLayer.CUTOUT, frameShaderState);
         }
     }
 

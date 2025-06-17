@@ -1,7 +1,6 @@
 package xfacthd.framedblocks.api.camo;
 
 import com.google.common.base.Preconditions;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
@@ -9,8 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -22,12 +19,16 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import xfacthd.framedblocks.api.FramedBlocksAPI;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.internal.InternalAPI;
 import xfacthd.framedblocks.api.util.network.ValidatingDecoder;
+
+import java.util.Optional;
 
 public final class CamoContainerHelper
 {
@@ -40,65 +41,38 @@ public final class CamoContainerHelper
             .apply(ValidatingDecoder.of(CamoContainerHelper::validateFromNetwork));
 
     /**
-     * Save the given {@link CamoContainer} to a {@link CompoundTag} for saving to disk
-     */
-    public static Tag writeToDisk(CamoContainer<?, ?> camo)
-    {
-        return CODEC.encodeStart(NbtOps.INSTANCE, camo).result().orElseGet(CompoundTag::new);
-    }
-
-    /**
-     * Reconstruct a {@link CamoContainer} from the given {@link CompoundTag} from disk
-     */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static CamoContainer<?, ?> readFromDisk(CompoundTag tag)
-    {
-        if (tag.isEmpty())
-        {
-            return EmptyCamoContainer.EMPTY;
-        }
-
-        return CODEC.decode(NbtOps.INSTANCE, tag)
-                .ifError(err -> LOGGER.error(err.message()))
-                .result()
-                .map(Pair::getFirst)
-                .orElse((CamoContainer) EmptyCamoContainer.EMPTY);
-    }
-
-    /**
      * Save the given the {@link CamoContainer} to a {@link CompoundTag} for sync over the network
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static CompoundTag writeToNetwork(CamoContainer<?, ?> camo)
+    public static void writeToNetwork(ValueOutput valueOutput, CamoContainer<?, ?> camo)
     {
         CamoContainerFactory factory = camo.getFactory();
         int id = REGISTRY.getId(factory);
         Preconditions.checkState(id != -1, "Attempted to get sync ID for unregistered CamoContainerFactory");
 
-        CompoundTag tag = new CompoundTag();
-        tag.putInt("type", REGISTRY.getId(factory));
-        factory.writeToNetwork(tag, camo);
-        return tag;
+        valueOutput.putInt("type", REGISTRY.getId(factory));
+        factory.writeToNetwork(valueOutput, camo);
     }
 
     /**
      * Reconstruct the {@link CamoContainer} from the given {@link CompoundTag} from a network packet
      */
-    public static CamoContainer<?, ?> readFromNetwork(CompoundTag tag)
+    public static CamoContainer<?, ?> readFromNetwork(Optional<ValueInput> optValueInput)
     {
-        if (tag.isEmpty())
+        if (optValueInput.isEmpty())
         {
             return EmptyCamoContainer.EMPTY;
         }
 
-        int id = tag.getIntOr("type", -1);
+        ValueInput valueInput = optValueInput.get();
+        int id = valueInput.getIntOr("type", -1);
         CamoContainerFactory<?> factory = REGISTRY.byId(id);
         if (factory == null)
         {
             LOGGER.error("Received unknown CamoContainer with ID {} from network, dropping!", id);
             return EmptyCamoContainer.EMPTY;
         }
-        return validateFromNetwork(factory.readFromNetwork(tag));
+        return validateFromNetwork(factory.readFromNetwork(valueInput));
     }
 
     private static CamoContainer<?, ?> validateFromNetwork(CamoContainer<?, ?> container)

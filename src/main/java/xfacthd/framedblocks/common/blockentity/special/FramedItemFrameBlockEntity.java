@@ -2,10 +2,7 @@ package xfacthd.framedblocks.common.blockentity.special;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -21,6 +18,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
@@ -217,66 +216,65 @@ public class FramedItemFrameBlockEntity extends FramedBlockEntity
 
     // Network
 
-    private void readFromNetwork(CompoundTag tag, HolderLookup.Provider provider)
+    private void readFromNetwork(ValueInput valueInput)
     {
-        heldItem = tag.read(ITEM_NBT_KEY, ItemStack.OPTIONAL_CODEC, provider.createSerializationContext(NbtOps.INSTANCE)).orElse(ItemStack.EMPTY);
-        rotation = tag.getByteOr("rotation", (byte) 0);
+        heldItem = valueInput.read(ITEM_NBT_KEY, ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
+        rotation = valueInput.getByteOr("rotation", (byte) 0);
     }
 
-    private void writeToNetwork(CompoundTag tag, HolderLookup.Provider provider)
+    private void writeToNetwork(ValueOutput valueOutput)
     {
-        tag.store(ITEM_NBT_KEY, ItemStack.OPTIONAL_CODEC, provider.createSerializationContext(NbtOps.INSTANCE), heldItem);
-        tag.putByte("rotation", (byte) rotation);
-    }
-
-    @Override
-    protected boolean readFromDataPacket(CompoundTag tag, HolderLookup.Provider lookupProvider)
-    {
-        readFromNetwork(tag, lookupProvider);
-        return super.readFromDataPacket(tag, lookupProvider);
+        valueOutput.store(ITEM_NBT_KEY, ItemStack.OPTIONAL_CODEC, heldItem);
+        valueOutput.putByte("rotation", (byte) rotation);
     }
 
     @Override
-    protected void writeToDataPacket(CompoundTag tag, HolderLookup.Provider lookupProvider)
+    protected boolean readFromDataPacket(ValueInput valueInput)
     {
-        super.writeToDataPacket(tag, lookupProvider);
-        writeToNetwork(tag, lookupProvider);
+        readFromNetwork(valueInput);
+        return super.readFromDataPacket(valueInput);
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider provider)
+    protected void writeToDataPacket(ValueOutput valueOutput)
     {
-        super.handleUpdateTag(tag, provider);
-        readFromNetwork(tag, provider);
+        super.writeToDataPacket(valueOutput);
+        writeToNetwork(valueOutput);
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider)
+    public void handleUpdateTag(ValueInput valueInput)
     {
-        CompoundTag tag = super.getUpdateTag(provider);
-        writeToNetwork(tag, provider);
-        return tag;
+        super.handleUpdateTag(valueInput);
+        readFromNetwork(valueInput);
+    }
+
+    @Override
+    protected void writeUpdateTag(ValueOutput valueOutput)
+    {
+        super.writeUpdateTag(valueOutput);
+        writeToNetwork(valueOutput);
     }
 
     // NBT
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput valueInput)
     {
-        super.loadAdditional(tag, provider);
+        super.loadAdditional(valueInput);
 
-        heldItem = tag.read(ITEM_NBT_KEY, ItemStack.OPTIONAL_CODEC, provider.createSerializationContext(NbtOps.INSTANCE)).orElse(ItemStack.EMPTY);
-        rotation = tag.getByteOr("rotation", (byte) 0);
-        mapTickOffset = tag.getIntOr("map_tick_offset", 0);
+        heldItem = valueInput.read(ITEM_NBT_KEY, ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
+        rotation = valueInput.getByteOr("rotation", (byte) 0);
+        mapTickOffset = valueInput.getIntOr("map_tick_offset", 0);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput valueInput)
     {
-        super.saveAdditional(tag, provider);
+        super.saveAdditional(valueInput);
 
-        tag.store(ITEM_NBT_KEY, ItemStack.OPTIONAL_CODEC, provider.createSerializationContext(NbtOps.INSTANCE), heldItem);
-        tag.putByte("rotation", (byte) rotation);
-        tag.putInt("map_tick_offset", mapTickOffset);
+        valueInput.store(ITEM_NBT_KEY, ItemStack.OPTIONAL_CODEC, heldItem);
+        valueInput.putByte("rotation", (byte) rotation);
+        valueInput.putInt("map_tick_offset", mapTickOffset);
     }
 }

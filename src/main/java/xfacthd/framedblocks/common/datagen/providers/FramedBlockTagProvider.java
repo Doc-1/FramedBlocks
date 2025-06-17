@@ -3,7 +3,7 @@ package xfacthd.framedblocks.common.datagen.providers;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.data.tags.TagAppender;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.tags.BlockTags;
@@ -26,9 +26,6 @@ public final class FramedBlockTagProvider extends BlockTagsProvider
     {
         super(output, lookupProvider, FramedConstants.MOD_ID);
     }
-
-    @Override
-    public String getName() { return super.getName() + ": " + FramedConstants.MOD_ID; }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -63,7 +60,7 @@ public final class FramedBlockTagProvider extends BlockTagsProvider
         tag(BlockTags.ENCHANTMENT_POWER_PROVIDER).add(FBContent.BLOCK_FRAMED_BOOKSHELF.value());
         tag(Tags.Blocks.BOOKSHELVES).add(FBContent.BLOCK_FRAMED_BOOKSHELF.value());
 
-        TagsProvider.TagAppender<Block> frameable = tag(Utils.FRAMEABLE).addTags(
+        tag(Utils.FRAMEABLE).addTags(
                 Tags.Blocks.GLASS_BLOCKS,
                 BlockTags.ICE,
                 BlockTags.LEAVES
@@ -78,33 +75,34 @@ public final class FramedBlockTagProvider extends BlockTagsProvider
                 Blocks.WAXED_OXIDIZED_COPPER_GRATE
         );
 
-        frameable.addOptional(Utils.rl("create", "oak_window"))
-                 .addOptional(Utils.rl("create", "spruce_window"))
-                 .addOptional(Utils.rl("create", "birch_window"))
-                 .addOptional(Utils.rl("create", "jungle_window"))
-                 .addOptional(Utils.rl("create", "acacia_window"))
-                 .addOptional(Utils.rl("create", "dark_oak_window"))
-                 .addOptional(Utils.rl("create", "crimson_window"))
-                 .addOptional(Utils.rl("create", "warped_window"))
-                 .addOptional(Utils.rl("create", "ornate_iron_window"))
-                 .addOptionalTag(Utils.rl("chipped", "glass"))
-                 .addOptionalTag(Utils.rl("chipped", "white_stained_glass"))
-                 .addOptionalTag(Utils.rl("chipped", "orange_stained_glass"))
-                 .addOptionalTag(Utils.rl("chipped", "magenta_stained_glass"))
-                 .addOptionalTag(Utils.rl("chipped", "light_blue_stained_glass"))
-                 .addOptionalTag(Utils.rl("chipped", "yellow_stained_glass"))
-                 .addOptionalTag(Utils.rl("chipped", "lime_stained_glass"))
-                 .addOptionalTag(Utils.rl("chipped", "pink_stained_glass"))
-                 .addOptionalTag(Utils.rl("chipped", "gray_stained_glass"))
-                 .addOptionalTag(Utils.rl("chipped", "light_gray_stained_glass"))
-                 .addOptionalTag(Utils.rl("chipped", "cyan_stained_glass"))
-                 .addOptionalTag(Utils.rl("chipped", "purple_stained_glass"))
-                 .addOptionalTag(Utils.rl("chipped", "blue_stained_glass"))
-                 .addOptionalTag(Utils.rl("chipped", "brown_stained_glass"))
-                 .addOptionalTag(Utils.rl("chipped", "green_stained_glass"))
-                 .addOptionalTag(Utils.rl("chipped", "red_stained_glass"))
-                 .addOptionalTag(Utils.rl("chipped", "black_stained_glass"))
-                 .addOptionalTag(Utils.rl("c", "hardened_glass"));
+        getOrCreateRawBuilder(Utils.FRAMEABLE)
+                .addOptionalElement(Utils.rl("create", "oak_window"))
+                .addOptionalElement(Utils.rl("create", "spruce_window"))
+                .addOptionalElement(Utils.rl("create", "birch_window"))
+                .addOptionalElement(Utils.rl("create", "jungle_window"))
+                .addOptionalElement(Utils.rl("create", "acacia_window"))
+                .addOptionalElement(Utils.rl("create", "dark_oak_window"))
+                .addOptionalElement(Utils.rl("create", "crimson_window"))
+                .addOptionalElement(Utils.rl("create", "warped_window"))
+                .addOptionalElement(Utils.rl("create", "ornate_iron_window"))
+                .addOptionalTag(Utils.rl("chipped", "glass"))
+                .addOptionalTag(Utils.rl("chipped", "white_stained_glass"))
+                .addOptionalTag(Utils.rl("chipped", "orange_stained_glass"))
+                .addOptionalTag(Utils.rl("chipped", "magenta_stained_glass"))
+                .addOptionalTag(Utils.rl("chipped", "light_blue_stained_glass"))
+                .addOptionalTag(Utils.rl("chipped", "yellow_stained_glass"))
+                .addOptionalTag(Utils.rl("chipped", "lime_stained_glass"))
+                .addOptionalTag(Utils.rl("chipped", "pink_stained_glass"))
+                .addOptionalTag(Utils.rl("chipped", "gray_stained_glass"))
+                .addOptionalTag(Utils.rl("chipped", "light_gray_stained_glass"))
+                .addOptionalTag(Utils.rl("chipped", "cyan_stained_glass"))
+                .addOptionalTag(Utils.rl("chipped", "purple_stained_glass"))
+                .addOptionalTag(Utils.rl("chipped", "blue_stained_glass"))
+                .addOptionalTag(Utils.rl("chipped", "brown_stained_glass"))
+                .addOptionalTag(Utils.rl("chipped", "green_stained_glass"))
+                .addOptionalTag(Utils.rl("chipped", "red_stained_glass"))
+                .addOptionalTag(Utils.rl("chipped", "black_stained_glass"))
+                .addOptionalTag(Utils.rl("c", "hardened_glass"));
 
         tag(Utils.BLOCK_BLACKLIST).add(
                 Blocks.PISTON,
@@ -117,7 +115,7 @@ public final class FramedBlockTagProvider extends BlockTagsProvider
         tag(Utils.NON_OCCLUDEABLE)
                 .addTag(BlockTags.LEAVES);
 
-        IntrinsicTagAppender<Block> fullGroupTag = tag(Utils.GROUP_FULL_CUBE);
+        TagAppender<Block, Block> fullGroupTag = tag(Utils.GROUP_FULL_CUBE);
         FBContent.getRegisteredBlocks()
                 .stream()
                 .map(Holder::value)
@@ -144,7 +142,7 @@ public final class FramedBlockTagProvider extends BlockTagsProvider
         pickaxeBlocks.add(FBContent.BLOCK_FRAMING_SAW.value());
         pickaxeBlocks.add(FBContent.BLOCK_POWERED_FRAMING_SAW.value());
 
-        IntrinsicTagAppender<Block> axeTag = tag(BlockTags.MINEABLE_WITH_AXE);
+        TagAppender<Block, Block> axeTag = tag(BlockTags.MINEABLE_WITH_AXE);
         FBContent.getRegisteredBlocks()
                 .stream()
                 .map(Holder::value)
@@ -156,5 +154,11 @@ public final class FramedBlockTagProvider extends BlockTagsProvider
         tag(BlockTags.MINEABLE_WITH_PICKAXE).add(pickaxeBlocks.toArray(Block[]::new));
 
         tag(BlockTags.create(Utils.rl("diagonalwindows", "non_diagonal_panes"))).add(FBContent.BLOCK_FRAMED_BARS.value());
+    }
+
+    @Override
+    public String getName()
+    {
+        return super.getName() + ": " + FramedConstants.MOD_ID;
     }
 }

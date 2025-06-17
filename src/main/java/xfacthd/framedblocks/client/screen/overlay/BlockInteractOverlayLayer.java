@@ -2,15 +2,15 @@ package xfacthd.framedblocks.client.screen.overlay;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.List;
 
-public final class BlockInteractOverlayLayer implements LayeredDraw.Layer
+public final class BlockInteractOverlayLayer implements GuiLayer
 {
     public static final ResourceLocation LISTENER_ID = Utils.rl("block_interact_overlay");
     private static final List<BlockInteractOverlay> OVERLAYS = List.of(

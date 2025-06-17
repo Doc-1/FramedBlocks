@@ -87,6 +87,7 @@ import xfacthd.framedblocks.client.render.special.CollapsibleBlockIndicatorRende
 import xfacthd.framedblocks.client.render.special.GhostBlockRenderer;
 import xfacthd.framedblocks.client.render.util.AnimationSplitterSource;
 import xfacthd.framedblocks.client.render.util.FramedRenderPipelines;
+import xfacthd.framedblocks.client.screen.FramedSignScreen;
 import xfacthd.framedblocks.client.screen.FramedStorageScreen;
 import xfacthd.framedblocks.client.screen.FramingSawScreen;
 import xfacthd.framedblocks.client.screen.PoweredFramingSawScreen;
@@ -145,6 +146,7 @@ public final class FBClient
         modBus.addListener(FBClient::onRegisterParticleProviders);
         modBus.addListener(FBClient::onRegisterClientExtensions);
         modBus.addListener(FBClient::onRegisterClientTooltipComponentFactories);
+        modBus.addListener(FBClient::onRegisterPictureInPictureRenderers);
         modBus.addListener(BlockOutlineRenderers::onRegisterOutlineRenderers);
         modBus.addListener(GhostRenderBehaviours::onRegisterGhostRenderBehaviours);
         modBus.addListener(FramedRenderPipelines::onRegisterRenderPipelines);
@@ -551,6 +553,12 @@ public final class FBClient
     private static void onRegisterClientTooltipComponentFactories(RegisterClientTooltipComponentFactoriesEvent event)
     {
         event.register(BlockPreviewTooltipComponent.Component.class, BlockPreviewTooltipComponent::new);
+    }
+
+    private static void onRegisterPictureInPictureRenderers(RegisterPictureInPictureRenderersEvent event)
+    {
+        event.register(FramedSignScreen.SignBlockPictureInPictureRenderer::new);
+        event.register(BlockPreviewTooltipComponent.BlockPreviewPictureInPictureRenderer::new);
     }
 
 

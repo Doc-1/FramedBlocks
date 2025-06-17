@@ -2,10 +2,9 @@ package xfacthd.framedblocks.common.datagen.providers;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.data.ItemTagsProvider;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.api.util.Utils;
@@ -14,13 +13,9 @@ import java.util.concurrent.CompletableFuture;
 
 public final class FramedItemTagProvider extends ItemTagsProvider
 {
-    public FramedItemTagProvider(
-            PackOutput output,
-            CompletableFuture<HolderLookup.Provider> lookupProvider,
-            CompletableFuture<TagLookup<Block>> blockTagProvider
-    )
+    public FramedItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider)
     {
-        super(output, lookupProvider, blockTagProvider, FramedConstants.MOD_ID);
+        super(output, lookupProvider, FramedConstants.MOD_ID);
     }
 
     @Override
@@ -50,6 +45,8 @@ public final class FramedItemTagProvider extends ItemTagsProvider
                 FBContent.ITEM_FRAMED_SCREWDRIVER.value(),
                 FBContent.ITEM_FRAMED_KEY.value()
         );
-        tag(Utils.COMPLEX_WRENCH).addOptional(Utils.rl("mekanism", "configurator"));
+
+        getOrCreateRawBuilder(Utils.COMPLEX_WRENCH)
+                .addOptionalElement(Utils.rl("mekanism", "configurator"));
     }
 }

@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.ARGB;
@@ -24,9 +25,9 @@ public final class RenderUtils
 {
     private static final Direction[] DIRECTIONS = Direction.values();
 
-    public static RenderType getEntityRenderType(RenderType blockRenderType)
+    public static RenderType getEntityRenderType(ChunkSectionLayer blockRenderType)
     {
-        if (blockRenderType == RenderType.solid())
+        if (blockRenderType == ChunkSectionLayer.SOLID)
         {
             return Sheets.solidBlockSheet();
         }

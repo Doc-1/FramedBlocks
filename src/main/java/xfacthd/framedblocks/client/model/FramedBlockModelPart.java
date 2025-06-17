@@ -1,7 +1,7 @@
 package xfacthd.framedblocks.client.model;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.util.TriState;
@@ -17,7 +17,7 @@ import java.util.List;
  * @param quads            The quad lists this part is made up of
  * @param ambientOcclusion Whether AO should be used
  * @param particleIcon     The particle texture used by this part
- * @param renderType       The {@link RenderType} this part should render with
+ * @param chunkLayer       The {@link ChunkSectionLayer} this part should render with
  * @param shaderState      The {@link BlockState} the framed block or part thereof is pretending to be, for use by shader mods
  */
 @ApiStatus.Internal
@@ -25,7 +25,7 @@ public record FramedBlockModelPart(
         List<BakedQuad>[] quads,
         TriState ambientOcclusion,
         TextureAtlasSprite particleIcon,
-        RenderType renderType,
+        ChunkSectionLayer chunkLayer,
         @Nullable BlockState shaderState
 ) implements ExtendedBlockModelPart
 {
@@ -42,9 +42,9 @@ public record FramedBlockModelPart(
     }
 
     @Override
-    public RenderType getRenderType(BlockState state)
+    public ChunkSectionLayer getRenderType(BlockState state)
     {
-        return renderType;
+        return chunkLayer;
     }
 
     @Nullable

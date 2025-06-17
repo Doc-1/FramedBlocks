@@ -1,6 +1,6 @@
 package xfacthd.framedblocks.api.model.geometry;
 
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,12 +19,12 @@ public interface OverlayPartGenerator
      *
      * @param cullFaces    The cull faces whose quads shall be operated on
      * @param sprite       The texture to be applied to the generated overlay quads
-     * @param renderType   The {@link RenderType} the generated part should render in
+     * @param chunkLayer   The {@link ChunkSectionLayer} the generated part should render in
      * @param shaderState  The {@link BlockState} that's visually closest to the generated overlay or {@code null} if no dedicated state should be used, for use by shader mods
      */
-    default void generate(@Nullable Direction[] cullFaces, TextureAtlasSprite sprite, RenderType renderType, @Nullable BlockState shaderState)
+    default void generate(@Nullable Direction[] cullFaces, TextureAtlasSprite sprite, ChunkSectionLayer chunkLayer, @Nullable BlockState shaderState)
     {
-        generate(cullFaces, dir -> sprite, sprite, dir -> true, renderType, shaderState);
+        generate(cullFaces, dir -> sprite, sprite, dir -> true, chunkLayer, shaderState);
     }
 
     /**
@@ -34,12 +34,18 @@ public interface OverlayPartGenerator
      * @param cullFaces    The cull faces whose quads shall be operated on
      * @param sprite       The texture to be applied to the generated overlay quads
      * @param normalFilter A predicate to filter the quads by their nearest normal direction
-     * @param renderType   The {@link RenderType} the generated part should render in
+     * @param chunkLayer   The {@link ChunkSectionLayer} the generated part should render in
      * @param shaderState  The {@link BlockState} that's visually closest to the generated overlay or {@code null} if no dedicated state should be used, for use by shader mods
      */
-    default void generate(@Nullable Direction[] cullFaces, TextureAtlasSprite sprite, Predicate<Direction> normalFilter, RenderType renderType, @Nullable BlockState shaderState)
+    default void generate(
+            @Nullable Direction[] cullFaces,
+            TextureAtlasSprite sprite,
+            Predicate<Direction> normalFilter,
+            ChunkSectionLayer chunkLayer,
+            @Nullable BlockState shaderState
+    )
     {
-        generate(cullFaces, dir -> sprite, sprite, normalFilter, renderType, shaderState);
+        generate(cullFaces, dir -> sprite, sprite, normalFilter, chunkLayer, shaderState);
     }
 
     /**
@@ -49,18 +55,18 @@ public interface OverlayPartGenerator
      * @param cullFaces     The cull faces whose quads shall be operated on
      * @param spriteGetter  A function returning the texture to be applied to the overlay quad generated from a quad with the given nearest normal direction
      * @param primarySprite The primary sprite, to be used as the part's particle sprite
-     * @param renderType    The {@link RenderType} the generated part should render in
+     * @param chunkLayer    The {@link ChunkSectionLayer} the generated part should render in
      * @param shaderState   The {@link BlockState} that's visually closest to the generated overlay or {@code null} if no dedicated state should be used, for use by shader mods
      */
     default void generate(
             @Nullable Direction[] cullFaces,
             SpriteGetter spriteGetter,
             TextureAtlasSprite primarySprite,
-            RenderType renderType,
+            ChunkSectionLayer chunkLayer,
             @Nullable BlockState shaderState
     )
     {
-        generate(cullFaces, spriteGetter, primarySprite, dir -> true, renderType, shaderState);
+        generate(cullFaces, spriteGetter, primarySprite, dir -> true, chunkLayer, shaderState);
     }
 
     /**
@@ -71,7 +77,7 @@ public interface OverlayPartGenerator
      * @param spriteGetter  A function returning the texture to be applied to the overlay quad generated from a quad with the given nearest normal direction
      * @param primarySprite The primary sprite, to be used as the part's particle sprite
      * @param normalFilter  A predicate to filter the quads by their nearest normal direction
-     * @param renderType    The {@link RenderType} the generated part should render in
+     * @param chunkLayer    The {@link ChunkSectionLayer} the generated part should render in
      * @param shaderState   The {@link BlockState} that's visually closest to the generated overlay or {@code null} if no dedicated state should be used, for use by shader mods
      */
     void generate(
@@ -79,7 +85,7 @@ public interface OverlayPartGenerator
             SpriteGetter spriteGetter,
             TextureAtlasSprite primarySprite,
             Predicate<Direction> normalFilter,
-            RenderType renderType,
+            ChunkSectionLayer chunkLayer,
             @Nullable BlockState shaderState
     );
 

@@ -4,27 +4,37 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
+import net.minecraft.client.gui.render.state.pip.PictureInPictureRenderState;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.ARGB;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
-import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
+import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
+import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.render.Quaternions;
+import xfacthd.framedblocks.api.render.RenderUtils;
+import xfacthd.framedblocks.api.util.SingleBlockFakeLevel;
 import xfacthd.framedblocks.common.block.sign.AbstractFramedHangingSignBlock;
 import xfacthd.framedblocks.common.block.sign.AbstractFramedSignBlock;
 import xfacthd.framedblocks.common.data.BlockType;
@@ -39,9 +49,10 @@ public class FramedSignScreen extends Screen
 {
     private static final Component TITLE_NORMAL = Component.translatable("sign.edit");
     private static final Component TITLE_HANGING = Component.translatable("hanging_sign.edit");
-    private static final SignConfig CFG_STANDING = new SignConfig(90F, 56F, 95F, -1F, 1F, 10);
-    private static final SignConfig CFG_WALL = new SignConfig(90F, 56F, 95F, 30F, 1F, 10);
-    private static final SignConfig CFG_HANGING = new SignConfig(100F, 30F, 75F, 27F, 1F, 9);
+    private static final SignConfig CFG_STANDING = new SignConfig(65, 105, 95F, 89, 10);
+    private static final SignConfig CFG_WALL = new SignConfig(60, 110, 95F, 120, 10);
+    private static final SignConfig CFG_HANGING = new SignConfig(75, 75, 75F, 127, 9);
+    private static final RandomSource RANDOM = RandomSource.create();
 
     private final AbstractFramedSignBlock signBlock;
     private final FramedSignBlockEntity sign;
@@ -161,11 +172,10 @@ public class FramedSignScreen extends Screen
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks)
     {
         super.render(graphics, mouseX, mouseY, partialTicks);
-
-        Lighting.setupForFlatItems();
-        graphics.drawCenteredString(font, title, width / 2, 40, 0xFFFFFF);
-        drawSign(graphics);
-        Lighting.setupFor3DItems();
+        graphics.drawCenteredString(font, title, width / 2, 40, 0xFFFFFFFF);
+        drawSignBlock(graphics);
+        drawLines(graphics, lines);
+        drawCursor(graphics, lines);
     }
 
     @Override
@@ -174,71 +184,25 @@ public class FramedSignScreen extends Screen
         renderTransparentBackground(graphics);
     }
 
-    private void drawSign(GuiGraphics graphics)
-    {
-        graphics.pose().pushPose();
-        graphics.pose().translate(width / 2F, signConfig.baseYOff, 150F);
-        graphics.pose().pushPose();
-        Lighting.setupLevel();
-        drawSignBlock(graphics);
-        Lighting.setupForFlatItems();
-        graphics.pose().popPose();
-        drawText(graphics);
-        graphics.pose().popPose();
-    }
-
     private void drawSignBlock(GuiGraphics graphics)
     {
-        BlockState state = sign.getBlockState();
-
-        PoseStack poseStack = graphics.pose();
-        poseStack.translate(0, signConfig.addYOff, 0);
-        poseStack.mulPose(Axis.YN.rotationDegrees(signBlock.getYRotationDegrees(state)));
-        poseStack.mulPose(Quaternions.ZP_180);
-        poseStack.scale(signConfig.signScale, signConfig.signScale, signConfig.signScale);
-        poseStack.translate(-.5, -.25, -.5);
-
-        //noinspection ConstantConditions
-        BlockRenderDispatcher renderer = minecraft.getBlockRenderer();
-        graphics.drawSpecial(buffer ->
-        {
-            int color = minecraft.getBlockColors().getColor(state, minecraft.level, sign.getBlockPos(), 0);
-            float red = ARGB.red(color) / 255F;
-            float green = ARGB.green(color) / 255F;
-            float blue = ARGB.blue(color) / 255F;
-
-            renderer.getModelRenderer().renderModel(
-                    poseStack.last(),
-                    buffer,
-                    renderer.getBlockModel(state),
-                    red, green, blue,
-                    LightTexture.FULL_BRIGHT,
-                    OverlayTexture.NO_OVERLAY,
-                    Objects.requireNonNull(sign.getLevel()),
-                    sign.getBlockPos(),
-                    state
-            );
-
-        });
+        int x0 = width / 2 - 50;
+        int y0 = signConfig.pipYOff;
+        int x1 = x0 + 100;
+        int y1 = y0 + signConfig.pipHeight;
+        graphics.submitPictureInPictureRenderState(SignBlockPictureInPictureRenderState.create(
+                signBlock, sign, x0, y0, x1, y1, signConfig.signScale, graphics.peekScissorStack()
+        ));
     }
 
-    private void drawText(GuiGraphics graphics)
-    {
-        graphics.pose().translate(0F, signConfig.textYOff, 0F);
-
-        //noinspection ConstantConditions
-        MultiBufferSource.BufferSource buffer = minecraft.renderBuffers().bufferSource();
-
-        drawLines(graphics.pose().last().pose(), buffer, lines);
-        drawCursor(graphics, buffer, lines);
-    }
-
-    private void drawLines(Matrix4f matrix, MultiBufferSource.BufferSource buffer, String[] lines)
+    private void drawLines(GuiGraphics graphics, String[] lines)
     {
         int color = text.hasGlowingText() ? text.getColor().getTextColor() : SignRenderer.getDarkColor(text);
         int lineHeight = signConfig.lineHeight;
         int centerY = 4 * lineHeight / 2;
 
+        int baseX = width / 2;
+        int baseY = signConfig.textYOff;
         for (int line = 0; line < lines.length; line++)
         {
             String text = lines[line];
@@ -249,23 +213,22 @@ public class FramedSignScreen extends Screen
                     text = font.bidirectionalShaping(text);
                 }
 
-                float textX = -font.width(text) / 2F;
-                font.drawInBatch(text, textX, line * lineHeight - centerY, color, false, matrix, buffer, Font.DisplayMode.NORMAL, 0, 0xF000F0);
+                int textX = baseX + -font.width(text) / 2;
+                int textY = baseY + line * lineHeight - centerY;
+                graphics.drawString(font, text, textX, textY, color, false);
             }
         }
-
-        buffer.endBatch();
     }
 
-    private void drawCursor(GuiGraphics graphics, MultiBufferSource.BufferSource buffer, String[] lines)
+    private void drawCursor(GuiGraphics graphics, String[] lines)
     {
-        Matrix4f matrix = graphics.pose().last().pose();
         int color = text.hasGlowingText() ? text.getColor().getTextColor() : SignRenderer.getDarkColor(text);
         boolean blink = blinkCounter / 6 % 2 == 0;
         int dir = font.isBidirectional() ? -1 : 1;
         int lineHeight = signConfig.lineHeight;
+        int baseX = width / 2;
         int centerY = 4 * lineHeight / 2;
-        int y = currLine * lineHeight - centerY;
+        int y = signConfig.textYOff + currLine * lineHeight - centerY;
 
         for (int i = 0; i < lines.length; ++i)
         {
@@ -274,7 +237,7 @@ public class FramedSignScreen extends Screen
             {
                 int hw = font.width(line) / 2;
                 int selectionEnd = font.width(line.substring(0, Math.max(Math.min(inputUtil.getCursorPos(), line.length()), 0)));
-                int cursorX = (selectionEnd - hw) * dir;
+                int cursorX = baseX + (selectionEnd - hw) * dir;
 
                 if (blink)
                 {
@@ -284,8 +247,7 @@ public class FramedSignScreen extends Screen
                     }
                     else
                     {
-                        font.drawInBatch("_", cursorX, y, color, false, matrix, buffer, Font.DisplayMode.NORMAL, 0, 0xF000F0);
-                        buffer.endBatch();
+                        graphics.drawString(font, "_", cursorX, y, color, false);
                     }
                 }
 
@@ -293,14 +255,118 @@ public class FramedSignScreen extends Screen
                 {
                     int x1 = (font.width(line.substring(0, inputUtil.getSelectionPos())) - hw) * dir;
                     int x2 = (font.width(line.substring(0, inputUtil.getCursorPos()   )) - hw) * dir;
-                    int xStart = Math.min(x1, x2);
-                    int xEnd = Math.max(x1, x2);
+                    int xStart = baseX + Math.min(x1, x2);
+                    int xEnd = baseX + Math.max(x1, x2);
 
-                    graphics.fill(RenderType.guiTextHighlight(), xStart, y, xEnd, y + lineHeight, 0xFF0000FF);
+                    graphics.fill(RenderPipelines.GUI_TEXT_HIGHLIGHT, xStart, y, xEnd, y + lineHeight, 0xFF0000FF);
                 }
             }
         }
     }
 
-    private record SignConfig(float baseYOff, float addYOff, float signScale, float textYOff, float textScale, int lineHeight) { }
+    private record SignConfig(int pipYOff, int pipHeight, float signScale, int textYOff, int lineHeight) { }
+
+    public record SignBlockPictureInPictureRenderState(
+            AbstractFramedSignBlock signBlock,
+            BlockState signState,
+            BlockPos signPos,
+            ModelData signBlockData,
+            int x0,
+            int y0,
+            int x1,
+            int y1,
+            float scale,
+            @Nullable ScreenRectangle scissorArea,
+            @Nullable ScreenRectangle bounds
+    ) implements PictureInPictureRenderState
+    {
+        public static SignBlockPictureInPictureRenderState create(
+                AbstractFramedSignBlock signBlock,
+                FramedSignBlockEntity sign,
+                int x0,
+                int y0,
+                int x1,
+                int y1,
+                float scale,
+                @Nullable ScreenRectangle scissorArea
+        )
+        {
+            BlockState state = sign.getBlockState();
+            BlockPos pos = sign.getBlockPos();
+            ModelData modelData = sign.getModelData(false);
+            ScreenRectangle bounds = PictureInPictureRenderState.getBounds(x0, y0, x1, y1, scissorArea);
+            return new SignBlockPictureInPictureRenderState(signBlock, state, pos, modelData, x0, y0, x1, y1, scale, scissorArea, bounds);
+        }
+    }
+
+    public static final class SignBlockPictureInPictureRenderer extends PictureInPictureRenderer<SignBlockPictureInPictureRenderState>
+    {
+        @Nullable
+        private BlockState lastSignState;
+        private BlockPos lastSignPos = BlockPos.ZERO;
+        private FramedBlockData lastBlockData = FramedBlockData.EMPTY;
+
+        public SignBlockPictureInPictureRenderer(MultiBufferSource.BufferSource bufferSource)
+        {
+            super(bufferSource);
+        }
+
+        @Override
+        protected void renderToTexture(SignBlockPictureInPictureRenderState state, PoseStack poseStack)
+        {
+            poseStack.mulPose(Axis.YN.rotationDegrees(state.signBlock.getYRotationDegrees(state.signState)));
+            poseStack.mulPose(Quaternions.ZP_180);
+            poseStack.translate(-.5, 0, -.5);
+
+            Minecraft minecraft = Minecraft.getInstance();
+            Level level = Objects.requireNonNull(minecraft.level);
+            BlockAndTintGetter fakeLevel = new SingleBlockFakeLevel(level, state.signPos, state.signPos, state.signState, null, state.signBlockData);
+
+            minecraft.gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_FLAT);
+            BlockRenderDispatcher renderer = minecraft.getBlockRenderer();
+            RANDOM.setSeed(42);
+            RenderUtils.renderModel(
+                    state.signState,
+                    fakeLevel,
+                    state.signPos,
+                    poseStack.last(),
+                    bufferSource,
+                    renderer.getBlockModel(state.signState),
+                    RANDOM,
+                    LightTexture.FULL_BRIGHT,
+                    OverlayTexture.NO_OVERLAY
+            );
+
+            lastSignState = state.signState;
+            lastSignPos = state.signPos;
+            lastBlockData = unpackData(state.signBlockData);
+        }
+
+        @Override
+        protected boolean textureIsReadyToBlit(SignBlockPictureInPictureRenderState renderState)
+        {
+            if (lastSignState != renderState.signState) return false;
+            if (!lastSignPos.equals(renderState.signPos)) return false;
+
+            return lastBlockData.equals(unpackData(renderState.signBlockData));
+        }
+
+        private static FramedBlockData unpackData(ModelData modelData)
+        {
+            AbstractFramedBlockData data = modelData.get(AbstractFramedBlockData.PROPERTY);
+            return data != null ? data.unwrap(false) : FramedBlockData.EMPTY;
+        }
+
+        @Override
+        protected String getTextureLabel()
+        {
+            return "framedblocks sign";
+        }
+
+        @Override
+        public Class<SignBlockPictureInPictureRenderState> getRenderStateClass()
+        {
+            return SignBlockPictureInPictureRenderState.class;
+        }
+    }
 }

@@ -1,15 +1,15 @@
 package xfacthd.framedblocks.common.blockentity.special;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
@@ -64,39 +64,38 @@ public class FramedTankBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider)
+    protected void writeUpdateTag(ValueOutput valueOutput)
     {
-        CompoundTag tag = super.getUpdateTag(provider);
-        fluidHandler.save(tag, provider);
-        return tag;
+        super.writeUpdateTag(valueOutput);
+        fluidHandler.serialize(valueOutput);
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag nbt, HolderLookup.Provider provider)
+    public void handleUpdateTag(ValueInput valueInput)
     {
-        super.handleUpdateTag(nbt, provider);
-        fluidHandler.load(nbt, provider);
+        super.handleUpdateTag(valueInput);
+        fluidHandler.deserialize(valueInput);
     }
 
     @Override
-    protected void writeToDataPacket(CompoundTag nbt, HolderLookup.Provider provider)
+    protected void writeToDataPacket(ValueOutput valueOutput)
     {
-        super.writeToDataPacket(nbt, provider);
-        fluidHandler.save(nbt, provider);
+        super.writeToDataPacket(valueOutput);
+        fluidHandler.serialize(valueOutput);
     }
 
     @Override
-    protected boolean readFromDataPacket(CompoundTag nbt, HolderLookup.Provider provider)
+    protected boolean readFromDataPacket(ValueInput valueInput)
     {
-        fluidHandler.load(nbt, provider);
-        return super.readFromDataPacket(nbt, provider);
+        fluidHandler.deserialize(valueInput);
+        return super.readFromDataPacket(valueInput);
     }
 
     @Override
-    public void removeComponentsFromTag(CompoundTag tag)
+    public void removeComponentsFromTag(ValueOutput valueOutput)
     {
-        super.removeComponentsFromTag(tag);
-        tag.remove(TankFluidHandler.FLUID_NBT_KEY);
+        super.removeComponentsFromTag(valueOutput);
+        valueOutput.discard(TankFluidHandler.FLUID_NBT_KEY);
     }
 
     @Override
@@ -120,16 +119,16 @@ public class FramedTankBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput valueInput)
     {
-        super.loadAdditional(nbt, provider);
-        fluidHandler.load(nbt, provider);
+        super.loadAdditional(valueInput);
+        fluidHandler.deserialize(valueInput);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput valueOutput)
     {
-        super.saveAdditional(nbt, provider);
-        fluidHandler.save(nbt, provider);
+        super.saveAdditional(valueOutput);
+        fluidHandler.serialize(valueOutput);
     }
 }

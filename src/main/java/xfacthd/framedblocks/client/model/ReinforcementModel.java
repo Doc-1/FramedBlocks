@@ -1,8 +1,8 @@
 package xfacthd.framedblocks.client.model;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.resources.model.QuadCollection;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -49,7 +49,7 @@ public final class ReinforcementModel
                     quadMap,
                     ambientOcclusion,
                     baseModel.particleIcon(),
-                    RenderType.cutout(),
+                    ChunkSectionLayer.CUTOUT,
                     SHADER_STATE
             );
         }
@@ -59,7 +59,7 @@ public final class ReinforcementModel
     public static void reload(StandaloneModelLoader.BakedModels models)
     {
         QuadCollection quads = Objects.requireNonNull(models.get(MODEL_KEY));
-        baseModel = new SimpleModelWrapper(quads, true, quads.getAll().getFirst().sprite(), RenderType.cutout());
+        baseModel = new SimpleModelWrapper(quads, true, quads.getAll().getFirst().sprite(), ChunkSectionLayer.CUTOUT);
     }
 
 

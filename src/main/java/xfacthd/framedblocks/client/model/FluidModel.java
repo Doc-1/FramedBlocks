@@ -3,11 +3,11 @@ package xfacthd.framedblocks.client.model;
 import com.google.common.base.Preconditions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
 import net.minecraft.client.renderer.block.model.SingleVariant;
 import net.minecraft.client.renderer.block.model.TextureSlots;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BlockModelRotation;
@@ -101,9 +101,9 @@ public final class FluidModel
                 bareModel.getTopAdditionalProperties()
         );
         Preconditions.checkNotNull(fluidQuads, "Failed to bake fluid model for fluid %s", fluid);
-        RenderType layer = ItemBlockRenderTypes.getRenderLayer(fluid.defaultFluidState());
+        ChunkSectionLayer chunkLayer = ItemBlockRenderTypes.getRenderLayer(fluid.defaultFluidState());
 
-        return new SingleVariant(new SimpleModelWrapper(fluidQuads, false, ClientUtils.getBlockSprite(stillTexture), layer));
+        return new SingleVariant(new SimpleModelWrapper(fluidQuads, false, ClientUtils.getBlockSprite(stillTexture), chunkLayer));
     }
 
     private static IClientFluidTypeExtensions getFluidTypeExtensions(Fluid fluid)

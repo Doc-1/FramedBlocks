@@ -5,7 +5,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -13,9 +13,12 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.render.block.FramedTankRenderer;
 import xfacthd.framedblocks.common.FBContent;
+
+import java.util.Set;
 
 public final class TankItemRenderer implements SpecialModelRenderer<SimpleFluidContent>
 {
@@ -32,15 +35,21 @@ public final class TankItemRenderer implements SpecialModelRenderer<SimpleFluidC
         ResourceLocation stillTex = fluidExt.getStillTexture();
         ResourceLocation flowTex = fluidExt.getFlowingTexture();
         int tint = fluidExt.getTintColor();
-        RenderType renderType = ItemBlockRenderTypes.getRenderLayer(content.getFluid().defaultFluidState());
+        ChunkSectionLayer chunkLayer = ItemBlockRenderTypes.getRenderLayer(content.getFluid().defaultFluidState());
 
-        FramedTankRenderer.renderContents(poseStack, buffer, renderType, light, content.getAmount(), stillTex, flowTex, tint);
+        FramedTankRenderer.renderContents(poseStack, buffer, chunkLayer, light, content.getAmount(), stillTex, flowTex, tint);
     }
 
     @Override
     public SimpleFluidContent extractArgument(ItemStack stack)
     {
         return stack.getOrDefault(FBContent.DC_TYPE_TANK_CONTENTS, SimpleFluidContent.EMPTY);
+    }
+
+    @Override
+    public void getExtents(Set<Vector3f> extents)
+    {
+        // NO-OP: this is always combined with another model which already provides correct extents
     }
 
 

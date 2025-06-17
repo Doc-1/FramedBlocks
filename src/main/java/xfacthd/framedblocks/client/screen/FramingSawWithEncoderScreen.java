@@ -7,7 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -110,11 +110,11 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
         super.renderBg(graphics, partialTick, mouseX, mouseY);
 
         ResourceLocation rlTop = encoding ? TAB_ICON : TAB_SELECTED_ICON;
-        graphics.blitSprite(RenderType::guiTextured, rlTop, leftPos + TAB_X, topPos + TAB_TOP_Y, TAB_WIDTH, TAB_HEIGHT);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, rlTop, leftPos + TAB_X, topPos + TAB_TOP_Y, TAB_WIDTH, TAB_HEIGHT);
         graphics.renderFakeItem(tableStack, leftPos + TAB_ICON_X, topPos + TAB_ICON_TOP_Y);
 
         ResourceLocation rlBot = encoding ? TAB_SELECTED_ICON : TAB_ICON;
-        graphics.blitSprite(RenderType::guiTextured, rlBot, leftPos + TAB_X, topPos + TAB_BOT_Y, TAB_WIDTH, TAB_HEIGHT);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, rlBot, leftPos + TAB_X, topPos + TAB_BOT_Y, TAB_WIDTH, TAB_HEIGHT);
         graphics.renderFakeItem(sawPatternStack, leftPos + TAB_ICON_X, topPos + TAB_ICON_BOT_Y);
 
         if (encoding)
@@ -210,13 +210,8 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
     {
         if (count != 1)
         {
-            graphics.pose().pushPose();
-            graphics.pose().translate(0F, 0F, 200F);
-
             String text = String.valueOf(count);
-            graphics.drawString(font, text, x + 19 - 2 - font.width(text), y + 6 + 3, 16777215, true);
-
-            graphics.pose().popPose();
+            graphics.drawString(font, text, x + 19 - 2 - font.width(text), y + 6 + 3, 0xFFFFFFFF, true);
         }
     }
 
@@ -229,11 +224,11 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
         {
             if (mouseY >= topPos + TAB_TOP_Y && mouseY <= topPos + TAB_BOT_Y)
             {
-                graphics.renderTooltip(font, TOOLTIP_TAB_CRAFTING, mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, TOOLTIP_TAB_CRAFTING, mouseX, mouseY);
             }
             else if (mouseY >= topPos + TAB_BOT_Y && mouseY <= topPos + (TAB_BOT_Y + TAB_HEIGHT))
             {
-                graphics.renderTooltip(font, TOOLTIP_TAB_PATTERN, mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, TOOLTIP_TAB_PATTERN, mouseX, mouseY);
             }
         }
         else if (encodeButton.isMouseOver(mouseX, mouseY) && encoderMatchResult != null && !encoderMatchResult.success())
@@ -241,7 +236,7 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
             List<Component> lines = new ArrayList<>();
             FramingSawMenu.FramedRecipeHolder recipe = menu.getRecipes().get(menu.getSelectedRecipeIndex());
             appendRecipeFailure(lines, cache, additiveResolver, recipe.getRecipe(), encoderMatchResult, this);
-            graphics.renderTooltip(font, lines, Optional.empty(), mouseX, mouseY);
+            graphics.setTooltipForNextFrame(font, lines, Optional.empty(), mouseX, mouseY);
         }
         else if (encoding)
         {

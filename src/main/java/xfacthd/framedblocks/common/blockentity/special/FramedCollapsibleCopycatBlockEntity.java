@@ -2,13 +2,13 @@ package xfacthd.framedblocks.common.blockentity.special;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.model.data.ModelData;
@@ -130,19 +130,19 @@ public class FramedCollapsibleCopycatBlockEntity extends FramedBlockEntity imple
     }
 
     @Override
-    protected void writeToDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
+    protected void writeToDataPacket(ValueOutput valueOutput)
     {
-        super.writeToDataPacket(nbt, lookupProvider);
-        nbt.putInt("offsets", packedOffsets);
-        nbt.putBoolean("occludesBeacon", occludesBeacon);
+        super.writeToDataPacket(valueOutput);
+        valueOutput.putInt("offsets", packedOffsets);
+        valueOutput.putBoolean("occludesBeacon", occludesBeacon);
     }
 
     @Override
-    protected boolean readFromDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
+    protected boolean readFromDataPacket(ValueInput valueInput)
     {
-        boolean needUpdate = super.readFromDataPacket(nbt, lookupProvider);
+        boolean needUpdate = super.readFromDataPacket(valueInput);
 
-        int packed = nbt.getIntOr("offsets", 0);
+        int packed = valueInput.getIntOr("offsets", 0);
         if (packed != packedOffsets)
         {
             packedOffsets = packed;
@@ -151,27 +151,26 @@ public class FramedCollapsibleCopycatBlockEntity extends FramedBlockEntity imple
             updateCulling(true, false);
         }
 
-        occludesBeacon = nbt.getBooleanOr("occludesBeacon", true);
+        occludesBeacon = valueInput.getBooleanOr("occludesBeacon", true);
 
         return needUpdate;
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider)
+    protected void writeUpdateTag(ValueOutput valueOutput)
     {
-        CompoundTag nbt = super.getUpdateTag(provider);
-        nbt.putInt("offsets", packedOffsets);
-        nbt.putBoolean("occludesBeacon", occludesBeacon);
-        return nbt;
+        super.writeUpdateTag(valueOutput);
+        valueOutput.putInt("offsets", packedOffsets);
+        valueOutput.putBoolean("occludesBeacon", occludesBeacon);
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag nbt, HolderLookup.Provider provider)
+    public void handleUpdateTag(ValueInput valueInput)
     {
-        packedOffsets = nbt.getIntOr("offsets", 0);
-        occludesBeacon = nbt.getBooleanOr("occludesBeacon", true);
+        packedOffsets = valueInput.getIntOr("offsets", 0);
+        occludesBeacon = valueInput.getBooleanOr("occludesBeacon", true);
 
-        super.handleUpdateTag(nbt, provider);
+        super.handleUpdateTag(valueInput);
     }
 
     @Override
@@ -190,10 +189,10 @@ public class FramedCollapsibleCopycatBlockEntity extends FramedBlockEntity imple
     }
 
     @Override
-    public void removeComponentsFromTag(CompoundTag tag)
+    public void removeComponentsFromTag(ValueOutput valueOutput)
     {
-        super.removeComponentsFromTag(tag);
-        tag.remove("offsets");
+        super.removeComponentsFromTag(valueOutput);
+        valueOutput.discard("offsets");
     }
 
     @Override
@@ -215,17 +214,17 @@ public class FramedCollapsibleCopycatBlockEntity extends FramedBlockEntity imple
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput valueOutput)
     {
-        super.saveAdditional(nbt, provider);
-        nbt.putInt("offsets", packedOffsets);
+        super.saveAdditional(valueOutput);
+        valueOutput.putInt("offsets", packedOffsets);
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput valueInput)
     {
-        super.loadAdditional(nbt, provider);
-        packedOffsets = nbt.getIntOr("offsets", 0);
+        super.loadAdditional(valueInput);
+        packedOffsets = valueInput.getIntOr("offsets", 0);
         updateBeaconOcclusion();
     }
 

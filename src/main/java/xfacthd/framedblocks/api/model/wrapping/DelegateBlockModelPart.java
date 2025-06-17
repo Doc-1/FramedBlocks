@@ -1,7 +1,7 @@
 package xfacthd.framedblocks.api.model.wrapping;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.util.TriState;
@@ -22,7 +22,7 @@ public interface DelegateBlockModelPart extends ExtendedBlockModelPart
     }
 
     @Override
-    default RenderType getRenderType(BlockState state)
+    default ChunkSectionLayer getRenderType(BlockState state)
     {
         return wrapped().getRenderType(state);
     }

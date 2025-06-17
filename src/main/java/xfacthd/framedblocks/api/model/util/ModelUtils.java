@@ -1,12 +1,12 @@
 package xfacthd.framedblocks.api.model.util;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
 import net.minecraft.client.renderer.block.model.SingleVariant;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BlockModelRotation;
 import net.minecraft.client.resources.model.MissingBlockModel;
@@ -160,13 +160,13 @@ public final class ModelUtils
     public static ExtendedBlockModelPart makeModelPart(BlockModelPart srcPart, QuadMap quadMap, BlockState state, DefaultAO defaultAO, @Nullable BlockState shaderState)
     {
         TriState partAO = defaultAO.apply(srcPart.ambientOcclusion());
-        RenderType renderType = srcPart.getRenderType(state);
-        return makeModelPart(quadMap, partAO, srcPart.particleIcon(), renderType, shaderState);
+        ChunkSectionLayer chunkLayer = srcPart.getRenderType(state);
+        return makeModelPart(quadMap, partAO, srcPart.particleIcon(), chunkLayer, shaderState);
     }
 
-    public static ExtendedBlockModelPart makeModelPart(QuadMap quadMap, TriState partAO, TextureAtlasSprite particleSprite, RenderType renderType, @Nullable BlockState shaderState)
+    public static ExtendedBlockModelPart makeModelPart(QuadMap quadMap, TriState partAO, TextureAtlasSprite particleSprite, ChunkSectionLayer chunkLayer, @Nullable BlockState shaderState)
     {
-        return InternalClientAPI.INSTANCE.makeBlockModelPart(quadMap, partAO, particleSprite, renderType, shaderState);
+        return InternalClientAPI.INSTANCE.makeBlockModelPart(quadMap, partAO, particleSprite, chunkLayer, shaderState);
     }
 
     public static List<BlockModelPart> collectModelParts(BlockStateModel camoModel, BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, boolean supportDynamicGeometry)

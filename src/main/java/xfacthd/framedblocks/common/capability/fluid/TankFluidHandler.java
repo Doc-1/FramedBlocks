@@ -1,13 +1,14 @@
 package xfacthd.framedblocks.common.capability.fluid;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import xfacthd.framedblocks.common.blockentity.special.FramedTankBlockEntity;
 
-public final class TankFluidHandler implements IFluidHandler
+public final class TankFluidHandler implements IFluidHandler, ValueIOSerializable
 {
     public static final int CAPACITY = 16 * FluidType.BUCKET_VOLUME;
     public static final String FLUID_NBT_KEY = "fluid";
@@ -118,16 +119,18 @@ public final class TankFluidHandler implements IFluidHandler
         blockEntity.onTankContentsChanged();
     }
 
-    public void load(CompoundTag tag, HolderLookup.Provider provider)
+    @Override
+    public void deserialize(ValueInput valueInput)
     {
-        fluid = FluidStack.parseOptional(provider, tag.getCompoundOrEmpty(FLUID_NBT_KEY));
+        fluid = valueInput.read(FLUID_NBT_KEY, FluidStack.OPTIONAL_CODEC).orElse(FluidStack.EMPTY);
     }
 
-    public void save(CompoundTag nbt, HolderLookup.Provider provider)
+    @Override
+    public void serialize(ValueOutput valueOutput)
     {
         if (!fluid.isEmpty())
         {
-            nbt.put(FLUID_NBT_KEY, fluid.save(provider));
+            valueOutput.store(FLUID_NBT_KEY, FluidStack.OPTIONAL_CODEC, fluid);
         }
     }
 }

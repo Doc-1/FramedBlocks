@@ -1,16 +1,16 @@
 package xfacthd.framedblocks.common.blockentity.special;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.model.data.ModelProperty;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
@@ -70,16 +70,16 @@ public class FramedFlowerPotBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    protected void writeToDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
+    protected void writeToDataPacket(ValueOutput valueOutput)
     {
-        super.writeToDataPacket(nbt, lookupProvider);
-        nbt.putString("flower", BuiltInRegistries.BLOCK.getKey(flowerBlock).toString());
+        super.writeToDataPacket(valueOutput);
+        valueOutput.putString("flower", BuiltInRegistries.BLOCK.getKey(flowerBlock).toString());
     }
 
     @Override
-    protected boolean readFromDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
+    protected boolean readFromDataPacket(ValueInput valueInput)
     {
-        Block flower = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(nbt.getStringOr("flower", "")));
+        Block flower = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(valueInput.getStringOr("flower", "")));
 
         boolean update = flower != flowerBlock;
         if (update)
@@ -87,25 +87,22 @@ public class FramedFlowerPotBlockEntity extends FramedBlockEntity
             flowerBlock = flower;
         }
 
-        return super.readFromDataPacket(nbt, lookupProvider) || update;
+        return super.readFromDataPacket(valueInput) || update;
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider)
+    protected void writeUpdateTag(ValueOutput valueOutput)
     {
-        CompoundTag nbt = super.getUpdateTag(provider);
-
-        nbt.putString("flower", BuiltInRegistries.BLOCK.getKey(flowerBlock).toString());
-
-        return nbt;
+        super.writeUpdateTag(valueOutput);
+        valueOutput.putString("flower", BuiltInRegistries.BLOCK.getKey(flowerBlock).toString());
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag nbt, HolderLookup.Provider provider)
+    public void handleUpdateTag(ValueInput valueInput)
     {
-        super.handleUpdateTag(nbt, provider);
+        super.handleUpdateTag(valueInput);
 
-        Block flower = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(nbt.getStringOr("flower", "")));
+        Block flower = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(valueInput.getStringOr("flower", "")));
         if (flower != flowerBlock)
         {
             flowerBlock = flower;
@@ -128,10 +125,10 @@ public class FramedFlowerPotBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    public void removeComponentsFromTag(CompoundTag tag)
+    public void removeComponentsFromTag(ValueOutput valueOutput)
     {
-        super.removeComponentsFromTag(tag);
-        tag.remove("flower");
+        super.removeComponentsFromTag(valueOutput);
+        valueOutput.discard("flower");
     }
 
     @Override
@@ -154,16 +151,16 @@ public class FramedFlowerPotBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput valueOutput)
     {
-        nbt.putString("flower", BuiltInRegistries.BLOCK.getKey(flowerBlock).toString());
-        super.saveAdditional(nbt, provider);
+        valueOutput.putString("flower", BuiltInRegistries.BLOCK.getKey(flowerBlock).toString());
+        super.saveAdditional(valueOutput);
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput valueInput)
     {
-        super.loadAdditional(nbt, provider);
-        flowerBlock = BuiltInRegistries.BLOCK.getValue(ResourceLocation.tryParse(nbt.getStringOr("flower", "")));
+        super.loadAdditional(valueInput);
+        flowerBlock = BuiltInRegistries.BLOCK.getValue(ResourceLocation.tryParse(valueInput.getStringOr("flower", "")));
     }
 }

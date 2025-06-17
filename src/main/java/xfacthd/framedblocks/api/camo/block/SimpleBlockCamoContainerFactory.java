@@ -3,7 +3,6 @@ package xfacthd.framedblocks.api.camo.block;
 import com.mojang.serialization.MapCodec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -15,6 +14,8 @@ import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import xfacthd.framedblocks.api.util.ConfigView;
 import xfacthd.framedblocks.api.util.Utils;
 
@@ -99,15 +100,15 @@ public abstract class SimpleBlockCamoContainerFactory extends AbstractBlockCamoC
     }
 
     @Override
-    protected final void writeToNetwork(CompoundTag tag, SimpleBlockCamoContainer container)
+    protected final void writeToNetwork(ValueOutput valueOutput, SimpleBlockCamoContainer container)
     {
-        tag.putInt("state", Block.getId(container.getState()));
+        valueOutput.putInt("state", Block.getId(container.getState()));
     }
 
     @Override
-    protected final SimpleBlockCamoContainer readFromNetwork(CompoundTag tag)
+    protected final SimpleBlockCamoContainer readFromNetwork(ValueInput valueInput)
     {
-        return new SimpleBlockCamoContainer(Block.stateById(tag.getIntOr("state", -1)), this);
+        return new SimpleBlockCamoContainer(Block.stateById(valueInput.getIntOr("state", -1)), this);
     }
 
     @Override

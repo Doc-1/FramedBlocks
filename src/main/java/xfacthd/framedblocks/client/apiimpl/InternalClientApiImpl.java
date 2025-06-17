@@ -1,10 +1,10 @@
 package xfacthd.framedblocks.client.apiimpl;
 
 import com.mojang.datafixers.util.Either;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BlockModelDefinition;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.SingleVariant;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Holder;
@@ -74,13 +74,13 @@ public final class InternalClientApiImpl implements InternalClientAPI
     }
 
     @Override
-    public ExtendedBlockModelPart makeBlockModelPart(QuadMap quadMap, TriState partAO, TextureAtlasSprite particleSprite, RenderType renderType, @Nullable BlockState shaderState)
+    public ExtendedBlockModelPart makeBlockModelPart(QuadMap quadMap, TriState partAO, TextureAtlasSprite particleSprite, ChunkSectionLayer chunkLayer, @Nullable BlockState shaderState)
     {
         if (shaderState == AIR)
         {
             shaderState = null;
         }
-        return new FramedBlockModelPart(quadMap.build(), partAO, particleSprite, renderType, shaderState);
+        return new FramedBlockModelPart(quadMap.build(), partAO, particleSprite, chunkLayer, shaderState);
     }
 
     @Override

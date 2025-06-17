@@ -2,7 +2,6 @@ package xfacthd.framedblocks.common.compat.jade;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,6 +16,7 @@ import net.minecraft.world.phys.Vec2;
 import net.neoforged.neoforge.client.RenderTypeHelper;
 import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3x2fStack;
 import org.joml.Vector3f;
 import snownee.jade.api.ui.Element;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
@@ -66,10 +66,11 @@ final class FramedBlockElement extends Element
     @Override
     public void render(GuiGraphics graphics, float x, float y, float maxX, float maxY)
     {
-        if (!state.isAir())
+        // FIXME: re-implement when Jade is ported
+        /*if (!state.isAir())
         {
-            PoseStack poseStack = graphics.pose();
-            poseStack.pushPose();
+            Matrix3x2fStack poseStack = graphics.pose();
+            poseStack.pushMatrix();
 
             poseStack.translate(x + (SIZE / 2F), y + (SIZE / 2F), Z_OFFSET);
             poseStack.scale(RENDER_SIZE * scale, -RENDER_SIZE * scale, RENDER_SIZE * scale);
@@ -95,8 +96,8 @@ final class FramedBlockElement extends Element
             buffer.endBatch();
             Lighting.setupFor3DItems();
 
-            poseStack.popPose();
-        }
+            poseStack.popMatrix();
+        }*/
     }
 
     @Override

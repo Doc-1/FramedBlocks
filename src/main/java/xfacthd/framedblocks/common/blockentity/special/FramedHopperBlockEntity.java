@@ -3,9 +3,7 @@ package xfacthd.framedblocks.common.blockentity.special;
 import java.util.function.BooleanSupplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
@@ -22,6 +20,8 @@ import net.minecraft.world.level.block.HopperBlock;
 import net.minecraft.world.level.block.entity.Hopper;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.items.ContainerOrHandler;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -269,19 +269,19 @@ public class FramedHopperBlockEntity extends FramedBlockEntity implements Hopper
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries)
+    public void loadAdditional(ValueInput valueInput)
     {
-        super.loadAdditional(tag, registries);
-        ContainerHelper.loadAllItems(tag, items, registries);
-        cooldownTime = tag.getIntOr(COOLDOWN_NBT_KEY, 0);
+        super.loadAdditional(valueInput);
+        ContainerHelper.loadAllItems(valueInput, items);
+        cooldownTime = valueInput.getIntOr(COOLDOWN_NBT_KEY, 0);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider registries)
+    public void saveAdditional(ValueOutput valueOutput)
     {
-        super.saveAdditional(tag, registries);
-        ContainerHelper.saveAllItems(tag, items, registries);
-        tag.putInt(COOLDOWN_NBT_KEY, cooldownTime);
+        super.saveAdditional(valueOutput);
+        ContainerHelper.saveAllItems(valueOutput, items);
+        valueOutput.putInt(COOLDOWN_NBT_KEY, cooldownTime);
     }
 
     @Override

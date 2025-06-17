@@ -1,6 +1,6 @@
 package xfacthd.framedblocks.client.model.geometry.interactive;
 
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -52,7 +52,7 @@ public class FramedStoneButtonGeometry extends FramedButtonGeometry
         AbstractFramedBlockData fbData = data.get(AbstractFramedBlockData.PROPERTY);
         if (fbData != null && !fbData.unwrap(state).getCamoContent().isEmpty())
         {
-            generator.generate(overlayCullFaces, overlaySpriteGetter, frameSpriteFront, RenderType.cutout(), Blocks.STONE.defaultBlockState());
+            generator.generate(overlayCullFaces, overlaySpriteGetter, frameSpriteFront, ChunkSectionLayer.CUTOUT, Blocks.STONE.defaultBlockState());
         }
     }
 

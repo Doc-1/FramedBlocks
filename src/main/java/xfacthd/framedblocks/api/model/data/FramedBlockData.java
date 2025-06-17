@@ -131,4 +131,18 @@ public final class FramedBlockData extends AbstractFramedBlockData
     {
         return viewBlocking;
     }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj == this) return true;
+        if (obj instanceof FramedBlockData other)
+        {
+            return camoContainer.equals(other.camoContainer) &&
+                   hidden == other.hidden &&
+                   flags == other.flags &&
+                   viewBlocking == other.viewBlocking;
+        }
+        return false;
+    }
 }

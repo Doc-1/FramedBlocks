@@ -82,16 +82,11 @@ public final class OneWayWindowOverlay extends BlockInteractOverlay
     {
         NullableDirection face = target.state().getValue(PropertyHolder.NULLABLE_FACE);
 
-        graphics.pose().pushPose();
-        graphics.pose().translate(-.5, -.5, 0);
-
         TEXTURE_EYE.draw(graphics, texX + 3, texY + 3);
         if (face == NullableDirection.NONE)
         {
             TEXTURE_CROSS.draw(graphics, texX + 4, texY + 4);
         }
-
-        graphics.pose().popPose();
 
         Font font = Minecraft.getInstance().font;
         int x = texX + (tex.width() / 2);

@@ -10,6 +10,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -30,6 +31,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -832,35 +836,34 @@ public class FramedBlockEntity extends BlockEntity
     {
         return ClientboundBlockEntityDataPacket.create(this, (be, registryAccess) ->
         {
-            CompoundTag tag = new CompoundTag();
-            ((FramedBlockEntity) be).writeToDataPacket(tag, registryAccess);
-            return tag;
+            TagValueOutput valueOutput = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, registryAccess);
+            ((FramedBlockEntity) be).writeToDataPacket(valueOutput);
+            return valueOutput.buildResult();
         });
     }
 
     @Override
-    public final void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider)
+    public final void onDataPacket(Connection net, ValueInput valueInput)
     {
-        CompoundTag nbt = pkt.getTag();
-        if (!nbt.isEmpty() && readFromDataPacket(nbt, lookupProvider))
+        if (readFromDataPacket(valueInput))
         {
             level().sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
             requestModelDataUpdate();
         }
     }
 
-    protected void writeToDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
+    protected void writeToDataPacket(ValueOutput valueOutput)
     {
-        nbt.put(CAMO_NBT_KEY, CamoContainerHelper.writeToNetwork(camoContainer));
-        nbt.putByte("flags", writeFlags());
+        CamoContainerHelper.writeToNetwork(valueOutput.child(CAMO_NBT_KEY), camoContainer);
+        valueOutput.putByte("flags", writeFlags());
     }
 
-    protected boolean readFromDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
+    protected boolean readFromDataPacket(ValueInput valueInput)
     {
         boolean needUpdate = false;
         boolean needCullingUpdate = false;
 
-        CamoContainer<?, ?> newCamo = CamoContainerHelper.readFromNetwork(nbt.getCompoundOrEmpty(CAMO_NBT_KEY));
+        CamoContainer<?, ?> newCamo = CamoContainerHelper.readFromNetwork(valueInput.child(CAMO_NBT_KEY));
         if (!newCamo.equals(camoContainer))
         {
             int oldLight = getLightValue();
@@ -874,7 +877,7 @@ public class FramedBlockEntity extends BlockEntity
             needCullingUpdate = true;
         }
 
-        byte flags = nbt.getByteOr("flags", (byte) 0);
+        byte flags = valueInput.getByteOr("flags", (byte) 0);
 
         boolean newGlow = readFlag(flags, FLAG_GLOWING);
         if (newGlow != glowing)
@@ -916,25 +919,28 @@ public class FramedBlockEntity extends BlockEntity
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider)
+    public final CompoundTag getUpdateTag(HolderLookup.Provider provider)
     {
-        CompoundTag nbt = super.getUpdateTag(provider);
+        TagValueOutput valueOutput = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, provider);
+        writeUpdateTag(valueOutput);
+        return valueOutput.buildResult();
+    }
 
-        nbt.put(CAMO_NBT_KEY, CamoContainerHelper.writeToNetwork(camoContainer));
-        nbt.putByte("flags", writeFlags());
-
-        return nbt;
+    protected void writeUpdateTag(ValueOutput valueOutput)
+    {
+        CamoContainerHelper.writeToNetwork(valueOutput.child(CAMO_NBT_KEY), camoContainer);
+        valueOutput.putByte("flags", writeFlags());
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag nbt, HolderLookup.Provider provider)
+    public void handleUpdateTag(ValueInput valueInput)
     {
-        if (readCamoFromUpdateTag(nbt, provider))
+        if (readCamoFromUpdateTag(valueInput))
         {
             cullStateDirty = true;
         }
 
-        byte flags = nbt.getByteOr("flags", (byte) 0);
+        byte flags = valueInput.getByteOr("flags", (byte) 0);
         glowing = readFlag(flags, FLAG_GLOWING);
         intangible = readFlag(flags, FLAG_INTANGIBLE);
         reinforced = readFlag(flags, FLAG_REINFORCED);
@@ -943,9 +949,9 @@ public class FramedBlockEntity extends BlockEntity
         requestModelDataUpdate();
     }
 
-    protected boolean readCamoFromUpdateTag(CompoundTag nbt, HolderLookup.Provider provider)
+    protected boolean readCamoFromUpdateTag(ValueInput valueInput)
     {
-        CamoContainer<?, ?> newCamo = CamoContainerHelper.readFromNetwork(nbt.getCompoundOrEmpty(CAMO_NBT_KEY));
+        CamoContainer<?, ?> newCamo = CamoContainerHelper.readFromNetwork(valueInput.child(CAMO_NBT_KEY));
         if (!newCamo.equals(camoContainer))
         {
             camoContainer = newCamo;
@@ -1057,14 +1063,14 @@ public class FramedBlockEntity extends BlockEntity
      */
 
     @Override
-    public void removeComponentsFromTag(CompoundTag tag)
+    public void removeComponentsFromTag(ValueOutput valueOutput)
     {
-        tag.remove(CAMO_NBT_KEY);
-        tag.remove("glowing");
-        tag.remove("intangible");
-        tag.remove("reinforced");
-        tag.remove("emissive");
-        tag.remove("updated");
+        valueOutput.discard(CAMO_NBT_KEY);
+        valueOutput.discard("glowing");
+        valueOutput.discard("intangible");
+        valueOutput.discard("reinforced");
+        valueOutput.discard("emissive");
+        valueOutput.discard("updated");
     }
 
     @Override
@@ -1108,28 +1114,28 @@ public class FramedBlockEntity extends BlockEntity
      */
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput valueOutput)
     {
-        nbt.put(CAMO_NBT_KEY, CamoContainerHelper.writeToDisk(camoContainer));
-        nbt.putBoolean("glowing", glowing);
-        nbt.putBoolean("intangible", intangible);
-        nbt.putBoolean("reinforced", reinforced);
-        nbt.putBoolean("emissive", emissive);
-        nbt.putByte("updated", (byte) DATA_VERSION);
+        valueOutput.store(CAMO_NBT_KEY, CamoContainerHelper.CODEC, camoContainer);
+        valueOutput.putBoolean("glowing", glowing);
+        valueOutput.putBoolean("intangible", intangible);
+        valueOutput.putBoolean("reinforced", reinforced);
+        valueOutput.putBoolean("emissive", emissive);
+        valueOutput.putByte("updated", (byte) DATA_VERSION);
 
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(valueOutput);
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput valueInput)
     {
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(valueInput);
 
-        camoContainer = loadAndValidateCamo(nbt, CAMO_NBT_KEY);
-        glowing = nbt.getBooleanOr("glowing", false);
-        intangible = nbt.getBooleanOr("intangible", false);
-        reinforced = nbt.getBooleanOr("reinforced", false);
-        emissive = nbt.getBooleanOr("emissive", false);
+        camoContainer = loadAndValidateCamo(valueInput, CAMO_NBT_KEY);
+        glowing = valueInput.getBooleanOr("glowing", false);
+        intangible = valueInput.getBooleanOr("intangible", false);
+        reinforced = valueInput.getBooleanOr("reinforced", false);
+        emissive = valueInput.getBooleanOr("emissive", false);
 
         if (glowing)
         {
@@ -1137,9 +1143,9 @@ public class FramedBlockEntity extends BlockEntity
         }
     }
 
-    protected final CamoContainer<?, ?> loadAndValidateCamo(CompoundTag tag, String key)
+    protected final CamoContainer<?, ?> loadAndValidateCamo(ValueInput valueInput, String key)
     {
-        CamoContainer<?, ?> camo = CamoContainerHelper.readFromDisk(tag.getCompoundOrEmpty(key));
+        CamoContainer<?, ?> camo = valueInput.read(key, CamoContainerHelper.CODEC).orElse(EmptyCamoContainer.EMPTY);
         if (!CamoContainerHelper.validateCamo(camo))
         {
             recheckStates = true;
@@ -1153,7 +1159,7 @@ public class FramedBlockEntity extends BlockEntity
             return EmptyCamoContainer.EMPTY;
         }
         forceLightUpdate |= camo.getContent().getLightEmission() > 0;
-        recheckStates |= tag.getByteOr("updated", (byte) 0) < DATA_VERSION;
+        recheckStates |= valueInput.getByteOr("updated", (byte) 0) < DATA_VERSION;
         return camo;
     }
 }

@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -108,11 +108,11 @@ public class PoweredFramingSawScreen extends AbstractContainerScreen<PoweredFram
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY)
     {
-        graphics.blit(RenderType::guiTextured, BACKGROUND, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
 
         int tx = leftPos + TITLE_TARGETBLOCK_X - font.width(TITLE_TARGETBLOCK);
         int ty = topPos + TITLE_TARGETBLOCK_Y;
-        graphics.drawString(font, TITLE_TARGETBLOCK, tx, ty, 0x404040, false);
+        graphics.drawString(font, TITLE_TARGETBLOCK, tx, ty, 0xFF404040, false);
 
         FramingSawRecipe recipe = Optionull.map(menu.getSelectedRecipe(), RecipeHolder::value);
         FramingSawRecipeMatchResult match = recipe != null ? menu.getMatchResult() : null;
@@ -145,7 +145,7 @@ public class PoweredFramingSawScreen extends AbstractContainerScreen<PoweredFram
                 {
                     int ax = leftPos + additiveSlot.x;
                     int ay = topPos + additiveSlot.y;
-                    graphics.blit(RenderType::guiTextured, BACKGROUND, ax, ay, CROSS_U, CROSS_V, CROSS_SIZE, CROSS_SIZE, 256, 256);
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, ax, ay, CROSS_U, CROSS_V, CROSS_SIZE, CROSS_SIZE, 256, 256);
                 }
                 else if (!additiveSlot.hasItem())
                 {
@@ -163,7 +163,7 @@ public class PoweredFramingSawScreen extends AbstractContainerScreen<PoweredFram
                 if (progress > 0F)
                 {
                     int width = Math.round(PROGRESS_WIDTH * progress);
-                    graphics.blit(RenderType::guiTextured, BACKGROUND, leftPos + PROGRESS_X, topPos + PROGRESS_Y, PROGRESS_U, PROGRESS_V, width, PROGRESS_HEIGHT, 256, 256);
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos + PROGRESS_X, topPos + PROGRESS_Y, PROGRESS_U, PROGRESS_V, width, PROGRESS_HEIGHT, 256, 256);
                 }
             }
         }
@@ -191,7 +191,7 @@ public class PoweredFramingSawScreen extends AbstractContainerScreen<PoweredFram
         }
         int sx = leftPos + STATUS_X;
         int sy = topPos + STATUS_Y + font.lineHeight;
-        graphics.drawString(font, status, sx, sy, 0x404040, false);
+        graphics.drawString(font, status, sx, sy, 0xFF404040, false);
         statusTooltipArea = width == -1 ? EMPTY : new Rect2i(sx + font.width(MSG_STATUS), sy, width, font.lineHeight);
     }
 
@@ -200,15 +200,15 @@ public class PoweredFramingSawScreen extends AbstractContainerScreen<PoweredFram
         float energy = (float) menu.getEnergy() / (float) menu.getEnergyCapacity();
         int height = (int) (energy * ENERGY_HEIGHT);
         int y = topPos + ENERGY_Y + (ENERGY_HEIGHT - height);
-        graphics.blit(RenderType::guiTextured, BACKGROUND, leftPos + ENERGY_X, y, ENERGY_U, ENERGY_V + (ENERGY_HEIGHT - height), ENERGY_WIDTH, height, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos + ENERGY_X, y, ENERGY_U, ENERGY_V + (ENERGY_HEIGHT - height), ENERGY_WIDTH, height, 256, 256);
 
         int minX = leftPos + ENERGY_X;
         int minY = topPos + ENERGY_Y;
         if (mouseX >= minX && mouseX < minX + ENERGY_WIDTH && mouseY >= minY && mouseY < minY + ENERGY_HEIGHT)
         {
-            setTooltipForNextRenderPass(Component.translatable(
+            graphics.setTooltipForNextFrame(Component.translatable(
                     TOOLTIP_ENERGY, menu.getEnergy(), menu.getEnergyCapacity()
-            ));
+            ), mouseX, mouseY);
         }
     }
 
@@ -241,7 +241,7 @@ public class PoweredFramingSawScreen extends AbstractContainerScreen<PoweredFram
 
         if (statusTooltipArea.contains(mouseX, mouseY))
         {
-            graphics.renderTooltip(font, statusTooltip, Optional.empty(), ItemStack.EMPTY, mouseX, mouseY);
+            graphics.setTooltipForNextFrame(font, statusTooltip, Optional.empty(), ItemStack.EMPTY, mouseX, mouseY);
             statusTooltipArea = EMPTY;
             statusTooltip = List.of();
         }
@@ -259,7 +259,7 @@ public class PoweredFramingSawScreen extends AbstractContainerScreen<PoweredFram
             components.add(Component.translatable(FramingSawScreen.TOOLTIP_MATERIAL, material));
         }
 
-        graphics.renderTooltip(font, components, tooltip, stack, mouseX, mouseY);
+        graphics.setTooltipForNextFrame(font, components, tooltip, stack, mouseX, mouseY);
     }
 
     @Override

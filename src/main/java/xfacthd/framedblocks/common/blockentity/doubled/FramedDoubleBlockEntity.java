@@ -1,7 +1,6 @@
 package xfacthd.framedblocks.common.blockentity.doubled;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.util.ARGB;
@@ -15,11 +14,12 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -332,18 +332,17 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
      */
 
     @Override
-    protected void writeToDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
+    protected void writeToDataPacket(ValueOutput valueOutput)
     {
-        super.writeToDataPacket(nbt, lookupProvider);
-
-        nbt.put(CAMO_TWO_NBT_KEY, CamoContainerHelper.writeToNetwork(camoContainer));
+        super.writeToDataPacket(valueOutput);
+        CamoContainerHelper.writeToNetwork(valueOutput.child(CAMO_TWO_NBT_KEY), camoContainer);
     }
 
     @Override
-    protected boolean readFromDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
+    protected boolean readFromDataPacket(ValueInput valueInput)
     {
         boolean needUpdate = false;
-        CamoContainer<?, ?> newCamo = CamoContainerHelper.readFromNetwork(nbt.getCompoundOrEmpty(CAMO_TWO_NBT_KEY));
+        CamoContainer<?, ?> newCamo = CamoContainerHelper.readFromNetwork(valueInput.child(CAMO_TWO_NBT_KEY));
         if (!newCamo.equals(camoContainer))
         {
             int oldLight = getLightValue();
@@ -357,24 +356,21 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
             updateCulling(true, false);
         }
 
-        return super.readFromDataPacket(nbt, lookupProvider) || needUpdate;
+        return super.readFromDataPacket(valueInput) || needUpdate;
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider)
+    protected void writeUpdateTag(ValueOutput valueOutput)
     {
-        CompoundTag nbt = super.getUpdateTag(provider);
-
-        nbt.put(CAMO_TWO_NBT_KEY, CamoContainerHelper.writeToNetwork(camoContainer));
-
-        return nbt;
+        super.writeUpdateTag(valueOutput);
+        CamoContainerHelper.writeToNetwork(valueOutput.child(CAMO_TWO_NBT_KEY), camoContainer);
     }
 
     @Override
-    protected boolean readCamoFromUpdateTag(CompoundTag nbt, HolderLookup.Provider provider)
+    protected boolean readCamoFromUpdateTag(ValueInput valueInput)
     {
-        boolean changed = super.readCamoFromUpdateTag(nbt, provider);
-        CamoContainer<?, ?> newCamo = CamoContainerHelper.readFromNetwork(nbt.getCompoundOrEmpty(CAMO_TWO_NBT_KEY));
+        boolean changed = super.readCamoFromUpdateTag(valueInput);
+        CamoContainer<?, ?> newCamo = CamoContainerHelper.readFromNetwork(valueInput.child(CAMO_TWO_NBT_KEY));
         if (!newCamo.equals(camoContainer))
         {
             camoContainer = newCamo;
@@ -418,10 +414,10 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
      */
 
     @Override
-    public void removeComponentsFromTag(CompoundTag tag)
+    public void removeComponentsFromTag(ValueOutput valueOutput)
     {
-        super.removeComponentsFromTag(tag);
-        tag.remove(CAMO_TWO_NBT_KEY);
+        super.removeComponentsFromTag(valueOutput);
+        valueOutput.discard(CAMO_TWO_NBT_KEY);
     }
 
     @Override
@@ -442,17 +438,17 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
      */
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput valueOutput)
     {
-        nbt.put(CAMO_TWO_NBT_KEY, CamoContainerHelper.writeToDisk(camoContainer));
+        valueOutput.store(CAMO_TWO_NBT_KEY, CamoContainerHelper.CODEC, camoContainer);
 
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(valueOutput);
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput valueInput)
     {
-        super.loadAdditional(nbt, provider);
-        camoContainer = loadAndValidateCamo(nbt, CAMO_TWO_NBT_KEY);
+        super.loadAdditional(valueInput);
+        camoContainer = loadAndValidateCamo(valueInput, CAMO_TWO_NBT_KEY);
     }
 }

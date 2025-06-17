@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.item.BlockModelWrapper;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ItemModelResolver;
@@ -143,6 +144,16 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
             errorModel.update(renderState, stack, resolver, ctx, level, entity, seed);
             return;
         }
+
+        renderState.appendModelIdentityElement(this);
+        if (!modelSet.camos.isEmpty())
+        {
+            renderState.appendModelIdentityElement(modelSet.camos);
+        }
+        if (modelSet.animated)
+        {
+            renderState.setAnimated();
+        }
         for (ModelEntry layerModel : modelSet.models)
         {
             ItemStackRenderState.LayerRenderState layer = renderState.newLayer();
@@ -168,6 +179,7 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
 
             List<ModelEntry> models = new ArrayList<>();
             IntSet tintIndices = new IntOpenHashSet();
+            boolean animated = false;
 
             RANDOM.setSeed(42);
             for (BlockModelPart modelPart : model.collectParts(level, BlockPos.ZERO, state, RANDOM))
@@ -185,13 +197,17 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
                     {
                         tintIndices.add(tintIndex);
                     }
+                    if (quad.sprite().isAnimated())
+                    {
+                        animated = true;
+                    }
                 }
-                RenderType renderType = modelPart.getRenderType(state);
-                models.add(new ModelEntry(allQuads, RenderTypeHelper.getEntityRenderType(renderType)));
+                ChunkSectionLayer chunkLayer = modelPart.getRenderType(state);
+                models.add(new ModelEntry(allQuads, RenderTypeHelper.getEntityRenderType(chunkLayer)));
             }
 
             ModelRenderProperties renderProps = new ModelRenderProperties(true, model.particleIcon(EmptyBlockAndTintGetter.INSTANCE, BlockPos.ZERO, state), itemTransforms);
-            modelSet = new ModelSet(models, collectTintValues(tintIndices, tintProvider, stack, camos), renderProps);
+            modelSet = new ModelSet(models, collectTintValues(tintIndices, tintProvider, stack, camos), renderProps, camos, animated);
             itemModelCache.put(camos, modelSet);
         }
         return modelSet;
@@ -229,7 +245,7 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
 
 
 
-    private record ModelSet(List<ModelEntry> models, @Nullable Int2IntMap tintValues, ModelRenderProperties properties) { }
+    private record ModelSet(List<ModelEntry> models, @Nullable Int2IntMap tintValues, ModelRenderProperties properties, CamoList camos, boolean animated) { }
 
     private record ModelEntry(List<BakedQuad> quads, RenderType renderType) { }
 

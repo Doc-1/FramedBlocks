@@ -2,15 +2,15 @@ package xfacthd.framedblocks.common.blockentity.special;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -236,19 +236,19 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
     }
 
     @Override
-    protected void writeToDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
+    protected void writeToDataPacket(ValueOutput valueOutput)
     {
-        super.writeToDataPacket(nbt, lookupProvider);
-        nbt.putInt("offsets", packedOffsets);
-        nbt.putByte("face", (byte) (collapsedFace == null ? -1 : collapsedFace.get3DDataValue()));
+        super.writeToDataPacket(valueOutput);
+        valueOutput.putInt("offsets", packedOffsets);
+        valueOutput.putByte("face", (byte) (collapsedFace == null ? -1 : collapsedFace.get3DDataValue()));
     }
 
     @Override
-    protected boolean readFromDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
+    protected boolean readFromDataPacket(ValueInput valueInput)
     {
-        boolean needUpdate = super.readFromDataPacket(nbt, lookupProvider);
+        boolean needUpdate = super.readFromDataPacket(valueInput);
 
-        int packed = nbt.getIntOr("offsets", 0);
+        int packed = valueInput.getIntOr("offsets", 0);
         if (packed != packedOffsets)
         {
             packedOffsets = packed;
@@ -257,7 +257,7 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
             updateCulling(true, false);
         }
 
-        int faceIdx = nbt.getByteOr("face", (byte) -1);
+        int faceIdx = valueInput.getByteOr("face", (byte) -1);
         Direction face = faceIdx == -1 ? null : Direction.from3DDataValue(faceIdx);
         if (collapsedFace != face)
         {
@@ -270,23 +270,22 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider)
+    protected void writeUpdateTag(ValueOutput valueOutput)
     {
-        CompoundTag nbt = super.getUpdateTag(provider);
-        nbt.putInt("offsets", packedOffsets);
-        nbt.putByte("face", (byte) (collapsedFace == null ? -1 : collapsedFace.get3DDataValue()));
-        return nbt;
+        super.writeUpdateTag(valueOutput);
+        valueOutput.putInt("offsets", packedOffsets);
+        valueOutput.putByte("face", (byte) (collapsedFace == null ? -1 : collapsedFace.get3DDataValue()));
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag nbt, HolderLookup.Provider provider)
+    public void handleUpdateTag(ValueInput valueInput)
     {
-        packedOffsets = nbt.getIntOr("offsets", 0);
+        packedOffsets = valueInput.getIntOr("offsets", 0);
 
-        int face = nbt.getByteOr("face", (byte) -1);
+        int face = valueInput.getByteOr("face", (byte) -1);
         collapsedFace = face == -1 ? null : Direction.from3DDataValue(face);
 
-        super.handleUpdateTag(nbt, provider);
+        super.handleUpdateTag(valueInput);
     }
 
     @Override
@@ -306,11 +305,11 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
     }
 
     @Override
-    public void removeComponentsFromTag(CompoundTag tag)
+    public void removeComponentsFromTag(ValueOutput valueOutput)
     {
-        super.removeComponentsFromTag(tag);
-        tag.remove("offsets");
-        tag.remove("face");
+        super.removeComponentsFromTag(valueOutput);
+        valueOutput.discard("offsets");
+        valueOutput.discard("face");
     }
 
     @Override
@@ -331,19 +330,19 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput valueOutput)
     {
-        super.saveAdditional(nbt, provider);
-        nbt.putInt("offsets", packedOffsets);
-        nbt.putInt("face", collapsedFace == null ? -1 : collapsedFace.get3DDataValue());
+        super.saveAdditional(valueOutput);
+        valueOutput.putInt("offsets", packedOffsets);
+        valueOutput.putInt("face", collapsedFace == null ? -1 : collapsedFace.get3DDataValue());
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput valueInput)
     {
-        super.loadAdditional(nbt, provider);
-        packedOffsets = nbt.getIntOr("offsets", 0);
-        int face = nbt.getIntOr("face", -1);
+        super.loadAdditional(valueInput);
+        packedOffsets = valueInput.getIntOr("offsets", 0);
+        int face = valueInput.getIntOr("face", -1);
         collapsedFace = face == -1 ? null : Direction.from3DDataValue(face);
     }
 

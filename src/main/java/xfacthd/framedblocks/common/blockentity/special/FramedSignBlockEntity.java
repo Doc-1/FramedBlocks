@@ -1,14 +1,9 @@
 package xfacthd.framedblocks.common.blockentity.special;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.serialization.DynamicOps;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -23,6 +18,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -206,52 +203,45 @@ public class FramedSignBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    protected void writeToDataPacket(CompoundTag nbt, HolderLookup.Provider lookupProvider)
+    protected void writeToDataPacket(ValueOutput valueOutput)
     {
-        super.writeToDataPacket(nbt, lookupProvider);
-        writeToNbt(nbt);
+        super.writeToDataPacket(valueOutput);
+        writeToNbt(valueOutput);
     }
 
     @Override
-    protected boolean readFromDataPacket(CompoundTag nbt, HolderLookup.Provider registries)
+    protected boolean readFromDataPacket(ValueInput valueInput)
     {
-        readFromNbt(nbt, registries);
-        return super.readFromDataPacket(nbt, registries);
+        readFromNbt(valueInput);
+        return super.readFromDataPacket(valueInput);
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider)
+    protected void writeUpdateTag(ValueOutput valueOutput)
     {
-        CompoundTag nbt = super.getUpdateTag(provider);
-        writeToNbt(nbt);
-        return nbt;
+        super.writeUpdateTag(valueOutput);
+        writeToNbt(valueOutput);
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag nbt, HolderLookup.Provider registries)
+    public void handleUpdateTag(ValueInput valueInput)
     {
-        super.handleUpdateTag(nbt, registries);
-        readFromNbt(nbt, registries);
+        super.handleUpdateTag(valueInput);
+        readFromNbt(valueInput);
     }
 
-    private void writeToNbt(CompoundTag nbt)
+    private void writeToNbt(ValueOutput valueOutput)
     {
-        SignText.DIRECT_CODEC.encodeStart(NbtOps.INSTANCE, frontText)
-                .resultOrPartial(FramedBlocks.LOGGER::error)
-                .ifPresent(tag -> nbt.put("front_text", tag));
-        SignText.DIRECT_CODEC.encodeStart(NbtOps.INSTANCE, backText)
-                .resultOrPartial(FramedBlocks.LOGGER::error)
-                .ifPresent(tag -> nbt.put("back_text", tag));
-
-        nbt.putBoolean("waxed", waxed);
+        valueOutput.store("front_text", SignText.DIRECT_CODEC, frontText);
+        valueOutput.store("back_text", SignText.DIRECT_CODEC, backText);
+        valueOutput.putBoolean("waxed", waxed);
     }
 
-    private void readFromNbt(CompoundTag nbt, HolderLookup.Provider provider)
+    private void readFromNbt(ValueInput valueInput)
     {
-        DynamicOps<Tag> regOps = provider.createSerializationContext(NbtOps.INSTANCE);
-        frontText = nbt.read("front_text", SignText.DIRECT_CODEC, regOps).map(lines -> loadLines(level, worldPosition, lines)).orElseGet(SignText::new);
-        backText = nbt.read("back_text", SignText.DIRECT_CODEC, regOps).map(lines -> loadLines(level, worldPosition, lines)).orElseGet(SignText::new);
-        waxed = nbt.getBooleanOr("waxed", false);
+        frontText = valueInput.read("front_text", SignText.DIRECT_CODEC).map(lines -> loadLines(level, worldPosition, lines)).orElseGet(SignText::new);
+        backText = valueInput.read("back_text", SignText.DIRECT_CODEC).map(lines -> loadLines(level, worldPosition, lines)).orElseGet(SignText::new);
+        waxed = valueInput.getBooleanOr("waxed", false);
     }
 
     private static SignText loadLines(@Nullable Level level, BlockPos pos, SignText text)
@@ -281,17 +271,17 @@ public class FramedSignBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput valueOutput)
     {
-        writeToNbt(nbt);
-        super.saveAdditional(nbt, provider);
+        writeToNbt(valueOutput);
+        super.saveAdditional(valueOutput);
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput valueInput)
     {
-        super.loadAdditional(nbt, provider);
-        readFromNbt(nbt, provider);
+        super.loadAdditional(valueInput);
+        readFromNbt(valueInput);
     }
 
 

@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
@@ -40,15 +41,15 @@ public class FramedTankRenderer implements BlockEntityRenderer<FramedTankBlockEn
         int tint = fluidExt.getTintColor(fluidState, be.getLevel(), be.getBlockPos());
         ResourceLocation stillTex = fluidExt.getStillTexture(fluidState, be.getLevel(), be.getBlockPos());
         ResourceLocation flowTex = fluidExt.getFlowingTexture(fluidState, be.getLevel(), be.getBlockPos());
-        RenderType renderType = ItemBlockRenderTypes.getRenderLayer(fluidState);
+        ChunkSectionLayer chunkLayer = ItemBlockRenderTypes.getRenderLayer(fluidState);
 
-        renderContents(poseStack, buffer, renderType, light, fluid.getAmount(), stillTex, flowTex, tint);
+        renderContents(poseStack, buffer, chunkLayer, light, fluid.getAmount(), stillTex, flowTex, tint);
     }
 
     public static void renderContents(
             PoseStack poseStack,
             MultiBufferSource buffer,
-            RenderType renderType,
+            ChunkSectionLayer chunkLayer,
             int light,
             int fluidAmount,
             ResourceLocation stillTex,
@@ -59,7 +60,7 @@ public class FramedTankRenderer implements BlockEntityRenderer<FramedTankBlockEn
         float height = Mth.clamp(fluidAmount / (float) TankFluidHandler.CAPACITY, OFFSET, 1F - OFFSET);
         boolean sameTex = stillTex.equals(flowTex);
 
-        RenderType bufferType = RenderTypeHelper.getEntityRenderType(renderType);
+        RenderType bufferType = RenderTypeHelper.getEntityRenderType(chunkLayer);
         VertexConsumer consumer = buffer.getBuffer(bufferType);
         PoseStack.Pose pose = poseStack.last();
 

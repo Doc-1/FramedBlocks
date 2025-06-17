@@ -42,6 +42,8 @@ public final class TankItemModel<T> implements ItemModel
         SimpleFluidContent fluid = stack.getOrDefault(FBContent.DC_TYPE_TANK_CONTENTS, SimpleFluidContent.EMPTY);
         if (!fluid.isEmpty())
         {
+            state.setAnimated(); // Assume that all fluids use animated textures
+
             ItemStackRenderState.LayerRenderState specialLayer = state.newLayer();
             if (stack.hasFoil())
             {

@@ -1,9 +1,8 @@
 package xfacthd.framedblocks.common.blockentity.special;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Clearable;
@@ -15,6 +14,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.util.Utils;
@@ -125,22 +126,19 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput valueOutput)
     {
-        nbt.put(INVENTORY_NBT_KEY, itemHandler.serializeNBT(provider));
-        if (customName != null)
-        {
-            nbt.putString("custom_name", Component.Serializer.toJson(customName, provider));
-        }
-        super.saveAdditional(nbt, provider);
+        itemHandler.serialize(valueOutput.child(INVENTORY_NBT_KEY));
+        valueOutput.storeNullable("custom_name", ComponentSerialization.CODEC, customName);
+        super.saveAdditional(valueOutput);
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries)
+    public void loadAdditional(ValueInput valueInput)
     {
-        super.loadAdditional(nbt, registries);
-        itemHandler.deserializeNBT(registries, nbt.getCompoundOrEmpty(INVENTORY_NBT_KEY));
-        customName = parseCustomNameSafe(nbt.get("custom_name"), registries);
+        super.loadAdditional(valueInput);
+        itemHandler.deserialize(valueInput.childOrEmpty(INVENTORY_NBT_KEY));
+        customName = parseCustomNameSafe(valueInput, "custom_name");
     }
 
     protected Component getDefaultName()
