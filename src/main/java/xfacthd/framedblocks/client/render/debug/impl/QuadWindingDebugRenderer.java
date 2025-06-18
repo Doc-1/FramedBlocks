@@ -10,22 +10,16 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.TriState;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.model.data.ModelData;
 import org.joml.Vector3f;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
-import xfacthd.framedblocks.api.camo.block.SimpleBlockCamoContainer;
-import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
-import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.model.quad.QuadData;
 import xfacthd.framedblocks.api.render.debug.BlockDebugRenderer;
 import xfacthd.framedblocks.api.util.SingleBlockFakeLevel;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.config.DevToolsConfig;
 
 import java.util.Objects;
@@ -34,9 +28,6 @@ public class QuadWindingDebugRenderer implements BlockDebugRenderer<FramedBlockE
 {
     public static final QuadWindingDebugRenderer INSTANCE = new QuadWindingDebugRenderer();
     private static final RandomSource RANDOM = RandomSource.create();
-    private static final FramedBlockData FRAMED_BLOCK_DATA = new FramedBlockData(
-            new SimpleBlockCamoContainer(Blocks.STONE.defaultBlockState(), FBContent.FACTORY_BLOCK.get()), new boolean[6], false, false, false, TriState.DEFAULT
-    );
 
     @Override
     public void render(FramedBlockEntity be, BlockHitResult blockHit, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay)
@@ -46,11 +37,7 @@ public class QuadWindingDebugRenderer implements BlockDebugRenderer<FramedBlockE
         Vector3f norm = new Vector3f();
         Vec3 viewVector = Objects.requireNonNull(Minecraft.getInstance().player).getViewVector(partialTick).normalize();
 
-        ModelData modelData = Objects.requireNonNull(be.getLevel())
-                .getModelData(be.getBlockPos())
-                .derive()
-                .with(AbstractFramedBlockData.PROPERTY, FRAMED_BLOCK_DATA)
-                .build();
+        ModelData modelData = Objects.requireNonNull(be.getLevel()).getModelData(be.getBlockPos());
 
         BlockAndTintGetter level = new SingleBlockFakeLevel(Objects.requireNonNull(be.getLevel()), be.getBlockPos(), be.getBlockState(), be, modelData);
         for (BlockModelPart part : model.collectParts(level, be.getBlockPos(), be.getBlockState(), RANDOM))
