@@ -21,8 +21,8 @@ import java.util.Objects;
 public final class ReinforcementModel
 {
     public static final BlockState SHADER_STATE = Blocks.OBSIDIAN.defaultBlockState();
-    private static final ResourceLocation LOCATION = Utils.rl("block/framed_reinforcement");
-    public static final StandaloneModelKey<QuadCollection> MODEL_KEY = new StandaloneModelKey<>(LOCATION);
+    public static final ResourceLocation MODEL_ID = Utils.rl("block/framed_reinforcement");
+    public static final StandaloneModelKey<QuadCollection> MODEL_KEY = new StandaloneModelKey<>(MODEL_ID::toString);
     private static final Direction[] DIRECTIONS = Direction.values();
     @Nullable
     private static SimpleModelWrapper baseModel = null;

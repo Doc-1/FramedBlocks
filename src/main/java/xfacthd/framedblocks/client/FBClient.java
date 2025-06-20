@@ -15,7 +15,7 @@ import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import net.neoforged.neoforge.client.model.standalone.StandaloneModelBaker;
+import net.neoforged.neoforge.client.model.standalone.SimpleUnbakedStandaloneModel;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.IFramedBlock;
@@ -485,9 +485,9 @@ public final class FBClient
 
     private static void onModelRegister(final ModelEvent.RegisterStandalone event)
     {
-        event.register(FluidModel.BARE_MODEL_KEY, FluidModel.DUMMY_STANDALONE_BAKER);
-        event.register(FluidModel.BARE_MODEL_SINGLE_KEY, FluidModel.DUMMY_STANDALONE_BAKER);
-        event.register(ReinforcementModel.MODEL_KEY, StandaloneModelBaker.quadCollection());
+        event.register(FluidModel.BARE_MODEL_KEY, FluidModel.BARE_UNBAKED_MODEL);
+        event.register(FluidModel.BARE_MODEL_SINGLE_KEY, FluidModel.BARE_UNBAKED_MODEL_SINGLE);
+        event.register(ReinforcementModel.MODEL_KEY, SimpleUnbakedStandaloneModel.quadCollection(ReinforcementModel.MODEL_ID));
     }
 
     private static void onModelsLoaded(final ModelEvent.BakingCompleted event)
