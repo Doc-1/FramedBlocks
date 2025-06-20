@@ -27,14 +27,11 @@ public record ClientboundOpenSignScreenPayload(BlockPos pos, boolean frontText) 
         return TYPE;
     }
 
-    public void handle(IPayloadContext ctx)
+    public void handle(@SuppressWarnings("unused") IPayloadContext ctx)
     {
-        ctx.enqueueWork(() ->
+        if (FMLEnvironment.dist.isClient())
         {
-            if (FMLEnvironment.dist.isClient())
-            {
-                ClientAccess.openSignScreen(pos, frontText);
-            }
-        });
+            ClientAccess.openSignScreen(pos, frontText);
+        }
     }
 }

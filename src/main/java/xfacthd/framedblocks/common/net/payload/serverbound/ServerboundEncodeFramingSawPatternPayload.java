@@ -37,17 +37,14 @@ public record ServerboundEncodeFramingSawPatternPayload(int containerId, Resourc
 
     public void handle(IPayloadContext ctx)
     {
-        ctx.enqueueWork(() ->
+        ServerPlayer player = (ServerPlayer) ctx.player();
+        if (player.containerMenu instanceof FramingSawWithEncoderMenu menu && menu.containerId == containerId)
         {
-            ServerPlayer player = (ServerPlayer) ctx.player();
-            if (player.containerMenu instanceof FramingSawWithEncoderMenu menu && menu.containerId == containerId)
+            RecipeHolder<?> holder = player.level().recipeAccess().byKey(recipeId).orElse(null);
+            if (holder != null && holder.value() instanceof FramingSawRecipe recipe)
             {
-                RecipeHolder<?> holder = player.level().recipeAccess().byKey(recipeId).orElse(null);
-                if (holder != null && holder.value() instanceof FramingSawRecipe recipe)
-                {
-                    menu.tryEncodePattern(recipe, inputs);
-                }
+                menu.tryEncodePattern(recipe, inputs);
             }
-        });
+        }
     }
 }

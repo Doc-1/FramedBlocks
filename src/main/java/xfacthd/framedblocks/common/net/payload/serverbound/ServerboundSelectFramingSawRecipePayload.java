@@ -29,14 +29,11 @@ public record ServerboundSelectFramingSawRecipePayload(int containerId, int reci
 
     public void handle(IPayloadContext ctx)
     {
-        ctx.enqueueWork(() ->
+        Player player = ctx.player();
+        AbstractContainerMenu menu = player.containerMenu;
+        if (menu.containerId == containerId && menu instanceof IFramingSawMenu)
         {
-            Player player = ctx.player();
-            AbstractContainerMenu menu = player.containerMenu;
-            if (menu.containerId == containerId && menu instanceof IFramingSawMenu)
-            {
-                menu.clickMenuButton(player, recipeIdx);
-            }
-        });
+            menu.clickMenuButton(player, recipeIdx);
+        }
     }
 }

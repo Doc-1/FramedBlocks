@@ -2,7 +2,7 @@ package xfacthd.framedblocks.common.net;
 
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.HandlerThread;
-import xfacthd.framedblocks.common.data.cullupdate.ClientCullingUpdateTracker;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import xfacthd.framedblocks.common.net.payload.clientbound.ClientboundCullingUpdatePayload;
 import xfacthd.framedblocks.common.net.payload.clientbound.ClientboundOpenSignScreenPayload;
 import xfacthd.framedblocks.common.net.payload.serverbound.ServerboundEncodeFramingSawPatternPayload;
@@ -15,13 +15,24 @@ public final class NetworkHandler
 
     public static void onRegisterPayloads(final RegisterPayloadHandlersEvent event)
     {
-        event.registrar(PROTOCOL_VERSION)
-                .executesOn(HandlerThread.NETWORK)
+        PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);
+        registerNetworkThreadPayloads(registrar);
+        registerMainThreadPayloads(registrar);
+    }
+
+    private static void registerNetworkThreadPayloads(PayloadRegistrar registrar)
+    {
+        registrar.executesOn(HandlerThread.NETWORK)
                 .playToServer(
                         ServerboundSignUpdatePayload.TYPE,
                         ServerboundSignUpdatePayload.CODEC,
                         ServerboundSignUpdatePayload::handle
-                )
+                );
+    }
+
+    private static void registerMainThreadPayloads(PayloadRegistrar registrar)
+    {
+        registrar.executesOn(HandlerThread.MAIN)
                 .playToClient(
                         ClientboundOpenSignScreenPayload.TYPE,
                         ClientboundOpenSignScreenPayload.CODEC,
@@ -30,7 +41,7 @@ public final class NetworkHandler
                 .playToClient(
                         ClientboundCullingUpdatePayload.TYPE,
                         ClientboundCullingUpdatePayload.CODEC,
-                        ClientCullingUpdateTracker::handleCullingUpdates
+                        ClientboundCullingUpdatePayload::handle
                 )
                 .playToServer(
                         ServerboundSelectFramingSawRecipePayload.TYPE,

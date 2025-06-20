@@ -1,34 +1,26 @@
 package xfacthd.framedblocks.common.data.cullupdate;
 
+import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.client.util.ClientTaskQueue;
-import xfacthd.framedblocks.common.net.payload.clientbound.ClientboundCullingUpdatePayload;
 
 import java.util.Objects;
 
 public final class ClientCullingUpdateTracker
 {
-    public static void handleCullingUpdates(ClientboundCullingUpdatePayload payload, IPayloadContext ctx)
-    {
-        CullingUpdateChunk chunk = new CullingUpdateChunk(new ChunkPos(payload.chunk()), payload.positions());
-        ctx.enqueueWork(() -> handleCullingUpdates(chunk));
-    }
-
-    private static void handleCullingUpdates(CullingUpdateChunk chunk)
+    public static void handleCullingUpdates(long chunkPos, LongSet positions)
     {
         ClientTaskQueue.enqueueClientTask(1, () ->
         {
             Level level = Objects.requireNonNull(Minecraft.getInstance().level);
             BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
-            ChunkPos cp = chunk.chunk();
-            if (level.hasChunk(cp.x, cp.z))
+            if (level.hasChunk(ChunkPos.getX(chunkPos), ChunkPos.getZ(chunkPos)))
             {
-                chunk.positions().forEach(pos ->
+                positions.forEach(pos ->
                 {
                     blockPos.set(pos);
                     if (level.getBlockEntity(blockPos) instanceof FramedBlockEntity be)
