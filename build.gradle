@@ -197,8 +197,8 @@ dependencies {
 
     modCompileOnly "curse.maven:atlasviewer-633577:4762356"
 
-    additionalRuntimeClasspath(group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.1.1')
-    jarJar(implementation(group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.1.1')) {
+    additionalRuntimeClasspath(group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: caffeine_version)
+    jarJar(implementation(group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: caffeine_version)) {
         transitive(false)
     }
 
