@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.RotationSegment;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.api.model.wrapping.WrapHelper;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
@@ -26,13 +27,14 @@ public class FramedMiniCubeBlock extends FramedBlock
     public FramedMiniCubeBlock(Properties props)
     {
         super(BlockType.FRAMED_MINI_CUBE, props);
+        registerDefaultState(defaultBlockState().setValue(FramedProperties.TOP, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         super.createBlockStateDefinition(builder);
-        builder.add(BlockStateProperties.ROTATION_16, BlockStateProperties.WATERLOGGED);
+        builder.add(BlockStateProperties.ROTATION_16, FramedProperties.TOP, BlockStateProperties.WATERLOGGED);
     }
 
     @Override
@@ -44,6 +46,7 @@ public class FramedMiniCubeBlock extends FramedBlock
                         BlockStateProperties.ROTATION_16,
                         RotationSegment.convertToSegment(modCtx.getRotation() + 180F)
                 ))
+                .withTop()
                 .withWater()
                 .build();
     }
