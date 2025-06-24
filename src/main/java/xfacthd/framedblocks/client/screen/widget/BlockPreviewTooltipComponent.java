@@ -23,8 +23,7 @@ public final class BlockPreviewTooltipComponent implements ClientTooltipComponen
 {
     private static final int SIZE = 36;
     private static final float STACK_SCALE = 48;
-    private static final Quaternionf ROT_180_ZP = Axis.ZP.rotationDegrees(180);
-    private static final Quaternionf ROT_22_5_XN = Axis.XN.rotationDegrees(22.5F);
+    private static final Quaternionf ROT_22_5_XP = Axis.XP.rotationDegrees(22.5F);
 
     private final ItemStackRenderState renderState;
 
@@ -36,7 +35,6 @@ public final class BlockPreviewTooltipComponent implements ClientTooltipComponen
     @Override
     public void renderImage(Font font, int x, int y, int width, int height, GuiGraphics graphics)
     {
-        graphics.fill(x, y, x + SIZE, y + SIZE, -1);
         graphics.submitPictureInPictureRenderState(new BlockPreviewPictureInPictureRenderState(
                 renderState,
                 (int) (System.currentTimeMillis() / 20 % 360),
@@ -103,14 +101,14 @@ public final class BlockPreviewTooltipComponent implements ClientTooltipComponen
         {
             ItemStackRenderState renderState = state.renderState;
 
+            poseStack.scale(1, -1, -1);
             poseStack.mulPose(new Matrix4f()
-                    .rotate(ROT_180_ZP)
-                    .rotate(ROT_22_5_XN)
+                    .rotate(ROT_22_5_XP)
                     .rotate(Axis.YP.rotationDegrees(state.rotY))
             );
 
             // FIXME: renders way too dark (using a block renderer doesn't fix it)
-            Minecraft.getInstance().gameRenderer.getLighting().setupFor(Lighting.Entry.ENTITY_IN_UI);
+            Minecraft.getInstance().gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_3D);
             renderState.render(poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
 
             lastModelIdentity = renderState.getModelIdentity();
