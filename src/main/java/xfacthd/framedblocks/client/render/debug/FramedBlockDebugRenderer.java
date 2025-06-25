@@ -36,9 +36,9 @@ public final class FramedBlockDebugRenderer
     private static boolean anyEnabled = false;
 
     @SuppressWarnings("unchecked")
-    private static void onRenderLevelStage(final RenderLevelStageEvent event)
+    private static void onRenderLevelStage(final RenderLevelStageEvent.AfterBlockEntities event)
     {
-        if (!anyEnabled || event.getStage() != RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) return;
+        if (!anyEnabled) return;
 
         HitResult hit = Minecraft.getInstance().hitResult;
         if (!(hit instanceof BlockHitResult blockHit)) return;

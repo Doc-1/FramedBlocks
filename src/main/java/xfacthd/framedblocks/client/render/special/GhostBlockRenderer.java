@@ -56,9 +56,9 @@ public final class GhostBlockRenderer
     private static final float SCALE = 1.0001F;
     private static final List<BlockModelPart> PART_SCRATCH_LIST = new ObjectArrayList<>();
 
-    public static void onRenderLevelStage(final RenderLevelStageEvent event)
+    public static void onRenderLevelStage(final RenderLevelStageEvent.AfterParticles event)
     {
-        if (!ClientConfig.VIEW.showGhostBlocks() || event.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES)
+        if (!ClientConfig.VIEW.showGhostBlocks())
         {
             return;
         }

@@ -557,8 +557,14 @@ public final class FBClient
 
     private static void onRegisterPictureInPictureRenderers(RegisterPictureInPictureRenderersEvent event)
     {
-        event.register(FramedSignScreen.SignBlockPictureInPictureRenderer::new);
-        event.register(BlockPreviewTooltipComponent.BlockPreviewPictureInPictureRenderer::new);
+        event.register(
+                FramedSignScreen.SignBlockPictureInPictureRenderState.class,
+                FramedSignScreen.SignBlockPictureInPictureRenderer::new
+        );
+        event.register(
+                BlockPreviewTooltipComponent.BlockPreviewPictureInPictureRenderState.class,
+                BlockPreviewTooltipComponent.BlockPreviewPictureInPictureRenderer::new
+        );
     }
 
 
