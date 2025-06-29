@@ -1,10 +1,10 @@
 package xfacthd.framedblocks.selftest.tests;
 
 import net.minecraft.world.level.block.Block;
+import xfacthd.framedblocks.api.block.IFramedDoubleBlock;
+import xfacthd.framedblocks.api.block.cache.DoubleBlockStateCache;
 import xfacthd.framedblocks.api.block.doubleblock.CamoGetter;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
-import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockStateCache;
 import xfacthd.framedblocks.selftest.SelfTestReporter;
 
 import java.util.List;

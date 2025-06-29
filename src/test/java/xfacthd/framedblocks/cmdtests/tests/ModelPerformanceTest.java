@@ -15,6 +15,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
+import xfacthd.framedblocks.api.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.block.SimpleBlockCamoContainer;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
@@ -25,7 +26,6 @@ import xfacthd.framedblocks.api.model.data.FramedDoubleBlockData;
 import xfacthd.framedblocks.client.model.baked.FramedBlockModel;
 import xfacthd.framedblocks.cmdtests.SpecialTestCommand;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.util.MarkdownTable;
 

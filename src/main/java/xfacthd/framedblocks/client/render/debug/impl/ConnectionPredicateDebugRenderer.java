@@ -12,13 +12,13 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.BlockHitResult;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
+import xfacthd.framedblocks.api.block.cache.DoubleBlockStateCache;
 import xfacthd.framedblocks.api.block.cache.StateCache;
 import xfacthd.framedblocks.api.block.doubleblock.CamoGetter;
 import xfacthd.framedblocks.api.render.Quaternions;
 import xfacthd.framedblocks.api.render.debug.BlockDebugRenderer;
 import xfacthd.framedblocks.api.util.ClientUtils;
 import xfacthd.framedblocks.common.config.DevToolsConfig;
-import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockStateCache;
 
 public class ConnectionPredicateDebugRenderer implements BlockDebugRenderer<FramedBlockEntity>
 {

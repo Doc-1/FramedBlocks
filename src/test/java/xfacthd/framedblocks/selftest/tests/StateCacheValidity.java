@@ -4,9 +4,9 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.StateDefinition;
+import xfacthd.framedblocks.api.block.cache.DoubleBlockStateCache;
 import xfacthd.framedblocks.api.block.cache.StateCache;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
-import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockStateCache;
 import xfacthd.framedblocks.selftest.SelfTestReporter;
 
 import java.util.Arrays;

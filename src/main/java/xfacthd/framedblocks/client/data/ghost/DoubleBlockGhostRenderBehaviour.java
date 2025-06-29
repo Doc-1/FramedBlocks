@@ -5,12 +5,12 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.api.ghost.GhostRenderBehaviour;
 import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.model.data.FramedDoubleBlockData;
-import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 
 public sealed class DoubleBlockGhostRenderBehaviour implements GhostRenderBehaviour permits AdjustableDoubleBlockGhostRenderBehaviour
 {

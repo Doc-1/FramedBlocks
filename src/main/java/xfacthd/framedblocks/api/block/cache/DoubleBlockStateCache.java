@@ -1,16 +1,15 @@
-package xfacthd.framedblocks.common.data.doubleblock;
+package xfacthd.framedblocks.api.block.cache;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.api.block.cache.StateCache;
+import xfacthd.framedblocks.api.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.api.block.doubleblock.CamoGetter;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.api.block.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 
 import java.util.Arrays;
 import java.util.Objects;
