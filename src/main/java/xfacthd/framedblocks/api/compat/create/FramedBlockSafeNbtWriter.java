@@ -5,7 +5,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
-import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
+import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 
 import java.util.Set;
@@ -33,12 +33,12 @@ public class FramedBlockSafeNbtWriter implements SafeNbtWriterRegistry.SafeNbtWr
             {
                 tag.remove(FramedBlockEntity.CAMO_NBT_KEY);
             }
-            if (fbe instanceof IFramedDoubleBlockEntity fdbe)
+            if (fbe instanceof FramedDoubleBlockEntity fdbe)
             {
                 CamoContainer<?, ?> camoTwo = fdbe.getCamoTwo();
                 if (!camoTwo.canTriviallyConvertToItemStack())
                 {
-                    tag.remove(IFramedDoubleBlockEntity.CAMO_TWO_NBT_KEY);
+                    tag.remove(FramedDoubleBlockEntity.CAMO_TWO_NBT_KEY);
                 }
             }
             for (String key : keysToClean)

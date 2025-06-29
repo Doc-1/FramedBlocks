@@ -43,8 +43,9 @@ import xfacthd.framedblocks.api.util.registration.DeferredBlockEntity;
 
 import java.util.List;
 
-public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFramedDoubleBlockEntity
+public class FramedDoubleBlockEntity extends FramedBlockEntity
 {
+    public static final String CAMO_TWO_NBT_KEY = "camo_two";
     private static final DeferredBlockEntity<FramedDoubleBlockEntity> DEFAULT_TYPE = DeferredBlockEntity.createBlockEntity(
             Utils.rl("framed_double_tile")
     );
@@ -100,7 +101,6 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
         return secondary ? camoContainer : getCamo();
     }
 
-    @Override
     public final CamoContainer<?, ?> getCamoTwo()
     {
         return camoContainer;

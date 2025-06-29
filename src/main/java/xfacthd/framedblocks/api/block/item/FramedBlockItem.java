@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
-import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
+import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.camo.CamoPrinter;
 import xfacthd.framedblocks.api.util.SoundUtils;
 import xfacthd.framedblocks.api.util.Utils;
@@ -53,7 +53,7 @@ public class FramedBlockItem extends BlockItem
         SoundType soundOne = be.getCamo().getContent().getSoundType();
         SoundUtils.playPlaceSound(context, soundOne, false);
 
-        if (!(be instanceof IFramedDoubleBlockEntity dbe)) return;
+        if (!(be instanceof FramedDoubleBlockEntity dbe)) return;
 
         SoundType soundTwo = dbe.getCamoTwo().getContent().getSoundType();
         if (!SoundUtils.isSameSound(soundOne, soundTwo, SoundType::getPlaceSound))

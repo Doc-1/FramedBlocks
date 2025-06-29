@@ -10,7 +10,7 @@ import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.ui.IElement;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
-import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
+import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 
 final class FramedBlockComponentProvider implements IBlockComponentProvider
 {
@@ -34,7 +34,7 @@ final class FramedBlockComponentProvider implements IBlockComponentProvider
     {
         if (accessor.getBlockEntity() instanceof FramedBlockEntity fbe)
         {
-            if (fbe.getBlockType().isDoubleBlock() && fbe instanceof IFramedDoubleBlockEntity fdbe)
+            if (fbe.getBlockType().isDoubleBlock() && fbe instanceof FramedDoubleBlockEntity fdbe)
             {
                 tooltip.add(Component.translatable(JadeCompat.LABEL_CAMO_ONE, fbe.getCamo().getContent().getCamoName()));
                 tooltip.add(Component.translatable(JadeCompat.LABEL_CAMO_TWO, fdbe.getCamoTwo().getContent().getCamoName()));

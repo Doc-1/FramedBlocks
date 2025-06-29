@@ -11,7 +11,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import org.jetbrains.annotations.ApiStatus;
 import xfacthd.framedblocks.api.block.FramedProperties;
-import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
+import xfacthd.framedblocks.api.block.IFramedDoubleBlock;
+import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.block.render.FramedClientBlockExtensions;
 import xfacthd.framedblocks.api.predicate.contex.ConTexMode;
 import xfacthd.framedblocks.api.predicate.contex.ConnectionPredicate;
@@ -72,9 +73,9 @@ public interface IBlockType
      * @return true if this type represents a block that combines two models into one and allows those to have separate
      * camos applied.
      *
-     * @apiNote if a block's type returns true from this method, its {@link BlockEntity} must implement
-     * {@link IFramedDoubleBlockEntity}. The {@link Block} and {@link BlockStateModel} are not required to extend or implement
-     * any specific class
+     * @apiNote if a block's type returns true from this method, its {@link Block} must implement {@link IFramedDoubleBlock}
+     * and its {@link BlockEntity} must extend {@link FramedDoubleBlockEntity}. The {@link BlockStateModel} is not required
+     * to extend or implement any specific class
      */
     default boolean isDoubleBlock()
     {

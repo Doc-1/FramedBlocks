@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
+import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.block.cache.DoubleBlockStateCache;
 import xfacthd.framedblocks.api.block.cache.StateCache;
 import xfacthd.framedblocks.api.block.doubleblock.CamoGetter;
@@ -112,7 +112,7 @@ public interface IFramedDoubleBlock extends IFramedBlock
     @Override
     default boolean addRunningEffects(BlockState state, Level level, BlockPos pos, Entity entity)
     {
-        if (level.getBlockEntity(pos) instanceof IFramedDoubleBlockEntity be)
+        if (level.getBlockEntity(pos) instanceof FramedDoubleBlockEntity be)
         {
             DoubleBlockTopInteractionMode mode = getCache(state).getTopInteractionMode();
             if (mode.applyFirst()) ParticleHelper.spawnRunningParticles(be.getCamo(), level, pos, entity);
@@ -127,7 +127,7 @@ public interface IFramedDoubleBlock extends IFramedBlock
             BlockState state, ServerLevel level, BlockPos pos, BlockState sameState, LivingEntity entity, int count
     )
     {
-        if (level.getBlockEntity(pos) instanceof IFramedDoubleBlockEntity be)
+        if (level.getBlockEntity(pos) instanceof FramedDoubleBlockEntity be)
         {
             DoubleBlockTopInteractionMode mode = getCache(state).getTopInteractionMode();
             if (mode.applyFirst()) ParticleHelper.spawnLandingParticles(be.getCamo(), level, pos, entity, count);
@@ -141,7 +141,7 @@ public interface IFramedDoubleBlock extends IFramedBlock
     @SuppressWarnings("deprecation")
     default void playStepSound(BlockState state, Level level, BlockPos pos, Entity entity, float volumeMult, float pitchMult)
     {
-        if (!(level.getBlockEntity(pos) instanceof IFramedDoubleBlockEntity be))
+        if (!(level.getBlockEntity(pos) instanceof FramedDoubleBlockEntity be))
         {
             SoundUtils.playStepSound(entity, state.getSoundType(), volumeMult, pitchMult);
             return;
@@ -169,7 +169,7 @@ public interface IFramedDoubleBlock extends IFramedBlock
     @SuppressWarnings("deprecation")
     default void playFallSound(BlockState state, Level level, BlockPos pos, LivingEntity entity)
     {
-        if (!(level.getBlockEntity(pos) instanceof IFramedDoubleBlockEntity be))
+        if (!(level.getBlockEntity(pos) instanceof FramedDoubleBlockEntity be))
         {
             SoundUtils.playFallSound(entity, state.getSoundType());
             return;

@@ -32,7 +32,7 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import org.slf4j.Logger;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
-import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
+import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.block.render.FramedClientBlockExtensions;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.CamoContainerFactory;
@@ -85,7 +85,7 @@ public final class TestUtils
             }
         }
         be.setCamo(camoContainer, false);
-        if (be instanceof IFramedDoubleBlockEntity)
+        if (be instanceof FramedDoubleBlockEntity)
         {
             be.setCamo(camoContainer, true);
         }

@@ -8,7 +8,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
-import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
+import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.CamoContainerHelper;
 import xfacthd.framedblocks.api.util.Utils;
@@ -34,7 +34,7 @@ public class FramedBlockEntityItemRequirement implements SchematicRequirementReg
             {
                 requirements.add(consume(CamoContainerHelper.dropCamo(camoOne)));
             }
-            if (fbe instanceof IFramedDoubleBlockEntity fdbe)
+            if (fbe instanceof FramedDoubleBlockEntity fdbe)
             {
                 CamoContainer<?, ?> camoTwo = fdbe.getCamoTwo();
                 if (!camoTwo.isEmpty() && camoTwo.canTriviallyConvertToItemStack())

@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
+import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.util.SoundUtils;
 
 public final class FramedClientDoubleBlockExtensions extends FramedClientBlockExtensions
@@ -23,7 +23,7 @@ public final class FramedClientDoubleBlockExtensions extends FramedClientBlockEx
     {
         BlockHitResult hit = (BlockHitResult) target;
         boolean suppressed = suppressParticles(state, level, hit.getBlockPos());
-        if (!suppressed && level.getBlockEntity(hit.getBlockPos()) instanceof IFramedDoubleBlockEntity be)
+        if (!suppressed && level.getBlockEntity(hit.getBlockPos()) instanceof FramedDoubleBlockEntity be)
         {
             ParticleHelper.Client.addHitEffects(state, level, hit, be.getCamo().getContent(), engine);
             ParticleHelper.Client.addHitEffects(state, level, hit, be.getCamoTwo().getContent(), engine);
@@ -36,7 +36,7 @@ public final class FramedClientDoubleBlockExtensions extends FramedClientBlockEx
     public boolean addDestroyEffects(BlockState state, Level level, BlockPos pos, ParticleEngine engine)
     {
         boolean suppressed = suppressParticles(state, level, pos);
-        if (!suppressed && level.getBlockEntity(pos) instanceof IFramedDoubleBlockEntity be)
+        if (!suppressed && level.getBlockEntity(pos) instanceof FramedDoubleBlockEntity be)
         {
             ParticleHelper.Client.addDestroyEffects(state, level, pos, be.getCamo().getContent(), engine);
             ParticleHelper.Client.addDestroyEffects(state, level, pos, be.getCamoTwo().getContent(), engine);
@@ -48,7 +48,7 @@ public final class FramedClientDoubleBlockExtensions extends FramedClientBlockEx
     @Override
     public boolean playHitSound(BlockState state, Level level, BlockPos pos, Direction hitFace, SoundManager soundManager)
     {
-        if (level.getBlockEntity(pos) instanceof IFramedDoubleBlockEntity be)
+        if (level.getBlockEntity(pos) instanceof FramedDoubleBlockEntity be)
         {
             SoundType soundOne = be.getCamo().getContent().getSoundType();
             SoundUtils.Client.playHitSound(soundManager, pos, soundOne);
@@ -66,7 +66,7 @@ public final class FramedClientDoubleBlockExtensions extends FramedClientBlockEx
     @Override
     public boolean playBreakSound(BlockState state, Level level, BlockPos pos)
     {
-        if (level.getBlockEntity(pos) instanceof IFramedDoubleBlockEntity be)
+        if (level.getBlockEntity(pos) instanceof FramedDoubleBlockEntity be)
         {
             SoundType soundOne = be.getCamo().getContent().getSoundType();
             SoundUtils.Client.playBreakSound(level, pos, soundOne);
