@@ -23,6 +23,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
@@ -36,8 +37,8 @@ import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.api.util.ColorUtils;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.api.util.ValueMerger;
+import xfacthd.framedblocks.api.util.registration.DeferredBlockEntity;
 import xfacthd.framedblocks.client.model.FramedDoubleBlockData;
-import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockStateCache;
@@ -46,6 +47,9 @@ import java.util.List;
 
 public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFramedDoubleBlockEntity
 {
+    private static final DeferredBlockEntity<FramedDoubleBlockEntity> DEFAULT_TYPE = DeferredBlockEntity.createBlockEntity(
+            Utils.rl("framed_double_tile")
+    );
     private static final ValueMerger<MapColor> MAP_COLOR_MERGER = new ValueMerger<>(ColorUtils::average);
     private static final ValueMerger<Integer> BEACON_MULT_MERGER = new ValueMerger<>(ARGB::average);
     private static final ValueMerger<Integer> FLAMMABILITY_MERGER = new ValueMerger<>(i -> i == -1, Math::min);
@@ -53,9 +57,10 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     private final boolean[] culledFaces = new boolean[6];
     private CamoContainer<?, ?> camoContainer = EmptyCamoContainer.EMPTY;
 
+    @ApiStatus.Internal
     public FramedDoubleBlockEntity(BlockPos pos, BlockState state)
     {
-        this(FBContent.BE_TYPE_FRAMED_DOUBLE_BLOCK.value(), pos, state);
+        this(DEFAULT_TYPE.value(), pos, state);
     }
 
     protected FramedDoubleBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state)
@@ -423,7 +428,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity implements IFrame
     @Override
     protected void collectCamoComponents(DataComponentMap.Builder builder)
     {
-        builder.set(FBContent.DC_TYPE_CAMO_LIST, CamoList.of(getCamo(), camoContainer));
+        builder.set(Utils.DC_TYPE_CAMO_LIST, CamoList.of(getCamo(), camoContainer));
     }
 
     @Override
