@@ -20,6 +20,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.render.FramedBlockColor;
 import xfacthd.framedblocks.api.block.render.FramedClientBlockExtensions;
+import xfacthd.framedblocks.api.block.render.FramedClientDoubleBlockExtensions;
 import xfacthd.framedblocks.api.block.render.NullCullPredicate;
 import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.model.item.block.BlockItemModelProvider;
@@ -113,7 +114,6 @@ import xfacthd.framedblocks.common.block.slopeslab.FramedFlatDoubleSlopeSlabCorn
 import xfacthd.framedblocks.common.block.stairs.standard.FramedStairsBlock;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.camo.fluid.FluidCamoClientHandler;
-import xfacthd.framedblocks.common.data.doubleblock.FramedClientDoubleBlockExtensions;
 
 import java.util.Set;
 
