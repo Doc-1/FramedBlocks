@@ -11,12 +11,12 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
+import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.common.blockentity.doubled.stairs.FramedSlopedDoubleStairsBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
-import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 
 public class FramedSlopedDoubleStairsBlock extends FramedSlopedStairsBlock implements IFramedDoubleBlock

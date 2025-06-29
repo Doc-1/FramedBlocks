@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
+import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.api.block.render.NullCullPredicate;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.model.AbstractFramedBlockModel;
@@ -23,7 +24,6 @@ import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockStateCache;
-import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
 
 import java.util.List;
 

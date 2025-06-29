@@ -17,6 +17,7 @@ import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
+import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.AbstractFramedDoubleBlock;
@@ -24,7 +25,6 @@ import xfacthd.framedblocks.common.blockentity.doubled.slopeslab.FramedElevatedD
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
-import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 
 public class FramedElevatedDoubleSlopeSlabBlock extends AbstractFramedDoubleBlock

@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.cache.StateCache;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
+import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.api.block.render.ParticleHelper;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
@@ -24,7 +25,6 @@ import xfacthd.framedblocks.api.util.SoundUtils;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockStateCache;
-import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 
 public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFramedDoubleBlock

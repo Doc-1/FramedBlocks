@@ -5,6 +5,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.cache.StateCache;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
+import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
