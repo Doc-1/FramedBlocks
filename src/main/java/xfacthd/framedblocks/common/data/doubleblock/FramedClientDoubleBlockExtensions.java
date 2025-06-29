@@ -13,7 +13,6 @@ import xfacthd.framedblocks.api.block.render.FramedClientBlockExtensions;
 import xfacthd.framedblocks.api.block.render.ParticleHelper;
 import xfacthd.framedblocks.api.util.SoundUtils;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
-import xfacthd.framedblocks.common.data.datamaps.SoundEventGroup;
 
 public final class FramedClientDoubleBlockExtensions extends FramedClientBlockExtensions
 {
@@ -57,7 +56,7 @@ public final class FramedClientDoubleBlockExtensions extends FramedClientBlockEx
             SoundUtils.Client.playHitSound(soundManager, pos, soundOne);
 
             SoundType soundTwo = be.getCamoTwo().getContent().getSoundType();
-            if (!SoundEventGroup.isSameSound(soundOne, soundTwo, SoundType::getHitSound))
+            if (!SoundUtils.isSameSound(soundOne, soundTwo, SoundType::getHitSound))
             {
                 SoundUtils.Client.playHitSound(soundManager, pos, soundTwo);
             }
@@ -75,7 +74,7 @@ public final class FramedClientDoubleBlockExtensions extends FramedClientBlockEx
             SoundUtils.Client.playBreakSound(level, pos, soundOne);
 
             SoundType soundTwo = be.getCamoTwo().getContent().getSoundType();
-            if (!SoundEventGroup.isSameSound(soundOne, soundTwo, SoundType::getBreakSound))
+            if (!SoundUtils.isSameSound(soundOne, soundTwo, SoundType::getBreakSound))
             {
                 SoundUtils.Client.playBreakSound(level, pos, soundTwo);
             }

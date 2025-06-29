@@ -21,7 +21,6 @@ import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
 import xfacthd.framedblocks.api.util.SoundUtils;
 import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
-import xfacthd.framedblocks.common.data.datamaps.SoundEventGroup;
 import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockStateCache;
@@ -161,7 +160,7 @@ public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFram
         if (!mode.applySecond()) return;
 
         SoundType soundTwo = be.getCamoTwo().getContent().getSoundType();
-        if (soundOne == null || !SoundEventGroup.isSameSound(soundOne, soundTwo, SoundType::getStepSound))
+        if (soundOne == null || !SoundUtils.isSameSound(soundOne, soundTwo, SoundType::getStepSound))
         {
             SoundUtils.playStepSound(entity, soundTwo, volumeMult, pitchMult);
         }
@@ -189,7 +188,7 @@ public interface IFramedDoubleBlock extends xfacthd.framedblocks.api.block.IFram
         if (!mode.applySecond()) return;
 
         SoundType soundTwo = be.getCamoTwo().getContent().getSoundType();
-        if (soundOne == null || !SoundEventGroup.isSameSound(soundOne, soundTwo, SoundType::getStepSound))
+        if (soundOne == null || !SoundUtils.isSameSound(soundOne, soundTwo, SoundType::getStepSound))
         {
             SoundUtils.playFallSound(entity, soundTwo);
         }

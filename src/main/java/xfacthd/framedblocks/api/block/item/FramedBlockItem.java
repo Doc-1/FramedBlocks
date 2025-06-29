@@ -22,7 +22,6 @@ import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.camo.CamoPrinter;
 import xfacthd.framedblocks.api.util.SoundUtils;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.common.data.datamaps.SoundEventGroup;
 
 import java.util.function.Consumer;
 
@@ -57,7 +56,7 @@ public class FramedBlockItem extends BlockItem
         if (!(be instanceof IFramedDoubleBlockEntity dbe)) return;
 
         SoundType soundTwo = dbe.getCamoTwo().getContent().getSoundType();
-        if (!SoundEventGroup.isSameSound(soundOne, soundTwo, SoundType::getPlaceSound))
+        if (!SoundUtils.isSameSound(soundOne, soundTwo, SoundType::getPlaceSound))
         {
             SoundUtils.playPlaceSound(context, soundTwo, false);
         }

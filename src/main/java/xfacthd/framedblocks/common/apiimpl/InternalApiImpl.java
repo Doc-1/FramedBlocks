@@ -3,10 +3,12 @@ package xfacthd.framedblocks.common.apiimpl;
 import com.google.common.base.Preconditions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +23,10 @@ import xfacthd.framedblocks.common.data.camo.CamoContainerFactories;
 import xfacthd.framedblocks.common.data.camo.block.rotator.BlockCamoRotators;
 import xfacthd.framedblocks.common.data.cullupdate.CullingUpdateTracker;
 import xfacthd.framedblocks.api.internal.InternalAPI;
+import xfacthd.framedblocks.common.data.datamaps.SoundEventGroup;
 import xfacthd.framedblocks.common.data.shapes.ShapeReloader;
+
+import java.util.function.Function;
 
 public final class InternalApiImpl implements InternalAPI
 {
@@ -76,5 +81,11 @@ public final class InternalApiImpl implements InternalAPI
     public BlockCamoRotator getCamoRotator(Block block)
     {
         return BlockCamoRotators.get(block);
+    }
+
+    @Override
+    public boolean isSameSound(SoundType typeOne, SoundType typeTwo, Function<SoundType, SoundEvent> eventResolver)
+    {
+        return SoundEventGroup.isSameSound(typeOne, typeTwo, eventResolver);
     }
 }

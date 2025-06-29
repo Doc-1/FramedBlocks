@@ -2,10 +2,12 @@ package xfacthd.framedblocks.api.internal;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -16,6 +18,8 @@ import xfacthd.framedblocks.api.camo.block.rotator.BlockCamoRotator;
 import xfacthd.framedblocks.api.shapes.ReloadableShapeProvider;
 import xfacthd.framedblocks.api.shapes.ShapeCache;
 import xfacthd.framedblocks.api.util.Utils;
+
+import java.util.function.Function;
 
 @ApiStatus.Internal
 public interface InternalAPI
@@ -46,4 +50,6 @@ public interface InternalAPI
     void registerReloadableShapeProvider(ReloadableShapeProvider provider);
 
     BlockCamoRotator getCamoRotator(Block block);
+
+    boolean isSameSound(SoundType typeOne, SoundType typeTwo, Function<SoundType, SoundEvent> eventResolver);
 }

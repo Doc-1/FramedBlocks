@@ -10,6 +10,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
+import xfacthd.framedblocks.api.internal.InternalAPI;
+
+import java.util.function.Function;
 
 public final class SoundUtils
 {
@@ -33,6 +36,11 @@ public final class SoundUtils
     public static void playFallSound(Entity entity, SoundType soundType)
     {
         entity.playSound(soundType.getFallSound(), soundType.getVolume() * .5F, soundType.getPitch() * .75F);
+    }
+
+    public static boolean isSameSound(SoundType typeOne, SoundType typeTwo, Function<SoundType, SoundEvent> eventResolver)
+    {
+        return InternalAPI.INSTANCE.isSameSound(typeOne, typeTwo, eventResolver);
     }
 
     public static final class Client
