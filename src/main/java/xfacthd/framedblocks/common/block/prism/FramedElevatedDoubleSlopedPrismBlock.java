@@ -14,15 +14,15 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
+import xfacthd.framedblocks.api.block.doubleblock.CamoGetter;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockTopInteractionMode;
+import xfacthd.framedblocks.api.block.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.AbstractFramedDoubleBlock;
 import xfacthd.framedblocks.common.blockentity.doubled.prism.FramedElevatedDoubleSlopedPrismBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
-import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
-import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.data.property.CompoundDirection;
 
 public class FramedElevatedDoubleSlopedPrismBlock extends AbstractFramedDoubleBlock implements IFramedPrismBlock

@@ -9,12 +9,12 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
+import xfacthd.framedblocks.api.block.doubleblock.CamoGetter;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockTopInteractionMode;
+import xfacthd.framedblocks.api.block.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.blockentity.doubled.slab.FramedAdjustableDoubleBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
-import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
-import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 
 import java.util.function.Function;
 

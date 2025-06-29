@@ -1,29 +1,28 @@
-package xfacthd.framedblocks.common.data.doubleblock;
+package xfacthd.framedblocks.api.block.doubleblock;
 
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
+import xfacthd.framedblocks.api.block.blockentity.IFramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
-import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 
 import java.util.function.Function;
 
 public enum CamoGetter
 {
     NONE(be -> EmptyCamoContainer.EMPTY, data -> FramedBlockData.EMPTY, parts -> null),
-    FIRST(FramedDoubleBlockEntity::getCamo, data -> data.unwrap(false), DoubleBlockParts::stateOne),
-    SECOND(FramedDoubleBlockEntity::getCamoTwo, data -> data.unwrap(true), DoubleBlockParts::stateTwo),
+    FIRST(IFramedDoubleBlockEntity::getCamo, data -> data.unwrap(false), DoubleBlockParts::stateOne),
+    SECOND(IFramedDoubleBlockEntity::getCamoTwo, data -> data.unwrap(true), DoubleBlockParts::stateTwo),
     ;
 
-    private final Function<FramedDoubleBlockEntity, CamoContainer<?, ?>> entityCamoGetter;
+    private final Function<IFramedDoubleBlockEntity, CamoContainer<?, ?>> entityCamoGetter;
     private final Function<AbstractFramedBlockData, FramedBlockData> modelDataUnwrapper;
     private final Function<DoubleBlockParts, @Nullable BlockState> partGetter;
 
     CamoGetter(
-            Function<FramedDoubleBlockEntity, CamoContainer<?, ?>> entityCamoGetter,
+            Function<IFramedDoubleBlockEntity, CamoContainer<?, ?>> entityCamoGetter,
             Function<AbstractFramedBlockData, FramedBlockData> modelDataUnwrapper,
             Function<DoubleBlockParts, @Nullable BlockState> partGetter
     )
@@ -33,7 +32,7 @@ public enum CamoGetter
         this.partGetter = partGetter;
     }
 
-    public CamoContainer<?, ?> getCamo(FramedDoubleBlockEntity be)
+    public CamoContainer<?, ?> getCamo(IFramedDoubleBlockEntity be)
     {
         return entityCamoGetter.apply(be);
     }

@@ -5,10 +5,10 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import xfacthd.framedblocks.api.block.FramedProperties;
+import xfacthd.framedblocks.api.block.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockStateCache;
-import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.selftest.SelfTestReporter;
 
 import java.util.List;
