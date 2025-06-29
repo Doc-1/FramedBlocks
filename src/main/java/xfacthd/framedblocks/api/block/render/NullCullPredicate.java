@@ -1,9 +1,13 @@
-package xfacthd.framedblocks.common.data.doubleblock;
+package xfacthd.framedblocks.api.block.render;
 
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Predicate;
 
+/**
+ * Declares whether the "uncullable" quads of either part of a double block should be culled for a particular part state
+ * when the other part has an opaque camo applied to it.
+ */
 public record NullCullPredicate(Predicate<BlockState> leftStateTest, Predicate<BlockState> rightStateTest)
 {
     public static final NullCullPredicate NEVER = new NullCullPredicate(state -> false, state -> false);

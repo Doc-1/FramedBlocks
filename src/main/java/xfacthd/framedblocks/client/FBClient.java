@@ -17,17 +17,17 @@ import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.model.standalone.SimpleUnbakedStandaloneModel;
 import net.neoforged.neoforge.common.NeoForge;
-import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.render.FramedBlockColor;
 import xfacthd.framedblocks.api.block.render.FramedClientBlockExtensions;
+import xfacthd.framedblocks.api.block.render.NullCullPredicate;
+import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.model.item.block.BlockItemModelProvider;
 import xfacthd.framedblocks.api.model.item.block.RegisterBlockItemModelProvidersEvent;
 import xfacthd.framedblocks.api.model.item.tint.FramedBlockItemTintProvider;
 import xfacthd.framedblocks.api.model.item.tint.RegisterItemTintProvidersEvent;
 import xfacthd.framedblocks.api.model.wrapping.RegisterModelWrappersEvent;
 import xfacthd.framedblocks.api.model.wrapping.WrapHelper;
-import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.render.debug.AttachDebugRenderersEvent;
 import xfacthd.framedblocks.api.type.IBlockType;
@@ -38,13 +38,6 @@ import xfacthd.framedblocks.client.data.BlockOutlineRenderers;
 import xfacthd.framedblocks.client.data.GhostRenderBehaviours;
 import xfacthd.framedblocks.client.data.extensions.block.NoEffectsClientBlockExtensions;
 import xfacthd.framedblocks.client.data.extensions.block.OneWayWindowClientBlockExtensions;
-import xfacthd.framedblocks.client.model.item.DynamicItemTintProviders;
-import xfacthd.framedblocks.client.model.item.FramedBlockItemModel;
-import xfacthd.framedblocks.client.model.item.BlockItemModelProviders;
-import xfacthd.framedblocks.client.model.item.TankItemModel;
-import xfacthd.framedblocks.client.model.item.modelprovider.FenceBlockItemModelProvider;
-import xfacthd.framedblocks.client.model.item.tintprovider.FramedTargetItemTintProvider;
-import xfacthd.framedblocks.client.model.loader.fallback.FallbackLoader;
 import xfacthd.framedblocks.client.model.DoubleBlockItemModelInfo;
 import xfacthd.framedblocks.client.model.FluidModel;
 import xfacthd.framedblocks.client.model.ReinforcementModel;
@@ -64,10 +57,17 @@ import xfacthd.framedblocks.client.model.geometry.slopepanelcorner.*;
 import xfacthd.framedblocks.client.model.geometry.slopeslab.*;
 import xfacthd.framedblocks.client.model.geometry.stairs.*;
 import xfacthd.framedblocks.client.model.geometry.torch.*;
+import xfacthd.framedblocks.client.model.item.BlockItemModelProviders;
+import xfacthd.framedblocks.client.model.item.DynamicItemTintProviders;
+import xfacthd.framedblocks.client.model.item.FramedBlockItemModel;
+import xfacthd.framedblocks.client.model.item.TankItemModel;
+import xfacthd.framedblocks.client.model.item.modelprovider.FenceBlockItemModelProvider;
+import xfacthd.framedblocks.client.model.item.tintprovider.FramedTargetItemTintProvider;
+import xfacthd.framedblocks.client.model.loader.fallback.FallbackLoader;
+import xfacthd.framedblocks.client.model.overlaygen.OverlayQuadGenerator;
 import xfacthd.framedblocks.client.model.unbaked.FramedBlockModelDefinition;
 import xfacthd.framedblocks.client.model.unbaked.UnbakedFramedDoubleBlockModel;
 import xfacthd.framedblocks.client.model.wrapping.ModelWrappingManager;
-import xfacthd.framedblocks.client.model.overlaygen.OverlayQuadGenerator;
 import xfacthd.framedblocks.client.render.block.FramedChestRenderer;
 import xfacthd.framedblocks.client.render.block.FramedHangingSignRenderer;
 import xfacthd.framedblocks.client.render.block.FramedItemFrameRenderer;
@@ -114,7 +114,6 @@ import xfacthd.framedblocks.common.block.stairs.standard.FramedStairsBlock;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.camo.fluid.FluidCamoClientHandler;
 import xfacthd.framedblocks.common.data.doubleblock.FramedClientDoubleBlockExtensions;
-import xfacthd.framedblocks.common.data.doubleblock.NullCullPredicate;
 
 import java.util.Set;
 
@@ -569,21 +568,12 @@ public final class FBClient
 
 
 
-    private static void wrapDoubleModel(
-            Holder<Block> block,
-            NullCullPredicate nullCullPredicate,
-            @Nullable Set<Property<?>> ignoredProps
-    )
+    private static void wrapDoubleModel(Holder<Block> block, NullCullPredicate nullCullPredicate, Set<Property<?>> ignoredProps)
     {
         wrapDoubleModel(block, nullCullPredicate, DoubleBlockItemModelInfo.INSTANCE, ignoredProps);
     }
 
-    private static void wrapDoubleModel(
-            Holder<Block> block,
-            NullCullPredicate nullCullPredicate,
-            ItemModelInfo itemModelInfo,
-            @Nullable Set<Property<?>> ignoredProps
-    )
+    private static void wrapDoubleModel(Holder<Block> block, NullCullPredicate nullCullPredicate, ItemModelInfo itemModelInfo, Set<Property<?>> ignoredProps)
     {
         WrapHelper.wrapSpecial(
                 block,

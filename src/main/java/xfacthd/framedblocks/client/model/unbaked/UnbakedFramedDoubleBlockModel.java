@@ -1,12 +1,12 @@
 package xfacthd.framedblocks.client.model.unbaked;
 
 import net.minecraft.client.renderer.block.model.BlockStateModel;
+import xfacthd.framedblocks.api.block.render.NullCullPredicate;
 import xfacthd.framedblocks.api.model.AbstractUnbakedFramedBlockModel;
 import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.wrapping.ModelFactory;
 import xfacthd.framedblocks.client.model.baked.FramedDoubleBlockModel;
-import xfacthd.framedblocks.common.data.doubleblock.NullCullPredicate;
 
 public final class UnbakedFramedDoubleBlockModel extends AbstractUnbakedFramedBlockModel
 {
