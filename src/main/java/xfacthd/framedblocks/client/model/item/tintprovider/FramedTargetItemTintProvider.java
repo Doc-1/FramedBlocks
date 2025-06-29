@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.client.itemmodel.tintprovider;
+package xfacthd.framedblocks.client.model.item.tintprovider;
 
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;

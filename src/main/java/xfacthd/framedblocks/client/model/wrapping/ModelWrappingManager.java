@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.client.modelwrapping;
+package xfacthd.framedblocks.client.model.wrapping;
 
 import com.google.common.base.Stopwatch;
 import com.mojang.logging.LogUtils;

@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.client.itemmodel;
+package xfacthd.framedblocks.client.model.item;
 
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;

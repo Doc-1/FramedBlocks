@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.client.itemmodel.modelprovider;
+package xfacthd.framedblocks.client.model.item.modelprovider;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockStateModel;

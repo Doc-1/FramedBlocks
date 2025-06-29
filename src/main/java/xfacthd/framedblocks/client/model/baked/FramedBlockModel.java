@@ -36,7 +36,7 @@ import xfacthd.framedblocks.api.predicate.contex.ConTexMode;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.model.ReinforcementModel;
-import xfacthd.framedblocks.client.overlaygen.OverlayModelPartGenerator;
+import xfacthd.framedblocks.client.model.overlaygen.OverlayModelPartGenerator;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.config.ClientConfig;
 import xfacthd.framedblocks.common.data.PropertyHolder;

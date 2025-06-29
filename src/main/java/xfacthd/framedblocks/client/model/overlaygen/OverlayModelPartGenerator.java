@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.client.overlaygen;
+package xfacthd.framedblocks.client.model.overlaygen;
 
 import com.google.common.base.Preconditions;
 import net.minecraft.client.renderer.block.model.BakedQuad;

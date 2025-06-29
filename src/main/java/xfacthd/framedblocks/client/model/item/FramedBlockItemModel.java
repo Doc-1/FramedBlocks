@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.client.itemmodel;
+package xfacthd.framedblocks.client.model.item;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Suppliers;

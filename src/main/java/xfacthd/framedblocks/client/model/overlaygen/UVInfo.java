@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.client.overlaygen;
+package xfacthd.framedblocks.client.model.overlaygen;
 
 import net.minecraft.core.Direction;
 import xfacthd.framedblocks.api.util.Utils;

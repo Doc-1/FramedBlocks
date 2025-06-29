@@ -14,7 +14,7 @@ import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import xfacthd.framedblocks.api.datagen.models.AbstractFramedItemModelProvider;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.client.loader.fallback.FallbackLoaderBuilder;
+import xfacthd.framedblocks.client.model.loader.fallback.FallbackLoaderBuilder;
 import xfacthd.framedblocks.client.render.item.BlueprintProperty;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.compat.ae2.AppliedEnergisticsCompat;

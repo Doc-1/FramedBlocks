@@ -224,7 +224,7 @@ public abstract class CamoContent<C extends CamoContent<C>> implements QuadCache
 
     @Override
     @ApiStatus.Internal
-    public boolean emissive()
+    public final boolean emissive()
     {
         return false;
     }

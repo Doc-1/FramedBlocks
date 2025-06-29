@@ -27,13 +27,13 @@ import xfacthd.framedblocks.client.model.FramedBlockModelPart;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.item.tint.DynamicItemTintProvider;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
-import xfacthd.framedblocks.client.itemmodel.FramedBlockItemModel;
+import xfacthd.framedblocks.client.model.item.FramedBlockItemModel;
 import xfacthd.framedblocks.client.model.baked.FramedBlockModel;
 import xfacthd.framedblocks.client.model.unbaked.FramedBlockModelDefinition;
 import xfacthd.framedblocks.client.model.unbaked.UnbakedFramedBlockModel;
 import xfacthd.framedblocks.client.model.unbaked.UnbakedCopyingFramedBlockModel;
-import xfacthd.framedblocks.client.modelwrapping.ModelWrappingHandler;
-import xfacthd.framedblocks.client.modelwrapping.ModelWrappingManager;
+import xfacthd.framedblocks.client.model.wrapping.ModelWrappingHandler;
+import xfacthd.framedblocks.client.model.wrapping.ModelWrappingManager;
 import xfacthd.framedblocks.client.util.ClientTaskQueue;
 
 import java.util.Map;

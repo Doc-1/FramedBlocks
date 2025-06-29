@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.client.modelwrapping;
+package xfacthd.framedblocks.client.model.wrapping;
 
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.SingleVariant;

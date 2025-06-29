@@ -12,8 +12,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.neoforged.neoforge.client.model.block.CustomBlockModelDefinition;
-import xfacthd.framedblocks.client.modelwrapping.ModelWrappingHandler;
-import xfacthd.framedblocks.client.modelwrapping.ModelWrappingManager;
+import xfacthd.framedblocks.client.model.wrapping.ModelWrappingHandler;
+import xfacthd.framedblocks.client.model.wrapping.ModelWrappingManager;
 import xfacthd.framedblocks.common.data.StateCacheBuilder;
 
 import java.util.IdentityHashMap;

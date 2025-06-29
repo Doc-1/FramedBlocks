@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.client.loader.fallback;
+package xfacthd.framedblocks.client.model.loader.fallback;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
