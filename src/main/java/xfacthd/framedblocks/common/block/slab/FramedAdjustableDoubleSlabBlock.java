@@ -4,10 +4,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.blockentity.doubled.slab.FramedAdjustableDoubleBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
-import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 

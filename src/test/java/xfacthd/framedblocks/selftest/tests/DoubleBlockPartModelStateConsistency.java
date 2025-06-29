@@ -3,10 +3,10 @@ package xfacthd.framedblocks.selftest.tests;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
+import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.client.model.wrapping.ModelWrappingHandler;
 import xfacthd.framedblocks.client.model.wrapping.ModelWrappingManager;
 import xfacthd.framedblocks.common.block.IFramedDoubleBlock;
-import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.selftest.SelfTestReporter;
 
 import java.util.ArrayList;

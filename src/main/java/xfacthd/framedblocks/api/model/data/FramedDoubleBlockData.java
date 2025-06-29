@@ -1,22 +1,23 @@
-package xfacthd.framedblocks.client.model;
+package xfacthd.framedblocks.api.model.data;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.TriState;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
-import xfacthd.framedblocks.api.model.data.FramedBlockData;
-import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
+import net.neoforged.fml.loading.FMLEnvironment;
+import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 
 public final class FramedDoubleBlockData extends AbstractFramedBlockData
 {
-    private final DoubleBlockParts parts;
+    private final BlockState partStateOne;
+    private final BlockState partStateTwo;
     private final FramedBlockData dataOne;
     private final FramedBlockData dataTwo;
 
     public FramedDoubleBlockData(DoubleBlockParts parts, FramedBlockData dataOne, FramedBlockData dataTwo)
     {
-        this.parts = parts;
+        this.partStateOne = parts.stateOne();
+        this.partStateTwo = parts.stateTwo();
         this.dataOne = dataOne;
         this.dataTwo = dataTwo;
     }
@@ -24,7 +25,13 @@ public final class FramedDoubleBlockData extends AbstractFramedBlockData
     @Override
     public FramedBlockData unwrap(BlockState partState)
     {
-        return partState == parts.stateTwo() ? dataTwo : dataOne;
+        if (partState == partStateOne) return dataOne;
+        if (partState == partStateTwo) return dataTwo;
+        if (!FMLEnvironment.production)
+        {
+            throw new IllegalArgumentException("Received invalid part state " + partState + ", expected " + partStateOne + " or " + partStateTwo);
+        }
+        return FramedBlockData.EMPTY;
     }
 
     @Override

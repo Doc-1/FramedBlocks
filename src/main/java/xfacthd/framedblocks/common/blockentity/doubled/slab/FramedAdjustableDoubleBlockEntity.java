@@ -14,6 +14,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.model.data.ModelData;
+import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
@@ -24,7 +25,6 @@ import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.common.blockentity.special.ICollapsibleBlockEntity;
 import xfacthd.framedblocks.common.blockentity.special.ICollapsibleCopycatBlockEntity;
 import xfacthd.framedblocks.common.data.component.AdjustableDoubleBlockData;
-import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
 
 import java.util.Optional;
 

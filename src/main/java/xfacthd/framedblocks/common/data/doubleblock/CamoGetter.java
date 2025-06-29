@@ -2,6 +2,7 @@ package xfacthd.framedblocks.common.data.doubleblock;
 
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;

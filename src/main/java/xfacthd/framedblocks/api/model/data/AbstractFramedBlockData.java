@@ -10,9 +10,8 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
-// TODO: make sealed when FramedDoubleBlockData becomes API
 @ApiStatus.NonExtendable
-public abstract class AbstractFramedBlockData
+public abstract sealed class AbstractFramedBlockData permits FramedBlockData, FramedDoubleBlockData
 {
     public static final ModelProperty<AbstractFramedBlockData> PROPERTY = new ModelProperty<>();
 

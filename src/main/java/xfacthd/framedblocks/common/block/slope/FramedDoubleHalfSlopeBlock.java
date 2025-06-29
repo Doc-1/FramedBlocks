@@ -15,8 +15,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.FramedProperties;
+import xfacthd.framedblocks.api.block.IFramedBlock;
+import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.AbstractFramedDoubleBlock;
@@ -25,10 +26,9 @@ import xfacthd.framedblocks.common.blockentity.doubled.slope.FramedDoubleHalfSlo
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.doubleblock.CamoGetter;
-import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
+import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.common.data.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.item.block.VerticalAndWallBlockItem;
-import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockTopInteractionMode;
 
 public class FramedDoubleHalfSlopeBlock extends AbstractFramedDoubleBlock
 {

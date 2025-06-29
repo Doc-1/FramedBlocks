@@ -3,7 +3,7 @@ package xfacthd.framedblocks.common.blockentity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.model.data.ModelProperty;
-import xfacthd.framedblocks.common.data.doubleblock.DoubleBlockParts;
+import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 
 public sealed interface PackedCollapsibleBlockOffsets
 {
