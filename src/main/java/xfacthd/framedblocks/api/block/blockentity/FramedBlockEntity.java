@@ -69,7 +69,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @SuppressWarnings("deprecation")
-public class FramedBlockEntity extends BlockEntity
+public non-sealed class FramedBlockEntity extends BlockEntity implements IFramedBlockEntity
 {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final DeferredBlockEntity<FramedBlockEntity> DEFAULT_TYPE = DeferredBlockEntity.createBlockEntity(
@@ -413,6 +413,7 @@ public class FramedBlockEntity extends BlockEntity
         return camoContainer;
     }
 
+    @Override
     public final CamoContainer<?, ?> getCamo()
     {
         return camoContainer;
