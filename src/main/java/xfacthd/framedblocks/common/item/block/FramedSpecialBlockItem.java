@@ -8,13 +8,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.BlockUtils;
+import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.block.item.FramedBlockItem;
 import xfacthd.framedblocks.api.camo.CamoContainer;
-import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.camo.CamoList;
+import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import xfacthd.framedblocks.api.util.SoundUtils;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.blockentity.doubled.FramedDoubleBlockEntity;
 
 public abstract class FramedSpecialBlockItem extends FramedBlockItem
 {
