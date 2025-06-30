@@ -2,6 +2,7 @@ package xfacthd.framedblocks.api.render.debug;
 
 import org.jetbrains.annotations.ApiStatus;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
+import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.util.Utils;
 
 @ApiStatus.NonExtendable
@@ -13,4 +14,6 @@ public interface DebugRenderers
     BlockDebugRenderer<FramedBlockEntity> connectionPredicate();
 
     BlockDebugRenderer<FramedBlockEntity> quadWinding();
+
+    BlockDebugRenderer<FramedDoubleBlockEntity> doubleBlockPart();
 }
