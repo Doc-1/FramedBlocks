@@ -8,7 +8,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.item.TrackingItemStackRenderState;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -305,7 +305,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
         }
         if (recipeHolder != null)
         {
-            ItemStackRenderState renderState = new ItemStackRenderState();
+            TrackingItemStackRenderState renderState = new TrackingItemStackRenderState();
             minecraft.getItemModelResolver().updateForTopItem(renderState, stack, ItemDisplayContext.FIXED, null, null, 0);
             if (renderState.usesBlockLight())
             {

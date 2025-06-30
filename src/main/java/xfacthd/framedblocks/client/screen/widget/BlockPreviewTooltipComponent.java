@@ -12,7 +12,7 @@ import net.minecraft.client.gui.render.state.pip.PictureInPictureRenderState;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.item.TrackingItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +25,7 @@ public final class BlockPreviewTooltipComponent implements ClientTooltipComponen
     private static final float STACK_SCALE = 48;
     private static final Quaternionf ROT_22_5_XP = Axis.XP.rotationDegrees(22.5F);
 
-    private final ItemStackRenderState renderState;
+    private final TrackingItemStackRenderState renderState;
 
     public BlockPreviewTooltipComponent(Component component)
     {
@@ -56,10 +56,10 @@ public final class BlockPreviewTooltipComponent implements ClientTooltipComponen
 
 
 
-    public record Component(ItemStackRenderState renderState) implements TooltipComponent { }
+    public record Component(TrackingItemStackRenderState renderState) implements TooltipComponent { }
 
     public record BlockPreviewPictureInPictureRenderState(
-            ItemStackRenderState renderState,
+            TrackingItemStackRenderState renderState,
             int rotY,
             int x0,
             int y0,
@@ -71,7 +71,7 @@ public final class BlockPreviewTooltipComponent implements ClientTooltipComponen
     ) implements PictureInPictureRenderState
     {
         public BlockPreviewPictureInPictureRenderState(
-                ItemStackRenderState renderState,
+                TrackingItemStackRenderState renderState,
                 int rotY,
                 int x0,
                 int y0,
@@ -99,7 +99,7 @@ public final class BlockPreviewTooltipComponent implements ClientTooltipComponen
         @Override
         protected void renderToTexture(BlockPreviewPictureInPictureRenderState state, PoseStack poseStack)
         {
-            ItemStackRenderState renderState = state.renderState;
+            TrackingItemStackRenderState renderState = state.renderState;
 
             poseStack.scale(1, -1, -1);
             poseStack.mulPose(new Matrix4f()
@@ -126,7 +126,7 @@ public final class BlockPreviewTooltipComponent implements ClientTooltipComponen
         {
             if (state.rotY != lastRotY) return false;
 
-            ItemStackRenderState renderState = state.renderState;
+            TrackingItemStackRenderState renderState = state.renderState;
             return !renderState.isAnimated() && renderState.getModelIdentity().equals(lastModelIdentity);
         }
 
