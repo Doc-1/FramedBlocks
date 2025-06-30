@@ -23,6 +23,7 @@ import xfacthd.framedblocks.api.block.render.FramedBlockColor;
 import xfacthd.framedblocks.api.block.render.FramedClientBlockExtensions;
 import xfacthd.framedblocks.api.block.render.FramedClientDoubleBlockExtensions;
 import xfacthd.framedblocks.api.block.render.NullCullPredicate;
+import xfacthd.framedblocks.api.model.item.DoubleBlockItemModelInfo;
 import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.model.item.block.BlockItemModelProvider;
 import xfacthd.framedblocks.api.model.item.block.RegisterBlockItemModelProvidersEvent;
@@ -40,7 +41,6 @@ import xfacthd.framedblocks.client.data.BlockOutlineRenderers;
 import xfacthd.framedblocks.client.data.GhostRenderBehaviours;
 import xfacthd.framedblocks.client.data.extensions.block.NoEffectsClientBlockExtensions;
 import xfacthd.framedblocks.client.data.extensions.block.OneWayWindowClientBlockExtensions;
-import xfacthd.framedblocks.client.model.DoubleBlockItemModelInfo;
 import xfacthd.framedblocks.client.model.FluidModel;
 import xfacthd.framedblocks.client.model.ReinforcementModel;
 import xfacthd.framedblocks.client.model.baked.FramedBlockModel;
@@ -68,7 +68,6 @@ import xfacthd.framedblocks.client.model.item.tintprovider.FramedTargetItemTintP
 import xfacthd.framedblocks.client.model.loader.fallback.FallbackLoader;
 import xfacthd.framedblocks.client.model.overlaygen.OverlayQuadGenerator;
 import xfacthd.framedblocks.client.model.unbaked.FramedBlockModelDefinition;
-import xfacthd.framedblocks.client.model.unbaked.UnbakedFramedDoubleBlockModel;
 import xfacthd.framedblocks.client.model.wrapping.ModelWrappingManager;
 import xfacthd.framedblocks.client.render.block.FramedChestRenderer;
 import xfacthd.framedblocks.client.render.block.FramedHangingSignRenderer;
@@ -575,11 +574,7 @@ public final class FBClient
 
     private static void wrapDoubleModel(Holder<Block> block, NullCullPredicate nullCullPredicate, ItemModelInfo itemModelInfo, Set<Property<?>> ignoredProps)
     {
-        WrapHelper.wrapSpecial(
-                block,
-                ctx -> new UnbakedFramedDoubleBlockModel(ctx, nullCullPredicate, itemModelInfo),
-                StateMerger.ignoring(ignoredProps)
-        );
+        WrapHelper.wrapDouble(block, nullCullPredicate, itemModelInfo, ignoredProps);
     }
 
     private static boolean useDefaultColorHandler(IFramedBlock block)

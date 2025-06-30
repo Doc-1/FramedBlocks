@@ -1,5 +1,6 @@
 package xfacthd.framedblocks.client.apiimpl;
 
+import com.google.common.base.Preconditions;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.client.renderer.block.model.BlockModelDefinition;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
@@ -14,9 +15,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.IFramedBlock;
+import xfacthd.framedblocks.api.block.IFramedDoubleBlock;
+import xfacthd.framedblocks.api.block.render.NullCullPredicate;
 import xfacthd.framedblocks.api.internal.InternalClientAPI;
 import xfacthd.framedblocks.api.model.AbstractFramedBlockModel;
 import xfacthd.framedblocks.api.model.ExtendedBlockModelPart;
+import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.model.item.block.BlockItemModelProvider;
 import xfacthd.framedblocks.api.model.util.ModelUtils;
 import xfacthd.framedblocks.api.model.wrapping.AuxModelProvider;
@@ -32,6 +37,7 @@ import xfacthd.framedblocks.client.model.baked.FramedBlockModel;
 import xfacthd.framedblocks.client.model.unbaked.FramedBlockModelDefinition;
 import xfacthd.framedblocks.client.model.unbaked.UnbakedFramedBlockModel;
 import xfacthd.framedblocks.client.model.unbaked.UnbakedCopyingFramedBlockModel;
+import xfacthd.framedblocks.client.model.unbaked.UnbakedFramedDoubleBlockModel;
 import xfacthd.framedblocks.client.model.wrapping.ModelWrappingHandler;
 import xfacthd.framedblocks.client.model.wrapping.ModelWrappingManager;
 import xfacthd.framedblocks.client.util.ClientTaskQueue;
@@ -46,7 +52,15 @@ public final class InternalClientApiImpl implements InternalClientAPI
     @Override
     public void registerModelWrapper(Holder<Block> block, GeometryFactory geometryFactory, StateMerger stateMerger)
     {
+        Preconditions.checkArgument(block.value() instanceof IFramedBlock, "Cannot register model wrapper for non-IFramedBlock");
         registerSpecialModelWrapper(block, ctx -> new UnbakedFramedBlockModel(ctx, geometryFactory), stateMerger);
+    }
+
+    @Override
+    public void registerDoubleModelWrapper(Holder<Block> block, NullCullPredicate nullCullPredicate, ItemModelInfo itemModelInfo, StateMerger stateMerger)
+    {
+        Preconditions.checkArgument(block.value() instanceof IFramedDoubleBlock, "Cannot register double model wrapper for non-IFramedDoubleBlock");
+        registerSpecialModelWrapper(block, ctx -> new UnbakedFramedDoubleBlockModel(ctx, nullCullPredicate, itemModelInfo), stateMerger);
     }
 
     @Override

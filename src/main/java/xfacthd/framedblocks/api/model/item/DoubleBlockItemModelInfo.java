@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.client.model;
+package xfacthd.framedblocks.api.model.item;
 
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
@@ -7,7 +7,6 @@ import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.model.data.FramedDoubleBlockData;
-import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 
 public class DoubleBlockItemModelInfo implements ItemModelInfo
 {

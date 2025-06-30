@@ -6,8 +6,14 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
 import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
+import xfacthd.framedblocks.api.block.IFramedBlock;
+import xfacthd.framedblocks.api.block.IFramedDoubleBlock;
+import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
+import xfacthd.framedblocks.api.block.render.NullCullPredicate;
 import xfacthd.framedblocks.api.internal.InternalClientAPI;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
+import xfacthd.framedblocks.api.model.item.DoubleBlockItemModelInfo;
+import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.util.Utils;
 
@@ -36,11 +42,11 @@ public final class WrapHelper
      * the given {@link GeometryFactory}.
      * <p>
      * States which match an already wrapped state after resetting the given ignored properties to default values
-     * will re-use the existing wrapped model
+     * will re-use the existing wrapped model.
      *
-     * @param block The block whose models to wrap
+     * @param block                The block whose models to wrap (must implement {@link IFramedBlock})
      * @param blockGeometryFactory The {@link GeometryFactory} to generate the wrapping models with
-     * @param ignoredProps The state properties to ignore during wrapping
+     * @param ignoredProps         The state properties to ignore during wrapping
      */
     public static void wrap(Holder<Block> block, GeometryFactory blockGeometryFactory, Set<Property<?>> ignoredProps)
     {
@@ -52,11 +58,11 @@ public final class WrapHelper
      * the given {@link GeometryFactory}.
      * <p>
      * States which match an already wrapped state after applying the given {@link StateMerger} will re-use the
-     * existing wrapped model
+     * existing wrapped model.
      *
-     * @param block The block whose models to wrap
+     * @param block                The block whose models to wrap (must implement {@link IFramedBlock})
      * @param blockGeometryFactory The {@link GeometryFactory} to generate the wrapping models with
-     * @param stateMerger The {@link StateMerger} to use for merging visually redundant states during wrapping
+     * @param stateMerger          The {@link StateMerger} to use for merging visually redundant states during wrapping
      */
     public static void wrap(Holder<Block> block, GeometryFactory blockGeometryFactory, StateMerger stateMerger)
     {
@@ -64,13 +70,46 @@ public final class WrapHelper
     }
 
     /**
-     * Wrap the models of all states of the given block with models generated from {@link Geometry}s created by
-     * the given {@link GeometryFactory}.
+     * Wrap the models of all states of the given block with double block models using the {@link DoubleBlockParts}
+     * retrieved from the given block for the respective state.
      * <p>
      * States which match an already wrapped state after resetting the given ignored properties to default values
-     * will re-use the existing wrapped model
+     * will re-use the existing wrapped model.
      *
-     * @param block The block whose models to wrap
+     * @param block             The block whose models to wrap (must implement {@link IFramedDoubleBlock})
+     * @param nullCullPredicate The {@link NullCullPredicate} to use for culling "uncullable" quads on the part models
+     * @param itemModelInfo     The {@link ItemModelInfo} to use for controlling item model geometry caching
+     * @param ignoredProps      The state properties to ignore during wrapping
+     */
+    public static void wrapDouble(Holder<Block> block, NullCullPredicate nullCullPredicate, ItemModelInfo itemModelInfo, Set<Property<?>> ignoredProps)
+    {
+        wrapDouble(block, nullCullPredicate, DoubleBlockItemModelInfo.INSTANCE, StateMerger.ignoring(ignoredProps));
+    }
+
+    /**
+     * Wrap the models of all states of the given block with double block models using the {@link DoubleBlockParts}
+     * retrieved from the given block for the respective state.
+     * <p>
+     * States which match an already wrapped state after applying the given {@link StateMerger} will re-use the
+     * existing wrapped model.
+     *
+     * @param block             The block whose models to wrap (must implement {@link IFramedDoubleBlock})
+     * @param nullCullPredicate The {@link NullCullPredicate} to use for culling "uncullable" quads on the part models
+     * @param itemModelInfo     The {@link ItemModelInfo} to use for controlling item model geometry caching
+     * @param stateMerger       The {@link StateMerger} to use for merging visually redundant states during wrapping
+     */
+    public static void wrapDouble(Holder<Block> block, NullCullPredicate nullCullPredicate, ItemModelInfo itemModelInfo, StateMerger stateMerger)
+    {
+        InternalClientAPI.INSTANCE.registerDoubleModelWrapper(block, nullCullPredicate, itemModelInfo, stateMerger);
+    }
+
+    /**
+     * Wrap the models of all states of the given block with models created by the given {@link ModelFactory}.
+     * <p>
+     * States which match an already wrapped state after resetting the given ignored properties to default values
+     * will re-use the existing wrapped model.
+     *
+     * @param block        The block whose models to wrap
      * @param modelFactory The {@link ModelFactory} to generate the wrapping models with
      * @param ignoredProps The state properties to ignore during wrapping
      */
@@ -80,15 +119,14 @@ public final class WrapHelper
     }
 
     /**
-     * Wrap the models of all states of the given block with models generated from {@link Geometry}s created by
-     * the given {@link GeometryFactory}.
+     * Wrap the models of all states of the given block with models created by the given {@link ModelFactory}.
      * <p>
      * States which match an already wrapped state after applying the given {@link StateMerger} will re-use the
-     * existing wrapped model
+     * existing wrapped model.
      *
-     * @param block The block whose models to wrap
+     * @param block        The block whose models to wrap
      * @param modelFactory The {@link ModelFactory} to generate the wrapping models with
-     * @param stateMerger The {@link StateMerger} to use for merging visually redundant states during wrapping
+     * @param stateMerger  The {@link StateMerger} to use for merging visually redundant states during wrapping
      */
     public static void wrapSpecial(Holder<Block> block, ModelFactory modelFactory, StateMerger stateMerger)
     {
@@ -99,10 +137,10 @@ public final class WrapHelper
      * Re-use the wrapped models from the given source block for the given block.
      * <p>
      * States which match an already handled state after resetting the given ignored properties on the target block
-     * to default values will re-use the previously retrieved model
+     * to default values will re-use the previously retrieved model.
      *
-     * @param block The block whose models to replace
-     * @param srcBlock The block whose models to re-use
+     * @param block        The block whose models to replace
+     * @param srcBlock     The block whose models to re-use
      * @param ignoredProps The state properties to ignore during copying before applying the target block's properties
      *                     to the source block for retrieving the wrapped model
      */
@@ -115,10 +153,10 @@ public final class WrapHelper
      * Re-use the wrapped models from the given source block for the given block.
      * <p>
      * States which match an already handled state after applying the given {@link StateMerger} will re-use the
-     * previously retrieved model
+     * previously retrieved model.
      *
-     * @param block The block whose models to replace
-     * @param srcBlock The block whose models to re-use
+     * @param block       The block whose models to replace
+     * @param srcBlock    The block whose models to re-use
      * @param stateMerger The {@link StateMerger} to use for merging visually redundant during copying before applying
      *                    the target block's properties to the source block for retrieving the wrapped model
      */

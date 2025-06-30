@@ -2,7 +2,7 @@ package xfacthd.framedblocks.client.model.geometry.slab;
 
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
-import xfacthd.framedblocks.client.model.DoubleBlockItemModelInfo;
+import xfacthd.framedblocks.api.model.item.DoubleBlockItemModelInfo;
 import xfacthd.framedblocks.common.blockentity.PackedCollapsibleBlockOffsets;
 import xfacthd.framedblocks.common.blockentity.doubled.slab.FramedAdjustableDoubleBlockEntity;
 

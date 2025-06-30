@@ -164,7 +164,7 @@ public abstract class Geometry
     }
 
     /**
-     * {@return the {@link ItemModelInfo} used to supply camo data and additional transformations to item rendering}
+     * {@return the {@link ItemModelInfo} to use for controlling item model geometry caching}
      */
     public ItemModelInfo getItemModelInfo()
     {
