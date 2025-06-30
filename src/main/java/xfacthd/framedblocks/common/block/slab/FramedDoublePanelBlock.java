@@ -9,22 +9,20 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
-import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.block.doubleblock.CamoGetter;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.api.block.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.block.AbstractFramedDoubleBlock;
+import xfacthd.framedblocks.common.block.FramedDoubleBlock;
 import xfacthd.framedblocks.common.data.BlockType;
 
-public class FramedDoublePanelBlock extends AbstractFramedDoubleBlock
+public class FramedDoublePanelBlock extends FramedDoubleBlock
 {
     public FramedDoublePanelBlock(Properties props)
     {
@@ -115,12 +113,6 @@ public class FramedDoublePanelBlock extends AbstractFramedDoubleBlock
             return SolidityCheck.SECOND;
         }
         return SolidityCheck.BOTH;
-    }
-
-    @Override
-    public final BlockEntity newBlockEntity(BlockPos pos, BlockState state)
-    {
-        return new FramedDoubleBlockEntity(pos, state);
     }
 
     @Override

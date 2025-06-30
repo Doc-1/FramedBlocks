@@ -23,12 +23,13 @@ import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.util.Utils;
+import xfacthd.framedblocks.common.block.IFramedBlockInternal;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 
 import java.util.List;
 
-public class FramedLanternBlock extends LanternBlock implements IFramedBlock
+public class FramedLanternBlock extends LanternBlock implements IFramedBlockInternal
 {
     private final BlockType type;
 

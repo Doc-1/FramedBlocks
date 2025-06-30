@@ -8,7 +8,7 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 import java.util.function.UnaryOperator;
 
-public abstract class FramedBlock extends AbstractFramedBlock
+public abstract class FramedBlock extends AbstractFramedBlock implements IFramedBlockInternal
 {
     protected FramedBlock(BlockType blockType, Properties props)
     {

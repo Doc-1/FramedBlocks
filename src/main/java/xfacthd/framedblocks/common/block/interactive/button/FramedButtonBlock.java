@@ -25,16 +25,16 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
-import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.model.wrapping.WrapHelper;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.util.Utils;
+import xfacthd.framedblocks.common.block.IFramedBlockInternal;
 import xfacthd.framedblocks.common.data.BlockType;
 
 import java.util.List;
 import java.util.Set;
 
-public class FramedButtonBlock extends ButtonBlock implements IFramedBlock
+public class FramedButtonBlock extends ButtonBlock implements IFramedBlockInternal
 {
     public static final ButtonStateMerger STATE_MERGER = new ButtonStateMerger();
 

@@ -3,13 +3,14 @@ package xfacthd.framedblocks.common.block.rail.fancyslope;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedDoubleBlock;
-import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
+import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.block.doubleblock.CamoGetter;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockTopInteractionMode;
@@ -17,6 +18,7 @@ import xfacthd.framedblocks.api.block.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.block.IFramedDoubleBlockInternal;
 import xfacthd.framedblocks.common.block.ISlopeBlock;
 import xfacthd.framedblocks.common.block.rail.vanillaslope.FramedPoweredRailSlopeBlock;
 import xfacthd.framedblocks.common.data.BlockType;
@@ -24,12 +26,10 @@ import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.property.SlopeType;
 import xfacthd.framedblocks.common.util.FramedUtils;
 
-import java.util.function.BiFunction;
-
-public class FramedFancyPoweredRailSlopeBlock extends FramedPoweredRailSlopeBlock implements IFramedDoubleBlock, ISlopeBlock.IRailSlopeBlock
+public class FramedFancyPoweredRailSlopeBlock extends FramedPoweredRailSlopeBlock<FramedDoubleBlockEntity> implements IFramedDoubleBlockInternal, ISlopeBlock.IRailSlopeBlock
 {
     public FramedFancyPoweredRailSlopeBlock(
-            BlockType type, Properties props, boolean isPoweredRail, BiFunction<BlockPos, BlockState, FramedBlockEntity> beFactory
+            BlockType type, Properties props, boolean isPoweredRail, BlockEntityType.BlockEntitySupplier<FramedDoubleBlockEntity> beFactory
     )
     {
         super(type, props, isPoweredRail, beFactory);

@@ -28,15 +28,16 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
-import xfacthd.framedblocks.api.block.IFramedBlock;
+import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.block.IFramedBlockInternal;
 import xfacthd.framedblocks.common.blockentity.special.FramedHopperBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 
 import java.util.List;
 
-public class FramedHopperBlock extends HopperBlock implements IFramedBlock
+public class FramedHopperBlock extends HopperBlock implements IFramedBlockInternal
 {
     public FramedHopperBlock(Properties props)
     {
@@ -137,7 +138,7 @@ public class FramedHopperBlock extends HopperBlock implements IFramedBlock
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
+    public FramedBlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
         return new FramedHopperBlockEntity(pos, state);
     }

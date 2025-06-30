@@ -8,13 +8,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
+import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.block.doubleblock.CamoGetter;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockTopInteractionMode;
@@ -22,13 +22,13 @@ import xfacthd.framedblocks.api.block.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.api.block.render.NullCullPredicate;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.block.AbstractFramedDoubleBlock;
+import xfacthd.framedblocks.common.block.FramedDoubleBlock;
 import xfacthd.framedblocks.common.blockentity.doubled.slopepanel.FramedDoubleSlopePanelBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.property.HorizontalRotation;
 
-public class FramedDoubleSlopePanelBlock extends AbstractFramedDoubleBlock
+public class FramedDoubleSlopePanelBlock extends FramedDoubleBlock
 {
     public static final NullCullPredicate NULL_CULL_PREDICATE = new NullCullPredicate(
             state -> !state.getValue(PropertyHolder.FRONT),
@@ -182,7 +182,7 @@ public class FramedDoubleSlopePanelBlock extends AbstractFramedDoubleBlock
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
+    public FramedDoubleBlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
         return new FramedDoubleSlopePanelBlockEntity(pos, state);
     }

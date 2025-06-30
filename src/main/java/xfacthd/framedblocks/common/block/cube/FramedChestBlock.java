@@ -31,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
+import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.blockentity.special.FramedChestBlockEntity;
@@ -299,7 +300,7 @@ public class FramedChestBlock extends FramedStorageBlock
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
+    public FramedBlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
         return new FramedChestBlockEntity(pos, state);
     }

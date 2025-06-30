@@ -446,13 +446,13 @@ public final class FBContent
 
     // region BlockEntityTypes
     public static final Holder<BlockEntityType<?>> BE_TYPE_FRAMED_BLOCK = registerBlockEntity(
-            FramedBlockEntity::new,
+            getDefaultBlockEntityFactory(),
             "framed_tile",
             getDefaultEntityBlocks(),
             true
     );
     public static final Holder<BlockEntityType<?>> BE_TYPE_FRAMED_DOUBLE_BLOCK = registerBlockEntity(
-            FramedDoubleBlockEntity::new,
+            getDefaultDoubleBlockEntityFactory(),
             "framed_double_tile",
             getDefaultDoubleEntityBlocks(),
             true
@@ -846,6 +846,16 @@ public final class FBContent
     public static List<DeferredBlockEntity<? extends FramedDoubleBlockEntity>> getDoubleBlockEntities()
     {
         return DOUBLE_BLOCK_ENTITIES;
+    }
+
+    public static BlockEntityType.BlockEntitySupplier<FramedBlockEntity> getDefaultBlockEntityFactory()
+    {
+        return (pos, state) -> new FramedBlockEntity(BE_TYPE_FRAMED_BLOCK.value(), pos, state);
+    }
+
+    public static BlockEntityType.BlockEntitySupplier<FramedBlockEntity> getDefaultDoubleBlockEntityFactory()
+    {
+        return (pos, state) -> new FramedDoubleBlockEntity(BE_TYPE_FRAMED_DOUBLE_BLOCK.value(), pos, state);
     }
 
     private static Supplier<Set<Block>> getDefaultEntityBlocks()

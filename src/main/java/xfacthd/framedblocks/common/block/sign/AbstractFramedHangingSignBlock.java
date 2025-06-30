@@ -3,8 +3,8 @@ package xfacthd.framedblocks.common.block.sign;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.common.blockentity.special.FramedSignBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 
@@ -34,7 +34,7 @@ public abstract class AbstractFramedHangingSignBlock extends AbstractFramedSignB
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
+    public FramedBlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
         return FramedSignBlockEntity.hangingSign(pos, state);
     }

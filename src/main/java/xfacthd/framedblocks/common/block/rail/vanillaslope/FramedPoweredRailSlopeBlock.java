@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.PoweredRailBlock;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -37,8 +37,11 @@ import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
+import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.shapes.ShapeProvider;
 import xfacthd.framedblocks.api.util.Utils;
+import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.block.IFramedBlockInternal;
 import xfacthd.framedblocks.common.block.ISlopeBlock;
 import xfacthd.framedblocks.common.block.rail.fancyslope.FramedFancyPoweredRailSlopeBlock;
 import xfacthd.framedblocks.common.blockentity.doubled.rail.FramedFancyRailSlopeBlockEntity;
@@ -48,16 +51,15 @@ import xfacthd.framedblocks.common.util.FramedUtils;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.BiFunction;
 
-public class FramedPoweredRailSlopeBlock extends PoweredRailBlock implements IFramedBlock, ISlopeBlock.IRailSlopeBlock
+public class FramedPoweredRailSlopeBlock<BE extends FramedBlockEntity> extends PoweredRailBlock implements IFramedBlockInternal, ISlopeBlock.IRailSlopeBlock
 {
     private final BlockType type;
     private final ShapeProvider shapes;
     private final ShapeProvider occlusionShapes;
-    private final BiFunction<BlockPos, BlockState, FramedBlockEntity> beFactory;
+    private final BlockEntityType.BlockEntitySupplier<BE> beFactory;
 
-    protected FramedPoweredRailSlopeBlock(BlockType type, Properties props, boolean isPoweredRail, BiFunction<BlockPos, BlockState, FramedBlockEntity> beFactory)
+    protected FramedPoweredRailSlopeBlock(BlockType type, Properties props, boolean isPoweredRail, BlockEntityType.BlockEntitySupplier<BE> beFactory)
     {
         super(IFramedBlock.applyDefaultProperties(props, type), isPoweredRail);
         this.type = type;
@@ -263,9 +265,9 @@ public class FramedPoweredRailSlopeBlock extends PoweredRailBlock implements IFr
     }
 
     @Override
-    public final BlockEntity newBlockEntity(BlockPos pos, BlockState state)
+    public final BE newBlockEntity(BlockPos pos, BlockState state)
     {
-        return beFactory.apply(pos, state);
+        return beFactory.create(pos, state);
     }
 
     @Override
@@ -294,17 +296,17 @@ public class FramedPoweredRailSlopeBlock extends PoweredRailBlock implements IFr
 
 
 
-    public static FramedPoweredRailSlopeBlock powered(Properties props)
+    public static FramedPoweredRailSlopeBlock<FramedBlockEntity> powered(Properties props)
     {
-        return new FramedPoweredRailSlopeBlock(
+        return new FramedPoweredRailSlopeBlock<>(
                 BlockType.FRAMED_POWERED_RAIL_SLOPE,
                 props,
                 true,
-                FramedBlockEntity::new
+                FBContent.getDefaultBlockEntityFactory()
         );
     }
 
-    public static FramedPoweredRailSlopeBlock poweredFancy(Properties props)
+    public static FramedPoweredRailSlopeBlock<FramedDoubleBlockEntity> poweredFancy(Properties props)
     {
         return new FramedFancyPoweredRailSlopeBlock(
                 BlockType.FRAMED_FANCY_POWERED_RAIL_SLOPE,
@@ -314,17 +316,17 @@ public class FramedPoweredRailSlopeBlock extends PoweredRailBlock implements IFr
         );
     }
 
-    public static FramedPoweredRailSlopeBlock activator(Properties props)
+    public static FramedPoweredRailSlopeBlock<FramedBlockEntity> activator(Properties props)
     {
-        return new FramedPoweredRailSlopeBlock(
+        return new FramedPoweredRailSlopeBlock<>(
                 BlockType.FRAMED_ACTIVATOR_RAIL_SLOPE,
                 props,
                 false,
-                FramedBlockEntity::new
+                FBContent.getDefaultBlockEntityFactory()
         );
     }
 
-    public static FramedPoweredRailSlopeBlock activatorFancy(Properties props)
+    public static FramedPoweredRailSlopeBlock<FramedDoubleBlockEntity> activatorFancy(Properties props)
     {
         return new FramedFancyPoweredRailSlopeBlock(
                 BlockType.FRAMED_FANCY_ACTIVATOR_RAIL_SLOPE,

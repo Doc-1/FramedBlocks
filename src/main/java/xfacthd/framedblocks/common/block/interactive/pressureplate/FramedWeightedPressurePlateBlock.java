@@ -27,13 +27,14 @@ import xfacthd.framedblocks.api.model.wrapping.WrapHelper;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.block.IFramedBlockInternal;
 import xfacthd.framedblocks.common.data.BlockType;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class FramedWeightedPressurePlateBlock extends WeightedPressurePlateBlock implements IFramedBlock
+public class FramedWeightedPressurePlateBlock extends WeightedPressurePlateBlock implements IFramedBlockInternal
 {
     public static final WeightedStateMerger STATE_MERGER = new WeightedStateMerger();
     private static final Map<BlockType, BlockType> WATERLOGGING_SWITCH = Map.of(

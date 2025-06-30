@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DetectorRailBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -36,8 +36,11 @@ import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
+import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.shapes.ShapeProvider;
 import xfacthd.framedblocks.api.util.Utils;
+import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.block.IFramedBlockInternal;
 import xfacthd.framedblocks.common.block.ISlopeBlock;
 import xfacthd.framedblocks.common.block.rail.fancyslope.FramedFancyDetectorRailSlopeBlock;
 import xfacthd.framedblocks.common.blockentity.doubled.rail.FramedFancyRailSlopeBlockEntity;
@@ -47,16 +50,15 @@ import xfacthd.framedblocks.common.util.FramedUtils;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.BiFunction;
 
-public class FramedDetectorRailSlopeBlock extends DetectorRailBlock implements IFramedBlock, ISlopeBlock.IRailSlopeBlock
+public class FramedDetectorRailSlopeBlock<BE extends FramedBlockEntity> extends DetectorRailBlock implements IFramedBlockInternal, ISlopeBlock.IRailSlopeBlock
 {
     private final BlockType type;
     private final ShapeProvider shapes;
     private final ShapeProvider occlusionShapes;
-    private final BiFunction<BlockPos, BlockState, FramedBlockEntity> beFactory;
+    private final BlockEntityType.BlockEntitySupplier<BE> beFactory;
 
-    protected FramedDetectorRailSlopeBlock(BlockType type, Properties props, BiFunction<BlockPos, BlockState, FramedBlockEntity> beFactory)
+    protected FramedDetectorRailSlopeBlock(BlockType type, Properties props, BlockEntityType.BlockEntitySupplier<BE> beFactory)
     {
         super(IFramedBlock.applyDefaultProperties(props, type));
         this.type = type;
@@ -243,9 +245,9 @@ public class FramedDetectorRailSlopeBlock extends DetectorRailBlock implements I
     }
 
     @Override
-    public final BlockEntity newBlockEntity(BlockPos pos, BlockState state)
+    public final BE newBlockEntity(BlockPos pos, BlockState state)
     {
-        return beFactory.apply(pos, state);
+        return beFactory.create(pos, state);
     }
 
     @Override
@@ -274,16 +276,16 @@ public class FramedDetectorRailSlopeBlock extends DetectorRailBlock implements I
 
 
 
-    public static FramedDetectorRailSlopeBlock normal(Properties props)
+    public static FramedDetectorRailSlopeBlock<FramedBlockEntity> normal(Properties props)
     {
-        return new FramedDetectorRailSlopeBlock(
+        return new FramedDetectorRailSlopeBlock<>(
                 BlockType.FRAMED_DETECTOR_RAIL_SLOPE,
                 props,
-                FramedBlockEntity::new
+                FBContent.getDefaultBlockEntityFactory()
         );
     }
 
-    public static FramedDetectorRailSlopeBlock fancy(Properties props)
+    public static FramedDetectorRailSlopeBlock<FramedDoubleBlockEntity> fancy(Properties props)
     {
         return new FramedFancyDetectorRailSlopeBlock(props, FramedFancyRailSlopeBlockEntity::new);
     }

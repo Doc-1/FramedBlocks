@@ -24,11 +24,12 @@ import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.block.IFramedBlockInternal;
 import xfacthd.framedblocks.common.data.BlockType;
 
 import java.util.List;
 
-public class FramedRedstoneWallTorchBlock extends RedstoneWallTorchBlock implements IFramedBlock
+public class FramedRedstoneWallTorchBlock extends RedstoneWallTorchBlock implements IFramedBlockInternal
 {
     public FramedRedstoneWallTorchBlock(Properties props)
     {

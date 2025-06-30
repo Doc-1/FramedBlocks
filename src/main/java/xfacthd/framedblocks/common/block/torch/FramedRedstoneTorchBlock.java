@@ -23,14 +23,14 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
-import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.block.IFramedBlockInternal;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.item.block.FramedStandingAndWallBlockItem;
 
 import java.util.List;
 
-public class FramedRedstoneTorchBlock extends RedstoneTorchBlock implements IFramedBlock
+public class FramedRedstoneTorchBlock extends RedstoneTorchBlock implements IFramedBlockInternal
 {
     public FramedRedstoneTorchBlock(Properties props)
     {

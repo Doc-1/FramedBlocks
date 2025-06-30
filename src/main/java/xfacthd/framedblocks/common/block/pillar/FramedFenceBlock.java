@@ -26,12 +26,13 @@ import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.util.Utils;
+import xfacthd.framedblocks.common.block.IFramedBlockInternal;
 import xfacthd.framedblocks.common.compat.diagonalblocks.DiagonalBlocksCompat;
 import xfacthd.framedblocks.common.data.BlockType;
 
 import java.util.List;
 
-public class FramedFenceBlock extends FenceBlock implements IFramedBlock
+public class FramedFenceBlock extends FenceBlock implements IFramedBlockInternal
 {
     public FramedFenceBlock(Properties props)
     {

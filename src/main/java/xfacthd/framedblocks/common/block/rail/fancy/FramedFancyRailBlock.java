@@ -26,11 +26,12 @@ import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.type.IBlockType;
+import xfacthd.framedblocks.common.block.IFramedBlockInternal;
 import xfacthd.framedblocks.common.data.BlockType;
 
 import java.util.List;
 
-public class FramedFancyRailBlock extends RailBlock implements IFramedBlock
+public class FramedFancyRailBlock extends RailBlock implements IFramedBlockInternal
 {
     public FramedFancyRailBlock(Properties props)
     {

@@ -1,29 +1,26 @@
 package xfacthd.framedblocks.common.block.pillar;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
-import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.block.doubleblock.CamoGetter;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.api.block.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.block.AbstractFramedDoubleBlock;
+import xfacthd.framedblocks.common.block.FramedDoubleBlock;
 import xfacthd.framedblocks.common.data.BlockType;
 
-public class FramedDoubleThreewayCornerPillarBlock extends AbstractFramedDoubleBlock
+public class FramedDoubleThreewayCornerPillarBlock extends FramedDoubleBlock
 {
     public FramedDoubleThreewayCornerPillarBlock(Properties props)
     {
@@ -73,12 +70,6 @@ public class FramedDoubleThreewayCornerPillarBlock extends AbstractFramedDoubleB
     protected BlockState mirror(BlockState state, Mirror mirror)
     {
         return BlockUtils.mirrorCornerBlock(state, mirror);
-    }
-
-    @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
-    {
-        return new FramedDoubleBlockEntity(pos, state);
     }
 
     @Override

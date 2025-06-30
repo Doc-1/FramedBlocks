@@ -62,7 +62,6 @@ import xfacthd.framedblocks.api.blueprint.BlueprintData;
 import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.api.util.ConfigView;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.api.util.registration.DeferredBlockEntity;
 
 import java.util.List;
 import java.util.Objects;
@@ -72,9 +71,6 @@ import java.util.Optional;
 public class FramedBlockEntity extends BlockEntity
 {
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final DeferredBlockEntity<FramedBlockEntity> DEFAULT_TYPE = DeferredBlockEntity.createBlockEntity(
-            Utils.rl("framed_tile")
-    );
     public static final String CAMO_NBT_KEY = "camo";
     /**
      * {@link InteractionResult} marker instance to consume the interaction and communicate a failed camo interaction
@@ -97,15 +93,6 @@ public class FramedBlockEntity extends BlockEntity
     private boolean recheckStates = false;
     private boolean forceLightUpdate = false;
     private boolean cullStateDirty = false;
-
-    /**
-     * @apiNote internal, addons must use their own {@link BlockEntityType} with the three-arg constructor
-     */
-    @ApiStatus.Internal
-    public FramedBlockEntity(BlockPos pos, BlockState state)
-    {
-        this(DEFAULT_TYPE.value(), pos, state);
-    }
 
     public FramedBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state)
     {

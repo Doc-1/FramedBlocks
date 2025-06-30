@@ -35,13 +35,14 @@ import xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import xfacthd.framedblocks.api.shapes.ShapeProvider;
 import xfacthd.framedblocks.api.shapes.ShapeUtils;
 import xfacthd.framedblocks.api.util.Utils;
+import xfacthd.framedblocks.common.block.IFramedBlockInternal;
 import xfacthd.framedblocks.common.data.BlockType;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class FramedWallBlock extends WallBlock implements IFramedBlock
+public class FramedWallBlock extends WallBlock implements IFramedBlockInternal
 {
     private static final Map<Direction, EnumProperty<WallSide>> PROPERTY_BY_DIRECTION = Map.of(
             Direction.NORTH, NORTH,

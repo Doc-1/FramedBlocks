@@ -30,12 +30,13 @@ import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.model.wrapping.WrapHelper;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.util.Utils;
+import xfacthd.framedblocks.common.block.IFramedBlockInternal;
 import xfacthd.framedblocks.common.data.BlockType;
 
 import java.util.List;
 import java.util.Set;
 
-public class FramedFenceGateBlock extends FenceGateBlock implements IFramedBlock
+public class FramedFenceGateBlock extends FenceGateBlock implements IFramedBlockInternal
 {
     public FramedFenceGateBlock(Properties props)
     {

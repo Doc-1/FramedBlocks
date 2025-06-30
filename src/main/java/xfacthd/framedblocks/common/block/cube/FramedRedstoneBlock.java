@@ -27,11 +27,12 @@ import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.type.IBlockType;
+import xfacthd.framedblocks.common.block.IFramedBlockInternal;
 import xfacthd.framedblocks.common.data.BlockType;
 
 import java.util.List;
 
-public class FramedRedstoneBlock extends PoweredBlock implements IFramedBlock
+public class FramedRedstoneBlock extends PoweredBlock implements IFramedBlockInternal
 {
     public FramedRedstoneBlock(Properties props)
     {

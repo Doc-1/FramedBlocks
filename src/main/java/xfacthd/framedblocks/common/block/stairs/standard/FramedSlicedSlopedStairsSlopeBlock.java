@@ -2,22 +2,22 @@ package xfacthd.framedblocks.common.block.stairs.standard;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.FramedProperties;
-import xfacthd.framedblocks.api.block.IFramedDoubleBlock;
+import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.block.doubleblock.CamoGetter;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.api.block.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.block.IFramedDoubleBlockInternal;
 import xfacthd.framedblocks.common.blockentity.doubled.stairs.FramedSlicedSlopedStairsSlopeBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.property.SlopeType;
 
-public class FramedSlicedSlopedStairsSlopeBlock extends FramedSlopedStairsBlock implements IFramedDoubleBlock
+public class FramedSlicedSlopedStairsSlopeBlock extends FramedSlopedStairsBlock implements IFramedDoubleBlockInternal
 {
     public FramedSlicedSlopedStairsSlopeBlock(Properties props)
     {
@@ -25,7 +25,7 @@ public class FramedSlicedSlopedStairsSlopeBlock extends FramedSlopedStairsBlock 
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
+    public FramedDoubleBlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
         return new FramedSlicedSlopedStairsSlopeBlockEntity(pos, state);
     }

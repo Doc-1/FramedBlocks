@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.SupportType;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -635,10 +634,7 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
     }
 
     @Override
-    default BlockEntity newBlockEntity(BlockPos pos, BlockState state)
-    {
-        return new FramedBlockEntity(pos, state);
-    }
+    FramedBlockEntity newBlockEntity(BlockPos pos, BlockState state);
 
     default CamoList getCamosFromBlueprint(BlueprintData blueprintData)
     {

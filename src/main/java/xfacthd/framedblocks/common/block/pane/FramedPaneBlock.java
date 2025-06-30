@@ -27,11 +27,12 @@ import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.block.IFramedBlockInternal;
 import xfacthd.framedblocks.common.data.BlockType;
 
 import java.util.List;
 
-public class FramedPaneBlock extends IronBarsBlock implements IFramedBlock
+public class FramedPaneBlock extends IronBarsBlock implements IFramedBlockInternal
 {
     private final BlockType type;
 

@@ -4,12 +4,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.block.AbstractFramedDoubleBlock;
+import xfacthd.framedblocks.common.block.FramedDoubleBlock;
 import xfacthd.framedblocks.common.block.cube.FramedCollapsibleCopycatBlock;
 import xfacthd.framedblocks.common.blockentity.doubled.slab.FramedAdjustableDoubleBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
@@ -18,7 +18,7 @@ import xfacthd.framedblocks.common.data.property.NullableDirection;
 
 import java.util.function.Function;
 
-public abstract class FramedAdjustableDoubleBlock extends AbstractFramedDoubleBlock
+public abstract class FramedAdjustableDoubleBlock extends FramedDoubleBlock
 {
     private final Function<BlockState, Direction> facingGetter;
     private final Function<BlockState, DoubleBlockParts> partsBuilder;
@@ -52,7 +52,7 @@ public abstract class FramedAdjustableDoubleBlock extends AbstractFramedDoubleBl
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
+    public FramedDoubleBlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
         return beSupplier.create(pos, state);
     }

@@ -3,25 +3,24 @@ package xfacthd.framedblocks.common.block.stairs.vertical;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
-import xfacthd.framedblocks.api.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.block.doubleblock.CamoGetter;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.api.block.doubleblock.SolidityCheck;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.block.IFramedDoubleBlockInternal;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.property.StairsType;
 
-public class FramedVerticalDoubleStairsBlock extends FramedVerticalStairsBlock implements IFramedDoubleBlock
+public class FramedVerticalDoubleStairsBlock extends FramedVerticalStairsBlock implements IFramedDoubleBlockInternal
 {
     public FramedVerticalDoubleStairsBlock(Properties props)
     {
@@ -190,9 +189,9 @@ public class FramedVerticalDoubleStairsBlock extends FramedVerticalStairsBlock i
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
+    public FramedDoubleBlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
-        return new FramedDoubleBlockEntity(pos, state);
+        return IFramedDoubleBlockInternal.super.newBlockEntity(pos, state);
     }
 
     @Override
