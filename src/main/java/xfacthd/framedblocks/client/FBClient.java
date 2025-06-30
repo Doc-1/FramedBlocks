@@ -69,6 +69,7 @@ import xfacthd.framedblocks.client.model.loader.fallback.FallbackLoader;
 import xfacthd.framedblocks.client.model.overlaygen.OverlayQuadGenerator;
 import xfacthd.framedblocks.client.model.unbaked.FramedBlockModelDefinition;
 import xfacthd.framedblocks.client.model.wrapping.ModelWrappingManager;
+import xfacthd.framedblocks.client.net.ClientNetworkHandler;
 import xfacthd.framedblocks.client.render.block.FramedChestRenderer;
 import xfacthd.framedblocks.client.render.block.FramedHangingSignRenderer;
 import xfacthd.framedblocks.client.render.block.FramedItemFrameRenderer;
@@ -148,6 +149,7 @@ public final class FBClient
         modBus.addListener(BlockOutlineRenderers::onRegisterOutlineRenderers);
         modBus.addListener(GhostRenderBehaviours::onRegisterGhostRenderBehaviours);
         modBus.addListener(FramedRenderPipelines::onRegisterRenderPipelines);
+        modBus.addListener(ClientNetworkHandler::onRegisterPayloadHandlers);
 
         NeoForge.EVENT_BUS.addListener(ClientTaskQueue::onClientTick);
         NeoForge.EVENT_BUS.addListener(BlockOutlineRenderer::onRenderBlockHighlight);

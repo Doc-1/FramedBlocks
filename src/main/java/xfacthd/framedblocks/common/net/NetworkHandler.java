@@ -35,13 +35,11 @@ public final class NetworkHandler
         registrar.executesOn(HandlerThread.MAIN)
                 .playToClient(
                         ClientboundOpenSignScreenPayload.TYPE,
-                        ClientboundOpenSignScreenPayload.CODEC,
-                        ClientboundOpenSignScreenPayload::handle
+                        ClientboundOpenSignScreenPayload.CODEC
                 )
                 .playToClient(
                         ClientboundCullingUpdatePayload.TYPE,
-                        ClientboundCullingUpdatePayload.CODEC,
-                        ClientboundCullingUpdatePayload::handle
+                        ClientboundCullingUpdatePayload.CODEC
                 )
                 .playToServer(
                         ServerboundSelectFramingSawRecipePayload.TYPE,

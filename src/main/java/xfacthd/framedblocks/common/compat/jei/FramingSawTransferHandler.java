@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
@@ -89,7 +89,7 @@ public abstract sealed class FramingSawTransferHandler<C extends AbstractContain
 
             if (doTransfer && menu.clickMenuButton(player, idx))
             {
-                PacketDistributor.sendToServer(new ServerboundSelectFramingSawRecipePayload(menu.containerId, idx));
+                ClientPacketDistributor.sendToServer(new ServerboundSelectFramingSawRecipePayload(menu.containerId, idx));
             }
             // TODO: return null instead of "transfer not implemented" when the suggestion is implemented
             return new RecipeTransferErrorTransferNotImplemented();

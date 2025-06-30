@@ -25,8 +25,8 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.model.data.ModelData;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 import org.lwjgl.glfw.GLFW;
@@ -120,7 +120,7 @@ public class FramedSignScreen extends Screen
     @Override
     public void removed()
     {
-        PacketDistributor.sendToServer(new ServerboundSignUpdatePayload(sign.getBlockPos(), front, Arrays.copyOf(lines, lines.length)));
+        ClientPacketDistributor.sendToServer(new ServerboundSignUpdatePayload(sign.getBlockPos(), front, Arrays.copyOf(lines, lines.length)));
     }
 
     @Override

@@ -6,7 +6,7 @@ import dev.emi.emi.api.recipe.handler.StandardRecipeHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
 import xfacthd.framedblocks.common.menu.FramingSawMenu;
@@ -71,7 +71,7 @@ public final class FramedEmiRecipeHandler<T extends AbstractContainerMenu & IFra
             //noinspection ConstantConditions
             if (menu.clickMenuButton(Minecraft.getInstance().player, idx))
             {
-                PacketDistributor.sendToServer(new ServerboundSelectFramingSawRecipePayload(menu.containerId, idx));
+                ClientPacketDistributor.sendToServer(new ServerboundSelectFramingSawRecipePayload(menu.containerId, idx));
             }
         }
         return true;

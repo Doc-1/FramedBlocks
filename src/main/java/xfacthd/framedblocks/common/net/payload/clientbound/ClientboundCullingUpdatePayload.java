@@ -6,11 +6,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 import xfacthd.framedblocks.api.util.network.FramedByteBufCodecs;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.common.data.cullupdate.ClientCullingUpdateTracker;
 
 public record ClientboundCullingUpdatePayload(long chunk, LongSet positions) implements CustomPacketPayload
 {
@@ -27,13 +24,5 @@ public record ClientboundCullingUpdatePayload(long chunk, LongSet positions) imp
     public CustomPacketPayload.Type<ClientboundCullingUpdatePayload> type()
     {
         return TYPE;
-    }
-
-    public void handle(@SuppressWarnings("unused") IPayloadContext ctx)
-    {
-        if (FMLEnvironment.dist.isClient())
-        {
-            ClientCullingUpdateTracker.handleCullingUpdates(chunk, positions);
-        }
     }
 }

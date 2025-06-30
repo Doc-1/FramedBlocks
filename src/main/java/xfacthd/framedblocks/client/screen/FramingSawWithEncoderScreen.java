@@ -17,7 +17,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 import org.lwjgl.glfw.GLFW;
@@ -368,7 +368,7 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
     {
         if (encoderMatchResult == null || !encoderMatchResult.success()) return;
 
-        PacketDistributor.sendToServer(new ServerboundEncodeFramingSawPatternPayload(
+        ClientPacketDistributor.sendToServer(new ServerboundEncodeFramingSawPatternPayload(
                 menu.containerId,
                 cache.getRecipes().get(menu.getSelectedRecipeIndex()).id(),
                 Arrays.stream(encodingInputs).filter(stack -> !stack.isEmpty()).toArray(ItemStack[]::new)
