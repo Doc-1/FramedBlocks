@@ -4,6 +4,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import xfacthd.framedblocks.api.block.IFramedBlock;
+import xfacthd.framedblocks.api.ghost.DoubleBlockGhostRenderBehaviour;
 import xfacthd.framedblocks.api.ghost.RegisterGhostRenderBehavioursEvent;
 import xfacthd.framedblocks.client.data.ghost.*;
 import xfacthd.framedblocks.common.FBContent;
@@ -15,7 +16,7 @@ public final class GhostRenderBehaviours
     public static void onRegisterGhostRenderBehaviours(RegisterGhostRenderBehavioursEvent event)
     {
         //noinspection SuspiciousToArrayCall
-        event.registerBlocks(new DoubleBlockGhostRenderBehaviour(), FBContent.getRegisteredBlocks()
+        event.registerBlocks(DoubleBlockGhostRenderBehaviour.INSTANCE, FBContent.getRegisteredBlocks()
                 .stream()
                 .map(Holder::value)
                 .filter(IFramedBlock.class::isInstance)

@@ -5,12 +5,13 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.ghost.DoubleBlockGhostRenderBehaviour;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.blockentity.PackedCollapsibleBlockOffsets;
 import xfacthd.framedblocks.common.blockentity.doubled.slab.FramedAdjustableDoubleBlockEntity;
 import xfacthd.framedblocks.common.data.component.AdjustableDoubleBlockData;
 
-public final class AdjustableDoubleBlockGhostRenderBehaviour extends DoubleBlockGhostRenderBehaviour
+public final class AdjustableDoubleBlockGhostRenderBehaviour implements DoubleBlockGhostRenderBehaviour
 {
     private final FramedAdjustableDoubleBlockEntity.OffsetPacker offsetPacker;
 
