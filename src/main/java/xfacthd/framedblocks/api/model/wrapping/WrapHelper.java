@@ -12,7 +12,6 @@ import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.api.block.render.NullCullPredicate;
 import xfacthd.framedblocks.api.internal.InternalClientAPI;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
-import xfacthd.framedblocks.api.model.item.DoubleBlockItemModelInfo;
 import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.util.Utils;
@@ -83,7 +82,7 @@ public final class WrapHelper
      */
     public static void wrapDouble(Holder<Block> block, NullCullPredicate nullCullPredicate, ItemModelInfo itemModelInfo, Set<Property<?>> ignoredProps)
     {
-        wrapDouble(block, nullCullPredicate, DoubleBlockItemModelInfo.INSTANCE, StateMerger.ignoring(ignoredProps));
+        wrapDouble(block, nullCullPredicate, itemModelInfo, StateMerger.ignoring(ignoredProps));
     }
 
     /**
