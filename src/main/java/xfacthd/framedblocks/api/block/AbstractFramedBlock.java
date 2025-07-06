@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -34,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.shapes.ShapeProvider;
 import xfacthd.framedblocks.api.shapes.ShapeUtils;
 import xfacthd.framedblocks.api.type.IBlockType;
+import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.List;
 
@@ -195,6 +197,12 @@ public abstract class AbstractFramedBlock extends Block implements IFramedBlock,
                 this
         );
         return beaconBeamOcclusion.getBoolean(state);
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType type)
+    {
+        return state.is(Utils.GROUP_FULL_CUBE) && super.isPathfindable(state, type);
     }
 
     @Override
