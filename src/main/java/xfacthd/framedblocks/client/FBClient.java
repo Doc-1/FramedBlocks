@@ -118,6 +118,7 @@ import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.camo.fluid.FluidCamoClientHandler;
 
 import java.util.Set;
+import java.util.function.Function;
 
 @Mod(value = FramedConstants.MOD_ID, dist = Dist.CLIENT)
 public final class FBClient
@@ -554,7 +555,7 @@ public final class FBClient
 
     private static void onRegisterClientTooltipComponentFactories(RegisterClientTooltipComponentFactoriesEvent event)
     {
-        event.register(BlockPreviewTooltipComponent.Component.class, BlockPreviewTooltipComponent::new);
+        event.register(BlockPreviewTooltipComponent.class, Function.identity());
     }
 
     private static void onRegisterPictureInPictureRenderers(RegisterPictureInPictureRenderersEvent event)

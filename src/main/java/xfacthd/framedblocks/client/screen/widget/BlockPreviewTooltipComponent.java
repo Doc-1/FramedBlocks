@@ -7,16 +7,16 @@ import net.minecraft.client.renderer.item.TrackingItemStackRenderState;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import xfacthd.framedblocks.client.screen.pip.SpinningItemPictureInPictureRenderer;
 
-public final class BlockPreviewTooltipComponent implements ClientTooltipComponent
+public final class BlockPreviewTooltipComponent implements TooltipComponent, ClientTooltipComponent
 {
     private static final int SIZE = 36;
     private static final float STACK_SCALE = 48;
 
     private final TrackingItemStackRenderState renderState;
 
-    public BlockPreviewTooltipComponent(Component component)
+    public BlockPreviewTooltipComponent(TrackingItemStackRenderState renderState)
     {
-        this.renderState = component.renderState;
+        this.renderState = renderState;
     }
 
     @Override
@@ -40,8 +40,4 @@ public final class BlockPreviewTooltipComponent implements ClientTooltipComponen
     {
         return SIZE;
     }
-
-
-
-    public record Component(TrackingItemStackRenderState renderState) implements TooltipComponent { }
 }
