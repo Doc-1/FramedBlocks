@@ -1,6 +1,7 @@
 package xfacthd.framedblocks.client.screen.pip;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
@@ -14,6 +15,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
+import org.joml.Quaternionfc;
 import org.joml.Vector3f;
 import xfacthd.framedblocks.api.render.RenderUtils;
 import xfacthd.framedblocks.api.util.SingleBlockFakeLevel;
@@ -27,6 +29,7 @@ public final class BlockPictureInPictureRenderer extends PictureInPictureRendere
     private static final ItemTransform DEFAULT_TRANSFORM = new ItemTransform(
             new Vector3f(30, 225, 0), new Vector3f(), new Vector3f(0.625F, 0.625F, 0.625F)
     );
+    private static final Quaternionfc LIGHT_FIX_ROT = Axis.YP.rotationDegrees(285);
     private static final RandomSource RANDOM = RandomSource.create();
 
     public BlockPictureInPictureRenderer(MultiBufferSource.BufferSource bufferSource)
@@ -41,8 +44,11 @@ public final class BlockPictureInPictureRenderer extends PictureInPictureRendere
         BlockState state = renderState.state;
         SingleBlockFakeLevel fakeLevel = renderState.fakeLevel;
 
-        poseStack.scale(RENDER_SIZE * scale, -RENDER_SIZE * scale, RENDER_SIZE * scale);
+        poseStack.scale(RENDER_SIZE * scale, -RENDER_SIZE * scale, -RENDER_SIZE * scale);
         DEFAULT_TRANSFORM.apply(false, poseStack.last());
+        poseStack.translate(.5, .5, .5);
+        poseStack.last().normal().rotate(LIGHT_FIX_ROT);
+        poseStack.translate(-.5, -.5, -.5);
 
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
         BlockStateModel model = blockRenderer.getBlockModel(state);
