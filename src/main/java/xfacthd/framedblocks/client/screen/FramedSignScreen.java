@@ -1,40 +1,19 @@
 package xfacthd.framedblocks.client.screen;
 
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
-import net.minecraft.client.gui.navigation.ScreenRectangle;
-import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
-import net.minecraft.client.gui.render.state.pip.PictureInPictureRenderState;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.SignRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.SignText;
-import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import net.neoforged.neoforge.model.data.ModelData;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 import org.lwjgl.glfw.GLFW;
-import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
-import xfacthd.framedblocks.api.model.data.FramedBlockData;
-import xfacthd.framedblocks.api.render.Quaternions;
-import xfacthd.framedblocks.api.render.RenderUtils;
-import xfacthd.framedblocks.api.util.SingleBlockFakeLevel;
+import xfacthd.framedblocks.client.screen.pip.SignBlockPictureInPictureRenderer;
 import xfacthd.framedblocks.common.block.sign.AbstractFramedHangingSignBlock;
 import xfacthd.framedblocks.common.block.sign.AbstractFramedSignBlock;
 import xfacthd.framedblocks.common.data.BlockType;
@@ -42,7 +21,6 @@ import xfacthd.framedblocks.common.net.payload.serverbound.ServerboundSignUpdate
 import xfacthd.framedblocks.common.blockentity.special.FramedSignBlockEntity;
 
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.stream.IntStream;
 
 public class FramedSignScreen extends Screen
@@ -52,7 +30,6 @@ public class FramedSignScreen extends Screen
     private static final SignConfig CFG_STANDING = new SignConfig(65, 105, 95F, 89, 10);
     private static final SignConfig CFG_WALL = new SignConfig(60, 110, 95F, 120, 10);
     private static final SignConfig CFG_HANGING = new SignConfig(75, 75, 75F, 127, 9);
-    private static final RandomSource RANDOM = RandomSource.create();
 
     private final AbstractFramedSignBlock signBlock;
     private final FramedSignBlockEntity sign;
@@ -190,7 +167,7 @@ public class FramedSignScreen extends Screen
         int y0 = signConfig.pipYOff;
         int x1 = x0 + 100;
         int y1 = y0 + signConfig.pipHeight;
-        graphics.submitPictureInPictureRenderState(SignBlockPictureInPictureRenderState.create(
+        graphics.submitPictureInPictureRenderState(SignBlockPictureInPictureRenderer.RenderState.create(
                 signBlock, sign, x0, y0, x1, y1, signConfig.signScale, graphics.peekScissorStack()
         ));
     }
@@ -265,108 +242,4 @@ public class FramedSignScreen extends Screen
     }
 
     private record SignConfig(int pipYOff, int pipHeight, float signScale, int textYOff, int lineHeight) { }
-
-    public record SignBlockPictureInPictureRenderState(
-            AbstractFramedSignBlock signBlock,
-            BlockState signState,
-            BlockPos signPos,
-            ModelData signBlockData,
-            int x0,
-            int y0,
-            int x1,
-            int y1,
-            float scale,
-            @Nullable ScreenRectangle scissorArea,
-            @Nullable ScreenRectangle bounds
-    ) implements PictureInPictureRenderState
-    {
-        public static SignBlockPictureInPictureRenderState create(
-                AbstractFramedSignBlock signBlock,
-                FramedSignBlockEntity sign,
-                int x0,
-                int y0,
-                int x1,
-                int y1,
-                float scale,
-                @Nullable ScreenRectangle scissorArea
-        )
-        {
-            BlockState state = sign.getBlockState();
-            BlockPos pos = sign.getBlockPos();
-            ModelData modelData = sign.getModelData(false);
-            ScreenRectangle bounds = PictureInPictureRenderState.getBounds(x0, y0, x1, y1, scissorArea);
-            return new SignBlockPictureInPictureRenderState(signBlock, state, pos, modelData, x0, y0, x1, y1, scale, scissorArea, bounds);
-        }
-    }
-
-    public static final class SignBlockPictureInPictureRenderer extends PictureInPictureRenderer<SignBlockPictureInPictureRenderState>
-    {
-        @Nullable
-        private BlockState lastSignState;
-        private BlockPos lastSignPos = BlockPos.ZERO;
-        private FramedBlockData lastBlockData = FramedBlockData.EMPTY;
-
-        public SignBlockPictureInPictureRenderer(MultiBufferSource.BufferSource bufferSource)
-        {
-            super(bufferSource);
-        }
-
-        @Override
-        protected void renderToTexture(SignBlockPictureInPictureRenderState state, PoseStack poseStack)
-        {
-            poseStack.mulPose(Axis.YN.rotationDegrees(state.signBlock.getYRotationDegrees(state.signState)));
-            poseStack.mulPose(Quaternions.ZP_180);
-            poseStack.translate(-.5, 0, -.5);
-
-            Minecraft minecraft = Minecraft.getInstance();
-            Level level = Objects.requireNonNull(minecraft.level);
-            BlockAndTintGetter fakeLevel = new SingleBlockFakeLevel(level, state.signPos, state.signPos, state.signState, null, state.signBlockData);
-
-            minecraft.gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_FLAT);
-            BlockRenderDispatcher renderer = minecraft.getBlockRenderer();
-            RANDOM.setSeed(42);
-            RenderUtils.renderModel(
-                    state.signState,
-                    fakeLevel,
-                    state.signPos,
-                    poseStack.last(),
-                    bufferSource,
-                    renderer.getBlockModel(state.signState),
-                    RANDOM,
-                    LightTexture.FULL_BRIGHT,
-                    OverlayTexture.NO_OVERLAY
-            );
-
-            lastSignState = state.signState;
-            lastSignPos = state.signPos;
-            lastBlockData = unpackData(state.signBlockData);
-        }
-
-        @Override
-        protected boolean textureIsReadyToBlit(SignBlockPictureInPictureRenderState renderState)
-        {
-            if (lastSignState != renderState.signState) return false;
-            if (!lastSignPos.equals(renderState.signPos)) return false;
-
-            return lastBlockData.equals(unpackData(renderState.signBlockData));
-        }
-
-        private static FramedBlockData unpackData(ModelData modelData)
-        {
-            AbstractFramedBlockData data = modelData.get(AbstractFramedBlockData.PROPERTY);
-            return data != null ? data.unwrap(false) : FramedBlockData.EMPTY;
-        }
-
-        @Override
-        protected String getTextureLabel()
-        {
-            return "framedblocks sign";
-        }
-
-        @Override
-        public Class<SignBlockPictureInPictureRenderState> getRenderStateClass()
-        {
-            return SignBlockPictureInPictureRenderState.class;
-        }
-    }
 }

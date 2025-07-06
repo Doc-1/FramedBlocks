@@ -89,12 +89,13 @@ import xfacthd.framedblocks.client.render.special.CollapsibleBlockIndicatorRende
 import xfacthd.framedblocks.client.render.special.GhostBlockRenderer;
 import xfacthd.framedblocks.client.render.util.AnimationSplitterSource;
 import xfacthd.framedblocks.client.render.util.FramedRenderPipelines;
-import xfacthd.framedblocks.client.screen.FramedSignScreen;
 import xfacthd.framedblocks.client.screen.FramedStorageScreen;
 import xfacthd.framedblocks.client.screen.FramingSawScreen;
 import xfacthd.framedblocks.client.screen.PoweredFramingSawScreen;
 import xfacthd.framedblocks.client.screen.overlay.BlockInteractOverlayLayer;
 import xfacthd.framedblocks.client.screen.pip.BlockPictureInPictureRenderer;
+import xfacthd.framedblocks.client.screen.pip.SpinningItemPictureInPictureRenderer;
+import xfacthd.framedblocks.client.screen.pip.SignBlockPictureInPictureRenderer;
 import xfacthd.framedblocks.client.screen.widget.BlockPreviewTooltipComponent;
 import xfacthd.framedblocks.client.util.ClientEventHandler;
 import xfacthd.framedblocks.client.util.ClientTaskQueue;
@@ -558,14 +559,8 @@ public final class FBClient
 
     private static void onRegisterPictureInPictureRenderers(RegisterPictureInPictureRenderersEvent event)
     {
-        event.register(
-                FramedSignScreen.SignBlockPictureInPictureRenderState.class,
-                FramedSignScreen.SignBlockPictureInPictureRenderer::new
-        );
-        event.register(
-                BlockPreviewTooltipComponent.BlockPreviewPictureInPictureRenderState.class,
-                BlockPreviewTooltipComponent.BlockPreviewPictureInPictureRenderer::new
-        );
+        event.register(SignBlockPictureInPictureRenderer.RenderState.class, SignBlockPictureInPictureRenderer::new);
+        event.register(SpinningItemPictureInPictureRenderer.RenderState.class, SpinningItemPictureInPictureRenderer::new);
         event.register(BlockPictureInPictureRenderer.RenderState.class, BlockPictureInPictureRenderer::new);
     }
 
