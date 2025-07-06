@@ -29,7 +29,7 @@ final class FramedBlockElement extends Element
         IFramedBlock block = (IFramedBlock) state.getBlock();
         this.state = block.getJadeRenderState(state);
         boolean renderCamo = ClientConfig.VIEW.shouldRenderCamoInJade();
-        ModelData modelData = renderCamo ? blockEntity.getModelData(false) : ModelData.EMPTY;
+        ModelData modelData = renderCamo ? blockEntity.getModelData(false, this.state) : ModelData.EMPTY;
         this.fakeLevel = new SingleBlockFakeLevel(Objects.requireNonNull(blockEntity.getLevel()), blockEntity.getBlockPos(), this.state, blockEntity, modelData);
         this.scale = block.getJadeRenderScale(this.state);
     }

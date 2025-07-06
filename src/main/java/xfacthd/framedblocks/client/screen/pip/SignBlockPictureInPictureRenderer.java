@@ -127,7 +127,7 @@ public final class SignBlockPictureInPictureRenderer extends PictureInPictureRen
         {
             BlockState state = sign.getBlockState();
             BlockPos pos = sign.getBlockPos();
-            ModelData modelData = sign.getModelData(false);
+            ModelData modelData = sign.getModelData(false, state);
             ScreenRectangle bounds = PictureInPictureRenderState.getBounds(x0, y0, x1, y1, scissorArea);
             return new RenderState(signBlock, state, pos, modelData, x0, y0, x1, y1, scale, scissorArea, bounds);
         }

@@ -376,12 +376,13 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity
      */
 
     @Override
-    protected final AbstractFramedBlockData computeBlockData(boolean includeCullInfo)
+    protected final AbstractFramedBlockData computeBlockData(boolean includeCullInfo, BlockState state)
     {
-        FramedBlockData modelDataOne = (FramedBlockData) super.computeBlockData(includeCullInfo);
+        FramedBlockData modelDataOne = (FramedBlockData) super.computeBlockData(includeCullInfo, state);
         boolean[] cullData = includeCullInfo ? culledFaces : FramedBlockData.NO_CULLED_FACES;
         FramedBlockData modelDataTwo = new FramedBlockData(camoContainer, cullData, true, isReinforced(), isEmissive(), modelDataOne.isViewBlocking());
-        return new FramedDoubleBlockData(getParts(), modelDataOne, modelDataTwo);
+        DoubleBlockParts parts = getBlock().getCache(state).getParts();
+        return new FramedDoubleBlockData(parts, modelDataOne, modelDataTwo);
     }
 
     /*

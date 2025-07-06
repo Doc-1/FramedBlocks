@@ -974,15 +974,16 @@ public class FramedBlockEntity extends BlockEntity
             updateCulling(false, false);
             cullStateDirty = false;
         }
-        return getModelData(true);
+        return getModelData(true, getBlockState());
     }
 
     /**
      * @param includeCullInfo Whether culling data should be included
+     * @param state           The {@link BlockState} with which the model data is used for rendering (usually {@link #getBlockState()})
      */
-    public final ModelData getModelData(boolean includeCullInfo)
+    public final ModelData getModelData(boolean includeCullInfo, BlockState state)
     {
-        AbstractFramedBlockData modelData = computeBlockData(includeCullInfo);
+        AbstractFramedBlockData modelData = computeBlockData(includeCullInfo, state);
         ModelData.Builder builder = ModelData.builder().with(AbstractFramedBlockData.PROPERTY, modelData);
         attachAdditionalModelData(builder);
         return builder.build();
@@ -990,12 +991,13 @@ public class FramedBlockEntity extends BlockEntity
 
     /**
      * @param includeCullInfo Whether culling data should be included
+     * @param state           The {@link BlockState} with which the model data is used for rendering (usually {@link #getBlockState()})
      */
     @ApiStatus.NonExtendable
-    protected AbstractFramedBlockData computeBlockData(boolean includeCullInfo)
+    protected AbstractFramedBlockData computeBlockData(boolean includeCullInfo, BlockState state)
     {
         boolean[] cullData = includeCullInfo ? culledFaces : FramedBlockData.NO_CULLED_FACES;
-        TriState viewBlocking = Utils.toTriState(getBlockState().isSuffocating(level(), worldPosition));
+        TriState viewBlocking = Utils.toTriState(state.isSuffocating(level(), worldPosition));
         return new FramedBlockData(camoContainer, cullData, false, isReinforced(), isEmissive(), viewBlocking);
     }
 
