@@ -94,6 +94,7 @@ import xfacthd.framedblocks.client.screen.FramedStorageScreen;
 import xfacthd.framedblocks.client.screen.FramingSawScreen;
 import xfacthd.framedblocks.client.screen.PoweredFramingSawScreen;
 import xfacthd.framedblocks.client.screen.overlay.BlockInteractOverlayLayer;
+import xfacthd.framedblocks.client.screen.pip.BlockPictureInPictureRenderer;
 import xfacthd.framedblocks.client.screen.widget.BlockPreviewTooltipComponent;
 import xfacthd.framedblocks.client.util.ClientEventHandler;
 import xfacthd.framedblocks.client.util.ClientTaskQueue;
@@ -565,6 +566,7 @@ public final class FBClient
                 BlockPreviewTooltipComponent.BlockPreviewPictureInPictureRenderState.class,
                 BlockPreviewTooltipComponent.BlockPreviewPictureInPictureRenderer::new
         );
+        event.register(BlockPictureInPictureRenderer.RenderState.class, BlockPictureInPictureRenderer::new);
     }
 
 

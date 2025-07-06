@@ -7,7 +7,7 @@ import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
-import snownee.jade.api.ui.IElement;
+import snownee.jade.api.ui.Element;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
@@ -20,7 +20,7 @@ final class FramedBlockComponentProvider implements IBlockComponentProvider
 
     @Override
     @Nullable
-    public IElement getIcon(BlockAccessor accessor, IPluginConfig config, IElement currentIcon)
+    public Element getIcon(BlockAccessor accessor, IPluginConfig config, Element currentIcon)
     {
         if (!(accessor.getBlockState().getBlock() instanceof IFramedBlock block)) return null;
         if (!block.shouldRenderAsBlockInJadeTooltip()) return null;

@@ -207,7 +207,8 @@ dependencies {
     compileOnly("appeng:appliedenergistics2:${ae2_version}:api")
     //runtimeOnly("appeng:appliedenergistics2:${ae2_version}")
 
-    compileOnly("snownee.jade:Jade-NeoForge:${jade_mc_version}-${jade_version}")
+    //compileOnly("snownee.jade:Jade-NeoForge:${jade_mc_version}-${jade_version}")
+    compileOnly("curse.maven:jade-324717:6713216")
 
     implementation("curse.maven:atlasviewer-633577:${atlasviewer_coord}")
 
