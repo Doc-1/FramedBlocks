@@ -213,6 +213,8 @@ dependencies {
     implementation("curse.maven:atlasviewer-633577:${atlasviewer_coord}")
 
     compileOnly("com.blamejared.searchables:Searchables-neoforge-${searchables_mc_version}:${searchables_version}")
+
+    compileOnly("curse.maven:additionalplacements-674852:${additionalplacements_coord}")
 }
 
 tasks.withType(ProcessResources).configureEach {
@@ -233,7 +235,8 @@ tasks.withType(ProcessResources).configureEach {
             athena_version: athena_version,
             create_version: create_version,
             ae2_version: ae2_version,
-            searchables_version: searchables_version
+            searchables_version: searchables_version,
+            additionalplacements_version: additionalplacements_version
     ]
     inputs.properties replaceProperties
 
