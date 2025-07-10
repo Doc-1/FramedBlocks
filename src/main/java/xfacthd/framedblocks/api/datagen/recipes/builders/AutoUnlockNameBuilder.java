@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.common.datagen.builders.recipe;
+package xfacthd.framedblocks.api.datagen.recipes.builders;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -9,27 +9,28 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.ApiStatus;
 import xfacthd.framedblocks.api.util.Utils;
 
 public interface AutoUnlockNameBuilder<T extends RecipeBuilder> extends RecipeBuilder
 {
     @SuppressWarnings("unchecked")
-    default T unlockedBy(RecipeProvider provider, Holder<? extends ItemLike> triggerItem)
+    default T unlockedBy(Holder<? extends ItemLike> triggerItem)
     {
         String name = buildCriterionName(Utils.getKeyOrThrow(triggerItem).location());
-        return (T) unlockedBy(name, provider.has(triggerItem.value()));
+        return (T) unlockedBy(name, provider().has(triggerItem.value()));
     }
 
-    default T unlockedBy(RecipeProvider provider, Item triggerItem)
+    default T unlockedBy(Item triggerItem)
     {
-        return unlockedBy(provider, BuiltInRegistries.ITEM.wrapAsHolder(triggerItem));
+        return unlockedBy(BuiltInRegistries.ITEM.wrapAsHolder(triggerItem));
     }
 
     @SuppressWarnings("unchecked")
-    default T unlockedBy(RecipeProvider provider, TagKey<Item> triggerTag)
+    default T unlockedBy(TagKey<Item> triggerTag)
     {
         String name = buildCriterionName(triggerTag.location());
-        return (T) unlockedBy(name, provider.has(triggerTag));
+        return (T) unlockedBy(name, provider().has(triggerTag));
     }
 
     private static String buildCriterionName(ResourceLocation triggerName)
@@ -41,4 +42,7 @@ public interface AutoUnlockNameBuilder<T extends RecipeBuilder> extends RecipeBu
         }
         return name.toString();
     }
+
+    @ApiStatus.Internal
+    RecipeProvider provider();
 }

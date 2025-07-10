@@ -1,20 +1,25 @@
-package xfacthd.framedblocks.common.datagen.builders.recipe;
+package xfacthd.framedblocks.api.datagen.recipes.builders;
 
 import net.minecraft.advancements.Criterion;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 public class ExtShapedRecipeBuilder extends ShapedRecipeBuilder implements AutoUnlockNameBuilder<ExtShapedRecipeBuilder>
 {
-    public ExtShapedRecipeBuilder(HolderGetter<Item> itemRegistry, RecipeCategory category, ItemLike result, int count)
+    private final RecipeProvider provider;
+
+    public ExtShapedRecipeBuilder(RecipeProvider provider, HolderGetter<Item> itemRegistry, RecipeCategory category, ItemLike result, int count)
     {
         super(itemRegistry, category, result, count);
+        this.provider = provider;
     }
 
     @Override
@@ -57,5 +62,12 @@ public class ExtShapedRecipeBuilder extends ShapedRecipeBuilder implements AutoU
     public ExtShapedRecipeBuilder showNotification(boolean pShowNotification)
     {
         return (ExtShapedRecipeBuilder) super.showNotification(pShowNotification);
+    }
+
+    @Override
+    @ApiStatus.Internal
+    public final RecipeProvider provider()
+    {
+        return provider;
     }
 }

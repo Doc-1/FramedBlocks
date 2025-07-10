@@ -7,6 +7,7 @@ import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -14,7 +15,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.common.datagen.builders.recipe.ExtShapelessRecipeBuilder;
+import xfacthd.framedblocks.api.datagen.recipes.builders.ExtShapelessRecipeBuilder;
 
 import java.util.Objects;
 
@@ -25,9 +26,9 @@ public final class ShapeRotationRecipeBuilder extends ExtShapelessRecipeBuilder
     @Nullable
     private Ingredient block = null;
 
-    public ShapeRotationRecipeBuilder(HolderGetter<Item> itemRegistry, ItemLike result)
+    public ShapeRotationRecipeBuilder(RecipeProvider provider, HolderGetter<Item> itemRegistry, ItemLike result)
     {
-        super(itemRegistry, RecipeCategory.BUILDING_BLOCKS, result, 1);
+        super(provider, itemRegistry, RecipeCategory.BUILDING_BLOCKS, result, 1);
     }
 
     public ShapeRotationRecipeBuilder tool(Ingredient tool)
