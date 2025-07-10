@@ -20,6 +20,8 @@ import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
 import xfacthd.framedblocks.api.block.IFramedBlock;
+import xfacthd.framedblocks.api.datagen.recipes.AbstractFramingSawRecipeProvider;
+import xfacthd.framedblocks.api.datagen.recipes.builders.FramingSawRecipeBuilder;
 import xfacthd.framedblocks.api.type.IBlockType;
 import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.common.FBContent;
@@ -28,8 +30,8 @@ import java.util.List;
 
 public final class FramingSawRecipe implements Recipe<RecipeInput>
 {
-    public static final int CUBE_MATERIAL_VALUE = 6144; // Empirically determined value
-    public static final int MAX_ADDITIVE_COUNT = 3;
+    public static final int CUBE_MATERIAL_VALUE = AbstractFramingSawRecipeProvider.CUBE_MATERIAL_VALUE; // Empirically determined value
+    public static final int MAX_ADDITIVE_COUNT = FramingSawRecipeBuilder.MAX_ADDITIVE_COUNT;
     public static final MapCodec<FramingSawRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             Codec.intRange(0, Integer.MAX_VALUE).fieldOf("material").forGetter(FramingSawRecipe::getMaterialAmount),
             FramingSawRecipeAdditive.CODEC.sizeLimitedListOf(FramingSawRecipe.MAX_ADDITIVE_COUNT).optionalFieldOf("additives", List.of()).forGetter(FramingSawRecipe::getAdditives),
@@ -54,7 +56,7 @@ public final class FramingSawRecipe implements Recipe<RecipeInput>
     private final IBlockType resultType;
     private final boolean disabled;
 
-    FramingSawRecipe(int materialAmount, List<FramingSawRecipeAdditive> additives, ItemStack result, boolean disabled)
+    public FramingSawRecipe(int materialAmount, List<FramingSawRecipeAdditive> additives, ItemStack result, boolean disabled)
     {
         this.materialAmount = materialAmount;
         this.additives = additives;

@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.common.crafting.saw;
+package xfacthd.framedblocks.api.datagen.recipes.builders;
 
 import com.google.common.base.Preconditions;
 import net.minecraft.advancements.Criterion;
@@ -9,21 +9,26 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.internal.InternalAPI;
 
 import java.util.List;
+import java.util.Objects;
 
 public final class FramingSawRecipeBuilder implements RecipeBuilder
 {
+    public static final int MAX_ADDITIVE_COUNT = 3;
+
     private final Item result;
     private final int count;
     private int material = 0;
-    private List<FramingSawRecipeAdditive> additives = List.of();
+    private List<Additive> additives = List.of();
     private boolean disabled = false;
 
-    private FramingSawRecipeBuilder(ItemLike result, int count)
+    public FramingSawRecipeBuilder(ItemLike result, int count)
     {
         this.result = result.asItem();
         this.count = count;
@@ -58,16 +63,19 @@ public final class FramingSawRecipeBuilder implements RecipeBuilder
         return this;
     }
 
-    public FramingSawRecipeBuilder additive(FramingSawRecipeAdditive additive)
+    public FramingSawRecipeBuilder additive(Additive additive)
     {
         Preconditions.checkNotNull(additive, "Additive must be non-null");
         this.additives = List.of(additive);
         return this;
     }
 
-    public FramingSawRecipeBuilder additives(List<FramingSawRecipeAdditive> additives)
+    public FramingSawRecipeBuilder additives(List<Additive> additives)
     {
         Preconditions.checkNotNull(additives, "Additives must be non-null");
+        Preconditions.checkArgument(!additives.isEmpty(), "At least one additive must be provided");
+        Preconditions.checkArgument(additives.size() <= MAX_ADDITIVE_COUNT, "At most 3 additives may be provided");
+        Preconditions.checkArgument(additives.stream().noneMatch(Objects::isNull), "Additives must be non-null");
         this.additives = additives;
         return this;
     }
@@ -103,7 +111,30 @@ public final class FramingSawRecipeBuilder implements RecipeBuilder
         Preconditions.checkState(material / count * count == material, "Material value not divisible by result size");
 
         recipeId = ResourceKey.create(Registries.RECIPE, recipeId.location().withPrefix("framing_saw/"));
-        FramingSawRecipe recipe = new FramingSawRecipe(material, additives, new ItemStack(result, count), disabled);
+        Recipe<?> recipe = InternalAPI.INSTANCE.makeFramingSawRecipe(material, additives, new ItemStack(result, count), disabled);
         output.accept(recipeId, recipe, null);
+    }
+
+    public record Additive(Ingredient ingredient, int count)
+    {
+        public static Additive of(ItemLike item)
+        {
+            return of(item, 1);
+        }
+
+        public static Additive of(ItemLike item, int count)
+        {
+            return of(Ingredient.of(item), count);
+        }
+
+        public static Additive of(Ingredient ingredient)
+        {
+            return of(ingredient, 1);
+        }
+
+        public static Additive of(Ingredient ingredient, int count)
+        {
+            return new Additive(ingredient, count);
+        }
     }
 }

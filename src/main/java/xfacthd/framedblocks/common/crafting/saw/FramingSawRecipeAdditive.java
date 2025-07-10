@@ -12,8 +12,8 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.datagen.recipes.builders.FramingSawRecipeBuilder;
 
 import java.util.Optional;
 
@@ -53,12 +53,7 @@ public record FramingSawRecipeAdditive(Ingredient ingredient, int count, @Nullab
         return new FramingSawRecipeDisplay.AdditiveDisplay(ingredient.display(), count);
     }
 
-    public static FramingSawRecipeAdditive of(Ingredient ingredient)
-    {
-        return of(ingredient, 1);
-    }
-
-    public static FramingSawRecipeAdditive of(Ingredient ingredient, int count)
+    private static FramingSawRecipeAdditive of(Ingredient ingredient, int count)
     {
         TagKey<Item> srcTag = null;
         if (!ingredient.isCustom() && ingredient.getValues() instanceof HolderSet.Named<Item> named)
@@ -68,13 +63,8 @@ public record FramingSawRecipeAdditive(Ingredient ingredient, int count, @Nullab
         return new FramingSawRecipeAdditive(ingredient, count, srcTag);
     }
 
-    public static FramingSawRecipeAdditive of(ItemLike item)
+    public static FramingSawRecipeAdditive of(FramingSawRecipeBuilder.Additive additive)
     {
-        return of(item, 1);
-    }
-
-    public static FramingSawRecipeAdditive of(ItemLike item, int count)
-    {
-        return of(Ingredient.of(item), count);
+        return of(additive.ingredient(), additive.count());
     }
 }

@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -15,10 +16,12 @@ import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.camo.CamoContainer;
 import xfacthd.framedblocks.api.camo.CamoContainerFactory;
 import xfacthd.framedblocks.api.camo.block.rotator.BlockCamoRotator;
+import xfacthd.framedblocks.api.datagen.recipes.builders.FramingSawRecipeBuilder;
 import xfacthd.framedblocks.api.shapes.ReloadableShapeProvider;
 import xfacthd.framedblocks.api.shapes.ShapeCache;
 import xfacthd.framedblocks.api.util.Utils;
 
+import java.util.List;
 import java.util.function.Function;
 
 @ApiStatus.Internal
@@ -52,4 +55,6 @@ public interface InternalAPI
     BlockCamoRotator getCamoRotator(Block block);
 
     boolean isSameSound(SoundType typeOne, SoundType typeTwo, Function<SoundType, SoundEvent> eventResolver);
+
+    Recipe<?> makeFramingSawRecipe(int materialAmount, List<FramingSawRecipeBuilder.Additive> additives, ItemStack result, boolean disabled);
 }
