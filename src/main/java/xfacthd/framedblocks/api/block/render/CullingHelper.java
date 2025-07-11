@@ -110,8 +110,12 @@ public final class CullingHelper
             IFramedBlock block, BlockGetter level, BlockPos pos, BlockState state, BlockState adjState, Direction side
     )
     {
+        if (adjState.getBlock() instanceof IFramedBlock)
+        {
+            return false;
+        }
         BlockPos adjPos = pos.relative(side);
-        if (adjState.getBlock() instanceof IFramedBlock || !block.canOccludeNeighbor(level, pos, state, adjPos, adjState))
+        if (!block.canOccludeNeighbor(level, pos, state, adjPos, adjState))
         {
             return false;
         }
