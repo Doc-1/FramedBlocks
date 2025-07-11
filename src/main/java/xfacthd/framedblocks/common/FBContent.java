@@ -4,16 +4,10 @@ import com.google.common.base.Preconditions;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.flag.FeatureFlags;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Recipe;
@@ -23,15 +17,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraft.world.level.storage.loot.providers.number.LootNumberProviderType;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.crafting.IngredientType;
-import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
-import net.neoforged.neoforge.network.IContainerFactory;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -50,6 +43,9 @@ import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.registration.DeferredAuxDataType;
 import xfacthd.framedblocks.api.util.registration.DeferredBlockEntity;
 import xfacthd.framedblocks.api.util.registration.DeferredDataComponentType;
+import xfacthd.framedblocks.api.util.registration.DeferredLootFunction;
+import xfacthd.framedblocks.api.util.registration.DeferredMenuType;
+import xfacthd.framedblocks.api.util.registration.DeferredParticleType;
 import xfacthd.framedblocks.api.util.registration.DeferredRecipeSerializer;
 import xfacthd.framedblocks.api.util.registration.DeferredRecipeType;
 import xfacthd.framedblocks.common.block.cube.*;
@@ -109,12 +105,14 @@ import xfacthd.framedblocks.common.item.PhantomPasteItem;
 import xfacthd.framedblocks.common.menu.FramedStorageMenu;
 import xfacthd.framedblocks.common.menu.FramingSawMenu;
 import xfacthd.framedblocks.common.menu.PoweredFramingSawMenu;
-import xfacthd.framedblocks.common.particle.BasicParticleType;
 import xfacthd.framedblocks.common.particle.FluidParticleOptions;
 import xfacthd.framedblocks.common.util.FramedCreativeTab;
 import xfacthd.framedblocks.common.util.registration.DeferredAuxDataTypeRegister;
 import xfacthd.framedblocks.common.util.registration.DeferredBlockEntityRegister;
 import xfacthd.framedblocks.common.util.registration.DeferredDataComponentTypeRegister;
+import xfacthd.framedblocks.common.util.registration.DeferredLootFunctionRegister;
+import xfacthd.framedblocks.common.util.registration.DeferredMenuTypeRegister;
+import xfacthd.framedblocks.common.util.registration.DeferredParticleTypeRegister;
 import xfacthd.framedblocks.common.util.registration.DeferredRecipeSerializerRegister;
 import xfacthd.framedblocks.common.util.registration.DeferredRecipeTypeRegister;
 
@@ -137,16 +135,16 @@ public final class FBContent
     private static final DeferredDataComponentTypeRegister DATA_COMPONENTS = DeferredDataComponentTypeRegister.create(FramedConstants.MOD_ID);
     private static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(FramedConstants.MOD_ID);
     private static final DeferredBlockEntityRegister BE_TYPES = DeferredBlockEntityRegister.create(FramedConstants.MOD_ID);
-    private static final DeferredRegister<MenuType<?>> CONTAINER_TYPES = register(Registries.MENU);
+    private static final DeferredMenuTypeRegister MENU_TYPES = DeferredMenuTypeRegister.create(FramedConstants.MOD_ID);
     private static final DeferredRecipeTypeRegister RECIPE_TYPES = DeferredRecipeTypeRegister.create(FramedConstants.MOD_ID);
     private static final DeferredRecipeSerializerRegister RECIPE_SERIALIZERS = DeferredRecipeSerializerRegister.create(FramedConstants.MOD_ID);
     private static final DeferredRegister<RecipeBookCategory> RECIPE_BOOK_CATEGORIES = register(Registries.RECIPE_BOOK_CATEGORY);
     private static final DeferredRegister<RecipeDisplay.Type<?>> RECIPE_DISPLAY_TYPES = register(Registries.RECIPE_DISPLAY);
     private static final DeferredRegister<IngredientType<?>> INGREDIENT_TYPES = register(NeoForgeRegistries.Keys.INGREDIENT_TYPES);
     private static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = register(Registries.CREATIVE_MODE_TAB);
-    private static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = register(Registries.PARTICLE_TYPE);
+    private static final DeferredParticleTypeRegister PARTICLE_TYPES = DeferredParticleTypeRegister.create(FramedConstants.MOD_ID);
     private static final DeferredRegister<LootItemConditionType> LOOT_CONDITIONS = register(Registries.LOOT_CONDITION_TYPE);
-    private static final DeferredRegister<LootItemFunctionType<?>> LOOT_FUNCTIONS = register(Registries.LOOT_FUNCTION_TYPE);
+    private static final DeferredLootFunctionRegister LOOT_FUNCTIONS = DeferredLootFunctionRegister.create(FramedConstants.MOD_ID);
     private static final DeferredRegister<LootNumberProviderType> LOOT_NUMBER_PROVIDERS = register(Registries.LOOT_NUMBER_PROVIDER_TYPE);
     private static final DeferredRegister<CamoContainerFactory<?>> CAMO_CONTAINER_FACTORIES = register(FramedConstants.CAMO_CONTAINER_FACTORY_REGISTRY_KEY);
     private static final DeferredAuxDataTypeRegister AUX_BLUEPRINT_DATA_TYPES = DeferredAuxDataTypeRegister.create(FramedConstants.MOD_ID);
@@ -672,21 +670,17 @@ public final class FBContent
     // endregion
 
     // region MenuTypes
-    public static final DeferredHolder<MenuType<?>, MenuType<FramedStorageMenu>> MENU_TYPE_FRAMED_STORAGE = registerSimpleMenuType(
-            FramedStorageMenu::createSingle,
-            "framed_chest"
+    public static final DeferredMenuType<FramedStorageMenu> MENU_TYPE_FRAMED_STORAGE = MENU_TYPES.registerSimpleMenuType(
+            "framed_chest", FramedStorageMenu::createSingle
     );
-    public static final DeferredHolder<MenuType<?>, MenuType<FramedStorageMenu>> MENU_TYPE_FRAMED_DOUBLE_CHEST = registerSimpleMenuType(
-            FramedStorageMenu::createDouble,
-            "framed_double_chest"
+    public static final DeferredMenuType<FramedStorageMenu> MENU_TYPE_FRAMED_DOUBLE_CHEST = MENU_TYPES.registerSimpleMenuType(
+            "framed_double_chest", FramedStorageMenu::createDouble
     );
-    public static final DeferredHolder<MenuType<?>, MenuType<FramingSawMenu>> MENU_TYPE_FRAMING_SAW = registerMenuType(
-            (id, inv, buf) -> FramingSawMenu.create(id, inv, ContainerLevelAccess.NULL),
-            "framing_saw"
+    public static final DeferredMenuType<FramingSawMenu> MENU_TYPE_FRAMING_SAW = MENU_TYPES.registerSimpleMenuType(
+            "framing_saw", FramingSawMenu::createClient
     );
-    public static final DeferredHolder<MenuType<?>, MenuType<PoweredFramingSawMenu>> MENU_TYPE_POWERED_FRAMING_SAW = registerMenuType(
-            PoweredFramingSawMenu::new,
-            "powered_framing_saw"
+    public static final DeferredMenuType<PoweredFramingSawMenu> MENU_TYPE_POWERED_FRAMING_SAW = MENU_TYPES.registerAdvancedMenuType(
+            "powered_framing_saw", PoweredFramingSawMenu::new
     );
     // endregion
 
@@ -716,7 +710,7 @@ public final class FBContent
     // endregion
 
     // region RecipeDisplay.Types
-    public static final DeferredHolder<RecipeDisplay.Type<?>, RecipeDisplay.Type<FramingSawRecipeDisplay>> RECIPE_DISPLAY_TYPE_FRAMING_SAW = RECIPE_DISPLAY_TYPES.register(
+    public static final Holder<RecipeDisplay.Type<?>> RECIPE_DISPLAY_TYPE_FRAMING_SAW = RECIPE_DISPLAY_TYPES.register(
             "framing_saw", () -> new RecipeDisplay.Type<>(FramingSawRecipeDisplay.CODEC, FramingSawRecipeDisplay.STREAM_CODEC)
     );
     // endregion
@@ -734,44 +728,41 @@ public final class FBContent
     // endregion
 
     // region ParticleTypes
-    public static final DeferredHolder<ParticleType<?>, ParticleType<FluidParticleOptions>> FLUID_PARTICLE = registerParticle(
+    public static final DeferredParticleType<FluidParticleOptions> FLUID_PARTICLE = PARTICLE_TYPES.registerParticleType(
             "fluid", false, FluidParticleOptions.CODEC, FluidParticleOptions.STREAM_CODEC
     );
     // endregion
 
     // region LootItemConditions
-    public static final Holder<LootItemConditionType> NON_TRIVIAL_CAMO_LOOT_CONDITION = LOOT_CONDITIONS.register(
-            "non_trivial_camo", () -> new LootItemConditionType(NonTrivialCamoLootCondition.MAP_CODEC)
+    public static final Holder<LootItemConditionType> NON_TRIVIAL_CAMO_LOOT_CONDITION = registerLootCondition(
+            "non_trivial_camo", NonTrivialCamoLootCondition.MAP_CODEC
     );
     // endregion
 
     // region LootItemFunctions
-    public static final DeferredHolder<LootItemFunctionType<?>, LootItemFunctionType<SplitCamoLootFunction>> SPLIT_CAMO_LOOT_FUNCTION = LOOT_FUNCTIONS.register(
-            "split_camo", () -> new LootItemFunctionType<>(SplitCamoLootFunction.MAP_CODEC)
+    public static final DeferredLootFunction<SplitCamoLootFunction> SPLIT_CAMO_LOOT_FUNCTION = LOOT_FUNCTIONS.registerLootFunction(
+            "split_camo", SplitCamoLootFunction.MAP_CODEC
     );
     // endregion
 
     // region LootNumberProviderTypes
-    public static final Holder<LootNumberProviderType> BOARD_ADDITIONAL_ITEM_COUNT_NUMBER_PROVIDER = LOOT_NUMBER_PROVIDERS.register(
-            "board", () -> new LootNumberProviderType(MapCodec.unit(BoardAdditionalItemCountNumberProvider.INSTANCE))
+    public static final Holder<LootNumberProviderType> BOARD_ADDITIONAL_ITEM_COUNT_NUMBER_PROVIDER = registerLootNumberProvider(
+            "board", MapCodec.unit(BoardAdditionalItemCountNumberProvider.INSTANCE)
     );
-    public static final Holder<LootNumberProviderType> LAYERED_CUBE_ADDITIONAL_ITEM_COUNT_NUMBER_PROVIDER = LOOT_NUMBER_PROVIDERS.register(
-            "layered_cube", () -> new LootNumberProviderType(MapCodec.unit(LayeredCubeAdditionalItemCountNumberProvider.INSTANCE))
+    public static final Holder<LootNumberProviderType> LAYERED_CUBE_ADDITIONAL_ITEM_COUNT_NUMBER_PROVIDER = registerLootNumberProvider(
+            "layered_cube", MapCodec.unit(LayeredCubeAdditionalItemCountNumberProvider.INSTANCE)
     );
     // endregion
 
     // region CamoContainer.Factories
     public static final DeferredHolder<CamoContainerFactory<?>, EmptyCamoContainerFactory> FACTORY_EMPTY = CAMO_CONTAINER_FACTORIES.register(
-            "empty",
-            EmptyCamoContainerFactory::new
+            "empty", EmptyCamoContainerFactory::new
     );
     public static final DeferredHolder<CamoContainerFactory<?>, BlockCamoContainerFactory> FACTORY_BLOCK = CAMO_CONTAINER_FACTORIES.register(
-            "block",
-            BlockCamoContainerFactory::new
+            "block", BlockCamoContainerFactory::new
     );
     public static final DeferredHolder<CamoContainerFactory<?>, FluidCamoContainerFactory> FACTORY_FLUID = CAMO_CONTAINER_FACTORIES.register(
-            "fluid",
-            FluidCamoContainerFactory::new
+            "fluid", FluidCamoContainerFactory::new
     );
     // endregion
 
@@ -806,7 +797,7 @@ public final class FBContent
         DATA_COMPONENTS.register(modBus);
         ITEMS.register(modBus);
         BE_TYPES.register(modBus);
-        CONTAINER_TYPES.register(modBus);
+        MENU_TYPES.register(modBus);
         RECIPE_TYPES.register(modBus);
         RECIPE_SERIALIZERS.register(modBus);
         RECIPE_BOOK_CATEGORIES.register(modBus);
@@ -985,20 +976,6 @@ public final class FBContent
         list.add((DeferredBlockEntity<T>) type);
     }
 
-    private static <T extends AbstractContainerMenu> DeferredHolder<MenuType<?>, MenuType<T>> registerSimpleMenuType(
-            MenuType.MenuSupplier<T> factory, String name
-    )
-    {
-        return CONTAINER_TYPES.register(name, () -> new MenuType<>(factory, FeatureFlags.VANILLA_SET));
-    }
-
-    private static <T extends AbstractContainerMenu> DeferredHolder<MenuType<?>, MenuType<T>> registerMenuType(
-            IContainerFactory<T> factory, String name
-    )
-    {
-        return CONTAINER_TYPES.register(name, () -> IMenuTypeExtension.create(factory));
-    }
-
     @SuppressWarnings("SameParameterValue")
     private static <T extends Recipe<?>> DeferredRecipeType<T> registerRecipeType(String name)
     {
@@ -1013,11 +990,14 @@ public final class FBContent
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static <O extends ParticleOptions> DeferredHolder<ParticleType<?>, ParticleType<O>> registerParticle(
-            String name, boolean overrideLimiter, MapCodec<O> codec, StreamCodec<? super RegistryFriendlyByteBuf, O> streamCodec
-    )
+    private static Holder<LootItemConditionType> registerLootCondition(String name, MapCodec<? extends LootItemCondition> codec)
     {
-        return PARTICLE_TYPES.register(name, () -> new BasicParticleType<>(overrideLimiter, codec, streamCodec));
+        return LOOT_CONDITIONS.register(name, () -> new LootItemConditionType(codec));
+    }
+
+    private static Holder<LootNumberProviderType> registerLootNumberProvider(String name, MapCodec<? extends NumberProvider> codec)
+    {
+        return LOOT_NUMBER_PROVIDERS.register(name, () -> new LootNumberProviderType(codec));
     }
 
     private static <T> DeferredRegister<T> register(ResourceKey<Registry<T>> key)

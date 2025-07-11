@@ -51,6 +51,20 @@ public class FramingSawMenu extends AbstractContainerMenu implements IFramingSaw
     private FramingSawRecipe selectedRecipe = null;
     private boolean recipeChanged = false;
 
+    public static FramingSawMenu createClient(int containerId, Inventory inv)
+    {
+        return create(containerId, inv, ContainerLevelAccess.NULL);
+    }
+
+    public static FramingSawMenu create(int containerId, Inventory inv, ContainerLevelAccess levelAccess)
+    {
+        if (AppliedEnergisticsCompat.isLoaded())
+        {
+            return new FramingSawWithEncoderMenu(containerId, inv, levelAccess);
+        }
+        return new FramingSawMenu(containerId, inv, levelAccess);
+    }
+
     protected FramingSawMenu(int containerId, Inventory inv, ContainerLevelAccess levelAccess)
     {
         super(FBContent.MENU_TYPE_FRAMING_SAW.value(), containerId);
@@ -278,19 +292,6 @@ public class FramingSawMenu extends AbstractContainerMenu implements IFramingSaw
     {
         return true;
     }
-
-
-
-    public static FramingSawMenu create(int containerId, Inventory inv, ContainerLevelAccess levelAccess)
-    {
-        if (AppliedEnergisticsCompat.isLoaded())
-        {
-            return new FramingSawWithEncoderMenu(containerId, inv, levelAccess);
-        }
-        return new FramingSawMenu(containerId, inv, levelAccess);
-    }
-
-
 
     protected static class FrameCrafterContainer extends SimpleContainer implements RecipeInput
     {
