@@ -752,7 +752,7 @@ final class SkipPredicateGeneratorData
                                 )
                         );
                     }
-                    if (dir.special)
+                    if (dir.isSpecial())
                     {
                         Type owningType = specialDirIdToOwingType.put(id, type);
                         if (owningType != null && owningType != type)
@@ -944,7 +944,7 @@ final class SkipPredicateGeneratorData
 
         public EntryBuilder oneWayTest(String targetType, TestDir dir)
         {
-            if (!dir.special)
+            if (!dir.isSpecial())
             {
                 throw new IllegalArgumentException("One-way test on BlockType." + type + " against BlockType." + targetType + " must be special");
             }
@@ -961,7 +961,7 @@ final class SkipPredicateGeneratorData
             {
                 if (dir.props == null)
                 {
-                    dir = new TestDir(dir.type, dir.name, propNames, dir.identifiers, dir.excludedTypes, dir.primitive, dir.special);
+                    dir = new TestDir(dir.type, dir.name, propNames, dir.identifiers, dir.excludedTypes, dir.comparison);
                 }
                 newTestDirs.add(dir);
             }
@@ -1001,7 +1001,7 @@ final class SkipPredicateGeneratorData
 
         public boolean hasSpecialTests()
         {
-            return testDirs.stream().anyMatch(TestDir::special);
+            return testDirs.stream().anyMatch(TestDir::isSpecial);
         }
 
         public boolean hasOneWayTestAgainst(Type type)
@@ -1060,11 +1060,11 @@ final class SkipPredicateGeneratorData
         CUSTOM
     }
 
-    record TestDir(TestType type, String name, @Nullable List<String> props, Set<String> identifiers, Set<String> excludedTypes, boolean primitive, boolean special)
+    record TestDir(TestType type, String name, @Nullable List<String> props, Set<String> identifiers, Set<String> excludedTypes, ComparisonType comparison)
     {
         TestDir(@Nullable String type, String name, @Nullable List<String> props, String... identifiers)
         {
-            this(new TestType(type), name, props, Set.of(identifiers), Set.of(), "boolean".equals(type), type == null);
+            this(new TestType(type), name, props, Set.of(identifiers), Set.of(), ComparisonType.of(type));
         }
 
         List<String> getProps()
@@ -1074,7 +1074,7 @@ final class SkipPredicateGeneratorData
 
         TestDir withExcludedTypes(String... types)
         {
-            return new TestDir(type, name, props, identifiers, Set.of(types), primitive, special);
+            return new TestDir(type, name, props, identifiers, Set.of(types), comparison);
         }
 
         boolean isExcluded(Type type)
@@ -1085,6 +1085,31 @@ final class SkipPredicateGeneratorData
         boolean isExcluded(String type)
         {
             return excludedTypes.contains(type);
+        }
+
+        boolean isSpecial()
+        {
+            return comparison == ComparisonType.SPECIAL;
+        }
+    }
+
+    enum ComparisonType
+    {
+        TEST_DIR,
+        BOOLEAN,
+        IDENTITY,
+        EQUALS,
+        SPECIAL;
+
+        private static ComparisonType of(@Nullable String type)
+        {
+            return switch (type)
+            {
+                case null -> SPECIAL;
+                case "boolean" -> BOOLEAN;
+                case "int" -> IDENTITY;
+                default -> TEST_DIR;
+            };
         }
     }
 
