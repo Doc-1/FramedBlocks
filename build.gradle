@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.80'
+    id 'net.neoforged.moddev' version '2.0.99'
 }
 
 version = mod_version
@@ -180,7 +180,7 @@ dependencies {
 
     compileOnly("mezz.jei:jei-${jei_mc_version}-common-api:${jei_version}")
     compileOnly("mezz.jei:jei-${jei_mc_version}-neoforge-api:${jei_version}")
-    //runtimeOnly("mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}")
+    runtimeOnly("mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}")
 
     compileOnly("dev.emi:emi-neoforge:${emi_version}+${emi_mc_version}:api")
     //runtimeOnly("dev.emi:emi-neoforge:${emi_version}+${emi_mc_version}")
