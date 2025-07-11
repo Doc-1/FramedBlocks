@@ -6,15 +6,14 @@
       "item": "framedblocks:framed_half_slope"
     },
     "S": {
-      "item": "framedblocks:framed_sloped_stairs"
+      "item": "framedblocks:framed_slope"
     }
   },
   "pattern": [
-    "H",
-    "S"
+    "SH"
   ],
   "result": {
     "count": 1,
-    "id": "framedblocks:framed_sloped_double_stairs"
+    "id": "framedblocks:framed_sliced_sloped_stairs_slope"
   }
 }
