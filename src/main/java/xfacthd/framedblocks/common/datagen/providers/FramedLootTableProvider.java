@@ -16,6 +16,7 @@ import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.datagen.loot.FramedBlockLootSubProvider;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.data.loot.BoardAdditionalItemCountNumberProvider;
+import xfacthd.framedblocks.common.data.loot.LayeredCubeAdditionalItemCountNumberProvider;
 
 import java.util.List;
 import java.util.Set;
@@ -83,6 +84,21 @@ public final class FramedLootTableProvider extends LootTableProvider
                     CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
                             .include(FBContent.DC_TYPE_TANK_CONTENTS.value())
             ));
+
+            add(
+                    FBContent.BLOCK_FRAMED_LAYERED_CUBE.value(),
+                    LootTable.lootTable()
+                            .withPool(createDropWithCamoPool(FBContent.BLOCK_FRAMED_LAYERED_CUBE.value()))
+                            .withPool(applyExplosionCondition(
+                                    FBContent.BLOCK_FRAMED_LAYERED_CUBE.value(),
+                                    LootPool.lootPool()
+                                            .setRolls(ConstantValue.exactly(1.0F))
+                                            .add(applyExplosionDecay(
+                                                    FBContent.BLOCK_FRAMED_LAYERED_CUBE.value(),
+                                                    LootItem.lootTableItem(FBContent.BLOCK_FRAMED_LAYERED_CUBE.value())
+                                            ).apply(SetItemCountFunction.setCount(LayeredCubeAdditionalItemCountNumberProvider.INSTANCE)))
+                            ))
+            );
 
             add(FBContent.BLOCK_FRAMED_UPPER_PYRAMID_SLAB.value(), noDrop());
             add(FBContent.BLOCK_FRAMED_MASONRY_CORNER_SEGMENT.value(), noDrop());

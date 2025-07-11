@@ -102,6 +102,7 @@ import xfacthd.framedblocks.common.data.component.FramedMap;
 import xfacthd.framedblocks.common.data.component.PottedFlower;
 import xfacthd.framedblocks.common.data.component.TargetColor;
 import xfacthd.framedblocks.common.data.loot.BoardAdditionalItemCountNumberProvider;
+import xfacthd.framedblocks.common.data.loot.LayeredCubeAdditionalItemCountNumberProvider;
 import xfacthd.framedblocks.common.item.FramedBlueprintItem;
 import xfacthd.framedblocks.common.item.FramedToolItem;
 import xfacthd.framedblocks.common.item.PhantomPasteItem;
@@ -383,6 +384,7 @@ public final class FBContent
     public static final Holder<Block> BLOCK_FRAMED_LANTERN = registerBlock(FramedLanternBlock::new, BlockType.FRAMED_LANTERN);
     public static final Holder<Block> BLOCK_FRAMED_SOUL_LANTERN = registerBlock(FramedLanternBlock::new, BlockType.FRAMED_SOUL_LANTERN);
     public static final Holder<Block> BLOCK_FRAMED_HOPPER = registerBlock(FramedHopperBlock::new, BlockType.FRAMED_HOPPER);
+    public static final Holder<Block> BLOCK_FRAMED_LAYERED_CUBE = registerBlock(FramedLayeredCubeBlock::new, BlockType.FRAMED_LAYERED_CUBE);
     // endregion
 
     // region Special Blocks
@@ -752,6 +754,9 @@ public final class FBContent
     // region LootNumberProviderTypes
     public static final Holder<LootNumberProviderType> BOARD_ADDITIONAL_ITEM_COUNT_NUMBER_PROVIDER = LOOT_NUMBER_PROVIDERS.register(
             "board", () -> new LootNumberProviderType(MapCodec.unit(BoardAdditionalItemCountNumberProvider.INSTANCE))
+    );
+    public static final Holder<LootNumberProviderType> LAYERED_CUBE_ADDITIONAL_ITEM_COUNT_NUMBER_PROVIDER = LOOT_NUMBER_PROVIDERS.register(
+            "layered_cube", () -> new LootNumberProviderType(MapCodec.unit(LayeredCubeAdditionalItemCountNumberProvider.INSTANCE))
     );
     // endregion
 

@@ -1,5 +1,6 @@
 package xfacthd.framedblocks.client.data.ghost;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.BlockItemStateProperties;
@@ -8,6 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3fc;
 import xfacthd.framedblocks.api.blueprint.BlueprintData;
 import xfacthd.framedblocks.api.ghost.GhostRenderBehaviour;
 import xfacthd.framedblocks.api.camo.CamoList;
@@ -158,6 +160,24 @@ public final class BlueprintGhostRenderBehaviour implements GhostRenderBehaviour
             return data;
         }
         return proxyBehaviour(proxiedStack).appendModelData(proxiedStack, null, ctx, renderState, renderPass, data);
+    }
+
+    @Override
+    public Vector3fc getRenderOffset(
+            ItemStack stack,
+            @Nullable ItemStack proxiedStack,
+            BlockPlaceContext ctx,
+            BlockState renderState,
+            int renderPass,
+            ModelData data,
+            PoseStack poseStack
+    )
+    {
+        if (proxiedStack == null)
+        {
+            return OFFSET_ZERO;
+        }
+        return proxyBehaviour(proxiedStack).getRenderOffset(proxiedStack, null, ctx, renderState, renderPass, data, poseStack);
     }
 
     private static GhostRenderBehaviour proxyBehaviour(ItemStack proxiedStack)

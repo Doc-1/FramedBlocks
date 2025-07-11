@@ -76,6 +76,7 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         ResourceLocation obsidianCube = makeUnderlayedCube(blockModels, Utils.rl("block/framed_obsidian_cube"), TEXTURE, mcLocation("block/obsidian"), $ -> {});
         ResourceLocation ironCube = makeUnderlayedCube(blockModels, Utils.rl("block/framed_iron_cube"), TEXTURE, mcLocation("block/iron_block"), $ -> {});
         ResourceLocation goldCube = makeUnderlayedCube(blockModels, Utils.rl("block/framed_gold_cube"), TEXTURE, mcLocation("block/gold_block"), $ -> {});
+        ResourceLocation snowCube = makeUnderlayedCube(blockModels, Utils.rl("block/framed_snow_cube"), TEXTURE, mcLocation("block/snow"), $ -> {});
 
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_SLOPE, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_DOUBLE_SLOPE, cube);
@@ -256,6 +257,7 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_TUBE, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_CORNER_TUBE, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_HOPPER, cube);
+        simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_LAYERED_CUBE, snowCube, builder -> builder.itemBaseModel(THIN_BLOCK_LOC));
 
         registerFramedCube(blockModels, cube);
         registerFramedFence(blockModels, cube);

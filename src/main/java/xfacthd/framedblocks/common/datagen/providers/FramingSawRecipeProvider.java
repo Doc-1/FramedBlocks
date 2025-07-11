@@ -872,6 +872,10 @@ public final class FramingSawRecipeProvider extends AbstractFramingSawRecipeProv
                 .material(CUBE_MATERIAL_VALUE)
                 .additive(additive(Tags.Items.CHESTS))
                 .save(output);
+
+        sawRecipe(FBContent.BLOCK_FRAMED_LAYERED_CUBE)
+                .material(CUBE_MATERIAL_VALUE / 8)
+                .save(output);
     }
 
     public static final class Runner extends RecipeProvider.Runner
