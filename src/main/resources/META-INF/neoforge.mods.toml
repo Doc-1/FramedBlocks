@@ -1,5 +1,3 @@
-modLoader="javafml"
-loaderVersion="${loader_version_range}"
 issueTrackerURL="https://www.github.com/xfacthd/framedblocks"
 license="LGPL v3"
 
@@ -33,13 +31,6 @@ license="LGPL v3"
     versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"
-
-[[dependencies.framedblocks]]
-    modId="athena"
-    type="optional"
-    versionRange="[${athena_version},)"
-    ordering="NONE"
-    side="CLIENT"
 
 [[dependencies.framedblocks]]
     modId="atlasviewer"
