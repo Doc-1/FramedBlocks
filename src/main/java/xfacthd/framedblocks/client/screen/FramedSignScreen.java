@@ -5,7 +5,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -235,7 +234,7 @@ public class FramedSignScreen extends Screen
                     int xStart = baseX + Math.min(x1, x2);
                     int xEnd = baseX + Math.max(x1, x2);
 
-                    graphics.fill(RenderPipelines.GUI_TEXT_HIGHLIGHT, xStart, y, xEnd, y + lineHeight, 0xFF0000FF);
+                    graphics.textHighlight(xStart, y, xEnd, y + lineHeight);
                 }
             }
         }
