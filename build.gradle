@@ -13,6 +13,29 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
+sourceSets {
+    main.resources {
+        srcDir 'src/generated/resources'
+    }
+
+    datagen {
+        java {
+            srcDir "src/datagen/java"
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+        }
+    }
+
+    test {
+        java {
+            srcDir "src/test/java"
+        }
+        resources {
+            srcDir "src/test/resources"
+        }
+    }
+}
+
 neoForge {
     version = project.neoforge_version
 
@@ -58,6 +81,8 @@ neoForge {
                     '--output', file('src/generated/resources/').getAbsolutePath(),
                     '--existing', file('src/main/resources/').getAbsolutePath()
             )
+
+            sourceSet = project.sourceSets.datagen
         }
 
         gameTestServer {
@@ -69,26 +94,13 @@ neoForge {
     mods {
         framedblocks {
             sourceSet(project.sourceSets.main)
+            sourceSet(project.sourceSets.datagen)
             sourceSet(project.sourceSets.test)
         }
     }
 
+    addModdingDependenciesTo(project.sourceSets.datagen)
     addModdingDependenciesTo(project.sourceSets.test)
-}
-
-sourceSets {
-    main.resources {
-        srcDir 'src/generated/resources'
-    }
-
-    test {
-        java {
-            srcDir "src/test/java"
-        }
-        resources {
-            srcDir "src/test/resources"
-        }
-    }
 }
 
 repositories {
@@ -234,6 +246,10 @@ tasks.withType(ProcessResources).configureEach {
 
 processTestResources {
     duplicatesStrategy(DuplicatesStrategy.INCLUDE)
+}
+
+jar {
+    exclude("/.cache")
 }
 
 publishing {
