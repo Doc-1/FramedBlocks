@@ -126,6 +126,9 @@ public final class ModelUtils
      */
     public static BakedQuad invertTintIndex(BakedQuad quad)
     {
+        // Avoid the unnecessary copy if the quad isn't tinted at all
+        if (quad.tintIndex() == -1) return quad;
+
         return new BakedQuad(
                 quad.vertices(), //Don't need to copy the vertex data, it won't be modified by the caller
                 encodeSecondaryTintIndex(quad.tintIndex()),
