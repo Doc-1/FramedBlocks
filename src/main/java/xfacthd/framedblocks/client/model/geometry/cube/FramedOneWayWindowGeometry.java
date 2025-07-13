@@ -55,14 +55,23 @@ public class FramedOneWayWindowGeometry extends Geometry
     }
 
     @Override
-    public QuadCacheKey makeCacheKey(BlockAndTintGetter level, BlockPos pos, RandomSource random, CamoContent<?> camo, @Nullable Object ctCtx, boolean emissive, ModelData data)
+    public QuadCacheKey makeCacheKey(
+            BlockAndTintGetter level,
+            BlockPos pos,
+            RandomSource random,
+            CamoContent<?> camo,
+            @Nullable Object ctCtx,
+            boolean secondPart,
+            boolean emissive,
+            ModelData data
+    )
     {
         Object auxCtCtx = tintedGlassModel.get().createGeometryKey(level, pos, GLASS_STATE, random);
         if (auxCtCtx != null)
         {
-            return new OneWayWindowCacheKey(camo, ctCtx, emissive, auxCtCtx);
+            return new OneWayWindowCacheKey(camo, ctCtx, secondPart, emissive, auxCtCtx);
         }
-        return super.makeCacheKey(level, pos, random, camo, ctCtx, emissive, data);
+        return super.makeCacheKey(level, pos, random, camo, ctCtx, secondPart, emissive, data);
     }
 
     @Override
@@ -73,5 +82,11 @@ public class FramedOneWayWindowGeometry extends Geometry
 
 
 
-    private record OneWayWindowCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, boolean emissive, Object auxCtCtx) implements QuadCacheKey { }
+    private record OneWayWindowCacheKey(
+            CamoContent<?> camo,
+            @Nullable Object ctCtx,
+            boolean secondPart,
+            boolean emissive,
+            Object auxCtCtx
+    ) implements QuadCacheKey { }
 }

@@ -110,21 +110,30 @@ public abstract class Geometry
     /**
      * Return a custom {@link QuadCacheKey} that holds additional metadata which influences the resulting quads.
      *
-     * @param level    The {@linkplain BlockAndTintGetter level} the block is being rendered in
-     * @param pos      The {@link BlockPos} the block is being rendered at
-     * @param random   The {@link RandomSource} to use for randomization
-     * @param camo     The {@link CamoContent} of the camo applied to the block
-     * @param ctCtx    The current connected textures context object, may be null
-     * @param emissive Whether the generated quads should be emissive
-     * @param data     The {@link ModelData} from the {@link FramedBlockEntity}
+     * @param level      The {@linkplain BlockAndTintGetter level} the block is being rendered in
+     * @param pos        The {@link BlockPos} the block is being rendered at
+     * @param random     The {@link RandomSource} to use for randomization
+     * @param camo       The {@link CamoContent} of the camo applied to the block
+     * @param ctCtx      The current connected textures context object, may be null
+     * @param secondPart Whether the generated quads are part of the second part of a double block model
+     * @param emissive   Whether the generated quads should be emissive
+     * @param data       The {@link ModelData} from the {@link FramedBlockEntity}
      * @implNote The resulting object must at least store the given {@link BlockState}, connected textures context object
      * and emissivity state and should either be a record or have an otherwise properly implemented {@code hashCode()}
      * and {@code equals()} implementation
      */
-    public QuadCacheKey makeCacheKey(BlockAndTintGetter level, BlockPos pos, RandomSource random, CamoContent<?> camo, @Nullable Object ctCtx, boolean emissive, ModelData data)
+    public QuadCacheKey makeCacheKey(
+            BlockAndTintGetter level, BlockPos pos,
+            RandomSource random,
+            CamoContent<?> camo,
+            @Nullable Object ctCtx,
+            boolean secondPart,
+            boolean emissive,
+            ModelData data
+    )
     {
         // Avoid allocating a key if the CT context is null
-        return ctCtx != null || emissive ? new SimpleQuadCacheKey(camo, ctCtx, emissive) : camo;
+        return ctCtx != null || secondPart || emissive ? new SimpleQuadCacheKey(camo, ctCtx, secondPart, emissive) : camo;
     }
 
     /**

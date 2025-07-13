@@ -202,17 +202,32 @@ public class FramedCollapsibleCopycatBlockGeometry extends Geometry
     }
 
     @Override
-    public QuadCacheKey makeCacheKey(BlockAndTintGetter level, BlockPos pos, RandomSource random, CamoContent<?> camo, @Nullable Object ctCtx, boolean emissive, ModelData data)
+    public QuadCacheKey makeCacheKey(
+            BlockAndTintGetter level,
+            BlockPos pos,
+            RandomSource random,
+            CamoContent<?> camo,
+            @Nullable Object ctCtx,
+            boolean secondPart,
+            boolean emissive,
+            ModelData data
+    )
     {
         int packedOffsets = PackedCollapsibleBlockOffsets.get(data, state);
         if (packedOffsets != 0)
         {
-            return new CollapsibleCopycatBlockQuadCacheKey(camo, ctCtx, emissive, packedOffsets);
+            return new CollapsibleCopycatBlockQuadCacheKey(camo, ctCtx, secondPart, emissive, packedOffsets);
         }
-        return super.makeCacheKey(level, pos, random, camo, ctCtx, emissive, data);
+        return super.makeCacheKey(level, pos, random, camo, ctCtx, secondPart, emissive, data);
     }
 
     private record FloatPair(float valOne, float valTwo) { }
 
-    private record CollapsibleCopycatBlockQuadCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, boolean emissive, @Nullable Integer packedOffsets) implements QuadCacheKey { }
+    private record CollapsibleCopycatBlockQuadCacheKey(
+            CamoContent<?> camo,
+            @Nullable Object ctCtx,
+            boolean secondPart,
+            boolean emissive,
+            @Nullable Integer packedOffsets
+    ) implements QuadCacheKey { }
 }

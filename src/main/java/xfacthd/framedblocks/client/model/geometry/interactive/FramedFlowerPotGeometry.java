@@ -152,14 +152,23 @@ public class FramedFlowerPotGeometry extends Geometry
     }
 
     @Override
-    public QuadCacheKey makeCacheKey(BlockAndTintGetter level, BlockPos pos, RandomSource random, CamoContent<?> camo, @Nullable Object ctCtx, boolean emissive, ModelData data)
+    public QuadCacheKey makeCacheKey(
+            BlockAndTintGetter level,
+            BlockPos pos,
+            RandomSource random,
+            CamoContent<?> camo,
+            @Nullable Object ctCtx,
+            boolean secondPart,
+            boolean emissive,
+            ModelData data
+    )
     {
         Block flower = getFlowerBlock(data);
         if (flower != Blocks.AIR)
         {
-            return new FlowerPotQuadCacheKey(camo, ctCtx, emissive, flower);
+            return new FlowerPotQuadCacheKey(camo, ctCtx, secondPart, emissive, flower);
         }
-        return super.makeCacheKey(level, pos, random, camo, ctCtx, emissive, data);
+        return super.makeCacheKey(level, pos, random, camo, ctCtx, secondPart, emissive, data);
     }
 
     @Override
@@ -174,5 +183,11 @@ public class FramedFlowerPotGeometry extends Geometry
         return flower != null ? flower : Blocks.AIR;
     }
 
-    private record FlowerPotQuadCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, boolean emissive, Block flower) implements QuadCacheKey { }
+    private record FlowerPotQuadCacheKey(
+            CamoContent<?> camo,
+            @Nullable Object ctCtx,
+            boolean secondPart,
+            boolean emissive,
+            Block flower
+    ) implements QuadCacheKey { }
 }

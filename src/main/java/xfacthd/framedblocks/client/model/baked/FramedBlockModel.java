@@ -144,7 +144,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
             random.setSeed(seed);
             Object ctCtx = needCtCtxCached ? camoModel.createGeometryKey(level, pos, this.state, random) : null;
             random.setSeed(seed);
-            QuadCacheKey key = geometry.makeCacheKey(level, pos, random, camoContent, ctCtx, forceEmissive, extraData);
+            QuadCacheKey key = geometry.makeCacheKey(level, pos, random, camoContent, ctCtx, secondPart, forceEmissive, extraData);
             List<ExtendedBlockModelPart> cachedParts = partCache.get(key);
             if (cachedParts == null)
             {

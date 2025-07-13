@@ -188,14 +188,23 @@ public class FramedCollapsibleBlockGeometry extends Geometry
     }
 
     @Override
-    public QuadCacheKey makeCacheKey(BlockAndTintGetter level, BlockPos pos, RandomSource random, CamoContent<?> camo, @Nullable Object ctCtx, boolean emissive, ModelData data)
+    public QuadCacheKey makeCacheKey(
+            BlockAndTintGetter level,
+            BlockPos pos,
+            RandomSource random,
+            CamoContent<?> camo,
+            @Nullable Object ctCtx,
+            boolean secondPart,
+            boolean emissive,
+            ModelData data
+    )
     {
         int packedOffsets = PackedCollapsibleBlockOffsets.get(data, state);
         if (packedOffsets != 0)
         {
-            return new CollapsibleBlockQuadCacheKey(camo, ctCtx, emissive, packedOffsets);
+            return new CollapsibleBlockQuadCacheKey(camo, ctCtx, secondPart, emissive, packedOffsets);
         }
-        return super.makeCacheKey(level, pos, random, camo, ctCtx, emissive, data);
+        return super.makeCacheKey(level, pos, random, camo, ctCtx, secondPart, emissive, data);
     }
 
     private int getYCollapsedIndexOffset(Direction quadFace)
@@ -211,5 +220,11 @@ public class FramedCollapsibleBlockGeometry extends Geometry
         };
     }
 
-    private record CollapsibleBlockQuadCacheKey(CamoContent<?> camo, @Nullable Object ctCtx, boolean emissive, @Nullable Integer packedOffsets) implements QuadCacheKey { }
+    private record CollapsibleBlockQuadCacheKey(
+            CamoContent<?> camo,
+            @Nullable Object ctCtx,
+            boolean secondPart,
+            boolean emissive,
+            @Nullable Integer packedOffsets
+    ) implements QuadCacheKey { }
 }
