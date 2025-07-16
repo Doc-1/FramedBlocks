@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.item.TrackingItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 public final class SpinningItemPictureInPictureRenderer extends PictureInPictureRenderer<SpinningItemPictureInPictureRenderer.RenderState>
@@ -34,13 +33,10 @@ public final class SpinningItemPictureInPictureRenderer extends PictureInPicture
         TrackingItemStackRenderState renderState = state.renderState;
 
         poseStack.scale(1, -1, -1);
-        poseStack.mulPose(new Matrix4f()
-                .rotate(ROT_22_5_XP)
-                .rotate(Axis.YP.rotationDegrees(state.rotY))
-        );
+        poseStack.mulPose(ROT_22_5_XP);
+        poseStack.mulPose(Axis.YP.rotationDegrees(state.rotY));
 
-        // FIXME: renders way too dark (using a block renderer doesn't fix it)
-        Minecraft.getInstance().gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_3D);
+        Minecraft.getInstance().gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_FLAT);
         renderState.render(poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
 
         lastModelIdentity = renderState.getModelIdentity();
