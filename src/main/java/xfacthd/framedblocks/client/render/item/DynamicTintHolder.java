@@ -3,7 +3,10 @@ package xfacthd.framedblocks.client.render.item;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import org.jetbrains.annotations.Nullable;
 
-public interface IDynamicTintAwareItemRenderer
+public final class DynamicTintHolder
 {
-    void framedblocks$setItemTintValues(@Nullable Int2IntMap tintValues);
+    @Nullable
+    public static Int2IntMap tintValues = null;
+
+    private DynamicTintHolder() { }
 }

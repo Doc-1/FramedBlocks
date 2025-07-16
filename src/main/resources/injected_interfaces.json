@@ -5,6 +5,9 @@
     "net/minecraft/client/renderer/block/BlockModelShaper": [
         "xfacthd/framedblocks/client/util/duck/DefaultedAccessorBlockModelShaper"
     ],
+    "net/minecraft/client/renderer/item/ItemStackRenderState$LayerRenderState": [
+        "xfacthd/framedblocks/client/render/item/IDynamicTintableItemStackRenderStateLayer"
+    ],
     "net/minecraft/client/resources/model/ModelManager": [
         "xfacthd/framedblocks/client/util/duck/DefaultedAccessorModelManager"
     ],

@@ -55,7 +55,6 @@ import xfacthd.framedblocks.api.model.util.ModelUtils;
 import xfacthd.framedblocks.api.util.ConfigView;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.api.model.item.tint.DynamicItemTintProvider;
-import xfacthd.framedblocks.client.render.item.IDynamicTintableItemStackRenderStateLayer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -163,7 +162,7 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
             modelSet.properties.applyToLayer(layer, ctx);
             if (modelSet.tintValues != null)
             {
-                ((IDynamicTintableItemStackRenderStateLayer) layer).framedblocks$setDynamicItemTintValues(modelSet.tintValues);
+                layer.framedblocks$setDynamicItemTintValues(modelSet.tintValues);
             }
         }
     }
@@ -221,9 +220,13 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
         Int2IntMap tintValues = new Int2IntOpenHashMap();
         for (int tintIndex : tintIndices)
         {
-            tintValues.put(tintIndex, tintProvider.getColor(stack, camos, tintIndex));
+            int color = tintProvider.getColor(stack, camos, tintIndex);
+            if (color != -1)
+            {
+                tintValues.put(tintIndex, color);
+            }
         }
-        return tintValues;
+        return tintValues.isEmpty() ? null : tintValues;
     }
 
     public ItemTransforms getItemTransforms()
