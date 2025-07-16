@@ -14,6 +14,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.RandomSupport;
+import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.neoforged.neoforge.model.data.ModelData;
 import xfacthd.framedblocks.api.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.api.camo.CamoContainer;
@@ -47,7 +49,7 @@ public final class ModelPerformanceTest
     private static final Direction[] DIRECTIONS = Stream.concat(
             Arrays.stream(Direction.values()), Stream.of((Direction) null)
     ).toArray(Direction[]::new);
-    private static final RandomSource RANDOM = RandomSource.create();
+    private static final RandomSource RANDOM = new SingleThreadedRandomSource(RandomSupport.generateUniqueSeed());
     private static final CamoContainer<?, ?> TEST_CAMO_CONTAINER = new SimpleBlockCamoContainer(Blocks.STONE.defaultBlockState(), FBContent.FACTORY_BLOCK.get());
 
     public static void testModelPerformance(
