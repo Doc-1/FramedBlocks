@@ -40,17 +40,17 @@ public class FramedHalfPillarGeometry extends Geometry
         }
         else if (Utils.isY(face))
         {
-            mod.apply(Modifiers.cutSideUpDown(face == Direction.UP, .5F))
+            mod.apply(Modifiers.cut(face.getOpposite(), .5F))
                     .export(quadMap.get(null));
         }
         else if (Utils.isY(quadDir))
         {
-            mod.apply(Modifiers.cutTopBottom(face.getOpposite(), .5F))
+            mod.apply(Modifiers.cut(face.getOpposite(), .5F))
                     .export(quadMap.get(null));
         }
         else
         {
-            mod.apply(Modifiers.cutSideLeftRight(face.getOpposite(), .5F))
+            mod.apply(Modifiers.cut(face.getOpposite(), .5F))
                     .export(quadMap.get(null));
         }
     }

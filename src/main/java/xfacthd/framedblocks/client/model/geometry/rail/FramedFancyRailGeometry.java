@@ -98,8 +98,8 @@ public class FramedFancyRailGeometry extends Geometry
 
             forAllSleepers((i, distDir, distOpp) ->
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutTopBottom(dir, distDir))
-                            .apply(Modifiers.cutTopBottom(dir.getOpposite(), distOpp))
+                            .apply(Modifiers.cut(dir, distDir))
+                            .apply(Modifiers.cut(dir.getOpposite(), distOpp))
                             .applyIf(Modifiers.setPosition(SLEEPER_HEIGHT), quadDir == Direction.UP)
                             .export(result)
             );
@@ -110,7 +110,7 @@ public class FramedFancyRailGeometry extends Geometry
 
             forAllSleepers((i, distDir, distOpp) ->
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideUpDown(false, SLEEPER_HEIGHT))
+                            .apply(Modifiers.cut(Direction.UP, SLEEPER_HEIGHT))
                             .apply(Modifiers.setPosition(distDir))
                             .export(result)
             );
@@ -121,9 +121,9 @@ public class FramedFancyRailGeometry extends Geometry
 
             forAllSleepers((i, distDir, distOpp) ->
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideUpDown(false, SLEEPER_HEIGHT))
-                            .apply(Modifiers.cutSideLeftRight(dir, distDir))
-                            .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), distOpp))
+                            .apply(Modifiers.cut(Direction.UP, SLEEPER_HEIGHT))
+                            .apply(Modifiers.cut(dir, distDir))
+                            .apply(Modifiers.cut(dir.getOpposite(), distOpp))
                             .export(result)
             );
         }
@@ -167,8 +167,8 @@ public class FramedFancyRailGeometry extends Geometry
                 boolean nonDiagUp = quadDir == Direction.UP && i != 1;
                 float height = nonDiagUp ? (SLEEPER_HEIGHT - .001F) : SLEEPER_HEIGHT;
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir, distDir))
-                        .apply(Modifiers.cutTopBottom(dir.getOpposite(), distOpp))
+                        .apply(Modifiers.cut(dir, distDir))
+                        .apply(Modifiers.cut(dir.getOpposite(), distOpp))
                         .applyIf(Modifiers.setPosition(height), quadDir == Direction.UP)
                         .applyIf(rotateCurveSleeper(dir, secDir, i), i < 2)
                         .applyIf(Modifiers.offset(dir, SLEEPER_DIAGONAL_OFFSET), i == 1)
@@ -183,7 +183,7 @@ public class FramedFancyRailGeometry extends Geometry
             boolean inDir = quadDir == dir;
             forAllSleepersCurve((i, distDir, distOpp) ->
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideUpDown(false, SLEEPER_HEIGHT))
+                            .apply(Modifiers.cut(Direction.UP, SLEEPER_HEIGHT))
                             .apply(Modifiers.setPosition(inDir ? distDir : distOpp))
                             .applyIf(rotateCurveSleeper(dir, secDir, i), i < 2)
                             .applyIf(Modifiers.offset(dir, SLEEPER_DIAGONAL_OFFSET), i == 1)
@@ -197,9 +197,9 @@ public class FramedFancyRailGeometry extends Geometry
 
             forAllSleepersCurve((i, distDir, distOpp) ->
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideUpDown(false, SLEEPER_HEIGHT))
-                            .apply(Modifiers.cutSideLeftRight(dir, distDir))
-                            .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), distOpp))
+                            .apply(Modifiers.cut(Direction.UP, SLEEPER_HEIGHT))
+                            .apply(Modifiers.cut(dir, distDir))
+                            .apply(Modifiers.cut(dir.getOpposite(), distOpp))
                             .applyIf(rotateCurveSleeper(dir, secDir, i), i < 2)
                             .applyIf(Modifiers.offset(dir, SLEEPER_DIAGONAL_OFFSET), i == 1)
                             .applyIf(Modifiers.offset(secDir, SLEEPER_DIAGONAL_OFFSET), i == 1)

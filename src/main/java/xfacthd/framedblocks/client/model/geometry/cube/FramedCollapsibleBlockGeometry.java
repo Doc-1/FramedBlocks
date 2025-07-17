@@ -4,7 +4,6 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -26,7 +25,6 @@ import xfacthd.framedblocks.common.data.PropertyHolder;
 
 public class FramedCollapsibleBlockGeometry extends Geometry
 {
-    public static final ResourceLocation ALT_BASE_MODEL_LOC = Utils.rl("block/framed_collapsible_block_alt");
     public static final String ALT_BASE_MODEL_KEY = "alt_base";
     private static final float MIN_DEPTH = .001F;
 
@@ -113,24 +111,24 @@ public class FramedCollapsibleBlockGeometry extends Geometry
                 float right = rotate ? 1F : 0F;
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(Direction.EAST, left, right))
+                        .apply(Modifiers.cut(Direction.EAST, left, right))
                         .apply(Modifiers.setPosition(vertexPos))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(Direction.WEST, left, right))
+                        .apply(Modifiers.cut(Direction.WEST, left, right))
                         .apply(Modifiers.setPosition(vertexPosTwo))
                         .export(quadMap.get(null));
             }
             else
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(quadDir.getCounterClockWise(), rotate ? 1F : 0F, rotate ? 0F : 1F))
+                        .apply(Modifiers.cut(quadDir.getCounterClockWise(), rotate ? 1F : 0F, rotate ? 0F : 1F))
                         .apply(Modifiers.setPosition(vertexPos))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(quadDir.getClockWise(), rotate ? 0F : 1F, rotate ? 1F : 0F))
+                        .apply(Modifiers.cut(quadDir.getClockWise(), rotate ? 0F : 1F, rotate ? 1F : 0F))
                         .apply(Modifiers.setPosition(vertexPosTwo))
                         .export(quadMap.get(null));
             }
@@ -146,7 +144,7 @@ public class FramedCollapsibleBlockGeometry extends Geometry
                 float posTwo = vertexPos[idxTwo];
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(!top, posOne, posTwo))
+                        .apply(Modifiers.cut(collapsedFace, posOne, posTwo))
                         .export(quadMap.get(quadDir));
             }
             else if (Utils.isY(quadDir))
@@ -156,7 +154,7 @@ public class FramedCollapsibleBlockGeometry extends Geometry
                 float posTwo = vertexPos[top ? 3 : 2];
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(collapsedFace, posOne, posTwo))
+                        .apply(Modifiers.cut(collapsedFace, posOne, posTwo))
                         .export(quadMap.get(quadDir));
             }
             else
@@ -166,7 +164,7 @@ public class FramedCollapsibleBlockGeometry extends Geometry
                 float posBot = vertexPos[right ? 2 : 1];
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(collapsedFace, posTop, posBot))
+                        .apply(Modifiers.cut(collapsedFace, posTop, posBot))
                         .export(quadMap.get(quadDir));
             }
         }

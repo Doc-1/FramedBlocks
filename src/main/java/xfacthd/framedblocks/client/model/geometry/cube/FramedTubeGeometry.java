@@ -19,7 +19,7 @@ public class FramedTubeGeometry extends Geometry
     public FramedTubeGeometry(GeometryFactory.Context ctx)
     {
         this.axis = ctx.state().getValue(BlockStateProperties.AXIS);
-        this.thickness = ctx.state().getValue(PropertyHolder.THICK) ? 3F : 2F;
+        this.thickness = (ctx.state().getValue(PropertyHolder.THICK) ? 3F : 2F) / 16F;
     }
 
     @Override
@@ -31,25 +31,25 @@ public class FramedTubeGeometry extends Geometry
             if (quadDir.getAxis() == axis)
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(Direction.NORTH, thickness / 16F))
+                        .apply(Modifiers.cut(Direction.NORTH, thickness))
                         .export(quadMap.get(quadDir));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(Direction.SOUTH, thickness / 16F))
+                        .apply(Modifiers.cut(Direction.SOUTH, thickness))
                         .export(quadMap.get(quadDir));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(Direction.EAST, thickness / 16F))
-                        .apply(Modifiers.cutTopBottom(Direction.Axis.Z, (16F - thickness) / 16F))
+                        .apply(Modifiers.cut(Direction.EAST, thickness))
+                        .apply(Modifiers.cut(Direction.Axis.Z, 1F - thickness))
                         .export(quadMap.get(quadDir));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(Direction.WEST, thickness / 16))
-                        .apply(Modifiers.cutTopBottom(Direction.Axis.Z, (16F - thickness) / 16F))
+                        .apply(Modifiers.cut(Direction.WEST, thickness / 16))
+                        .apply(Modifiers.cut(Direction.Axis.Z, 1F - thickness))
                         .export(quadMap.get(quadDir));
             }
             else
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight((16F - thickness) / 16F))
-                        .apply(Modifiers.setPosition(thickness / 16F))
+                        .apply(Modifiers.cut(quadDir.getClockWise().getAxis(), 1F - thickness))
+                        .apply(Modifiers.setPosition(thickness))
                         .export(quadMap.get(null));
             }
         }
@@ -58,32 +58,32 @@ public class FramedTubeGeometry extends Geometry
             if (quadDir.getAxis() == axis)
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(false, thickness / 16F))
+                        .apply(Modifiers.cut(Direction.UP, thickness))
                         .export(quadMap.get(quadDir));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(true, thickness / 16F))
+                        .apply(Modifiers.cut(Direction.DOWN, thickness))
                         .export(quadMap.get(quadDir));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(quadDir.getClockWise(), thickness / 16F))
-                        .apply(Modifiers.cutSideUpDown((16F - thickness) / 16F))
+                        .apply(Modifiers.cut(quadDir.getClockWise(), thickness))
+                        .apply(Modifiers.cut(Direction.Axis.Y, 1F - thickness))
                         .export(quadMap.get(quadDir));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(quadDir.getCounterClockWise(), thickness / 16F))
-                        .apply(Modifiers.cutSideUpDown((16F - thickness) / 16F))
+                        .apply(Modifiers.cut(quadDir.getCounterClockWise(), thickness))
+                        .apply(Modifiers.cut(Direction.Axis.Y, 1F - thickness))
                         .export(quadMap.get(quadDir));
             }
             else if (Utils.isY(quadDir))
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(Utils.nextAxisNotEqualTo(axis, Direction.Axis.Y), (16F - thickness) / 16F))
-                        .apply(Modifiers.setPosition(thickness / 16F))
+                        .apply(Modifiers.cut(Utils.nextAxisNotEqualTo(axis, Direction.Axis.Y), 1F - thickness))
+                        .apply(Modifiers.setPosition(thickness))
                         .export(quadMap.get(null));
             }
             else
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown((16F - thickness) / 16F))
-                        .apply(Modifiers.setPosition(thickness / 16F))
+                        .apply(Modifiers.cut(Direction.Axis.Y, 1F - thickness))
+                        .apply(Modifiers.setPosition(thickness))
                         .export(quadMap.get(null));
             }
         }

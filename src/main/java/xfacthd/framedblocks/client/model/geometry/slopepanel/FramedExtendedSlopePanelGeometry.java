@@ -37,7 +37,7 @@ public class FramedExtendedSlopePanelGeometry extends Geometry
             if (Utils.isY(orientation))
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(facing.getOpposite(), .5F))
+                        .apply(Modifiers.cut(facing.getOpposite(), .5F))
                         .export(quadMap.get(face));
 
                 if (ySlope)
@@ -51,7 +51,7 @@ public class FramedExtendedSlopePanelGeometry extends Geometry
             else
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(facing.getOpposite(), .5F))
+                        .apply(Modifiers.cut(facing.getOpposite(), .5F))
                         .export(quadMap.get(face));
             }
         }
@@ -67,14 +67,14 @@ public class FramedExtendedSlopePanelGeometry extends Geometry
             {
                 boolean up = orientation == Direction.UP;
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(facing.getOpposite(), up ? .5F :  1F, up ?  1F : .5F))
+                        .apply(Modifiers.cut(facing.getOpposite(), up ? .5F :  1F, up ?  1F : .5F))
                         .export(quadMap.get(face));
             }
             else
             {
                 boolean rightRot = rotation == HorizontalRotation.RIGHT;
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(facing.getOpposite(), rightRot ?  1F : .5F, rightRot ? .5F :  1F))
+                        .apply(Modifiers.cut(facing.getOpposite(), rightRot ?  1F : .5F, rightRot ? .5F :  1F))
                         .export(quadMap.get(face));
             }
         }

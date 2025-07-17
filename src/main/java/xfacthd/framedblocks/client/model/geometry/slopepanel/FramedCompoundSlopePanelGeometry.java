@@ -39,13 +39,13 @@ public class FramedCompoundSlopePanelGeometry extends Geometry
             if (Utils.isY(quadDir))
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir.getOpposite(), .5F))
+                        .apply(Modifiers.cut(dir.getOpposite(), .5F))
                         .export(quadMap.get(quadDir));
             }
             else
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), .5F))
+                        .apply(Modifiers.cut(dir.getOpposite(), .5F))
                         .export(quadMap.get(quadDir));
             }
         }
@@ -54,13 +54,13 @@ public class FramedCompoundSlopePanelGeometry extends Geometry
             if (Utils.isY(quadDir))
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir, .5F))
+                        .apply(Modifiers.cut(dir, .5F))
                         .export(quadMap.get(quadDir));
             }
             else
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(dir, .5F))
+                        .apply(Modifiers.cut(dir, .5F))
                         .export(quadMap.get(quadDir));
             }
         }
@@ -98,16 +98,16 @@ public class FramedCompoundSlopePanelGeometry extends Geometry
         {
             boolean right = rot == HorizontalRotation.RIGHT;
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(dir, right ? 1F : .5F, right ? .5F : 1F))
-                    .apply(Modifiers.cutTopBottom(dir.getOpposite(), right ? 1F : .5F, right ? .5F : 1F))
+                    .apply(Modifiers.cut(dir, right ? 1F : .5F, right ? .5F : 1F))
+                    .apply(Modifiers.cut(dir.getOpposite(), right ? 1F : .5F, right ? .5F : 1F))
                     .export(quadMap.get(quadDir));
         }
         else if (triangleAxis != Direction.Axis.Y && quadDir.getAxis() == triangleAxis)
         {
             boolean up = rot == HorizontalRotation.UP;
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(dir, up ? 1F : .5F, up ? .5F : 1F))
-                    .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), up ? .5F : 1F, up ? 1F : .5F))
+                    .apply(Modifiers.cut(dir, up ? 1F : .5F, up ? .5F : 1F))
+                    .apply(Modifiers.cut(dir.getOpposite(), up ? .5F : 1F, up ? 1F : .5F))
                     .export(quadMap.get(quadDir));
         }
     }

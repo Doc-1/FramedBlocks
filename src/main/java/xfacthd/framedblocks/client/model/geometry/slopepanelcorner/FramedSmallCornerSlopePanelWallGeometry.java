@@ -41,26 +41,26 @@ public class FramedSmallCornerSlopePanelWallGeometry extends Geometry
         if (quadDir == dir)
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(horRotDir.getOpposite(), .5F))
-                    .apply(Modifiers.cutSideUpDown(vertRotDir == Direction.UP, .5F))
+                    .apply(Modifiers.cut(horRotDir.getOpposite(), .5F))
+                    .apply(Modifiers.cut(vertRotDir.getOpposite(), .5F))
                     .export(quadMap.get(quadDir));
         }
         else if (quadDir == horRotDir)
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(up, cw ? 0F : .5F, cw ? .5F : 0F))
+                    .apply(Modifiers.cut(vertRotDir.getOpposite(), cw ? 0F : .5F, cw ? .5F : 0F))
                     .export(quadMap.get(quadDir));
         }
         else if (quadDir == vertRotDir)
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(horRotDir.getOpposite(), cw ? .5F : 0F, cw ? 0F : .5F))
+                    .apply(Modifiers.cut(horRotDir.getOpposite(), cw ? .5F : 0F, cw ? 0F : .5F))
                     .export(quadMap.get(quadDir));
         }
         else if (quadDir == horRotDir.getOpposite())
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(up, cw ? .5F : 0F, cw ? 0F : .5F))
+                    .apply(Modifiers.cut(vertRotDir.getOpposite(), cw ? .5F : 0F, cw ? 0F : .5F))
                     .apply(Modifiers.makeHorizontalSlope(!cw, FramedSlopePanelGeometry.SLOPE_ANGLE))
                     .apply(Modifiers.offset(horRotDir, .5F))
                     .export(quadMap.get(null));
@@ -68,14 +68,14 @@ public class FramedSmallCornerSlopePanelWallGeometry extends Geometry
         else if (!ySlope && quadDir == dir.getOpposite())
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(horRotDir.getOpposite(), up ? 0F : .5F, up ? .5F : 0F))
+                    .apply(Modifiers.cut(horRotDir.getOpposite(), up ? 0F : .5F, up ? .5F : 0F))
                     .apply(Modifiers.makeVerticalSlope(!up, FramedSlopePanelGeometry.SLOPE_ANGLE_VERT))
                     .export(quadMap.get(null));
         }
         else if (ySlope && quadDir == vertRotDir.getOpposite())
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(horRotDir.getOpposite(), cw ? .5F : 0F, cw ? 0F : .5F))
+                    .apply(Modifiers.cut(horRotDir.getOpposite(), cw ? .5F : 0F, cw ? 0F : .5F))
                     .apply(Modifiers.makeVerticalSlope(dir.getOpposite(), FramedSlopePanelGeometry.SLOPE_ANGLE))
                     .apply(Modifiers.offset(vertRotDir, .5F))
                     .export(quadMap.get(null));

@@ -59,22 +59,22 @@ public class FramedPillarGeometry extends Geometry
             if (axis == Direction.Axis.Y)
             {
                 return QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(quadDir.getClockWise(), sideCut))
-                        .apply(Modifiers.cutSideLeftRight(quadDir.getCounterClockWise(), sideCut))
+                        .apply(Modifiers.cut(quadDir.getClockWise(), sideCut))
+                        .apply(Modifiers.cut(quadDir.getCounterClockWise(), sideCut))
                         .apply(Modifiers.setPosition(sideCut));
             }
             else if (Utils.isY(quadDir))
             {
                 return QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(axisToDir(axis, true).getClockWise(), sideCut))
-                        .apply(Modifiers.cutTopBottom(axisToDir(axis, false).getClockWise(), sideCut))
+                        .apply(Modifiers.cut(axisToDir(axis, true).getClockWise(), sideCut))
+                        .apply(Modifiers.cut(axisToDir(axis, false).getClockWise(), sideCut))
                         .apply(Modifiers.setPosition(sideCut));
             }
             else
             {
                 return QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(true, sideCut))
-                        .apply(Modifiers.cutSideUpDown(false, sideCut))
+                        .apply(Modifiers.cut(Direction.DOWN, sideCut))
+                        .apply(Modifiers.cut(Direction.UP, sideCut))
                         .apply(Modifiers.setPosition(sideCut));
             }
         }

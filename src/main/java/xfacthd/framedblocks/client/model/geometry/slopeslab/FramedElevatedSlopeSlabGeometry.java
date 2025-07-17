@@ -37,7 +37,7 @@ public class FramedElevatedSlopeSlabGeometry extends Geometry
             }
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(top, .5F))
+                    .apply(Modifiers.cut(top ? Direction.DOWN : Direction.UP, .5F))
                     .export(quadMap.get(face));
         }
         else if (ySlope && ((!top && face == Direction.UP) || (top && face == Direction.DOWN)))
@@ -50,7 +50,7 @@ public class FramedElevatedSlopeSlabGeometry extends Geometry
         {
             boolean rightFace = face == facing.getClockWise();
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(top, rightFace ? .5F : 1, rightFace ? 1 : .5F))
+                    .apply(Modifiers.cut(top ? Direction.DOWN : Direction.UP, rightFace ? .5F : 1, rightFace ? 1 : .5F))
                     .export(quadMap.get(face));
         }
     }

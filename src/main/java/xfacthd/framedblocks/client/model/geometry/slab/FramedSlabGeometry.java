@@ -32,7 +32,7 @@ public class FramedSlabGeometry extends Geometry
         else if (!Utils.isY(quadDir))
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(top, .5F))
+                    .apply(Modifiers.cut(top ? Direction.DOWN : Direction.UP, .5F))
                     .export(quadMap.get(quadDir));
         }
     }

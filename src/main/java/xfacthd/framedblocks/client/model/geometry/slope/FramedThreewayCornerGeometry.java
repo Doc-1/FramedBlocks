@@ -29,14 +29,14 @@ public class FramedThreewayCornerGeometry extends Geometry
         if ((quadDir == Direction.UP && top) || (quadDir == Direction.DOWN && !top))
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(dir.getOpposite(), 1, 0))
+                    .apply(Modifiers.cut(dir.getOpposite(), 1, 0))
                     .export(quadMap.get(quadDir));
         }
         else if (quadDir == dir || quadDir == dir.getCounterClockWise())
         {
             Direction cutDir = quadDir == dir ? dir.getClockWise() : dir.getOpposite();
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(cutDir, top ? 1 : 0, top ? 0 : 1))
+                    .apply(Modifiers.cut(cutDir, top ? 1 : 0, top ? 0 : 1))
                     .export(quadMap.get(quadDir));
         }
         else if (quadDir == dir.getOpposite())

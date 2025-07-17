@@ -27,26 +27,26 @@ public class FramedHopperGeometry extends Geometry
         if (Utils.isY(quadDir) && facing != Direction.DOWN)
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(facing.getOpposite(), 4F/16F))
-                    .apply(Modifiers.cutTopBottom(facing.getClockWise().getAxis(), 10F/16F))
+                    .apply(Modifiers.cut(facing.getOpposite(), 4F/16F))
+                    .apply(Modifiers.cut(facing.getClockWise().getAxis(), 10F/16F))
                     .apply(Modifiers.setPosition(quadDir == Direction.UP ? 8F/16F : 12F/16F))
                     .export(quadMap.get(null));
         }
         if (quadDir == Direction.UP)
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(Direction.NORTH, 2F/16F))
+                    .apply(Modifiers.cut(Direction.NORTH, 2F/16F))
                     .export(quadMap.get(quadDir));
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(Direction.SOUTH, 2F/16F))
+                    .apply(Modifiers.cut(Direction.SOUTH, 2F/16F))
                     .export(quadMap.get(quadDir));
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(Direction.Axis.Z, 14F/16F))
-                    .apply(Modifiers.cutTopBottom(Direction.EAST, 2F/16F))
+                    .apply(Modifiers.cut(Direction.Axis.Z, 14F/16F))
+                    .apply(Modifiers.cut(Direction.EAST, 2F/16F))
                     .export(quadMap.get(quadDir));
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(Direction.Axis.Z, 14F/16F))
-                    .apply(Modifiers.cutTopBottom(Direction.WEST, 2F/16F))
+                    .apply(Modifiers.cut(Direction.Axis.Z, 14F/16F))
+                    .apply(Modifiers.cut(Direction.WEST, 2F/16F))
                     .export(quadMap.get(quadDir));
 
             QuadModifier.of(quad)
@@ -57,21 +57,21 @@ public class FramedHopperGeometry extends Geometry
         else if (quadDir == Direction.DOWN)
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(Direction.NORTH, 4F/16F))
+                    .apply(Modifiers.cut(Direction.NORTH, 4F/16F))
                     .apply(Modifiers.setPosition(6F/16F))
                     .export(quadMap.get(null));
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(Direction.SOUTH, 4F/16F))
+                    .apply(Modifiers.cut(Direction.SOUTH, 4F/16F))
                     .apply(Modifiers.setPosition(6F/16F))
                     .export(quadMap.get(null));
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(Direction.Axis.Z, 12F/16F))
-                    .apply(Modifiers.cutTopBottom(Direction.EAST, 4F/16F))
+                    .apply(Modifiers.cut(Direction.Axis.Z, 12F/16F))
+                    .apply(Modifiers.cut(Direction.EAST, 4F/16F))
                     .apply(Modifiers.setPosition(6F/16F))
                     .export(quadMap.get(null));
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(Direction.Axis.Z, 12F/16F))
-                    .apply(Modifiers.cutTopBottom(Direction.WEST, 4F/16F))
+                    .apply(Modifiers.cut(Direction.Axis.Z, 12F/16F))
+                    .apply(Modifiers.cut(Direction.WEST, 4F/16F))
                     .apply(Modifiers.setPosition(6F/16F))
                     .export(quadMap.get(null));
 
@@ -90,15 +90,15 @@ public class FramedHopperGeometry extends Geometry
         else
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(true, 6F/16F))
+                    .apply(Modifiers.cut(Direction.DOWN, 6F/16F))
                     .export(quadMap.get(quadDir));
             QuadModifier.of(quad)
                     .apply(Modifiers.cutSide(4F/16F, 4F/16F, 12F/16F, 10F/16F))
                     .apply(Modifiers.setPosition(12F/16F))
                     .export(quadMap.get(null));
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(true, 5F/16F))
-                    .apply(Modifiers.cutSideLeftRight(14F/16F))
+                    .apply(Modifiers.cut(Direction.DOWN, 5F/16F))
+                    .apply(Modifiers.cut(quadDir.getClockWise().getAxis(), 14F/16F))
                     .apply(Modifiers.setPosition(2F/16F))
                     .export(quadMap.get(null));
 
@@ -118,9 +118,9 @@ public class FramedHopperGeometry extends Geometry
             else if (quadDir.getAxis() == facing.getClockWise().getAxis())
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(facing.getOpposite(), 4F/16F))
-                        .apply(Modifiers.cutSideUpDown(true, 12F/16F))
-                        .apply(Modifiers.cutSideUpDown(false, 8F/16F))
+                        .apply(Modifiers.cut(facing.getOpposite(), 4F/16F))
+                        .apply(Modifiers.cut(Direction.DOWN, 12F/16F))
+                        .apply(Modifiers.cut(Direction.UP, 8F/16F))
                         .apply(Modifiers.setPosition(10F/16F))
                         .export(quadMap.get(null));
             }

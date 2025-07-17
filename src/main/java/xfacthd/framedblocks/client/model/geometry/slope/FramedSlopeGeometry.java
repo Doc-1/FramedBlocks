@@ -46,7 +46,7 @@ public class FramedSlopeGeometry extends Geometry
             else if (Utils.isY(quadDir))
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir.getOpposite(), 1, 0))
+                        .apply(Modifiers.cut(dir.getOpposite(), 1, 0))
                         .export(quadMap.get(quadDir));
             }
         }
@@ -68,7 +68,7 @@ public class FramedSlopeGeometry extends Geometry
             else if (quadDir == dir.getClockWise() || quadDir == dir.getCounterClockWise())
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), top ? 1 : 0, top ? 0 : 1))
+                        .apply(Modifiers.cut(dir.getOpposite(), top ? 1 : 0, top ? 0 : 1))
                         .export(quadMap.get(quadDir));
             }
         }

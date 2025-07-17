@@ -136,11 +136,9 @@ public class FramedItemFrameGeometry extends Geometry
         }
         else
         {
-            boolean down = facing == Direction.UP;
-
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(down, 1F/16F))
-                    .applyIf(Modifiers.cutSideLeftRight(outerMax), !mapFrame)
+                    .apply(Modifiers.cut(facing.getOpposite(), 1F/16F))
+                    .applyIf(Modifiers.cut(quadFace.getClockWise().getAxis(), outerMax), !mapFrame)
                     .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
                     .applyIf(Modifiers.setPosition(outerMax), !mapFrame)
                     .export(quadMap.get(null));
@@ -148,9 +146,9 @@ public class FramedItemFrameGeometry extends Geometry
             if (!mapFrame)
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(!down, 15.5F / 16F))
-                        .apply(Modifiers.cutSideUpDown(down, 1F / 16F))
-                        .apply(Modifiers.cutSideLeftRight(innerLength))
+                        .apply(Modifiers.cut(facing, 15.5F / 16F))
+                        .apply(Modifiers.cut(facing.getOpposite(), 1F / 16F))
+                        .apply(Modifiers.cut(quadFace.getClockWise().getAxis(), innerLength))
                         .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
                         .apply(Modifiers.setPosition(innerPos))
                         .export(quadMap.get(null));
@@ -216,8 +214,8 @@ public class FramedItemFrameGeometry extends Geometry
         else if (Utils.isY(quadFace))
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(facing.getOpposite(), 1F/16F))
-                    .applyIf(Modifiers.cutTopBottom(facing.getClockWise().getAxis(), outerMax), !mapFrame)
+                    .apply(Modifiers.cut(facing.getOpposite(), 1F/16F))
+                    .applyIf(Modifiers.cut(facing.getClockWise().getAxis(), outerMax), !mapFrame)
                     .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
                     .applyIf(Modifiers.setPosition(outerMax), !mapFrame)
                     .export(quadMap.get(null));
@@ -225,9 +223,9 @@ public class FramedItemFrameGeometry extends Geometry
             if (!mapFrame)
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(facing, 15.5F/16F))
-                        .apply(Modifiers.cutTopBottom(facing.getOpposite(), 1F/16F))
-                        .apply(Modifiers.cutTopBottom(facing.getClockWise().getAxis(), innerLength))
+                        .apply(Modifiers.cut(facing, 15.5F/16F))
+                        .apply(Modifiers.cut(facing.getOpposite(), 1F/16F))
+                        .apply(Modifiers.cut(facing.getClockWise().getAxis(), innerLength))
                         .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
                         .apply(Modifiers.setPosition(innerPos))
                         .export(quadMap.get(null));
@@ -236,8 +234,8 @@ public class FramedItemFrameGeometry extends Geometry
         else
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(facing.getOpposite(), 1F/16F))
-                    .applyIf(Modifiers.cutSideUpDown(outerMax), !mapFrame)
+                    .apply(Modifiers.cut(facing.getOpposite(), 1F/16F))
+                    .applyIf(Modifiers.cut(Direction.Axis.Y, outerMax), !mapFrame)
                     .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
                     .applyIf(Modifiers.setPosition(outerMax), !mapFrame)
                     .export(quadMap.get(null));
@@ -245,9 +243,9 @@ public class FramedItemFrameGeometry extends Geometry
             if (!mapFrame)
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(facing, 15.5F/16F))
-                        .apply(Modifiers.cutSideLeftRight(facing.getOpposite(), 1F/16F))
-                        .apply(Modifiers.cutSideUpDown(innerLength))
+                        .apply(Modifiers.cut(facing, 15.5F/16F))
+                        .apply(Modifiers.cut(facing.getOpposite(), 1F/16F))
+                        .apply(Modifiers.cut(Direction.Axis.Y, innerLength))
                         .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
                         .apply(Modifiers.setPosition(innerPos))
                         .export(quadMap.get(null));

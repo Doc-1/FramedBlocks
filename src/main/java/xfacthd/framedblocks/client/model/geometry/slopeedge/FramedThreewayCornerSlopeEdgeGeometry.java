@@ -38,61 +38,61 @@ public class FramedThreewayCornerSlopeEdgeGeometry extends Geometry
             if (quadDir == dir)
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(!top, .5F))
-                        .apply(Modifiers.cutSideLeftRight(dir.getClockWise(), .5F))
+                        .apply(Modifiers.cut(yBackFace, .5F))
+                        .apply(Modifiers.cut(dir.getClockWise(), .5F))
                         .apply(Modifiers.setPosition(.5F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(top, .5F))
-                        .apply(Modifiers.cutSideLeftRight(dir.getCounterClockWise(), .5F))
+                        .apply(Modifiers.cut(yBackFace.getOpposite(), .5F))
+                        .apply(Modifiers.cut(dir.getCounterClockWise(), .5F))
                         .apply(Modifiers.setPosition(.5F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(!top, .5F))
-                        .apply(Modifiers.cutSideLeftRight(dir.getCounterClockWise(), .5F))
-                        .apply(Modifiers.cutSideLeftRight(dir.getClockWise(), top ? 1.5F : .5F, top ? .5F : 1.5F))
+                        .apply(Modifiers.cut(yBackFace, .5F))
+                        .apply(Modifiers.cut(dir.getCounterClockWise(), .5F))
+                        .apply(Modifiers.cut(dir.getClockWise(), top ? 1.5F : .5F, top ? .5F : 1.5F))
                         .export(quadMap.get(quadDir));
             }
             else if (quadDir == dir.getCounterClockWise())
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(!top, .5F))
-                        .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), .5F))
+                        .apply(Modifiers.cut(yBackFace, .5F))
+                        .apply(Modifiers.cut(dir.getOpposite(), .5F))
                         .apply(Modifiers.setPosition(.5F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(top, .5F))
-                        .apply(Modifiers.cutSideLeftRight(dir, .5F))
+                        .apply(Modifiers.cut(yBackFace.getOpposite(), .5F))
+                        .apply(Modifiers.cut(dir, .5F))
                         .apply(Modifiers.setPosition(.5F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(!top, .5F))
-                        .apply(Modifiers.cutSideLeftRight(dir, .5F))
-                        .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), top ? 1.5F : .5F, top ? .5F : 1.5F))
+                        .apply(Modifiers.cut(yBackFace, .5F))
+                        .apply(Modifiers.cut(dir, .5F))
+                        .apply(Modifiers.cut(dir.getOpposite(), top ? 1.5F : .5F, top ? .5F : 1.5F))
                         .export(quadMap.get(quadDir));
             }
             else if (quadDir == yBackFace)
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir.getOpposite(), .5F))
-                        .apply(Modifiers.cutTopBottom(dir.getCounterClockWise(), .5F))
+                        .apply(Modifiers.cut(dir.getOpposite(), .5F))
+                        .apply(Modifiers.cut(dir.getCounterClockWise(), .5F))
                         .apply(Modifiers.setPosition(.5F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir, .5F))
-                        .apply(Modifiers.cutTopBottom(dir.getClockWise(), .5F))
+                        .apply(Modifiers.cut(dir, .5F))
+                        .apply(Modifiers.cut(dir.getClockWise(), .5F))
                         .apply(Modifiers.setPosition(.5F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir, .5F))
-                        .apply(Modifiers.cutTopBottom(dir.getClockWise(), .5F, 1.5F))
-                        .apply(Modifiers.cutTopBottom(dir.getCounterClockWise(), .5F))
+                        .apply(Modifiers.cut(dir, .5F))
+                        .apply(Modifiers.cut(dir.getClockWise(), .5F, 1.5F))
+                        .apply(Modifiers.cut(dir.getCounterClockWise(), .5F))
                         .export(quadMap.get(quadDir));
             }
             else if (quadDir == dir.getOpposite())
@@ -100,17 +100,17 @@ public class FramedThreewayCornerSlopeEdgeGeometry extends Geometry
                 if (!right)
                 {
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideUpDown(top, .5F))
-                            .apply(Modifiers.cutSideLeftRight(dir.getCounterClockWise(), .5F))
+                            .apply(Modifiers.cut(yBackFace.getOpposite(), .5F))
+                            .apply(Modifiers.cut(dir.getCounterClockWise(), .5F))
                             .apply(Modifiers.makeHorizontalSlope(false, 45))
                             .apply(Modifiers.offset(dir.getOpposite(), .5F))
                             .export(quadMap.get(null));
 
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideUpDown(top, .75F))
-                            .apply(Modifiers.cutSideUpDown(!top, .5F))
-                            .apply(Modifiers.cutSideLeftRight(dir.getClockWise(), top ? 1.5F : .5F, top ? .5F : 1.5F))
-                            .apply(Modifiers.cutSideLeftRight(dir.getCounterClockWise(), top ? 1F : 0F, top ? 0F : 1F))
+                            .apply(Modifiers.cut(yBackFace.getOpposite(), .75F))
+                            .apply(Modifiers.cut(yBackFace, .5F))
+                            .apply(Modifiers.cut(dir.getClockWise(), top ? 1.5F : .5F, top ? .5F : 1.5F))
+                            .apply(Modifiers.cut(dir.getCounterClockWise(), top ? 1F : 0F, top ? 0F : 1F))
                             .apply(Modifiers.makeHorizontalSlope(false, 45))
                             .apply(Modifiers.offset(dir.getOpposite(), .5F))
                             .export(quadMap.get(null));
@@ -119,18 +119,18 @@ public class FramedThreewayCornerSlopeEdgeGeometry extends Geometry
                 if (!ySlope)
                 {
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideUpDown(!top, .5F))
-                            .apply(Modifiers.cutSideLeftRight(dir.getClockWise(), .5F))
+                            .apply(Modifiers.cut(yBackFace, .5F))
+                            .apply(Modifiers.cut(dir.getClockWise(), .5F))
                             .apply(Modifiers.makeVerticalSlope(!top, 45))
                             .apply(Modifiers.offset(dir.getOpposite(), .5F))
                             .export(quadMap.get(null));
 
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideUpDown(!top, .5F))
-                            .apply(Modifiers.cutSideLeftRight(dir.getClockWise(), .75F))
-                            .apply(Modifiers.cutSideLeftRight(dir.getCounterClockWise(), .5F))
-                            .apply(Modifiers.cutSideUpDown(false, top ? 1F : 1.5F, top ? 0F : .5F))
-                            .apply(Modifiers.cutSideUpDown(true, top ? 1.5F : 1F, top ? .5F : 0F))
+                            .apply(Modifiers.cut(yBackFace, .5F))
+                            .apply(Modifiers.cut(dir.getClockWise(), .75F))
+                            .apply(Modifiers.cut(dir.getCounterClockWise(), .5F))
+                            .apply(Modifiers.cut(Direction.UP, top ? 1F : 1.5F, top ? 0F : .5F))
+                            .apply(Modifiers.cut(Direction.DOWN, top ? 1.5F : 1F, top ? .5F : 0F))
                             .apply(Modifiers.makeVerticalSlope(!top, 45))
                             .apply(Modifiers.offset(dir.getOpposite(), .5F))
                             .export(quadMap.get(null));
@@ -141,17 +141,17 @@ public class FramedThreewayCornerSlopeEdgeGeometry extends Geometry
                 if (right)
                 {
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideUpDown(top, .5F))
-                            .apply(Modifiers.cutSideLeftRight(dir, .5F))
+                            .apply(Modifiers.cut(yBackFace.getOpposite(), .5F))
+                            .apply(Modifiers.cut(dir, .5F))
                             .apply(Modifiers.makeHorizontalSlope(true, 45))
                             .apply(Modifiers.offset(dir.getClockWise(), .5F))
                             .export(quadMap.get(null));
 
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideUpDown(top, .75F))
-                            .apply(Modifiers.cutSideUpDown(!top, .5F))
-                            .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), top ? 1.5F : .5F, top ? .5F : 1.5F))
-                            .apply(Modifiers.cutSideLeftRight(dir, top ? 1F : 0F, top ? 0F : 1F))
+                            .apply(Modifiers.cut(yBackFace.getOpposite(), .75F))
+                            .apply(Modifiers.cut(yBackFace, .5F))
+                            .apply(Modifiers.cut(dir.getOpposite(), top ? 1.5F : .5F, top ? .5F : 1.5F))
+                            .apply(Modifiers.cut(dir, top ? 1F : 0F, top ? 0F : 1F))
                             .apply(Modifiers.makeHorizontalSlope(true, 45))
                             .apply(Modifiers.offset(dir.getClockWise(), .5F))
                             .export(quadMap.get(null));
@@ -160,18 +160,18 @@ public class FramedThreewayCornerSlopeEdgeGeometry extends Geometry
                 if (!ySlope)
                 {
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideUpDown(!top, .5F))
-                            .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), .5F))
+                            .apply(Modifiers.cut(yBackFace, .5F))
+                            .apply(Modifiers.cut(dir.getOpposite(), .5F))
                             .apply(Modifiers.makeVerticalSlope(!top, 45))
                             .apply(Modifiers.offset(dir.getClockWise(), .5F))
                             .export(quadMap.get(null));
 
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideUpDown(!top, .5F))
-                            .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), .75F))
-                            .apply(Modifiers.cutSideLeftRight(dir, .5F))
-                            .apply(Modifiers.cutSideUpDown(false, top ? 0F : .5F, top ? 1F : 1.5F))
-                            .apply(Modifiers.cutSideUpDown(true, top ? .5F : 0F, top ? 1.5F : 1F))
+                            .apply(Modifiers.cut(yBackFace, .5F))
+                            .apply(Modifiers.cut(dir.getOpposite(), .75F))
+                            .apply(Modifiers.cut(dir, .5F))
+                            .apply(Modifiers.cut(Direction.UP, top ? 0F : .5F, top ? 1F : 1.5F))
+                            .apply(Modifiers.cut(Direction.DOWN, top ? .5F : 0F, top ? 1.5F : 1F))
                             .apply(Modifiers.makeVerticalSlope(!top, 45))
                             .apply(Modifiers.offset(dir.getClockWise(), .5F))
                             .export(quadMap.get(null));
@@ -180,33 +180,33 @@ public class FramedThreewayCornerSlopeEdgeGeometry extends Geometry
             else if (ySlope && quadDir == yBackFace.getOpposite())
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir.getOpposite(), .5F))
-                        .apply(Modifiers.cutTopBottom(dir.getCounterClockWise(), .5F))
+                        .apply(Modifiers.cut(dir.getOpposite(), .5F))
+                        .apply(Modifiers.cut(dir.getCounterClockWise(), .5F))
                         .apply(Modifiers.makeVerticalSlope(dir.getClockWise(), 45))
                         .apply(Modifiers.offset(yBackFace.getOpposite(), .5F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir.getClockWise(), .5F))
-                        .apply(Modifiers.cutTopBottom(dir, .5F))
+                        .apply(Modifiers.cut(dir.getClockWise(), .5F))
+                        .apply(Modifiers.cut(dir, .5F))
                         .apply(Modifiers.makeVerticalSlope(dir.getOpposite(), 45))
                         .apply(Modifiers.offset(yBackFace.getOpposite(), .5F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir.getOpposite(), .75F))
-                        .apply(Modifiers.cutTopBottom(dir, .5F))
-                        .apply(Modifiers.cutTopBottom(dir.getCounterClockWise(), 1F, 0F))
-                        .apply(Modifiers.cutTopBottom(dir.getClockWise(), .5F, 1.5F))
+                        .apply(Modifiers.cut(dir.getOpposite(), .75F))
+                        .apply(Modifiers.cut(dir, .5F))
+                        .apply(Modifiers.cut(dir.getCounterClockWise(), 1F, 0F))
+                        .apply(Modifiers.cut(dir.getClockWise(), .5F, 1.5F))
                         .apply(Modifiers.makeVerticalSlope(dir.getClockWise(), 45))
                         .apply(Modifiers.offset(yBackFace.getOpposite(), .5F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir.getClockWise(), .75F))
-                        .apply(Modifiers.cutTopBottom(dir.getCounterClockWise(), .5F))
-                        .apply(Modifiers.cutTopBottom(dir, 0F, 1F))
-                        .apply(Modifiers.cutTopBottom(dir.getOpposite(), 1.5F, .5F))
+                        .apply(Modifiers.cut(dir.getClockWise(), .75F))
+                        .apply(Modifiers.cut(dir.getCounterClockWise(), .5F))
+                        .apply(Modifiers.cut(dir, 0F, 1F))
+                        .apply(Modifiers.cut(dir.getOpposite(), 1.5F, .5F))
                         .apply(Modifiers.makeVerticalSlope(dir.getOpposite(), 45))
                         .apply(Modifiers.offset(yBackFace.getOpposite(), .5F))
                         .export(quadMap.get(null));
@@ -217,22 +217,22 @@ public class FramedThreewayCornerSlopeEdgeGeometry extends Geometry
             if (quadDir == dir)
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(top, .5F))
-                        .apply(Modifiers.cutSideLeftRight(dir.getClockWise(), top ? .5F : -.5F, top ? -.5F : .5F))
+                        .apply(Modifiers.cut(yBackFace.getOpposite(), .5F))
+                        .apply(Modifiers.cut(dir.getClockWise(), top ? .5F : -.5F, top ? -.5F : .5F))
                         .export(quadMap.get(quadDir));
             }
             else if (quadDir == dir.getCounterClockWise())
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(top, .5F))
-                        .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), top ? .5F : -.5F, top ? -.5F : .5F))
+                        .apply(Modifiers.cut(yBackFace.getOpposite(), .5F))
+                        .apply(Modifiers.cut(dir.getOpposite(), top ? .5F : -.5F, top ? -.5F : .5F))
                         .export(quadMap.get(quadDir));
             }
             else if (quadDir == yBackFace)
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir.getOpposite(), .5F))
-                        .apply(Modifiers.cutTopBottom(dir.getClockWise(), -.5F, .5F))
+                        .apply(Modifiers.cut(dir.getOpposite(), .5F))
+                        .apply(Modifiers.cut(dir.getClockWise(), -.5F, .5F))
                         .export(quadMap.get(quadDir));
             }
             else if (quadDir == dir.getOpposite())
@@ -240,9 +240,9 @@ public class FramedThreewayCornerSlopeEdgeGeometry extends Geometry
                 if (!right)
                 {
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideUpDown(top, .25F))
-                            .apply(Modifiers.cutSideLeftRight(dir.getClockWise(), top ? .5F : -.5F, top ? -.5F : .5F))
-                            .apply(Modifiers.cutSideLeftRight(dir.getCounterClockWise(), top ? 1F : 0F, top ? 0F : 1F))
+                            .apply(Modifiers.cut(yBackFace.getOpposite(), .25F))
+                            .apply(Modifiers.cut(dir.getClockWise(), top ? .5F : -.5F, top ? -.5F : .5F))
+                            .apply(Modifiers.cut(dir.getCounterClockWise(), top ? 1F : 0F, top ? 0F : 1F))
                             .apply(Modifiers.makeHorizontalSlope(false, 45))
                             .apply(Modifiers.offset(dir, .5F))
                             .export(quadMap.get(null));
@@ -251,10 +251,10 @@ public class FramedThreewayCornerSlopeEdgeGeometry extends Geometry
                 if (!ySlope)
                 {
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideUpDown(top, .5F))
-                            .apply(Modifiers.cutSideLeftRight(dir.getClockWise(), .25F))
-                            .apply(Modifiers.cutSideUpDown(false, top ? 1F : .5F, top ? 0F : -.5F))
-                            .apply(Modifiers.cutSideUpDown(true, top ? .5F : 1F, top ? -.5F : 0F))
+                            .apply(Modifiers.cut(yBackFace.getOpposite(), .5F))
+                            .apply(Modifiers.cut(dir.getClockWise(), .25F))
+                            .apply(Modifiers.cut(Direction.UP, top ? 1F : .5F, top ? 0F : -.5F))
+                            .apply(Modifiers.cut(Direction.DOWN, top ? .5F : 1F, top ? -.5F : 0F))
                             .apply(Modifiers.makeVerticalSlope(!top, 45))
                             .apply(Modifiers.offset(dir, .5F))
                             .export(quadMap.get(null));
@@ -265,9 +265,9 @@ public class FramedThreewayCornerSlopeEdgeGeometry extends Geometry
                 if (right)
                 {
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideUpDown(top, .25F))
-                            .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), top ? .5F : -.5F, top ? -.5F : .5F))
-                            .apply(Modifiers.cutSideLeftRight(dir, top ? 1F : 0F, top ? 0F : 1F))
+                            .apply(Modifiers.cut(yBackFace.getOpposite(), .25F))
+                            .apply(Modifiers.cut(dir.getOpposite(), top ? .5F : -.5F, top ? -.5F : .5F))
+                            .apply(Modifiers.cut(dir, top ? 1F : 0F, top ? 0F : 1F))
                             .apply(Modifiers.makeHorizontalSlope(true, 45))
                             .apply(Modifiers.offset(dir.getCounterClockWise(), .5F))
                             .export(quadMap.get(null));
@@ -276,10 +276,10 @@ public class FramedThreewayCornerSlopeEdgeGeometry extends Geometry
                 if (!ySlope)
                 {
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideUpDown(top, .5F))
-                            .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), .25F))
-                            .apply(Modifiers.cutSideUpDown(false, top ? 0F : -.5F, top ? 1F : .5F))
-                            .apply(Modifiers.cutSideUpDown(true, top ? -.5F : 0F, top ? .5F : 1F))
+                            .apply(Modifiers.cut(yBackFace.getOpposite(), .5F))
+                            .apply(Modifiers.cut(dir.getOpposite(), .25F))
+                            .apply(Modifiers.cut(Direction.UP, top ? 0F : -.5F, top ? 1F : .5F))
+                            .apply(Modifiers.cut(Direction.DOWN, top ? -.5F : 0F, top ? .5F : 1F))
                             .apply(Modifiers.makeVerticalSlope(!top, 45))
                             .apply(Modifiers.offset(dir.getCounterClockWise(), .5F))
                             .export(quadMap.get(null));
@@ -288,17 +288,17 @@ public class FramedThreewayCornerSlopeEdgeGeometry extends Geometry
             else if (ySlope && quadDir == yBackFace.getOpposite())
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir.getOpposite(), .25F))
-                        .apply(Modifiers.cutTopBottom(dir.getClockWise(), -.5F, .5F))
-                        .apply(Modifiers.cutTopBottom(dir.getCounterClockWise(), 1F, 0F))
+                        .apply(Modifiers.cut(dir.getOpposite(), .25F))
+                        .apply(Modifiers.cut(dir.getClockWise(), -.5F, .5F))
+                        .apply(Modifiers.cut(dir.getCounterClockWise(), 1F, 0F))
                         .apply(Modifiers.makeVerticalSlope(dir.getClockWise(), 45))
                         .apply(Modifiers.offset(yBackFace, .5F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir.getClockWise(), .25F))
-                        .apply(Modifiers.cutTopBottom(dir, 0F, 1F))
-                        .apply(Modifiers.cutTopBottom(dir.getOpposite(), .5F, -.5F))
+                        .apply(Modifiers.cut(dir.getClockWise(), .25F))
+                        .apply(Modifiers.cut(dir, 0F, 1F))
+                        .apply(Modifiers.cut(dir.getOpposite(), .5F, -.5F))
                         .apply(Modifiers.makeVerticalSlope(dir.getOpposite(), 45))
                         .apply(Modifiers.offset(yBackFace, .5F))
                         .export(quadMap.get(null));

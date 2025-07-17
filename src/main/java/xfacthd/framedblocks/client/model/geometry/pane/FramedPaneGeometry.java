@@ -84,8 +84,8 @@ public class FramedPaneGeometry extends Geometry
         Preconditions.checkArgument(!Utils.isY(dir), String.format("Invalid direction: %s!", dir));
 
         QuadModifier.of(quad)
-                .apply(Modifiers.cutTopBottom(dir.getOpposite(), 7F/16F))
-                .apply(Modifiers.cutTopBottom(dir.getClockWise().getAxis(), 9F/16F))
+                .apply(Modifiers.cut(dir.getOpposite(), 7F/16F))
+                .apply(Modifiers.cut(dir.getClockWise().getAxis(), 9F/16F))
                 .applyIf(Modifiers.setPosition(.001F), mirrored)
                 .export(quadMap.get(mirrored ? null : quad.direction()));
     }
@@ -98,7 +98,7 @@ public class FramedPaneGeometry extends Geometry
         Direction exportSide = inset ? null : (mirrored ? quadDir.getOpposite() : quadDir);
 
         QuadModifier.of(quad)
-                .apply(Modifiers.cutSideLeftRight(9F/16F))
+                .apply(Modifiers.cut(quadDir.getClockWise().getAxis(), 9F/16F))
                 .applyIf(Modifiers.setPosition(9F/16F), inset)
                 .applyIf(Modifiers.setPosition(.001F), !inset && mirrored)
                 .export(quadMap.get(exportSide));
@@ -107,7 +107,7 @@ public class FramedPaneGeometry extends Geometry
     private static void createSideQuad(List<BakedQuad> quadList, BakedQuad quad, Direction dir)
     {
         QuadModifier.of(quad)
-                .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), 7F/16F))
+                .apply(Modifiers.cut(dir.getOpposite(), 7F/16F))
                 .apply(Modifiers.setPosition(9F/16F))
                 .export(quadList);
     }

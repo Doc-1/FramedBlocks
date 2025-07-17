@@ -30,7 +30,7 @@ public class FramedSlabEdgeGeometry extends Geometry
             boolean inset = (quadDir == Direction.DOWN) == top;
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(dir.getOpposite(), .5F))
+                    .apply(Modifiers.cut(dir.getOpposite(), .5F))
                     .applyIf(Modifiers.setPosition(.5F), inset)
                     .export(quadMap.get(inset ? null : quadDir));
         }
@@ -40,8 +40,8 @@ public class FramedSlabEdgeGeometry extends Geometry
             boolean side = quadDir.getAxis() != dir.getAxis();
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(top, .5F))
-                    .applyIf(Modifiers.cutSideLeftRight(dir.getOpposite(), .5F), side)
+                    .apply(Modifiers.cut(top ? Direction.DOWN : Direction.UP, .5F))
+                    .applyIf(Modifiers.cut(dir.getOpposite(), .5F), side)
                     .applyIf(Modifiers.setPosition(.5F), inset)
                     .export(quadMap.get(inset ? null : quadDir));
         }

@@ -28,51 +28,51 @@ public class FramedMasonryCornerSegmentGeometry extends Geometry
         if ((!top && quadDir == Direction.UP) || (top && quadDir == Direction.DOWN))
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(dir, .5F))
-                    .apply(Modifiers.cutTopBottom(dir.getClockWise(), .5F))
+                    .apply(Modifiers.cut(dir, .5F))
+                    .apply(Modifiers.cut(dir.getClockWise(), .5F))
                     .apply(Modifiers.setPosition(.5F))
                     .export(quadMap.get(null));
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(dir.getCounterClockWise(), .5F))
+                    .apply(Modifiers.cut(dir.getCounterClockWise(), .5F))
                     .export(quadMap.get(quadDir));
         }
         else if ((!top && quadDir == Direction.DOWN) || (top && quadDir == Direction.UP))
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(dir.getOpposite(), .5F))
-                    .apply(Modifiers.cutTopBottom(dir.getCounterClockWise(), .5F))
+                    .apply(Modifiers.cut(dir.getOpposite(), .5F))
+                    .apply(Modifiers.cut(dir.getCounterClockWise(), .5F))
                     .apply(Modifiers.setPosition(.5F))
                     .export(quadMap.get(null));
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(dir, .5F))
+                    .apply(Modifiers.cut(dir, .5F))
                     .export(quadMap.get(quadDir));
         }
         else if (quadDir.getAxis() == dir.getAxis())
         {
             boolean inDir = quadDir == dir;
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(top, .5F))
+                    .apply(Modifiers.cut(top ? Direction.DOWN : Direction.UP, .5F))
                     .applyIf(Modifiers.setPosition(.5F), inDir)
                     .export(quadMap.get(inDir ? null : quadDir));
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(!top, .5F))
-                    .apply(Modifiers.cutSideLeftRight(dir.getCounterClockWise(), .5F))
+                    .apply(Modifiers.cut(top ? Direction.UP : Direction.DOWN, .5F))
+                    .apply(Modifiers.cut(dir.getCounterClockWise(), .5F))
                     .export(quadMap.get(quadDir));
         }
         else if (quadDir.getAxis() == dir.getClockWise().getAxis())
         {
             boolean inDir = quadDir == dir.getCounterClockWise();
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(!top, .5F))
+                    .apply(Modifiers.cut(top ? Direction.UP : Direction.DOWN, .5F))
                     .applyIf(Modifiers.setPosition(.5F), inDir)
                     .export(quadMap.get(inDir ? null : quadDir));
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(top, .5F))
-                    .apply(Modifiers.cutSideLeftRight(dir, .5F))
+                    .apply(Modifiers.cut(top ? Direction.DOWN : Direction.UP, .5F))
+                    .apply(Modifiers.cut(dir, .5F))
                     .export(quadMap.get(quadDir));
         }
     }

@@ -32,13 +32,13 @@ public class FramedPanelGeometry extends Geometry
         else if (Utils.isY(quad.direction()))
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(dir.getOpposite(), .5F))
+                    .apply(Modifiers.cut(dir.getOpposite(), .5F))
                     .export(quadMap.get(quadDir));
         }
         else
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), .5F))
+                    .apply(Modifiers.cut(dir.getOpposite(), .5F))
                     .export(quadMap.get(quadDir));
         }
     }

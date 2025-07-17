@@ -36,14 +36,14 @@ public class FramedElevatedSlopeEdgeGeometry extends Geometry
                 if (!ySlope)
                 {
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideLeftRight(dir.getCounterClockWise(), .5F))
+                            .apply(Modifiers.cut(dir.getCounterClockWise(), .5F))
                             .apply(Modifiers.makeHorizontalSlope(false, 45))
                             .apply(Modifiers.offset(dir.getOpposite(), .5F))
                             .export(quadMap.get(null));
                 }
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(dir.getClockWise(), .5F))
+                        .apply(Modifiers.cut(dir.getClockWise(), .5F))
                         .export(quadMap.get(quadDir));
             }
             else if (quadDir == dir.getClockWise())
@@ -51,41 +51,42 @@ public class FramedElevatedSlopeEdgeGeometry extends Geometry
                 if (ySlope)
                 {
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideLeftRight(dir, .5F))
+                            .apply(Modifiers.cut(dir, .5F))
                             .apply(Modifiers.makeHorizontalSlope(true, 45))
                             .apply(Modifiers.offset(dir.getClockWise(), .5F))
                             .export(quadMap.get(null));
                 }
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), .5F))
+                        .apply(Modifiers.cut(dir.getOpposite(), .5F))
                         .export(quadMap.get(quadDir));
             }
             else if (Utils.isY(quadDir))
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir.getCounterClockWise(), .5F))
-                        .apply(Modifiers.cutTopBottom(dir.getOpposite(), 1.5F, .5F))
+                        .apply(Modifiers.cut(dir.getCounterClockWise(), .5F))
+                        .apply(Modifiers.cut(dir.getOpposite(), 1.5F, .5F))
                         .export(quadMap.get(quadDir));
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir.getClockWise(), .5F))
+                        .apply(Modifiers.cut(dir.getClockWise(), .5F))
                         .export(quadMap.get(quadDir));
             }
         }
         else
         {
             boolean top = type == SlopeType.TOP;
+            Direction vertEdge = top ? Direction.DOWN : Direction.UP;
             if (quadDir == dir.getOpposite())
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(top, .5F))
+                        .apply(Modifiers.cut(vertEdge, .5F))
                         .export(quadMap.get(quadDir));
 
                 if (!ySlope)
                 {
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutSideUpDown(!top, .5F))
+                            .apply(Modifiers.cut(vertEdge.getOpposite(), .5F))
                             .apply(Modifiers.makeVerticalSlope(!top, 45))
                             .apply(Modifiers.offset(dir.getOpposite(), .5F))
                             .export(quadMap.get(null));
@@ -94,13 +95,13 @@ public class FramedElevatedSlopeEdgeGeometry extends Geometry
             else if ((!top && quadDir == Direction.UP) || (top && quadDir == Direction.DOWN))
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir.getOpposite(), .5F))
+                        .apply(Modifiers.cut(dir.getOpposite(), .5F))
                         .export(quadMap.get(quadDir));
 
                 if (ySlope)
                 {
                     QuadModifier.of(quad)
-                            .apply(Modifiers.cutTopBottom(dir, .5F))
+                            .apply(Modifiers.cut(dir, .5F))
                             .apply(Modifiers.makeVerticalSlope(dir.getOpposite(), 45))
                             .apply(Modifiers.offset(top ? Direction.DOWN : Direction.UP, .5F))
                             .export(quadMap.get(null));
@@ -109,12 +110,12 @@ public class FramedElevatedSlopeEdgeGeometry extends Geometry
             else if (quadDir == dir.getClockWise() || quadDir == dir.getCounterClockWise())
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(!top, .5F))
-                        .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), top ? 1.5F : .5F, top ? .5F : 1.5F))
+                        .apply(Modifiers.cut(vertEdge.getOpposite(), .5F))
+                        .apply(Modifiers.cut(dir.getOpposite(), top ? 1.5F : .5F, top ? .5F : 1.5F))
                         .export(quadMap.get(quadDir));
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(top, .5F))
+                        .apply(Modifiers.cut(vertEdge, .5F))
                         .export(quadMap.get(quadDir));
             }
         }

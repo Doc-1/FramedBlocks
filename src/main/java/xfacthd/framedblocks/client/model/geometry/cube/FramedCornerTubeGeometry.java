@@ -13,6 +13,8 @@ import xfacthd.framedblocks.common.data.property.CornerTubeOrientation;
 
 public class FramedCornerTubeGeometry extends Geometry
 {
+    private static final Direction[] DIRECTIONS = Direction.values();
+
     private final CornerTubeOrientation orientation;
     private final float minWidth;
     private final float maxWidth;
@@ -35,26 +37,26 @@ public class FramedCornerTubeGeometry extends Geometry
             if (orientation.isSideOpen(quadDir))
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(Direction.NORTH, minWidth))
+                        .apply(Modifiers.cut(Direction.NORTH, minWidth))
                         .export(quadMap.get(quadDir));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(Direction.SOUTH, minWidth))
+                        .apply(Modifiers.cut(Direction.SOUTH, minWidth))
                         .export(quadMap.get(quadDir));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(Direction.EAST, minWidth))
-                        .apply(Modifiers.cutTopBottom(Direction.Axis.Z, maxWidth))
+                        .apply(Modifiers.cut(Direction.EAST, minWidth))
+                        .apply(Modifiers.cut(Direction.Axis.Z, maxWidth))
                         .export(quadMap.get(quadDir));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(Direction.WEST, minWidth))
-                        .apply(Modifiers.cutTopBottom(Direction.Axis.Z, maxWidth))
+                        .apply(Modifiers.cut(Direction.WEST, minWidth))
+                        .apply(Modifiers.cut(Direction.Axis.Z, maxWidth))
                         .export(quadMap.get(quadDir));
 
                 QuadModifier mod = QuadModifier.of(quad);
-                for (Direction side : Direction.values())
+                for (Direction side : DIRECTIONS)
                 {
                     if (side.getAxis() != quadDir.getAxis() && !orientation.isSideOpen(side))
                     {
-                        mod.apply(Modifiers.cutTopBottom(side, maxWidth));
+                        mod.apply(Modifiers.cut(side, maxWidth));
                     }
                 }
                 mod.apply(Modifiers.setPosition(minWidth)).export(quadMap.get(null));
@@ -62,17 +64,17 @@ public class FramedCornerTubeGeometry extends Geometry
             else if (orientation.isSideOpen(quadDir.getOpposite()))
             {
                 QuadModifier mod = QuadModifier.of(quad);
-                for (Direction side : Direction.values())
+                for (Direction side : DIRECTIONS)
                 {
                     if (side.getAxis() == quadDir.getAxis()) continue;
 
                     if (orientation.isSideOpen(side.getOpposite()))
                     {
-                        mod.apply(Modifiers.cutTopBottom(side, minWidth));
+                        mod.apply(Modifiers.cut(side, minWidth));
                     }
                     else if (!orientation.isSideOpen(side))
                     {
-                        mod.apply(Modifiers.cutTopBottom(side, maxWidth));
+                        mod.apply(Modifiers.cut(side, maxWidth));
                     }
                 }
                 mod.apply(Modifiers.setPosition(minWidth)).export(quadMap.get(null));
@@ -81,18 +83,18 @@ public class FramedCornerTubeGeometry extends Geometry
             {
                 QuadModifier modOne = QuadModifier.of(quad);
                 QuadModifier modTwo = QuadModifier.of(quad);
-                for (Direction side : Direction.values())
+                for (Direction side : DIRECTIONS)
                 {
                     if (side.getAxis() == quadDir.getAxis()) continue;
 
                     if (side != orientation.getPrimaryDir())
                     {
-                        modOne.apply(Modifiers.cutTopBottom(side, maxWidth));
+                        modOne.apply(Modifiers.cut(side, maxWidth));
                     }
                     if (side != orientation.getSecondaryDir())
                     {
                         float len = side == orientation.getSecondaryDir().getOpposite() ? minWidth : maxWidth;
-                        modTwo.apply(Modifiers.cutTopBottom(side, len));
+                        modTwo.apply(Modifiers.cut(side, len));
                     }
                 }
                 modOne.apply(Modifiers.setPosition(minWidth)).export(quadMap.get(null));
@@ -104,26 +106,26 @@ public class FramedCornerTubeGeometry extends Geometry
             if (orientation.isSideOpen(quadDir))
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(false, minWidth))
+                        .apply(Modifiers.cut(Direction.UP, minWidth))
                         .export(quadMap.get(quadDir));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(true, minWidth))
+                        .apply(Modifiers.cut(Direction.DOWN, minWidth))
                         .export(quadMap.get(quadDir));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(quadDir.getClockWise(), minWidth))
-                        .apply(Modifiers.cutSideUpDown(maxWidth))
+                        .apply(Modifiers.cut(quadDir.getClockWise(), minWidth))
+                        .apply(Modifiers.cut(Direction.Axis.Y, maxWidth))
                         .export(quadMap.get(quadDir));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(quadDir.getCounterClockWise(), minWidth))
-                        .apply(Modifiers.cutSideUpDown(maxWidth))
+                        .apply(Modifiers.cut(quadDir.getCounterClockWise(), minWidth))
+                        .apply(Modifiers.cut(Direction.Axis.Y, maxWidth))
                         .export(quadMap.get(quadDir));
 
                 QuadModifier mod = QuadModifier.of(quad);
-                for (Direction side : Direction.values())
+                for (Direction side : DIRECTIONS)
                 {
                     if (side.getAxis() != quadDir.getAxis() && !orientation.isSideOpen(side))
                     {
-                        mod.apply(Modifiers.cutSide(side, maxWidth, maxWidth));
+                        mod.apply(Modifiers.cut(side, maxWidth, maxWidth));
                     }
                 }
                 mod.apply(Modifiers.setPosition(minWidth)).export(quadMap.get(null));
@@ -131,17 +133,17 @@ public class FramedCornerTubeGeometry extends Geometry
             else if (orientation.isSideOpen(quadDir.getOpposite()))
             {
                 QuadModifier mod = QuadModifier.of(quad);
-                for (Direction side : Direction.values())
+                for (Direction side : DIRECTIONS)
                 {
                     if (side.getAxis() == quadDir.getAxis()) continue;
 
                     if (orientation.isSideOpen(side.getOpposite()))
                     {
-                        mod.apply(Modifiers.cutSide(side, minWidth, minWidth));
+                        mod.apply(Modifiers.cut(side, minWidth, minWidth));
                     }
                     else if (!orientation.isSideOpen(side))
                     {
-                        mod.apply(Modifiers.cutSide(side, maxWidth, maxWidth));
+                        mod.apply(Modifiers.cut(side, maxWidth, maxWidth));
                     }
                 }
                 mod.apply(Modifiers.setPosition(minWidth)).export(quadMap.get(null));
@@ -150,18 +152,18 @@ public class FramedCornerTubeGeometry extends Geometry
             {
                 QuadModifier modOne = QuadModifier.of(quad);
                 QuadModifier modTwo = QuadModifier.of(quad);
-                for (Direction side : Direction.values())
+                for (Direction side : DIRECTIONS)
                 {
                     if (side.getAxis() == quadDir.getAxis()) continue;
 
                     if (side != orientation.getPrimaryDir())
                     {
-                        modOne.apply(Modifiers.cutSide(side, maxWidth, maxWidth));
+                        modOne.apply(Modifiers.cut(side, maxWidth, maxWidth));
                     }
                     if (side != orientation.getSecondaryDir())
                     {
                         float len = side == orientation.getSecondaryDir().getOpposite() ? minWidth : maxWidth;
-                        modTwo.apply(Modifiers.cutSide(side, len, len));
+                        modTwo.apply(Modifiers.cut(side, len, len));
                     }
                 }
                 modOne.apply(Modifiers.setPosition(minWidth)).export(quadMap.get(null));

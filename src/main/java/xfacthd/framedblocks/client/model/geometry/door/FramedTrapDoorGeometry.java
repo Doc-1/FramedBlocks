@@ -43,13 +43,13 @@ public class FramedTrapDoorGeometry extends Geometry
             else if (Utils.isY(quadDir))
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir, DEPTH))
+                        .apply(Modifiers.cut(dir, DEPTH))
                         .export(quadMap.get(quadDir));
             }
             else
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(dir, DEPTH))
+                        .apply(Modifiers.cut(dir, DEPTH))
                         .export(quadMap.get(quadDir));
             }
         }
@@ -64,7 +64,7 @@ public class FramedTrapDoorGeometry extends Geometry
             else if (!Utils.isY(quad.direction()))
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideUpDown(top, DEPTH))
+                        .apply(Modifiers.cut(top ? Direction.DOWN : Direction.UP, DEPTH))
                         .export(quadMap.get(quadDir));
             }
         }

@@ -4,7 +4,6 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,7 +26,6 @@ import java.util.List;
 
 public class FramedCollapsibleCopycatBlockGeometry extends Geometry
 {
-    public static final ResourceLocation ALT_BASE_MODEL_LOC = Utils.rl("block/framed_collapsible_copycat_block_alt");
     public static final String ALT_BASE_MODEL_KEY = "alt_base";
     private static final int UP = Direction.UP.ordinal();
     private static final int DOWN = Direction.DOWN.ordinal();
@@ -71,14 +69,14 @@ public class FramedCollapsibleCopycatBlockGeometry extends Geometry
                 {
                     mods.add(initialModifier
                             .derive()
-                            .apply(Modifiers.cutTopBottom(Direction.SOUTH, length.valOne))
+                            .apply(Modifiers.cut(Direction.SOUTH, length.valOne))
                             .apply(Modifiers.offset(Direction.SOUTH, offsets[NORTH] / 16F))
                     );
                 }
                 if (length.valTwo > 0F)
                 {
                     mods.add(initialModifier
-                            .apply(Modifiers.cutTopBottom(Direction.NORTH, length.valTwo))
+                            .apply(Modifiers.cut(Direction.NORTH, length.valTwo))
                             .apply(Modifiers.offset(Direction.NORTH, offsets[SOUTH] / 16F))
                     );
                 }
@@ -96,13 +94,13 @@ public class FramedCollapsibleCopycatBlockGeometry extends Geometry
                     if (length.valOne > 0F)
                     {
                         modifier.derive()
-                                .apply(Modifiers.cutTopBottom(Direction.EAST, length.valOne))
+                                .apply(Modifiers.cut(Direction.EAST, length.valOne))
                                 .apply(Modifiers.offset(Direction.EAST, offsets[WEST] / 16F))
                                 .export(quadMap.get(solid ? quadDir : null));
                     }
                     if (length.valTwo > 0F)
                     {
-                        modifier.apply(Modifiers.cutTopBottom(Direction.WEST, length.valTwo))
+                        modifier.apply(Modifiers.cut(Direction.WEST, length.valTwo))
                                 .apply(Modifiers.offset(Direction.WEST, offsets[EAST] / 16F))
                                 .export(quadMap.get(solid ? quadDir : null));
                     }
@@ -129,14 +127,14 @@ public class FramedCollapsibleCopycatBlockGeometry extends Geometry
                 {
                     mods.add(initialModifier
                             .derive()
-                            .apply(Modifiers.cutSideLeftRight(axisNeg.getOpposite(), length.valOne))
+                            .apply(Modifiers.cut(axisNeg.getOpposite(), length.valOne))
                             .apply(Modifiers.offset(axisNeg.getOpposite(), offsets[axisMin] / 16F))
                     );
                 }
                 if (length.valTwo > 0F)
                 {
                     mods.add(initialModifier
-                            .apply(Modifiers.cutSideLeftRight(axisNeg, length.valTwo))
+                            .apply(Modifiers.cut(axisNeg, length.valTwo))
                             .apply(Modifiers.offset(axisNeg, offsets[axisMax] / 16F))
                     );
                 }
@@ -154,13 +152,13 @@ public class FramedCollapsibleCopycatBlockGeometry extends Geometry
                     if (length.valOne > 0F)
                     {
                         modifier.derive()
-                                .apply(Modifiers.cutSideUpDown(false, length.valOne))
+                                .apply(Modifiers.cut(Direction.UP, length.valOne))
                                 .apply(Modifiers.offset(Direction.UP, offsets[DOWN] / 16F))
                                 .export(quadMap.get(solid ? quadDir : null));
                     }
                     if (length.valTwo > 0F)
                     {
-                        modifier.apply(Modifiers.cutSideUpDown(true, length.valTwo))
+                        modifier.apply(Modifiers.cut(Direction.DOWN, length.valTwo))
                                 .apply(Modifiers.offset(Direction.DOWN, offsets[UP] / 16F))
                                 .export(quadMap.get(solid ? quadDir : null));
                     }

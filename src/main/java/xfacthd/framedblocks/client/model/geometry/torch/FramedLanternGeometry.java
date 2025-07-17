@@ -99,18 +99,18 @@ public class FramedLanternGeometry extends Geometry
     private void createCamoChain(QuadMap quadMap, BakedQuad quad, Direction quadDir)
     {
         Direction.Axis quadPerpAxis = Utils.isX(quadDir) ? Direction.Axis.Z : Direction.Axis.X;
-        Direction dirNeg = Direction.fromAxisAndDirection(quadPerpAxis, Direction.AxisDirection.NEGATIVE);
-        Direction dirPos = Direction.fromAxisAndDirection(quadPerpAxis, Direction.AxisDirection.POSITIVE);
+        Direction dirNeg = quadPerpAxis.getNegative();
+        Direction dirPos = quadPerpAxis.getPositive();
 
         List<MultiQuadModifier> modifiers = new ArrayList<>();
         MultiQuadModifier baseEdgeMod = new MultiQuadModifier(
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(dirNeg, 10F/16F))
-                        .apply(Modifiers.cutSideLeftRight(dirPos,  7F/16F))
+                        .apply(Modifiers.cut(dirNeg, 10F/16F))
+                        .apply(Modifiers.cut(dirPos,  7F/16F))
                         .apply(Modifiers.offset(dirPos, .5F/16F)),
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(dirNeg,  7F/16F))
-                        .apply(Modifiers.cutSideLeftRight(dirPos, 10F/16F))
+                        .apply(Modifiers.cut(dirNeg,  7F/16F))
+                        .apply(Modifiers.cut(dirPos, 10F/16F))
                         .apply(Modifiers.offset(dirNeg, .5F/16F))
         );
 
@@ -118,8 +118,8 @@ public class FramedLanternGeometry extends Geometry
         {
             modifiers.add(
                     baseEdgeMod.derive()
-                            .apply(Modifiers.cutSideUpDown(true, hanging ? 6F/16F : 7F/16F))
-                            .apply(Modifiers.cutSideUpDown(false, hanging ? 12F/16F : 11F/16F))
+                            .apply(Modifiers.cut(Direction.DOWN, hanging ? 6F/16F : 7F/16F))
+                            .apply(Modifiers.cut(Direction.UP, hanging ? 12F/16F : 11F/16F))
             );
         }
         for (int i = 0; i < 2; i++)
@@ -128,9 +128,9 @@ public class FramedLanternGeometry extends Geometry
 
             float height = i == 0 ? 2 : (hanging ? 5 : 6);
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(8.5F/16F))
-                    .apply(Modifiers.cutSideUpDown(true, height / 16F))
-                    .apply(Modifiers.cutSideUpDown(false, (16F - height + 1F) / 16F))
+                    .apply(Modifiers.cut(quadDir.getClockWise().getAxis(), 8.5F/16F))
+                    .apply(Modifiers.cut(Direction.DOWN, height / 16F))
+                    .apply(Modifiers.cut(Direction.UP, (16F - height + 1F) / 16F))
                     .apply(Modifiers.setPosition(.5F))
                     .apply(Modifiers.rotate(Direction.Axis.Y, ROT_ORIGIN, 45, false))
                     .export(quadMap.get(null));
@@ -142,15 +142,15 @@ public class FramedLanternGeometry extends Geometry
             {
                 modifiers.add(
                         baseEdgeMod.derive()
-                                .apply(Modifiers.cutSideUpDown(true, 2F/16F))
+                                .apply(Modifiers.cut(Direction.DOWN, 2F/16F))
                 );
             }
             else if (Utils.isZ(quadDir))
             {
                 modifiers.add(
                         baseEdgeMod.derive()
-                                .apply(Modifiers.cutSideUpDown(true, 5F/16F))
-                                .apply(Modifiers.cutSideUpDown(false, 15F/16F))
+                                .apply(Modifiers.cut(Direction.DOWN, 5F/16F))
+                                .apply(Modifiers.cut(Direction.UP, 15F/16F))
 
                 );
             }

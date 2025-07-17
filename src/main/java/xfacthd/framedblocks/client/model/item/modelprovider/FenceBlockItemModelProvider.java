@@ -81,52 +81,52 @@ public final class FenceBlockItemModelProvider implements BlockItemModelProvider
             else if (Utils.isX(quadDir))
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(Direction.SOUTH, 4F/16F))
+                        .apply(Modifiers.cut(Direction.SOUTH, 4F/16F))
                         .apply(Modifiers.setPosition(10F/16F))
                         .export(quadMap.get(null));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(Direction.NORTH, 4F/16F))
+                        .apply(Modifiers.cut(Direction.NORTH, 4F/16F))
                         .apply(Modifiers.setPosition(10F/16F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(12F/16F))
-                        .apply(Modifiers.cutSideUpDown(false, 15F/16F))
-                        .apply(Modifiers.cutSideUpDown(true, 4F/16F))
+                        .apply(Modifiers.cut(quadDir.getClockWise().getAxis(), 12F/16F))
+                        .apply(Modifiers.cut(Direction.UP, 15F/16F))
+                        .apply(Modifiers.cut(Direction.DOWN, 4F/16F))
                         .apply(Modifiers.setPosition(9F/16F))
                         .export(quadMap.get(null));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(12F/16F))
-                        .apply(Modifiers.cutSideUpDown(false, 9F/16F))
-                        .apply(Modifiers.cutSideUpDown(true, 10F/16F))
+                        .apply(Modifiers.cut(quadDir.getClockWise().getAxis(), 12F/16F))
+                        .apply(Modifiers.cut(Direction.UP, 9F/16F))
+                        .apply(Modifiers.cut(Direction.DOWN, 10F/16F))
                         .apply(Modifiers.setPosition(9F/16F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(Direction.SOUTH, 2F/16F))
-                        .apply(Modifiers.cutSideUpDown(false, 15F/16F))
-                        .apply(Modifiers.cutSideUpDown(true, 4F/16F))
+                        .apply(Modifiers.cut(Direction.SOUTH, 2F/16F))
+                        .apply(Modifiers.cut(Direction.UP, 15F/16F))
+                        .apply(Modifiers.cut(Direction.DOWN, 4F/16F))
                         .apply(Modifiers.setPosition(9F/16F))
                         .apply(Modifiers.offset(Direction.SOUTH, 1F))
                         .export(quadMap.get(null));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(Direction.SOUTH, 2F/16F))
-                        .apply(Modifiers.cutSideUpDown(false, 9F/16F))
-                        .apply(Modifiers.cutSideUpDown(true, 10F/16F))
+                        .apply(Modifiers.cut(Direction.SOUTH, 2F/16F))
+                        .apply(Modifiers.cut(Direction.UP, 9F/16F))
+                        .apply(Modifiers.cut(Direction.DOWN, 10F/16F))
                         .apply(Modifiers.setPosition(9F/16F))
                         .apply(Modifiers.offset(Direction.SOUTH, 1F))
                         .export(quadMap.get(null));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(Direction.NORTH, 2F/16F))
-                        .apply(Modifiers.cutSideUpDown(false, 15F/16F))
-                        .apply(Modifiers.cutSideUpDown(true, 4F/16F))
+                        .apply(Modifiers.cut(Direction.NORTH, 2F/16F))
+                        .apply(Modifiers.cut(Direction.UP, 15F/16F))
+                        .apply(Modifiers.cut(Direction.DOWN, 4F/16F))
                         .apply(Modifiers.setPosition(9F/16F))
                         .apply(Modifiers.offset(Direction.NORTH, 1F))
                         .export(quadMap.get(null));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(Direction.NORTH, 2F/16F))
-                        .apply(Modifiers.cutSideUpDown(false, 9F/16F))
-                        .apply(Modifiers.cutSideUpDown(true, 10F/16F))
+                        .apply(Modifiers.cut(Direction.NORTH, 2F/16F))
+                        .apply(Modifiers.cut(Direction.UP, 9F/16F))
+                        .apply(Modifiers.cut(Direction.DOWN, 10F/16F))
                         .apply(Modifiers.setPosition(9F/16F))
                         .apply(Modifiers.offset(Direction.NORTH, 1F))
                         .export(quadMap.get(null));
@@ -134,10 +134,10 @@ public final class FenceBlockItemModelProvider implements BlockItemModelProvider
             else
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(10F/16F))
+                        .apply(Modifiers.cut(quadDir.getClockWise().getAxis(), 10F/16F))
                         .export(quadMap.get(quadDir));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(10F/16F))
+                        .apply(Modifiers.cut(quadDir.getClockWise().getAxis(), 10F/16F))
                         .apply(Modifiers.setPosition(4F/16F))
                         .export(quadMap.get(null));
 

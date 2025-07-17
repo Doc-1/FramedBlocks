@@ -19,7 +19,6 @@ import java.util.function.Predicate;
 public class FramedChainGeometry extends Geometry
 {
     private static final Vector3f ROT_ORIGIN = new Vector3f(.5F, .5F, .5F);
-    private static final CutterFactory CUTTER_SIDE_UD = (dir, len) -> Modifiers.cutSideUpDown(dir == Direction.DOWN, len);
 
     private final Direction.Axis axis;
 
@@ -37,8 +36,8 @@ public class FramedChainGeometry extends Geometry
         {
             if (!Utils.isY(quadDir))
             {
-                createChainEdgeParts(quadMap, quad, quadDir, quadPerpAxis, Utils::isX, CUTTER_SIDE_UD, Modifiers::cutSideLeftRight);
-                createChainCenterParts(quadMap, quad, CUTTER_SIDE_UD, Modifiers::cutSideLeftRight);
+                createChainEdgeParts(quadMap, quad, quadDir, quadPerpAxis, Utils::isX, Modifiers::cut, Modifiers::cut);
+                createChainCenterParts(quadMap, quad, Modifiers::cut, length -> Modifiers.cut(quadPerpAxis, length));
             }
         }
         else
@@ -47,13 +46,13 @@ public class FramedChainGeometry extends Geometry
             {
                 Direction.Axis perpAxis = axis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X;
 
-                createChainEdgeParts(quadMap, quad, quadDir, quadPerpAxis, dir -> axis == Direction.Axis.Z, Modifiers::cutTopBottom, Modifiers::cutTopBottom);
-                createChainCenterParts(quadMap, quad, Modifiers::cutTopBottom, len -> Modifiers.cutTopBottom(perpAxis, len));
+                createChainEdgeParts(quadMap, quad, quadDir, quadPerpAxis, dir -> axis == Direction.Axis.Z, Modifiers::cut, Modifiers::cut);
+                createChainCenterParts(quadMap, quad, Modifiers::cut, len -> Modifiers.cut(perpAxis, len));
             }
             else if (quadDir.getAxis() != axis)
             {
-                createChainEdgeParts(quadMap, quad, quadDir, quadPerpAxis, dir -> axis == Direction.Axis.X, Modifiers::cutSideLeftRight, CUTTER_SIDE_UD);
-                createChainCenterParts(quadMap, quad, Modifiers::cutSideLeftRight, Modifiers::cutSideUpDown);
+                createChainEdgeParts(quadMap, quad, quadDir, quadPerpAxis, dir -> axis == Direction.Axis.X, Modifiers::cut, Modifiers::cut);
+                createChainCenterParts(quadMap, quad, Modifiers::cut, length -> Modifiers.cut(Direction.Axis.Y, length));
             }
         }
     }

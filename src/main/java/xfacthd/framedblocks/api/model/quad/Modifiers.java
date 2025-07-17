@@ -179,136 +179,6 @@ public final class Modifiers
         return true;
     }
 
-    /**
-     * Cuts the quad pointing upwards or downwards at the edge given by the given {@code cutDir}
-     * @param cutDir The direction towards the cut edge
-     * @param length The target length from the starting edge
-     */
-    @Deprecated
-    public static QuadModifier.Modifier cutTopBottom(Direction cutDir, float length)
-    {
-        if (Mth.equal(length, 1F))
-        {
-            return NOOP_MODIFIER;
-        }
-        return cutTopBottom(cutDir, length, length);
-    }
-
-    /**
-     * Cuts the quad pointing upwards or downwards at the edge given by the given {@code cutDir}
-     * @param cutDir The direction towards the cut edge
-     * @param lengthRight The target length of the right corner (cut direction rotated clockwise) from the starting edge
-     * @param lengthLeft The target length of the left corner (cut direction rotated counter-clockwise) from the starting edge
-     */
-    @Deprecated
-    public static QuadModifier.Modifier cutTopBottom(Direction cutDir, float lengthRight, float lengthLeft)
-    {
-        Preconditions.checkArgument(!Utils.isY(cutDir), "Cut direction must be horizontal");
-        return data -> cut(data, cutDir, lengthRight, lengthLeft);
-    }
-
-    /**
-     * Cuts the quad pointing horizontally at the top and bottom edge
-     * @param length The target length from either starting edge
-     */
-    @Deprecated
-    public static QuadModifier.Modifier cutSideUpDown(float length)
-    {
-        return data -> cut(data, Direction.UP, length, length) && cut(data, Direction.DOWN, length, length);
-    }
-
-    /**
-     * Cuts the quad pointing horizontally at the top or bottom edge given by {@code downwards}
-     * @param downwards Whether the starting edge should be top (true) or bottom (false)
-     * @param length The target length from the starting edge
-     */
-    @Deprecated
-    public static QuadModifier.Modifier cutSideUpDown(boolean downwards, float length)
-    {
-        if (Mth.equal(length, 1F))
-        {
-            return NOOP_MODIFIER;
-        }
-        return cutSideUpDown(downwards, length, length);
-    }
-
-    /**
-     * Cuts the quad pointing horizontally at the top or bottom edge given by {@code downwards}
-     * @param downwards Whether the starting edge should be top (true) or bottom (false)
-     * @param lengthRight The target length of the right corner (cut direction rotated clockwise) from the starting edge
-     * @param lengthLeft The target length of the left corner (cut direction rotated counter-clockwise) from the starting edge
-     */
-    @Deprecated
-    public static QuadModifier.Modifier cutSideUpDown(boolean downwards, float lengthRight, float lengthLeft)
-    {
-        return data -> cut(data, downwards ? Direction.DOWN : Direction.UP, lengthRight, lengthLeft);
-    }
-
-    /**
-     * Cuts the quad pointing horizontally at the edge given by {@code cutDir}
-     * @param cutDir The direction towards the cut edge
-     * @param length The target length from the starting edge
-     */
-    @Deprecated
-    public static QuadModifier.Modifier cutSideLeftRight(Direction cutDir, float length)
-    {
-        return cutSideLeftRight(cutDir, length, length);
-    }
-
-    /**
-     * Cuts the quad pointing horizontally at the edge given by {@code cutDir}
-     * @param cutDir The direction towards the cut edge
-     * @param lengthTop The target length of the right corner (cut direction rotated clockwise) from the starting edge
-     * @param lengthBottom The target length of the left corner (cut direction rotated counter-clockwise) from the starting edge
-     */
-    @Deprecated
-    public static QuadModifier.Modifier cutSideLeftRight(Direction cutDir, float lengthTop, float lengthBottom)
-    {
-        Preconditions.checkArgument(!Utils.isY(cutDir), "Cut direction must be horizontal");
-        return data -> cut(data, cutDir, lengthTop, lengthBottom);
-    }
-
-    /**
-     * Cuts the quad pointing horizontally at the left and right edge
-     * @param length The target length from either starting edge
-     */
-    @Deprecated
-    public static QuadModifier.Modifier cutSideLeftRight(float length)
-    {
-        return data ->
-        {
-            Direction quadDir = data.quad.direction();
-            return cut(data, quadDir.getCounterClockWise(), length, length) && cut(data, quadDir.getClockWise(), length, length);
-        };
-    }
-
-    /**
-     * Cuts the quad pointing horizontally at the left or right edge given by {@code towardsRight}
-     * @param towardsRight Whether the starting edge should be the left (true) or right (false) edge
-     * @param length The target length from the starting edge
-     */
-    @Deprecated
-    public static QuadModifier.Modifier cutSideLeftRight(boolean towardsRight, float length)
-    {
-        return cutSideLeftRight(towardsRight, length, length);
-    }
-
-    /**
-     * Cuts the quad pointing horizontally at the left or right edge given by {@code towardsRight}
-     * @param towardsRight Whether the starting edge should be the left (true) or right (false) edge
-     * @param lengthTop The target length of the top corner
-     * @param lengthBottom The target length of the bottom corner
-     */
-    @Deprecated
-    public static QuadModifier.Modifier cutSideLeftRight(boolean towardsRight, float lengthTop, float lengthBottom)
-    {
-        return data ->
-        {
-            Direction quadDir = data.quad().direction();
-            return cut(data, towardsRight ? quadDir.getClockWise() : quadDir.getCounterClockWise(), lengthTop, lengthBottom);
-        };
-    }
-
 
 
     /**
@@ -329,27 +199,6 @@ public final class Modifiers
                    cut(data, Direction.EAST, maxX, maxX) &&
                    cut(data, Direction.NORTH, 1F - minZ, 1F - minZ) &&
                    cut(data, Direction.SOUTH, maxZ, maxZ);
-        };
-    }
-
-    /**
-     * Cuts the quad pointing upwards or downwards at both edges given by the given {@code cutAxis}
-     * @param cutAxis The axis of the directions towards the cut edges
-     * @param length The target length from either starting edge
-     */
-    @Deprecated
-    public static QuadModifier.Modifier cutTopBottom(Direction.Axis cutAxis, float length)
-    {
-        return data ->
-        {
-            Direction quadDir = data.quad().direction();
-            Preconditions.checkArgument(Utils.isY(quadDir), "Quad direction must be vertical");
-            Preconditions.checkArgument(quadDir.getAxis() != cutAxis, "Cutting axis must be perpendicular to quad axis");
-
-            Direction posDir = Direction.fromAxisAndDirection(cutAxis, Direction.AxisDirection.POSITIVE);
-            Direction negDir = Direction.fromAxisAndDirection(cutAxis, Direction.AxisDirection.NEGATIVE);
-
-            return cut(data, posDir, length, length) && cut(data, negDir, length, length);
         };
     }
 
@@ -384,14 +233,13 @@ public final class Modifiers
      * @param lengthCW The target length of the right corner (cut direction rotated clockwise) from the starting edge
      * @param lengthCCW The target length of the left corner (cut direction rotated counter-clockwise) from the starting edge
      */
-    @Deprecated
     public static QuadModifier.Modifier cutSide(Direction cutDir, float lengthCW, float lengthCCW)
     {
         return data ->
         {
             Direction quadDir = data.quad().direction();
             Preconditions.checkArgument(!Utils.isY(quadDir), "Quad direction must be horizontal");
-            Preconditions.checkArgument(quadDir.getAxis() != cutDir.getAxis(), "Cut direction must be prependicular to the quad direction");
+            Preconditions.checkArgument(quadDir.getAxis() != cutDir.getAxis(), "Cut direction must be perpendicular to the quad direction");
 
             if (Utils.isY(cutDir))
             {

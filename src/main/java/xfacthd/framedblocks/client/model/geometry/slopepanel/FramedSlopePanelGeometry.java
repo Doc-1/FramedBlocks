@@ -47,13 +47,13 @@ public class FramedSlopePanelGeometry extends Geometry
             if (Utils.isY(orientation))
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(cutDir, .5F))
+                        .apply(Modifiers.cut(cutDir, .5F))
                         .export(quadMap.get(face));
             }
             else
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(cutDir, .5F))
+                        .apply(Modifiers.cut(cutDir, .5F))
                         .export(quadMap.get(face));
             }
         }
@@ -88,8 +88,8 @@ public class FramedSlopePanelGeometry extends Geometry
                 float top =    up ? (front ? .5F :  0F) : (front ?  1F : .5F);
                 float bottom = up ? (front ?  1F : .5F) : (front ? .5F :  0F);
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(facing.getOpposite(), top, bottom))
-                        .applyIf(Modifiers.cutSideLeftRight(facing, .5F), front)
+                        .apply(Modifiers.cut(facing.getOpposite(), top, bottom))
+                        .applyIf(Modifiers.cut(facing, .5F), front)
                         .export(quadMap.get(face));
             }
             else
@@ -98,8 +98,8 @@ public class FramedSlopePanelGeometry extends Geometry
                 float right = rightRot ? (front ?  1F : .5F) : (front ? .5F :  0F);
                 float left =  rightRot ? (front ? .5F :  0F) : (front ?  1F : .5F);
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(facing.getOpposite(), right, left))
-                        .applyIf(Modifiers.cutTopBottom(facing, .5F), front)
+                        .apply(Modifiers.cut(facing.getOpposite(), right, left))
+                        .applyIf(Modifiers.cut(facing, .5F), front)
                         .export(quadMap.get(face));
             }
         }

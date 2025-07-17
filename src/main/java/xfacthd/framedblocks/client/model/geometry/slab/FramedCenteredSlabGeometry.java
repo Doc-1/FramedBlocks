@@ -26,7 +26,7 @@ public class FramedCenteredSlabGeometry extends Geometry
         else
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(12F/16F))
+                    .apply(Modifiers.cut(Direction.Axis.Y, 12F/16F))
                     .export(quadMap.get(quadDir));
         }
     }

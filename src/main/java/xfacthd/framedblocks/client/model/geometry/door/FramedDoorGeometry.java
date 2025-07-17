@@ -36,7 +36,7 @@ public class FramedDoorGeometry extends Geometry
         if (Utils.isY(quadDir))
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(faceDir, 3F/16F))
+                    .apply(Modifiers.cut(faceDir, 3F/16F))
                     .export(quadMap.get(quadDir));
         }
         else
@@ -50,7 +50,7 @@ public class FramedDoorGeometry extends Geometry
             else
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(faceDir, 3F/16F))
+                        .apply(Modifiers.cut(faceDir, 3F/16F))
                         .export(quadMap.get(quadDir));
             }
         }

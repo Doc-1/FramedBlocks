@@ -93,8 +93,8 @@ public class FramedWallGeometry extends Geometry
             else if (quadDir.getAxis() != dir.getAxis())
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), center ? LARGE_MIN : SMALL_MIN))
-                        .applyIf(Modifiers.cutSideUpDown(false, LOW_HEIGHT), height != WallSide.TALL)
+                        .apply(Modifiers.cut(dir.getOpposite(), center ? LARGE_MIN : SMALL_MIN))
+                        .applyIf(Modifiers.cut(Direction.UP, LOW_HEIGHT), height != WallSide.TALL)
                         .apply(Modifiers.setPosition(SMALL_MAX))
                         .export(quadMap.get(null));
             }

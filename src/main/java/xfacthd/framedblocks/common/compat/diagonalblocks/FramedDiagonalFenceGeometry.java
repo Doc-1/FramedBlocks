@@ -50,9 +50,9 @@ class FramedDiagonalFenceGeometry extends FramedFenceGeometry
         if (Utils.isY(quadDir))
         {
             QuadModifier mod = QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(dir.getOpposite(), 7F/16F))
-                    .apply(Modifiers.cutTopBottom(dir.getClockWise(), 9F/16F))
-                    .apply(Modifiers.cutTopBottom(dir.getCounterClockWise(), 9F/16F))
+                    .apply(Modifiers.cut(dir.getOpposite(), 7F/16F))
+                    .apply(Modifiers.cut(dir.getClockWise(), 9F/16F))
+                    .apply(Modifiers.cut(dir.getCounterClockWise(), 9F/16F))
                     .apply(rotate(dir));
 
             mod.derive().apply(Modifiers.setPosition(quadDir == Direction.UP ? 15F/16F : 4F/16F))

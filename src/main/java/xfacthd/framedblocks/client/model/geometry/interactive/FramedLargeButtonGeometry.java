@@ -55,8 +55,8 @@ public class FramedLargeButtonGeometry extends Geometry
         else
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(facing == Direction.DOWN, pressed ? 1F/16F : 2F/16F))
-                    .apply(Modifiers.cutSideLeftRight(15F/16F))
+                    .apply(Modifiers.cut(facing, pressed ? 1F/16F : 2F/16F))
+                    .apply(Modifiers.cut(quadDir.getClockWise().getAxis(), 15F/16F))
                     .apply(Modifiers.setPosition(15F/16F))
                     .export(quadMap.get(null));
         }
@@ -75,16 +75,16 @@ public class FramedLargeButtonGeometry extends Geometry
         else if (Utils.isY(quadDir))
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(dir, height))
-                    .apply(Modifiers.cutTopBottom(dir.getClockWise().getAxis(), 15F/16F))
+                    .apply(Modifiers.cut(dir, height))
+                    .apply(Modifiers.cut(dir.getClockWise().getAxis(), 15F/16F))
                     .apply(Modifiers.setPosition(15F/16F))
                     .export(quadMap.get(null));
         }
         else
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(dir, height))
-                    .apply(Modifiers.cutSideUpDown(15F/16F))
+                    .apply(Modifiers.cut(dir, height))
+                    .apply(Modifiers.cut(Direction.Axis.Y, 15F/16F))
                     .apply(Modifiers.setPosition(15F/16F))
                     .export(quadMap.get(null));
         }

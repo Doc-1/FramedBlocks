@@ -50,7 +50,7 @@ public class FramedSlopeSlabGeometry extends Geometry
         else if (face == facing)
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(topHalf, .5F))
+                    .apply(Modifiers.cut(topHalf ? Direction.DOWN : Direction.UP, .5F))
                     .export(quadMap.get(face));
         }
         else if (face == facing.getClockWise() || face == facing.getCounterClockWise())
@@ -60,8 +60,8 @@ public class FramedSlopeSlabGeometry extends Geometry
             float left =  rightFace ? (offset ? 1 : .5F) : (offset ? .5F : 0);
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(top, right, left))
-                    .applyIf(Modifiers.cutSideUpDown(!top, .5F), offset)
+                    .apply(Modifiers.cut(top ? Direction.DOWN : Direction.UP, right, left))
+                    .applyIf(Modifiers.cut(top ? Direction.UP : Direction.DOWN, .5F), offset)
                     .export(quadMap.get(face));
         }
         else if ((top && !topHalf && face == Direction.UP) || (!top && topHalf && face == Direction.DOWN))

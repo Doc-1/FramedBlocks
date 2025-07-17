@@ -51,7 +51,7 @@ public class FramedFlatSlopePanelCornerGeometry extends Geometry
             if (!ySlope || !Utils.isY(orientation))
             {
                 QuadModifier.of(quad)
-                        .apply(createSlopeTriangle(facing, orientation, false))
+                        .apply(createSlopeTriangle(facing, orientation, false, face))
                         .apply(FramedSlopePanelGeometry.createSlope(facing, orientation))
                         .applyIf(Modifiers.offset(facing, .5F), !front)
                         .export(quadMap.get(null));
@@ -60,7 +60,7 @@ public class FramedFlatSlopePanelCornerGeometry extends Geometry
             if (!ySlope || !Utils.isY(rotOrientation))
             {
                 QuadModifier.of(quad)
-                        .apply(createSlopeTriangle(facing, rotOrientation, true))
+                        .apply(createSlopeTriangle(facing, rotOrientation, true, face))
                         .apply(FramedSlopePanelGeometry.createSlope(facing, rotOrientation))
                         .applyIf(Modifiers.offset(facing, .5F), !front)
                         .export(quadMap.get(null));
@@ -90,21 +90,23 @@ public class FramedFlatSlopePanelCornerGeometry extends Geometry
         }
     }
 
-    public static QuadModifier.Modifier createSlopeTriangle(Direction facing, Direction orientation, boolean second)
+    public static QuadModifier.Modifier createSlopeTriangle(Direction facing, Direction orientation, boolean second, Direction quadDir)
     {
         if (Utils.isY(orientation))
         {
             boolean down = orientation == Direction.UP;
+            Direction cutDir = down ? Direction.DOWN : Direction.UP;
             float right = (down != second) ? 0 : 1;
             float left  = (down != second) ? 1 : 0;
-            return Modifiers.cutSideUpDown(down, right, left);
+            return Modifiers.cut(cutDir, right, left);
         }
         else
         {
             boolean right = orientation == facing.getClockWise();
+            Direction cutDir = right ? quadDir.getClockWise() : quadDir.getCounterClockWise();
             float top = (right != second) ? 0 : 1;
             float bot = (right != second) ? 1 : 0;
-            return Modifiers.cutSideLeftRight(right, top, bot);
+            return Modifiers.cut(cutDir, top, bot);
         }
     }
 
@@ -115,7 +117,7 @@ public class FramedFlatSlopePanelCornerGeometry extends Geometry
         boolean down = orientation == Direction.DOWN;
         float right = (second == down) ? 0 : 1;
         float left  = (second == down) ? 1 : 0;
-        return Modifiers.cutTopBottom(facing.getOpposite(), right, left);
+        return Modifiers.cut(facing.getOpposite(), right, left);
     }
 
     public static void createSideTriangle(
@@ -137,8 +139,8 @@ public class FramedFlatSlopePanelCornerGeometry extends Geometry
             float top =    up ? (front ? .5F :  0F) : (front ?  1F : .5F);
             float bottom = up ? (front ?  1F : .5F) : (front ? .5F :  0F);
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(facing.getOpposite(), top, bottom))
-                    .applyIf(Modifiers.cutSideLeftRight(facing, .5F), front && !extended)
+                    .apply(Modifiers.cut(facing.getOpposite(), top, bottom))
+                    .applyIf(Modifiers.cut(facing, .5F), front && !extended)
                     .export(quadMap.get(face));
         }
         else
@@ -147,8 +149,8 @@ public class FramedFlatSlopePanelCornerGeometry extends Geometry
             float right = rightRot ? (front ?  1F : .5F) : (front ? .5F :  0F);
             float left =  rightRot ? (front ? .5F :  0F) : (front ?  1F : .5F);
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(facing.getOpposite(), right, left))
-                    .applyIf(Modifiers.cutTopBottom(facing, .5F), front && !extended)
+                    .apply(Modifiers.cut(facing.getOpposite(), right, left))
+                    .applyIf(Modifiers.cut(facing, .5F), front && !extended)
                     .export(quadMap.get(face));
         }
     }

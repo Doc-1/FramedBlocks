@@ -49,18 +49,18 @@ public class FramedChestGeometry extends Geometry
         if (Utils.isY(quadDir))
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(facing.getAxis(), 15F/16F))
-                    .applyIf(Modifiers.cutTopBottom(facing.getClockWise(), 15F/16F), type != ChestType.LEFT)
-                    .applyIf(Modifiers.cutTopBottom(facing.getCounterClockWise(), 15F/16F), type != ChestType.RIGHT)
+                    .apply(Modifiers.cut(facing.getAxis(), 15F/16F))
+                    .applyIf(Modifiers.cut(facing.getClockWise(), 15F/16F), type != ChestType.LEFT)
+                    .applyIf(Modifiers.cut(facing.getCounterClockWise(), 15F/16F), type != ChestType.RIGHT)
                     .applyIf(Modifiers.setPosition(closed ? 14F/16F : 10F/16F), quadDir == Direction.UP)
                     .export(quadMap.get(quadDir == Direction.UP ? null : quadDir));
         }
         else if (quadDir.getAxis() == facing.getAxis())
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(false, closed ? 14F/16F : 10F/16F))
-                    .applyIf(Modifiers.cutSideLeftRight(facing.getClockWise(), 15F/16F), type != ChestType.LEFT)
-                    .applyIf(Modifiers.cutSideLeftRight(facing.getCounterClockWise(), 15F/16F), type != ChestType.RIGHT)
+                    .apply(Modifiers.cut(Direction.UP, closed ? 14F/16F : 10F/16F))
+                    .applyIf(Modifiers.cut(facing.getClockWise(), 15F/16F), type != ChestType.LEFT)
+                    .applyIf(Modifiers.cut(facing.getCounterClockWise(), 15F/16F), type != ChestType.RIGHT)
                     .apply(Modifiers.setPosition(15F/16F))
                     .export(quadMap.get(null));
         }
@@ -68,8 +68,8 @@ public class FramedChestGeometry extends Geometry
         {
             boolean offset = (type != ChestType.RIGHT || quadDir != facing.getCounterClockWise()) && (type != ChestType.LEFT || quadDir != facing.getClockWise());
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(false, closed ? 14F/16F : 10F/16F))
-                    .apply(Modifiers.cutSideLeftRight(15F/16F))
+                    .apply(Modifiers.cut(Direction.UP, closed ? 14F/16F : 10F/16F))
+                    .apply(Modifiers.cut(quadDir.getClockWise().getAxis(), 15F/16F))
                     .applyIf(Modifiers.setPosition(15F/16F), offset)
                     .export(quadMap.get(offset ? null : quadDir));
         }
@@ -88,19 +88,19 @@ public class FramedChestGeometry extends Geometry
         if (face == facing || face == facing.getOpposite())
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(true, 9F/16F))
-                    .apply(Modifiers.cutSideUpDown(false, 11F/16F))
-                    .applyIf(Modifiers.cutSideLeftRight(facing.getClockWise(), length), type != ChestType.LEFT)
-                    .applyIf(Modifiers.cutSideLeftRight(facing.getCounterClockWise(), length), type != ChestType.RIGHT)
+                    .apply(Modifiers.cut(Direction.DOWN, 9F/16F))
+                    .apply(Modifiers.cut(Direction.UP, 11F/16F))
+                    .applyIf(Modifiers.cut(facing.getClockWise(), length), type != ChestType.LEFT)
+                    .applyIf(Modifiers.cut(facing.getCounterClockWise(), length), type != ChestType.RIGHT)
                     .applyIf(Modifiers.setPosition(1F/16F), face != facing)
                     .export(quadMap.get(face == facing ? facing : null));
         }
         else if (Utils.isY(face))
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(facing.getOpposite(), 1F/16F))
-                    .applyIf(Modifiers.cutTopBottom(facing.getClockWise(), length), type != ChestType.LEFT)
-                    .applyIf(Modifiers.cutTopBottom(facing.getCounterClockWise(), length), type != ChestType.RIGHT)
+                    .apply(Modifiers.cut(facing.getOpposite(), 1F/16F))
+                    .applyIf(Modifiers.cut(facing.getClockWise(), length), type != ChestType.LEFT)
+                    .applyIf(Modifiers.cut(facing.getCounterClockWise(), length), type != ChestType.RIGHT)
                     .apply(Modifiers.setPosition(face == Direction.UP ? 11F/16F : 9F/16F))
                     .export(quadMap.get(null));
         }
@@ -109,7 +109,7 @@ public class FramedChestGeometry extends Geometry
             boolean offset = (type != ChestType.RIGHT || face != facing.getCounterClockWise()) && (type != ChestType.LEFT || face != facing.getClockWise());
             QuadModifier.of(quad)
                     .apply(Modifiers.cutSide(0, 7F/16F, 1, 11F/16F))
-                    .apply(Modifiers.cutSideLeftRight(facing.getOpposite(), 1F/16F))
+                    .apply(Modifiers.cut(facing.getOpposite(), 1F/16F))
                     .applyIf(Modifiers.setPosition(length), offset)
                     .export(quadMap.get(offset ? null : face));
         }

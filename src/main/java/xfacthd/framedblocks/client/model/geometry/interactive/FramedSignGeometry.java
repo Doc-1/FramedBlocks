@@ -31,7 +31,7 @@ public class FramedSignGeometry extends Geometry
         if (quadDir.getAxis() == dir.getAxis())
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(true, .5F))
+                    .apply(Modifiers.cut(Direction.DOWN, .5F))
                     .apply(Modifiers.setPosition(POS))
                     .apply(Modifiers.offset(Direction.UP, Y_OFF))
                     .apply(Modifiers.rotateCentered(Direction.Axis.Y, rotDegrees, false))
@@ -40,7 +40,7 @@ public class FramedSignGeometry extends Geometry
         else if (Utils.isY(quadDir))
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(dir.getAxis(), 9F/16F))
+                    .apply(Modifiers.cut(dir.getAxis(), 9F/16F))
                     .applyIf(Modifiers.setPosition(.5F), quadDir == Direction.DOWN)
                     .apply(Modifiers.offset(Direction.UP, Y_OFF))
                     .apply(Modifiers.rotateCentered(Direction.Axis.Y, rotDegrees, false))

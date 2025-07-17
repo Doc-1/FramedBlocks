@@ -32,13 +32,13 @@ public class FramedCenteredPanelGeometry extends Geometry
         else if (Utils.isY(quadDir))
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(dir.getAxis(), 12F/16F))
+                    .apply(Modifiers.cut(dir.getAxis(), 12F/16F))
                     .export(quadMap.get(quadDir));
         }
         else
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(12F/16F))
+                    .apply(Modifiers.cut(quadDir.getClockWise().getAxis(), 12F/16F))
                     .export(quadMap.get(quadDir));
         }
     }

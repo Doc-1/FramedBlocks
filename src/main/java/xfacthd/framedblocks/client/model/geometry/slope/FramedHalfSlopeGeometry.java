@@ -36,13 +36,13 @@ public class FramedHalfSlopeGeometry extends Geometry
         {
             QuadModifier.of(quad)
                     .apply(Modifiers.makeVerticalSlope(!top, 45))
-                    .apply(Modifiers.cutSideLeftRight(cutDir, .5F))
+                    .apply(Modifiers.cut(cutDir, .5F))
                     .export(quadMap.get(null));
         }
         else if (ySlope && ((!top && quadDir == Direction.UP) || (top && quadDir == Direction.DOWN)))
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(cutDir, .5F))
+                    .apply(Modifiers.cut(cutDir, .5F))
                     .apply(Modifiers.makeVerticalSlope(dir.getOpposite(), 45))
                     .export(quadMap.get(null));
         }
@@ -51,20 +51,20 @@ public class FramedHalfSlopeGeometry extends Geometry
             boolean needOffset = right == (quadDir == dir.getCounterClockWise());
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), top ? 1 : 0, top ? 0 : 1))
+                    .apply(Modifiers.cut(dir.getOpposite(), top ? 1 : 0, top ? 0 : 1))
                     .applyIf(Modifiers.setPosition(.5F), needOffset)
                     .export(quadMap.get(needOffset ? null : quadDir));
         }
         else if ((!top && quadDir == Direction.DOWN) || (top && quadDir == Direction.UP))
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(cutDir, .5F))
+                    .apply(Modifiers.cut(cutDir, .5F))
                     .export(quadMap.get(quadDir));
         }
         else if (quadDir == dir)
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(cutDir, .5F))
+                    .apply(Modifiers.cut(cutDir, .5F))
                     .export(quadMap.get(quadDir));
         }
     }

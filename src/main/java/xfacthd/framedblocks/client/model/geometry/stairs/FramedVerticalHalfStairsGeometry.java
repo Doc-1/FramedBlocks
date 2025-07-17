@@ -25,23 +25,24 @@ public class FramedVerticalHalfStairsGeometry extends Geometry
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
         Direction quadDir = quad.direction();
+        Direction vertEdge = top ? Direction.DOWN : Direction.UP;
         if (quadDir == dir.getOpposite() || quadDir == dir.getClockWise())
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(quadDir == dir.getOpposite() ? dir.getClockWise() : dir.getOpposite(), .5F))
-                    .apply(Modifiers.cutSideUpDown(top, .5F))
+                    .apply(Modifiers.cut(quadDir == dir.getOpposite() ? dir.getClockWise() : dir.getOpposite(), .5F))
+                    .apply(Modifiers.cut(vertEdge, .5F))
                     .export(quadMap.get(quadDir));
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(quadDir == dir.getOpposite() ? dir.getCounterClockWise() : dir, .5F))
-                    .apply(Modifiers.cutSideUpDown(top, .5F))
+                    .apply(Modifiers.cut(quadDir == dir.getOpposite() ? dir.getCounterClockWise() : dir, .5F))
+                    .apply(Modifiers.cut(vertEdge, .5F))
                     .apply(Modifiers.setPosition(.5F))
                     .export(quadMap.get(null));
         }
         else if (quadDir == dir || quadDir == dir.getCounterClockWise())
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(top, .5F))
+                    .apply(Modifiers.cut(vertEdge, .5F))
                     .export(quadMap.get(quadDir));
         }
         else if (Utils.isY(quadDir))
@@ -49,13 +50,13 @@ public class FramedVerticalHalfStairsGeometry extends Geometry
             boolean inset = (quadDir == Direction.UP) != top;
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(dir.getOpposite(), .5F))
+                    .apply(Modifiers.cut(dir.getOpposite(), .5F))
                     .applyIf(Modifiers.setPosition(.5F), inset)
                     .export(quadMap.get(inset ? null : quadDir));
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(dir, .5F))
-                    .apply(Modifiers.cutTopBottom(dir.getClockWise(), .5F))
+                    .apply(Modifiers.cut(dir, .5F))
+                    .apply(Modifiers.cut(dir.getClockWise(), .5F))
                     .applyIf(Modifiers.setPosition(.5F), inset)
                     .export(quadMap.get(inset ? null : quadDir));
         }

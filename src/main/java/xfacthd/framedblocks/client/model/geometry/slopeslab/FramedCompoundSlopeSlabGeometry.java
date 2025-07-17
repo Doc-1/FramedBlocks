@@ -28,7 +28,7 @@ public class FramedCompoundSlopeSlabGeometry extends Geometry
         if (quadDir == dir)
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(true, .5F))
+                    .apply(Modifiers.cut(Direction.DOWN, .5F))
                     .export(quadMap.get(quadDir));
 
             if (!ySlope)
@@ -42,7 +42,7 @@ public class FramedCompoundSlopeSlabGeometry extends Geometry
         else if (quadDir == dir.getOpposite())
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(false, .5F))
+                    .apply(Modifiers.cut(Direction.UP, .5F))
                     .export(quadMap.get(quadDir));
 
             if (!ySlope)
@@ -64,8 +64,8 @@ public class FramedCompoundSlopeSlabGeometry extends Geometry
         {
             boolean cw = quadDir == dir.getClockWise();
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(false, cw ? .5F : 1F, cw ? 1F : .5F))
-                    .apply(Modifiers.cutSideUpDown(true, cw ? 1F : .5F, cw ? .5F : 1F))
+                    .apply(Modifiers.cut(Direction.UP, cw ? .5F : 1F, cw ? 1F : .5F))
+                    .apply(Modifiers.cut(Direction.DOWN, cw ? 1F : .5F, cw ? .5F : 1F))
                     .export(quadMap.get(quadDir));
         }
     }

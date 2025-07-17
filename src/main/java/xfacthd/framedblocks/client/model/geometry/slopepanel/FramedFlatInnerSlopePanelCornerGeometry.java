@@ -67,25 +67,16 @@ public class FramedFlatInnerSlopePanelCornerGeometry extends Geometry
         else if (face == orientation.getOpposite() || face == rotOrientation.getOpposite())
         {
             Direction cutDir = front ? facing : facing.getOpposite();
-            if (Utils.isY(face))
-            {
-                QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(cutDir, .5F))
-                        .export(quadMap.get(face));
-            }
-            else
-            {
-                QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(cutDir, .5F))
-                        .export(quadMap.get(face));
-            }
+            QuadModifier.of(quad)
+                    .apply(Modifiers.cut(cutDir, .5F))
+                    .export(quadMap.get(face));
         }
         else if (face == facing.getOpposite())
         {
             if (!ySlope || !Utils.isY(orientation))
             {
                 QuadModifier.of(quad)
-                        .apply(FramedFlatSlopePanelCornerGeometry.createSlopeTriangle(facing, rotOrientation, true))
+                        .apply(FramedFlatSlopePanelCornerGeometry.createSlopeTriangle(facing, rotOrientation, true, face))
                         .apply(FramedSlopePanelGeometry.createSlope(facing, orientation))
                         .applyIf(Modifiers.offset(facing, .5F), !front)
                         .export(quadMap.get(null));
@@ -94,7 +85,7 @@ public class FramedFlatInnerSlopePanelCornerGeometry extends Geometry
             if (!ySlope || !Utils.isY(rotOrientation))
             {
                 QuadModifier.of(quad)
-                        .apply(FramedFlatSlopePanelCornerGeometry.createSlopeTriangle(facing, orientation, false))
+                        .apply(FramedFlatSlopePanelCornerGeometry.createSlopeTriangle(facing, orientation, false, face))
                         .apply(FramedSlopePanelGeometry.createSlope(facing, rotOrientation))
                         .applyIf(Modifiers.offset(facing, .5F), !front)
                         .export(quadMap.get(null));

@@ -32,14 +32,14 @@ public class FramedExtendedCornerSlopePanelGeometry extends Geometry
             Direction cutDir = quadDir == dir ? dir.getClockWise() : dir.getOpposite();
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(cutDir, top ? 1F : .5F, top ? .5F : 1F))
+                    .apply(Modifiers.cut(cutDir, top ? 1F : .5F, top ? .5F : 1F))
                     .export(quadMap.get(quadDir));
         }
         else if (!ySlope && (quadDir == dir.getOpposite() || quadDir == dir.getClockWise()))
         {
             Direction cutDir = quadDir == dir.getOpposite() ? dir.getClockWise() : dir.getOpposite();
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(cutDir, top ? 1F : .5F, top ? .5F : 1F))
+                    .apply(Modifiers.cut(cutDir, top ? 1F : .5F, top ? .5F : 1F))
                     .apply(Modifiers.makeVerticalSlope(!top, FramedSlopePanelGeometry.SLOPE_ANGLE))
                     .export(quadMap.get(null));
         }
@@ -48,21 +48,21 @@ public class FramedExtendedCornerSlopePanelGeometry extends Geometry
             if (ySlope)
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir.getOpposite(), .5F, 1))
+                        .apply(Modifiers.cut(dir.getOpposite(), .5F, 1))
                         .apply(Modifiers.makeVerticalSlope(dir.getClockWise(), FramedSlopePanelGeometry.SLOPE_ANGLE_VERT))
                         .apply(Modifiers.offset(dir.getClockWise(), .5F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutTopBottom(dir.getClockWise(), 1, .5F))
+                        .apply(Modifiers.cut(dir.getClockWise(), 1, .5F))
                         .apply(Modifiers.makeVerticalSlope(dir.getOpposite(), FramedSlopePanelGeometry.SLOPE_ANGLE_VERT))
                         .apply(Modifiers.offset(dir.getOpposite(), .5F))
                         .export(quadMap.get(null));
             }
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(dir.getOpposite(), .5F))
-                    .apply(Modifiers.cutTopBottom(dir.getClockWise(), .5F))
+                    .apply(Modifiers.cut(dir.getOpposite(), .5F))
+                    .apply(Modifiers.cut(dir.getClockWise(), .5F))
                     .export(quadMap.get(quadDir));
         }
     }

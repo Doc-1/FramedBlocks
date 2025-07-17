@@ -39,7 +39,7 @@ public class FramedPrismGeometry extends Geometry
         {
             boolean up = facing == Direction.UP;
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(!up, .5F))
+                    .apply(Modifiers.cut(facing, .5F))
                     .apply(Modifiers.makeVerticalSlope(up, 45))
                     .export(quadMap.get(null));
         }
@@ -50,38 +50,38 @@ public class FramedPrismGeometry extends Geometry
             Direction offAxisCCW = onAxis.getCounterClockWise();
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(offAxisCW, .5F))
+                    .apply(Modifiers.cut(offAxisCW, .5F))
                     .apply(Modifiers.makeVerticalSlope(offAxisCCW, 45))
                     .export(quadMap.get(null));
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(offAxisCCW, .5F))
+                    .apply(Modifiers.cut(offAxisCCW, .5F))
                     .apply(Modifiers.makeVerticalSlope(offAxisCW, 45))
                     .export(quadMap.get(null));
         }
         else if (!yFacing && yAxis && !quadOnAxis && !quadOnFacingAxis) // Slopes for horizontal facing and vertical axis
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(facing, .5F))
+                    .apply(Modifiers.cut(facing, .5F))
                     .apply(Modifiers.makeHorizontalSlope(quadFace == facing.getCounterClockWise(), 45))
                     .export(quadMap.get(null));
         }
         else if (!ySlope && !yFacing && !yAxis && quadFace == facing) // Slopes for horizontal facing and horizontal axis without Y_SLOPE
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(false, .5F))
+                    .apply(Modifiers.cut(Direction.UP, .5F))
                     .apply(Modifiers.makeVerticalSlope(false, 45))
                     .export(quadMap.get(null));
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(true, .5F))
+                    .apply(Modifiers.cut(Direction.DOWN, .5F))
                     .apply(Modifiers.makeVerticalSlope(true, 45))
                     .export(quadMap.get(null));
         }
         else if (ySlope && !yFacing && !yAxis && Utils.isY(quadFace)) // Slopes for horizontal facing and horizontal axis with Y_SLOPE
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(facing, .5F))
+                    .apply(Modifiers.cut(facing, .5F))
                     .apply(Modifiers.makeVerticalSlope(facing, 45))
                     .export(quadMap.get(null));
         }

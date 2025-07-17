@@ -54,8 +54,8 @@ public class FramedCeilingHangingSignGeometry extends Geometry
         if (quadDir.getAxis() == dir.getAxis())
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(false, 10F/16F))
-                    .apply(Modifiers.cutSideLeftRight(15F/16F))
+                    .apply(Modifiers.cut(Direction.UP, 10F/16F))
+                    .apply(Modifiers.cut(quadDir.getClockWise().getAxis(), 15F/16F))
                     .apply(Modifiers.setPosition(9F/16F))
                     .applyIf(Modifiers.rotateCentered(Direction.Axis.Y, rotDegrees, false), attached)
                     .export(quadMap.get(null));
@@ -63,8 +63,8 @@ public class FramedCeilingHangingSignGeometry extends Geometry
         else if (quadDir.getAxis() == dir.getClockWise().getAxis())
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(false, 10F/16F))
-                    .apply(Modifiers.cutSideLeftRight(9F/16F))
+                    .apply(Modifiers.cut(Direction.UP, 10F/16F))
+                    .apply(Modifiers.cut(quadDir.getClockWise().getAxis(), 9F/16F))
                     .apply(Modifiers.setPosition(15F/16F))
                     .applyIf(Modifiers.rotateCentered(Direction.Axis.Y, rotDegrees, false), attached)
                     .export(quadMap.get(null));
@@ -73,8 +73,8 @@ public class FramedCeilingHangingSignGeometry extends Geometry
         {
             boolean up = quadDir == Direction.UP;
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(dir.getAxis(), 9F/16F))
-                    .apply(Modifiers.cutTopBottom(dir.getClockWise().getAxis(), 15F/16F))
+                    .apply(Modifiers.cut(dir.getAxis(), 9F/16F))
+                    .apply(Modifiers.cut(dir.getClockWise().getAxis(), 15F/16F))
                     .applyIf(Modifiers.setPosition(10F/16F), up)
                     .applyIf(Modifiers.rotateCentered(Direction.Axis.Y, rotDegrees, false), attached)
                     .export(quadMap.get(up ? null : quadDir));

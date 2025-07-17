@@ -35,16 +35,16 @@ public class FramedWallSignGeometry extends Geometry
         else if (Utils.isY(quadDir))
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(dir, DEPTH))
+                    .apply(Modifiers.cut(dir, DEPTH))
                     .apply(Modifiers.setPosition(quadDir == Direction.UP ? 12.5F/16F : 11.5F/16F))
                     .export(quadMap.get(null));
         }
         else
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(dir, DEPTH))
-                    .apply(Modifiers.cutSideUpDown(false, 12.5F/16F))
-                    .apply(Modifiers.cutSideUpDown(true, 11.5F/16F))
+                    .apply(Modifiers.cut(dir, DEPTH))
+                    .apply(Modifiers.cut(Direction.UP, 12.5F/16F))
+                    .apply(Modifiers.cut(Direction.DOWN, 11.5F/16F))
                     .export(quadMap.get(quadDir));
         }
     }

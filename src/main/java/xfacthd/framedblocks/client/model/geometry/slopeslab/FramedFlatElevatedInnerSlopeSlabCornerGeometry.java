@@ -31,12 +31,12 @@ public class FramedFlatElevatedInnerSlopeSlabCornerGeometry extends Geometry
         {
             if (!ySlope)
             {
-                boolean right = face != facing.getClockWise();
+                Direction cutDir = face != facing.getClockWise() ? face.getClockWise() : face.getCounterClockWise();
                 float lenTop = top ? 0F : 1F;
                 float lenBot = top ? 1F : 0F;
 
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cutSideLeftRight(right, lenTop, lenBot))
+                        .apply(Modifiers.cut(cutDir, lenTop, lenBot))
                         .apply(Modifiers.makeVerticalSlope(!top, FramedSlopeSlabGeometry.SLOPE_ANGLE))
                         .apply(Modifiers.offset(top ? Direction.DOWN : Direction.UP, .5F))
                         .export(quadMap.get(null));
@@ -47,18 +47,18 @@ public class FramedFlatElevatedInnerSlopeSlabCornerGeometry extends Geometry
             float lenLeft =  rightFace ? .5F : 1;
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(top, lenRight, lenLeft))
+                    .apply(Modifiers.cut(top ? Direction.DOWN : Direction.UP, lenRight, lenLeft))
                     .export(quadMap.get(face));
         }
         else if (ySlope && ((!top && face == Direction.UP) || (top && face == Direction.DOWN)))
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(facing.getCounterClockWise(), 1, 0))
+                    .apply(Modifiers.cut(facing.getCounterClockWise(), 1, 0))
                     .apply(Modifiers.makeVerticalSlope(facing.getOpposite(), FramedSlopeSlabGeometry.SLOPE_ANGLE_VERT))
                     .export(quadMap.get(null));
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(facing, 0, 1))
+                    .apply(Modifiers.cut(facing, 0, 1))
                     .apply(Modifiers.makeVerticalSlope(facing.getClockWise(), FramedSlopeSlabGeometry.SLOPE_ANGLE_VERT))
                     .export(quadMap.get(null));
         }

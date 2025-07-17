@@ -28,54 +28,55 @@ public class FramedHalfStairsGeometry extends Geometry
     public void transformQuad(QuadMap quadMap, BakedQuad quad)
     {
         Direction face = quad.direction();
-        Direction vertCut = right ? dir.getCounterClockWise() : dir.getClockWise();
+        Direction horCut = right ? dir.getCounterClockWise() : dir.getClockWise();
+        Direction vertCut = top ? Direction.DOWN : Direction.UP;
 
         if (face == dir)
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(vertCut, .5F))
+                    .apply(Modifiers.cut(horCut, .5F))
                     .export(quadMap.get(face));
         }
         else if (face == dir.getOpposite())
         {
             QuadModifier mod = QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(vertCut, .5F));
+                    .apply(Modifiers.cut(horCut, .5F));
 
-            mod.derive().apply(Modifiers.cutSideUpDown(!top, .5F))
+            mod.derive().apply(Modifiers.cut(vertCut.getOpposite(), .5F))
                     .apply(Modifiers.setPosition(.5F))
                     .export(quadMap.get(null));
 
-            mod.apply(Modifiers.cutSideUpDown(top, .5F))
+            mod.apply(Modifiers.cut(vertCut, .5F))
                     .export(quadMap.get(face));
         }
         else if (!Utils.isY(face) && face.getAxis() != dir.getAxis())
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(dir.getOpposite(), .5F))
-                    .applyIf(Modifiers.setPosition(.5F), face == vertCut)
-                    .export(quadMap.get(face == vertCut ? null : face));
+                    .apply(Modifiers.cut(dir.getOpposite(), .5F))
+                    .applyIf(Modifiers.setPosition(.5F), face == horCut)
+                    .export(quadMap.get(face == horCut ? null : face));
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(dir, .5F))
-                    .apply(Modifiers.cutSideUpDown(top, .5F))
-                    .applyIf(Modifiers.setPosition(.5F), face == vertCut)
-                    .export(quadMap.get(face == vertCut ? null : face));
+                    .apply(Modifiers.cut(dir, .5F))
+                    .apply(Modifiers.cut(vertCut, .5F))
+                    .applyIf(Modifiers.setPosition(.5F), face == horCut)
+                    .export(quadMap.get(face == horCut ? null : face));
         }
         else if (Utils.isY(face))
         {
             boolean base = (face == Direction.UP && top) || (face == Direction.DOWN && !top);
 
             QuadModifier mod = QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(vertCut, .5F));
+                    .apply(Modifiers.cut(horCut, .5F));
 
             if (!base)
             {
-                mod.derive().apply(Modifiers.cutTopBottom(dir, .5F))
+                mod.derive().apply(Modifiers.cut(dir, .5F))
                         .apply(Modifiers.setPosition(.5F))
                         .export(quadMap.get(null));
             }
 
-            mod.applyIf(Modifiers.cutTopBottom(dir.getOpposite(), .5F), !base)
+            mod.applyIf(Modifiers.cut(dir.getOpposite(), .5F), !base)
                     .export(quadMap.get(face));
         }
     }

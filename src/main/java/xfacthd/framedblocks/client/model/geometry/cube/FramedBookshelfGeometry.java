@@ -49,26 +49,26 @@ public class FramedBookshelfGeometry extends Geometry
         List<BakedQuad> quads = quadMap.get(quadDir);
 
         QuadModifier.of(quad)
-                .apply(Modifiers.cutSideUpDown(true, 1F/16F))
+                .apply(Modifiers.cut(Direction.DOWN, 1F/16F))
                 .export(quads);
 
         QuadModifier.of(quad)
-                .apply(Modifiers.cutSideUpDown(false, 1F/16F))
+                .apply(Modifiers.cut(Direction.UP, 1F/16F))
                 .export(quads);
 
         QuadModifier.of(quad)
-                .apply(Modifiers.cutSideLeftRight(true, 1F/16F))
-                .apply(Modifiers.cutSideUpDown(15F/16F))
+                .apply(Modifiers.cut(quadDir.getClockWise(), 1F/16F))
+                .apply(Modifiers.cut(Direction.Axis.Y, 15F/16F))
                 .export(quads);
 
         QuadModifier.of(quad)
-                .apply(Modifiers.cutSideLeftRight(false, 1F/16F))
-                .apply(Modifiers.cutSideUpDown(15F/16F))
+                .apply(Modifiers.cut(quadDir.getCounterClockWise(), 1F/16F))
+                .apply(Modifiers.cut(Direction.Axis.Y, 15F/16F))
                 .export(quads);
 
         QuadModifier.of(quad)
-                .apply(Modifiers.cutSideUpDown(9F/16F))
-                .apply(Modifiers.cutSideLeftRight(15F/16F))
+                .apply(Modifiers.cut(Direction.Axis.Y, 9F/16F))
+                .apply(Modifiers.cut(quadDir.getClockWise().getAxis(), 15F/16F))
                 .export(quads);
     }
 

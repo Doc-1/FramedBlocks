@@ -62,14 +62,14 @@ public class FramedSlopedPrismGeometry extends Geometry
             Direction offAxisCCW = orientation.getCounterClockWise();
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(offAxisCW, .5F))
-                    .apply(Modifiers.cutTopBottom(orientOpp, 1, 0))
+                    .apply(Modifiers.cut(offAxisCW, .5F))
+                    .apply(Modifiers.cut(orientOpp, 1, 0))
                     .apply(Modifiers.makeVerticalSlope(offAxisCCW, 45))
                     .export(quadMap.get(null));
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(offAxisCCW, .5F))
-                    .apply(Modifiers.cutTopBottom(orientOpp, 0, 1))
+                    .apply(Modifiers.cut(offAxisCCW, .5F))
+                    .apply(Modifiers.cut(orientOpp, 0, 1))
                     .apply(Modifiers.makeVerticalSlope(offAxisCW, 45))
                     .export(quadMap.get(null));
         }
@@ -97,8 +97,8 @@ public class FramedSlopedPrismGeometry extends Geometry
         {
             boolean up = facing == Direction.UP;
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(facing == Direction.DOWN, .5F))
-                    .apply(Modifiers.cutSideLeftRight(orientation.getOpposite(), up ? 0 : 1, up ? 1 : 0))
+                    .apply(Modifiers.cut(facing, .5F))
+                    .apply(Modifiers.cut(orientation.getOpposite(), up ? 0 : 1, up ? 1 : 0))
                     .apply(Modifiers.makeVerticalSlope(up, 45))
                     .export(quadMap.get(null));
         }
@@ -106,22 +106,22 @@ public class FramedSlopedPrismGeometry extends Geometry
         {
             boolean right = quadFace == facing.getClockWise();
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideLeftRight(facing, .5F))
-                    .apply(Modifiers.cutSideUpDown(orientation == Direction.UP, right ? 1 : 0, right ? 0 : 1))
+                    .apply(Modifiers.cut(facing, .5F))
+                    .apply(Modifiers.cut(orientation.getOpposite(), right ? 1 : 0, right ? 0 : 1))
                     .apply(Modifiers.makeHorizontalSlope(quadFace == facing.getCounterClockWise(), 45))
                     .export(quadMap.get(null));
         }
         else if (!ySlope && !yOrient && !yFacing && quadFace == facing) // Slopes for horizontal facing and horizontal orientation without Y_SLOPE
         {
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(false, .5F))
-                    .apply(Modifiers.cutSideLeftRight(orientation.getOpposite(), 0, 1))
+                    .apply(Modifiers.cut(Direction.UP, .5F))
+                    .apply(Modifiers.cut(orientation.getOpposite(), 0, 1))
                     .apply(Modifiers.makeVerticalSlope(false, 45))
                     .export(quadMap.get(null));
 
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutSideUpDown(true, .5F))
-                    .apply(Modifiers.cutSideLeftRight(orientation.getOpposite(), 1, 0))
+                    .apply(Modifiers.cut(Direction.DOWN, .5F))
+                    .apply(Modifiers.cut(orientation.getOpposite(), 1, 0))
                     .apply(Modifiers.makeVerticalSlope(true, 45))
                     .export(quadMap.get(null));
         }
@@ -129,8 +129,8 @@ public class FramedSlopedPrismGeometry extends Geometry
         {
             boolean right = orientation == facing.getClockWise();
             QuadModifier.of(quad)
-                    .apply(Modifiers.cutTopBottom(facing, .5F))
-                    .apply(Modifiers.cutTopBottom(orientOpp, right ? 0 : 1, right ? 1 : 0))
+                    .apply(Modifiers.cut(facing, .5F))
+                    .apply(Modifiers.cut(orientOpp, right ? 0 : 1, right ? 1 : 0))
                     .apply(Modifiers.makeVerticalSlope(facing, 45))
                     .export(quadMap.get(null));
         }
