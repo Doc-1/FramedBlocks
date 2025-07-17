@@ -3,6 +3,7 @@ package xfacthd.framedblocks.client.model.geometry.pillar;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.neoforged.neoforge.model.data.ModelData;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
@@ -31,7 +32,7 @@ public class FramedPillarGeometry extends Geometry
     }
 
     @Override
-    public void transformQuad(QuadMap quadMap, BakedQuad quad)
+    public void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData modelData)
     {
         Direction quadDir = quad.direction();
         createPillarQuad(quad, axis, capStart, capEnd, sideCut)

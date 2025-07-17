@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.StairsShape;
+import net.neoforged.neoforge.model.data.ModelData;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
@@ -28,7 +29,7 @@ public class FramedStairsGeometry extends Geometry
     }
 
     @Override
-    public void transformQuad(QuadMap quadMap, BakedQuad quad)
+    public void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData modelData)
     {
         Direction quadDir = quad.direction();
         if ((top && quadDir == Direction.DOWN) || (!top && quadDir == Direction.UP))

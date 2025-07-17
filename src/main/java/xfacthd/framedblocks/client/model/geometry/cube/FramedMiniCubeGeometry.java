@@ -3,6 +3,7 @@ package xfacthd.framedblocks.client.model.geometry.cube;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.neoforged.neoforge.model.data.ModelData;
 import org.joml.Vector3f;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.model.data.QuadMap;
@@ -31,7 +32,7 @@ public class FramedMiniCubeGeometry extends Geometry
     }
 
     @Override
-    public void transformQuad(QuadMap quadMap, BakedQuad quad)
+    public void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData modelData)
     {
         Direction quadDir = quad.direction();
         QuadModifier.of(quad)

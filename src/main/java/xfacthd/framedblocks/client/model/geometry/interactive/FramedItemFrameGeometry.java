@@ -66,7 +66,7 @@ public class FramedItemFrameGeometry extends Geometry
     }
 
     @Override
-    public void transformQuad(QuadMap quadMap, BakedQuad quad)
+    public void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData modelData)
     {
         Direction quadFace = quad.direction();
         if (Utils.isY(facing))

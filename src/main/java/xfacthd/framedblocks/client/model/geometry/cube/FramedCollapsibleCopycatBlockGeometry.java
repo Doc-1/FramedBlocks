@@ -185,9 +185,6 @@ public class FramedCollapsibleCopycatBlockGeometry extends Geometry
     }
 
     @Override
-    public void transformQuad(QuadMap quadMap, BakedQuad quad) { }
-
-    @Override
     public boolean useBaseModel()
     {
         return true;

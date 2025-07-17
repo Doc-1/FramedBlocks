@@ -28,25 +28,14 @@ public abstract class Geometry
 {
     /**
      * Called for each {@link BakedQuad} of the camo block's model for whose side this block's
-     * {@link FullFacePredicate#test(BlockState, Direction)} returns {@code false}.
+     * {@link FullFacePredicate#test(BlockState, Direction)} returns {@code false} or all quads
+     * if {@link #transformAllQuads()} returns {@code true}.
      * @param quadMap The target map to put all final quads into
      * @param quad The source quad. Must not be modified directly, use {@link QuadModifier}s to
      *             modify the quad
      * @param data The {@link ModelData}
      */
-    public void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData data)
-    {
-        transformQuad(quadMap, quad);
-    }
-
-    /**
-     * Called for each {@link BakedQuad} of the camo block's model for whose side this block's
-     * {@link FullFacePredicate#test(BlockState, Direction)} returns {@code false}.
-     * @param quadMap The target map to put all final quads into
-     * @param quad The source quad. Must not be modified directly, use {@link QuadModifier}s to
-     *             modify the quad
-     */
-    public abstract void transformQuad(QuadMap quadMap, BakedQuad quad);
+    public abstract void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData data);
 
     /**
      * Return true if the base model loaded from JSON should be used when no camo is applied without going

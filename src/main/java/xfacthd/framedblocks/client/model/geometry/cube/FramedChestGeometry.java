@@ -43,7 +43,7 @@ public class FramedChestGeometry extends Geometry
     }
 
     @Override
-    public void transformQuad(QuadMap quadMap, BakedQuad quad)
+    public void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData modelData)
     {
         Direction quadDir = quad.direction();
         if (Utils.isY(quadDir))

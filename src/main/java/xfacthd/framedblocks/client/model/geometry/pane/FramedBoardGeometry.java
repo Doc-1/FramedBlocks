@@ -85,9 +85,6 @@ public class FramedBoardGeometry extends Geometry
         }
     }
 
-    @Override
-    public void transformQuad(QuadMap quadMap, BakedQuad quad) { }
-
     private boolean hasFace(Direction side)
     {
         return (faces & (1 << side.ordinal())) != 0;

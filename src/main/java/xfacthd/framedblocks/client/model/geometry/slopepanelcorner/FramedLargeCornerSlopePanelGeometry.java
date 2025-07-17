@@ -2,6 +2,7 @@ package xfacthd.framedblocks.client.model.geometry.slopepanelcorner;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
+import net.neoforged.neoforge.model.data.ModelData;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
@@ -24,7 +25,7 @@ public class FramedLargeCornerSlopePanelGeometry extends Geometry
     }
 
     @Override
-    public void transformQuad(QuadMap quadMap, BakedQuad quad)
+    public void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData modelData)
     {
         Direction quadDir = quad.direction();
         if (quadDir == dir || quadDir == dir.getCounterClockWise())

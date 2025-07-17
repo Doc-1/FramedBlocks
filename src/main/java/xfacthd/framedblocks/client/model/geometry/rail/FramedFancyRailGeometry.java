@@ -68,7 +68,7 @@ public class FramedFancyRailGeometry extends Geometry
     }
 
     @Override
-    public void transformQuad(QuadMap quadMap, BakedQuad quad)
+    public void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData modelData)
     {
         Pair<List<BakedQuad>, Direction> result;
         if (shape.isSlope())

@@ -39,7 +39,7 @@ public class FramedTargetGeometry extends Geometry
     }
 
     @Override
-    public void transformQuad(QuadMap quadMap, BakedQuad quad) { }
+    public void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData modelData) { }
 
     @Override
     public void collectAdditionalPartsUncached(PartConsumer consumer, BlockAndTintGetter level, BlockPos pos, RandomSource random, ModelData data)

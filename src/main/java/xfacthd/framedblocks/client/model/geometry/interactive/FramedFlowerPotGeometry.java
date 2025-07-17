@@ -69,7 +69,7 @@ public class FramedFlowerPotGeometry extends Geometry
     }
 
     @Override
-    public void transformQuad(QuadMap quadMap, BakedQuad quad)
+    public void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData modelData)
     {
         if (quad.direction() == Direction.DOWN)
         {

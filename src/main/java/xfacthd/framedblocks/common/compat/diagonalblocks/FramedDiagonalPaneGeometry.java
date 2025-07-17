@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import fuzs.diagonalblocks.api.v2.DiagonalBlock;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
+import net.neoforged.neoforge.model.data.ModelData;
 import org.joml.Vector3f;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
@@ -34,9 +35,9 @@ class FramedDiagonalPaneGeometry extends FramedPaneGeometry
     }
 
     @Override
-    public void transformQuad(QuadMap quadMap, BakedQuad quad)
+    public void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData modelData)
     {
-        super.transformQuad(quadMap, quad);
+        super.transformQuad(quadMap, quad, modelData);
 
         Direction face = quad.direction();
         if (Utils.isY(face))

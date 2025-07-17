@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.model.data.ModelData;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
 import xfacthd.framedblocks.api.model.item.block.BlockItemModelProvider;
@@ -32,7 +33,7 @@ public final class FenceBlockItemModelProvider implements BlockItemModelProvider
         private FenceItemGeometry(GeometryFactory.Context ctx) { }
 
         @Override
-        public void transformQuad(QuadMap quadMap, BakedQuad quad)
+        public void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData modelData)
         {
             Direction quadDir = quad.direction();
             if (Utils.isY(quadDir))
