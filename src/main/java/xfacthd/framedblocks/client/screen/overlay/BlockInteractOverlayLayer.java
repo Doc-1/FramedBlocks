@@ -22,7 +22,8 @@ public final class BlockInteractOverlayLayer implements GuiLayer
             new SplitLineOverlay(),
             new OneWayWindowOverlay(),
             new FrameBackgroundOverlay(),
-            new CamoRotationOverlay()
+            new CamoRotationOverlay(),
+            new TrapdoorTextureRotationOverlay()
     );
 
     @Override

@@ -28,6 +28,7 @@ import xfacthd.framedblocks.client.screen.overlay.SplitLineOverlay;
 import xfacthd.framedblocks.client.screen.overlay.StateLockOverlay;
 import xfacthd.framedblocks.client.screen.overlay.ToggleWaterloggableOverlay;
 import xfacthd.framedblocks.client.screen.overlay.ToggleYSlopeOverlay;
+import xfacthd.framedblocks.client.screen.overlay.TrapdoorTextureRotationOverlay;
 import xfacthd.framedblocks.common.blockentity.special.FramedHopperBlockEntity;
 import xfacthd.framedblocks.common.compat.atlasviewer.AtlasViewerCompat;
 import xfacthd.framedblocks.common.compat.jade.JadeCompat;
@@ -491,6 +492,10 @@ public final class FramedLanguageProvider extends LanguageProvider
 
         add(CamoRotationOverlay.ROTATEABLE_FALSE, "The targetted camo cannot be rotated");
         add(CamoRotationOverlay.ROTATEABLE_TRUE, "The targetted camo can be rotated");
+
+        add(TrapdoorTextureRotationOverlay.ROTATING_FALSE, "Camo texture will not rotate when opening the trapdoor");
+        add(TrapdoorTextureRotationOverlay.ROTATING_TRUE, "Camo texture will rotate when opening the trapdoor");
+        add(TrapdoorTextureRotationOverlay.ROTATING_TOGGLE, "Hit with a Framed Hammer to toggle texture rotation");
     }
 
     private void addConfigTranslations()
@@ -541,6 +546,7 @@ public final class FramedLanguageProvider extends LanguageProvider
         addConfigValue(ClientConfig.ONE_WAY_WINDOW_MODE_VALUE, "One-Way Window overlay: Display mode");
         addConfigValue(ClientConfig.FRAME_BACKGROUND_MODE_VALUE, "Item Frame Background overlay: Display mode");
         addConfigValue(ClientConfig.CAMO_ROTATION_MODE_VALUE, "Camo Rotation overlay: Display mode");
+        addConfigValue(ClientConfig.TRAPDOOR_TEXTURE_ROTATION_MODE_VALUE, "Trapdoor Texture Rotation overlay: Display mode");
 
         add("framedblocks.configuration.section.framedblocks.devtools.toml", "Dev Tools Settings");
         add("framedblocks.configuration.section.framedblocks.devtools.toml.title", "FramedBlocks Dev Tools Configuration");

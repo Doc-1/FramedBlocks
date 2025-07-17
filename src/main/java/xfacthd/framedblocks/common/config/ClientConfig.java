@@ -42,6 +42,7 @@ public final class ClientConfig
     private static final String KEY_ONE_WAY_WINDOW_MODE = "oneWayWindowMode";
     private static final String KEY_FRAME_BACKGROUND_MODE = "itemFrameBackgroundMode";
     private static final String KEY_CAMO_ROTATION_MODE = "camoRotationMode";
+    private static final String KEY_TRAPDOOR_TEXTURE_ROTATION_MODE = "trapdoorTextureRotationMode";
 
     public static final String TRANSLATION_CATEGORY_GENERAL = translate("category.general");
     public static final String TRANSLATION_CATEGORY_OVERLAY = translate("category.overlay");
@@ -77,6 +78,7 @@ public final class ClientConfig
     public static final ModConfigSpec.EnumValue<OverlayDisplayMode> ONE_WAY_WINDOW_MODE_VALUE;
     public static final ModConfigSpec.EnumValue<OverlayDisplayMode> FRAME_BACKGROUND_MODE_VALUE;
     public static final ModConfigSpec.EnumValue<OverlayDisplayMode> CAMO_ROTATION_MODE_VALUE;
+    public static final ModConfigSpec.EnumValue<OverlayDisplayMode> TRAPDOOR_TEXTURE_ROTATION_MODE_VALUE;
 
     private static boolean showGhostBlocks = false;
     private static boolean altGhostRenderer = false;
@@ -104,6 +106,7 @@ public final class ClientConfig
     private static OverlayDisplayMode oneWayWindowMode = OverlayDisplayMode.DETAILED;
     private static OverlayDisplayMode frameBackgroundMode = OverlayDisplayMode.DETAILED;
     private static OverlayDisplayMode camoRotationMode = OverlayDisplayMode.DETAILED;
+    private static OverlayDisplayMode trapdoorTextureRotationMode = OverlayDisplayMode.DETAILED;
 
     public static void init(IEventBus modBus, ModContainer modContainer)
     {
@@ -254,6 +257,10 @@ public final class ClientConfig
                 .comment(formatOverlayComments("Camo Rotation"))
                 .translation(translate(KEY_CAMO_ROTATION_MODE))
                 .defineEnum(KEY_CAMO_ROTATION_MODE, OverlayDisplayMode.DETAILED);
+        TRAPDOOR_TEXTURE_ROTATION_MODE_VALUE = builder
+                .comment(formatOverlayComments("Trapdoor Texture Rotation"))
+                .translation(translate(KEY_TRAPDOOR_TEXTURE_ROTATION_MODE))
+                .defineEnum(KEY_TRAPDOOR_TEXTURE_ROTATION_MODE, OverlayDisplayMode.DETAILED);
         builder.pop();
 
         SPEC = builder.build();
@@ -304,6 +311,7 @@ public final class ClientConfig
             oneWayWindowMode = ONE_WAY_WINDOW_MODE_VALUE.get();
             frameBackgroundMode = FRAME_BACKGROUND_MODE_VALUE.get();
             camoRotationMode = CAMO_ROTATION_MODE_VALUE.get();
+            trapdoorTextureRotationMode = TRAPDOOR_TEXTURE_ROTATION_MODE_VALUE.get();
         }
     }
 
@@ -461,6 +469,12 @@ public final class ClientConfig
         public OverlayDisplayMode getCamoRotationMode()
         {
             return camoRotationMode;
+        }
+
+        @Override
+        public OverlayDisplayMode getTrapdoorTextureRotationMode()
+        {
+            return trapdoorTextureRotationMode;
         }
     }
 }
