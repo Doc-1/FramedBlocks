@@ -27,7 +27,7 @@ public final class KeyMappings
         );
     }
 
-    public static void onClientTick(@SuppressWarnings("unused") final ClientTickEvent.Pre event)
+    public static void onClientTick(@SuppressWarnings("unused") ClientTickEvent.Pre event)
     {
         Level level = Minecraft.getInstance().level;
         if (level == null || Minecraft.getInstance().screen != null)

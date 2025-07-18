@@ -133,17 +133,17 @@ public final class FramingSawRecipeCache
         return client ? CLIENT_INSTANCE : SERVER_INSTANCE;
     }
 
-    public static void onAddReloadListener(final AddServerReloadListenersEvent event)
+    public static void onAddReloadListener(AddServerReloadListenersEvent event)
     {
         event.addListener(LISTENER_ID, new Reloader(event.getServerResources()));
     }
 
-    public static void onDataPackSync(final OnDatapackSyncEvent event)
+    public static void onDataPackSync(OnDatapackSyncEvent event)
     {
         event.sendRecipes(FBContent.RECIPE_TYPE_FRAMING_SAW_RECIPE.value());
     }
 
-    public static void onRecipesReceived(final RecipesReceivedEvent event)
+    public static void onRecipesReceived(RecipesReceivedEvent event)
     {
         CLIENT_INSTANCE.update(event.getRecipeMap());
     }

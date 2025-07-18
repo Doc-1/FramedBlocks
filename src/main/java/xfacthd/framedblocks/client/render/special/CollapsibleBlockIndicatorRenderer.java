@@ -25,7 +25,7 @@ public final class CollapsibleBlockIndicatorRenderer
 {
     private static final float[] VERTEX_NO_OFFSET = new float[] { 1F, 1F, 1F, 1F };
 
-    public static void onRenderBlockHighlight(final RenderHighlightEvent.Block event)
+    public static void onRenderBlockHighlight(RenderHighlightEvent.Block event)
     {
         //noinspection ConstantConditions
         ItemStack heldItem = Minecraft.getInstance().player.getMainHandItem();

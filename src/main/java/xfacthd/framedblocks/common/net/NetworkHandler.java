@@ -13,7 +13,7 @@ public final class NetworkHandler
 {
     private static final String PROTOCOL_VERSION = "3";
 
-    public static void onRegisterPayloads(final RegisterPayloadHandlersEvent event)
+    public static void onRegisterPayloads(RegisterPayloadHandlersEvent event)
     {
         PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);
         registerNetworkThreadPayloads(registrar);

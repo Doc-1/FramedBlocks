@@ -107,7 +107,7 @@ public final class AppliedEnergisticsCompat
             modBus.addListener(GuardedAccess::onRegisterCapabilities);
         }
 
-        private static void onRegisterCapabilities(final RegisterCapabilitiesEvent event)
+        private static void onRegisterCapabilities(RegisterCapabilitiesEvent event)
         {
             event.registerBlockEntity(
                     AECapabilities.CRAFTING_MACHINE,

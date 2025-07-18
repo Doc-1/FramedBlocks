@@ -38,7 +38,7 @@ public final class BlockOutlineRenderer
     private static final Map<IBlockType, OutlineRenderer> OUTLINE_RENDERERS = new IdentityHashMap<>();
     private static final Set<IBlockType> ERRORED_TYPES = new HashSet<>();
 
-    public static void onRenderBlockHighlight(final RenderHighlightEvent.Block event)
+    public static void onRenderBlockHighlight(RenderHighlightEvent.Block event)
     {
         if (!ClientConfig.VIEW.useFancySelectionBoxes() && !DevToolsConfig.VIEW.isOcclusionShapeDebugRenderingEnabled())
         {

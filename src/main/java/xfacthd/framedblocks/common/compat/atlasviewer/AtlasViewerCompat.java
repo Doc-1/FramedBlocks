@@ -42,7 +42,7 @@ public final class AtlasViewerCompat
             modBus.addListener(GuardedClientAccess::onRegisterSpriteSourceDetails);
         }
 
-        private static void onRegisterSpriteSourceDetails(final RegisterSpriteSourceDetailsEvent event)
+        private static void onRegisterSpriteSourceDetails(RegisterSpriteSourceDetailsEvent event)
         {
             event.registerPrimaryResourceGetter(
                     AnimationSplitterSource.FrameInstance.class,

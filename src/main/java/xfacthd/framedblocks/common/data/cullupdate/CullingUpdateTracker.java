@@ -22,7 +22,7 @@ public final class CullingUpdateTracker
     private static final Map<ResourceKey<Level>, Long2ObjectMap<LongSet>> UPDATED_POSITIONS = new Reference2ObjectOpenHashMap<>();
 
     // Send updates at the start of the next tick to ensure receipt after block update packet
-    public static void onServerLevelTick(final LevelTickEvent.Pre event)
+    public static void onServerLevelTick(LevelTickEvent.Pre event)
     {
         Level level = event.getLevel();
         if (level.isClientSide())
@@ -47,7 +47,7 @@ public final class CullingUpdateTracker
         }
     }
 
-    public static void onServerShutdown(@SuppressWarnings("unused") final ServerStoppedEvent event)
+    public static void onServerShutdown(@SuppressWarnings("unused") ServerStoppedEvent event)
     {
         UPDATED_POSITIONS.clear();
     }

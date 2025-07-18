@@ -32,7 +32,7 @@ public final class GeneratorHandler
         }
     }
 
-    private static void onGatherData(final GatherDataEvent.Client event)
+    private static void onGatherData(GatherDataEvent.Client event)
     {
         event.createProvider(FramedSpriteSourceProvider::new);
         event.createProvider(FramedBlockModelProvider::new);

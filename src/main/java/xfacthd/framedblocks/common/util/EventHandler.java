@@ -14,7 +14,7 @@ import xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
 
 public final class EventHandler
 {
-    public static void onBlockLeftClick(final PlayerInteractEvent.LeftClickBlock event)
+    public static void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event)
     {
         Level level = event.getLevel();
         BlockPos pos = event.getPos();
@@ -42,7 +42,7 @@ public final class EventHandler
         }
     }
 
-    public static void onServerShutdown(@SuppressWarnings("unused") final ServerStoppedEvent event)
+    public static void onServerShutdown(@SuppressWarnings("unused") ServerStoppedEvent event)
     {
         FramingSawRecipeCache.get(false).clear();
     }

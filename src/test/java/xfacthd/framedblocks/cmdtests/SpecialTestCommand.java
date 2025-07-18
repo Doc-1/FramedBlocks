@@ -27,7 +27,7 @@ public final class SpecialTestCommand
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("uuuu_MM_dd-kk_mm_ss");
     private static final Path EXPORT_DIR = Path.of("./logs/test");
 
-    public static void registerCommands(final RegisterCommandsEvent event)
+    public static void registerCommands(RegisterCommandsEvent event)
     {
         event.getDispatcher().register(Commands.literal("fbtest")
                 .then(Commands.literal("skippredicates")

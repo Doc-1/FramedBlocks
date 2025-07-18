@@ -78,7 +78,7 @@ public final class FramedBlocks
         );
     }
 
-    private static void onCommonSetup(final FMLCommonSetupEvent event)
+    private static void onCommonSetup(FMLCommonSetupEvent event)
     {
         StateCacheBuilder.ensureStateCachesInitialized();
         FramedBlueprintItem.init();
@@ -86,7 +86,7 @@ public final class FramedBlocks
         CamoContainerFactories.registerCamoFactories();
     }
 
-    private static void onAddDebugReloadListener(final AddServerReloadListenersEvent event)
+    private static void onAddDebugReloadListener(AddServerReloadListenersEvent event)
     {
         event.addListener(ShapeReloader.LISTENER_ID, ShapeReloader.INSTANCE);
         event.addListener(StateCacheBuilder.CacheReloader.LISTENER_ID, StateCacheBuilder.CacheReloader.INSTANCE);

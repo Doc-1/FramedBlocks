@@ -9,7 +9,7 @@ import xfacthd.framedblocks.common.capability.fluid.TankFluidHandler;
 
 public final class CapabilitySetup
 {
-    public static void onRegisterCapabilities(final RegisterCapabilitiesEvent event)
+    public static void onRegisterCapabilities(RegisterCapabilitiesEvent event)
     {
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,

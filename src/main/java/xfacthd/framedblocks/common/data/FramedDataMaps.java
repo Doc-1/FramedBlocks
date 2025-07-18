@@ -24,13 +24,13 @@ public final class FramedDataMaps
             SoundEventGroup.CODEC
     ).synced(SoundEventGroup.CODEC, true).build();
 
-    public static void onRegisterDataMapTypes(final RegisterDataMapTypesEvent event)
+    public static void onRegisterDataMapTypes(RegisterDataMapTypesEvent event)
     {
         event.register(BLOCK_CAMO_ROTATORS);
         event.register(SOUND_EVENT_GROUPS);
     }
 
-    public static void onDataMapsUpdated(final DataMapsUpdatedEvent event)
+    public static void onDataMapsUpdated(DataMapsUpdatedEvent event)
     {
         if (event.getRegistryKey() == Registries.BLOCK)
         {

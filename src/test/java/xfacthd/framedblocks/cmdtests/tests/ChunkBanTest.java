@@ -135,7 +135,7 @@ public final class ChunkBanTest
         return 1;
     }
 
-    public static void onLevelTick(final LevelTickEvent.Pre event)
+    public static void onLevelTick(LevelTickEvent.Pre event)
     {
         Level level = event.getLevel();
         if (dimension != null && level.dimension() == dimension)

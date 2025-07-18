@@ -81,7 +81,7 @@ public final class DiagonalBlocksCompat
             modBus.addListener(GuardedAccess::onBlockEntityTypeAddBlocks);
         }
 
-        private static void onBlockEntityTypeAddBlocks(final BlockEntityTypeAddBlocksEvent event)
+        private static void onBlockEntityTypeAddBlocks(BlockEntityTypeAddBlocksEvent event)
         {
             getBlock(DiagonalBlockTypes.FENCE, FBContent.BLOCK_FRAMED_FENCE).ifPresent(
                     holder -> event.modify(FBContent.BE_TYPE_FRAMED_BLOCK.value(), holder.value())
@@ -122,7 +122,7 @@ public final class DiagonalBlocksCompat
             modBus.addListener(GuardedClientAccess::onRegisterClientExtensions);
         }
 
-        private static void onRegisterModelWrappers(final RegisterModelWrappersEvent event)
+        private static void onRegisterModelWrappers(RegisterModelWrappersEvent event)
         {
             GuardedAccess.getBlock(DiagonalBlockTypes.FENCE, FBContent.BLOCK_FRAMED_FENCE).ifPresent(
                     holder -> WrapHelper.wrap(holder, FramedDiagonalFenceGeometry::new, WrapHelper.IGNORE_WATERLOGGED_LOCK)
@@ -132,7 +132,7 @@ public final class DiagonalBlocksCompat
             );
         }
 
-        private static void onRegisterBlockColors(final RegisterColorHandlersEvent.Block event)
+        private static void onRegisterBlockColors(RegisterColorHandlersEvent.Block event)
         {
             GuardedAccess.getBlock(DiagonalBlockTypes.FENCE, FBContent.BLOCK_FRAMED_FENCE).ifPresent(
                     holder -> event.register(FramedBlockColor.INSTANCE, holder.value())
@@ -142,7 +142,7 @@ public final class DiagonalBlocksCompat
             );
         }
 
-        private static void onRegisterClientExtensions(final RegisterClientExtensionsEvent event)
+        private static void onRegisterClientExtensions(RegisterClientExtensionsEvent event)
         {
             GuardedAccess.getBlock(DiagonalBlockTypes.FENCE, FBContent.BLOCK_FRAMED_FENCE).ifPresent(
                     holder -> event.registerBlock(FramedClientBlockExtensions.INSTANCE, holder.value())

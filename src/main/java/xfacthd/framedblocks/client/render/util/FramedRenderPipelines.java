@@ -13,7 +13,7 @@ public final class FramedRenderPipelines
             .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
             .build();
 
-    public static void onRegisterRenderPipelines(final RegisterRenderPipelinesEvent event)
+    public static void onRegisterRenderPipelines(RegisterRenderPipelinesEvent event)
     {
         event.registerPipeline(LINES_NO_DEPTH);
     }

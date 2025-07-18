@@ -28,7 +28,7 @@ public final class FramedRegistries
         return builder.create();
     }
 
-    public static void onRegisterNewRegistries(final NewRegistryEvent event)
+    public static void onRegisterNewRegistries(NewRegistryEvent event)
     {
         event.register(CAMO_CONTAINER_FACTORIES);
         event.register(AUX_BLUEPRINT_DATA_TYPES);

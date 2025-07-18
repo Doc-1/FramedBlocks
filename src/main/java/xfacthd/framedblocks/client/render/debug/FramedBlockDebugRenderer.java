@@ -36,7 +36,7 @@ public final class FramedBlockDebugRenderer
     private static boolean anyEnabled = false;
 
     @SuppressWarnings("unchecked")
-    private static void onRenderLevelStage(final RenderLevelStageEvent.AfterBlockEntities event)
+    private static void onRenderLevelStage(RenderLevelStageEvent.AfterBlockEntities event)
     {
         if (!anyEnabled) return;
 
@@ -72,7 +72,7 @@ public final class FramedBlockDebugRenderer
         buffer.endBatch();
     }
 
-    private static void onFrameGraphSetup(final FrameGraphSetupEvent event)
+    private static void onFrameGraphSetup(FrameGraphSetupEvent event)
     {
         anyEnabled = false;
         for (BlockDebugRenderer<?> renderer : RENDERERS)

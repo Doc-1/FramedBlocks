@@ -53,7 +53,7 @@ public final class BuildingGadgetsCompat
             modBus.addListener(GuardedAccess::sendCompatImc);
         }
 
-        private static void sendCompatImc(@SuppressWarnings("unused") final InterModEnqueueEvent event)
+        private static void sendCompatImc(@SuppressWarnings("unused") InterModEnqueueEvent event)
         {
             InterModComms.sendTo("buildinggadgets", "imc_tile_data_factory", GuardedAccess::createDataFactory);
         }

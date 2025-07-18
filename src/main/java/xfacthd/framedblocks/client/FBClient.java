@@ -167,23 +167,23 @@ public final class FBClient
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 
-    private static void onRegisterConditionalItemModelProperties(final RegisterConditionalItemModelPropertyEvent event)
+    private static void onRegisterConditionalItemModelProperties(RegisterConditionalItemModelPropertyEvent event)
     {
         event.register(BlueprintProperty.HAS_DATA, BlueprintProperty.TYPE);
     }
 
-    private static void onRegisterItemModels(final RegisterItemModelsEvent event)
+    private static void onRegisterItemModels(RegisterItemModelsEvent event)
     {
         event.register(FramedBlockItemModel.Unbaked.ID, FramedBlockItemModel.Unbaked.CODEC);
         event.register(TankItemModel.Unbaked.ID, TankItemModel.Unbaked.CODEC);
     }
 
-    private static void onRegisterSpecialModelRenderers(final RegisterSpecialModelRendererEvent event)
+    private static void onRegisterSpecialModelRenderers(RegisterSpecialModelRendererEvent event)
     {
         event.register(TankItemRenderer.Unbaked.ID, TankItemRenderer.Unbaked.CODEC);
     }
 
-    private static void onRegisterMenuScreens(final RegisterMenuScreensEvent event)
+    private static void onRegisterMenuScreens(RegisterMenuScreensEvent event)
     {
         event.register(FBContent.MENU_TYPE_FRAMED_STORAGE.value(), FramedStorageScreen::new);
         event.register(FBContent.MENU_TYPE_FRAMED_DOUBLE_CHEST.value(), FramedStorageScreen::new);
@@ -191,20 +191,20 @@ public final class FBClient
         event.register(FBContent.MENU_TYPE_POWERED_FRAMING_SAW.value(), PoweredFramingSawScreen::new);
     }
 
-    private static void onRegisterKeyMappings(final RegisterKeyMappingsEvent event)
+    private static void onRegisterKeyMappings(RegisterKeyMappingsEvent event)
     {
         event.register(KeyMappings.KEYMAPPING_UPDATE_CULLING.get());
         event.register(KeyMappings.KEYMAPPING_WIPE_CACHE.get());
     }
 
-    private static void onAttachDebugRenderers(final AttachDebugRenderersEvent event)
+    private static void onAttachDebugRenderers(AttachDebugRenderersEvent event)
     {
         FBContent.getBlockEntities().forEach(type -> event.attach(type.value(), ConnectionPredicateDebugRenderer.INSTANCE));
         FBContent.getBlockEntities().forEach(type -> event.attach(type.value(), QuadWindingDebugRenderer.INSTANCE));
         FBContent.getDoubleBlockEntities().forEach(type -> event.attach(type.value(), DoubleBlockPartDebugRenderer.INSTANCE));
     }
 
-    private static void onRegisterRenderers(final EntityRenderersEvent.RegisterRenderers event)
+    private static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event)
     {
         event.registerBlockEntityRenderer(FBContent.BE_TYPE_FRAMED_SIGN.value(), FramedSignRenderer::new);
         event.registerBlockEntityRenderer(FBContent.BE_TYPE_FRAMED_HANGING_SIGN.value(), FramedHangingSignRenderer::new);
@@ -213,7 +213,7 @@ public final class FBClient
         event.registerBlockEntityRenderer(FBContent.BE_TYPE_FRAMED_TANK.value(), FramedTankRenderer::new);
     }
 
-    private static void onRegisterBlockColors(final RegisterColorHandlersEvent.Block event)
+    private static void onRegisterBlockColors(RegisterColorHandlersEvent.Block event)
     {
         //noinspection SuspiciousToArrayCall
         Block[] blocks = FBContent.getRegisteredBlocks()
@@ -230,27 +230,27 @@ public final class FBClient
         event.register(FramedTargetBlockColor.INSTANCE, FBContent.BLOCK_FRAMED_TARGET.value());
     }
 
-    private static void onRegisterBlockItemModelProviders(final RegisterBlockItemModelProvidersEvent event)
+    private static void onRegisterBlockItemModelProviders(RegisterBlockItemModelProvidersEvent event)
     {
         event.register(Utils.rl("default"), BlockItemModelProvider.DEFAULT);
         event.register(Utils.rl("fence"), FenceBlockItemModelProvider.INSTANCE);
     }
 
-    private static void onRegisterItemTintProviders(final RegisterItemTintProvidersEvent event)
+    private static void onRegisterItemTintProviders(RegisterItemTintProvidersEvent event)
     {
         event.register(Utils.rl("single"), FramedBlockItemTintProvider.INSTANCE_SINGLE);
         event.register(Utils.rl("double"), FramedBlockItemTintProvider.INSTANCE_DOUBLE);
         event.register(Utils.rl("target"), FramedTargetItemTintProvider.INSTANCE);
     }
 
-    private static void onRegisterGuiLayers(final RegisterGuiLayersEvent event)
+    private static void onRegisterGuiLayers(RegisterGuiLayersEvent event)
     {
         BlockInteractOverlayLayer.init();
 
         event.registerAboveAll(Utils.rl("block_interact"), new BlockInteractOverlayLayer());
     }
 
-    private static void onRegisterBlockInteractOverlays(final RegisterBlockInteractOverlaysEvent event)
+    private static void onRegisterBlockInteractOverlays(RegisterBlockInteractOverlaysEvent event)
     {
         event.register("state_lock", new StateLockOverlay());
         event.register("toggle_waterloggable", new ToggleWaterloggableOverlay());
@@ -264,12 +264,12 @@ public final class FBClient
         event.register("trapdoor_texture_rotation", new TrapdoorTextureRotationOverlay());
     }
 
-    private static void onGeometryLoaderRegister(final ModelEvent.RegisterLoaders event)
+    private static void onGeometryLoaderRegister(ModelEvent.RegisterLoaders event)
     {
         event.register(FallbackLoader.ID, new FallbackLoader());
     }
 
-    private static void onRegisterModelWrappers(final RegisterModelWrappersEvent event)
+    private static void onRegisterModelWrappers(RegisterModelWrappersEvent event)
     {
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_CUBE, FramedCubeGeometry::new, WrapHelper.IGNORE_SOLID);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_SLOPE, FramedSlopeGeometry::new, WrapHelper.IGNORE_DEFAULT);
@@ -501,19 +501,19 @@ public final class FBClient
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_LAYERED_CUBE, FramedLayeredCubeGeometry::new, WrapHelper.IGNORE_DEFAULT);
     }
 
-    private static void onBlockStateModelRegister(final RegisterBlockStateModels event)
+    private static void onBlockStateModelRegister(RegisterBlockStateModels event)
     {
         event.registerDefinition(Utils.rl("wrapper"), FramedBlockModelDefinition.CODEC);
     }
 
-    private static void onModelRegister(final ModelEvent.RegisterStandalone event)
+    private static void onModelRegister(ModelEvent.RegisterStandalone event)
     {
         event.register(FluidModel.BARE_MODEL_KEY, FluidModel.BARE_UNBAKED_MODEL);
         event.register(FluidModel.BARE_MODEL_SINGLE_KEY, FluidModel.BARE_UNBAKED_MODEL_SINGLE);
         event.register(ReinforcementModel.MODEL_KEY, SimpleUnbakedStandaloneModel.quadCollection(ReinforcementModel.MODEL_ID));
     }
 
-    private static void onModelsLoaded(final ModelEvent.BakingCompleted event)
+    private static void onModelsLoaded(ModelEvent.BakingCompleted event)
     {
         FluidCamoClientHandler.clearModelCache();
         FramedChestRenderer.onModelsLoaded(event.getBakingResult());
@@ -523,13 +523,13 @@ public final class FBClient
         ModelWrappingManager.printWrappingInfo(event.getBakingResult().blockStateModels());
     }
 
-    private static void onRegisterReloadListener(final AddClientReloadListenersEvent event)
+    private static void onRegisterReloadListener(AddClientReloadListenersEvent event)
     {
         event.addListener(BlockInteractOverlayLayer.LISTENER_ID, (ResourceManagerReloadListener) BlockInteractOverlayLayer::onResourceReload);
         event.addListener(OverlayQuadGenerator.LISTENER_ID, (ResourceManagerReloadListener) OverlayQuadGenerator::onResourceReload);
     }
 
-    private static void onInitClientRegistries(final InitializeClientRegistriesEvent event)
+    private static void onInitClientRegistries(InitializeClientRegistriesEvent event)
     {
         ModelWrappingManager.fireRegistration();
         FramedBlockDebugRenderer.init();
@@ -539,12 +539,12 @@ public final class FBClient
         DynamicItemTintProviders.init();
     }
 
-    private static void onRegisterSpriteSources(final RegisterSpriteSourcesEvent event)
+    private static void onRegisterSpriteSources(RegisterSpriteSourcesEvent event)
     {
         event.register(Utils.rl("anim_splitter"), AnimationSplitterSource.CODEC);
     }
 
-    private static void onTexturesStitched(final TextureAtlasStitchedEvent event)
+    private static void onTexturesStitched(TextureAtlasStitchedEvent event)
     {
         if (event.getAtlas().location().equals(ClientUtils.BLOCK_ATLAS))
         {
@@ -552,12 +552,12 @@ public final class FBClient
         }
     }
 
-    private static void onRegisterParticleProviders(final RegisterParticleProvidersEvent event)
+    private static void onRegisterParticleProviders(RegisterParticleProvidersEvent event)
     {
         event.registerSpecial(FBContent.FLUID_PARTICLE.get(), new FluidSpriteParticle.Provider());
     }
 
-    private static void onRegisterClientExtensions(final RegisterClientExtensionsEvent event)
+    private static void onRegisterClientExtensions(RegisterClientExtensionsEvent event)
     {
         FBContent.getRegisteredBlocks()
                 .stream()
