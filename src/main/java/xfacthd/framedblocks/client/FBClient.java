@@ -131,7 +131,6 @@ public final class FBClient
         modBus.addListener(FBClient::onRegisterItemModels);
         modBus.addListener(FBClient::onRegisterSpecialModelRenderers);
         modBus.addListener(FBClient::onRegisterMenuScreens);
-        modBus.addListener(FBClient::onRegisterKeyMappings);
         modBus.addListener(FBClient::onAttachDebugRenderers);
         modBus.addListener(FBClient::onRegisterRenderers);
         modBus.addListener(FBClient::onRegisterBlockColors);
@@ -152,6 +151,7 @@ public final class FBClient
         modBus.addListener(FBClient::onRegisterClientExtensions);
         modBus.addListener(FBClient::onRegisterClientTooltipComponentFactories);
         modBus.addListener(FBClient::onRegisterPictureInPictureRenderers);
+        modBus.addListener(KeyMappings::onRegisterKeyMappings);
         modBus.addListener(BlockOutlineRenderers::onRegisterOutlineRenderers);
         modBus.addListener(GhostRenderBehaviours::onRegisterGhostRenderBehaviours);
         modBus.addListener(FramedRenderPipelines::onRegisterRenderPipelines);
@@ -189,12 +189,6 @@ public final class FBClient
         event.register(FBContent.MENU_TYPE_FRAMED_DOUBLE_CHEST.value(), FramedStorageScreen::new);
         event.register(FBContent.MENU_TYPE_FRAMING_SAW.value(), FramingSawScreen::create);
         event.register(FBContent.MENU_TYPE_POWERED_FRAMING_SAW.value(), PoweredFramingSawScreen::new);
-    }
-
-    private static void onRegisterKeyMappings(RegisterKeyMappingsEvent event)
-    {
-        event.register(KeyMappings.KEYMAPPING_UPDATE_CULLING.get());
-        event.register(KeyMappings.KEYMAPPING_WIPE_CACHE.get());
     }
 
     private static void onAttachDebugRenderers(AttachDebugRenderersEvent event)
