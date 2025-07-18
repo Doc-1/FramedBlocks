@@ -2,7 +2,7 @@ package xfacthd.framedblocks.selftest.tests;
 
 import net.minecraft.world.level.block.Block;
 import xfacthd.framedblocks.api.block.IFramedBlock;
-import xfacthd.framedblocks.api.type.IBlockType;
+import xfacthd.framedblocks.api.block.IBlockType;
 import xfacthd.framedblocks.client.render.special.BlockOutlineRenderer;
 import xfacthd.framedblocks.selftest.SelfTestReporter;
 

@@ -21,7 +21,7 @@ import net.neoforged.neoforge.client.event.RenderHighlightEvent;
 import xfacthd.framedblocks.FramedBlocks;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.render.RegisterOutlineRenderersEvent;
-import xfacthd.framedblocks.api.type.IBlockType;
+import xfacthd.framedblocks.api.block.IBlockType;
 import xfacthd.framedblocks.api.render.OutlineRenderer;
 import xfacthd.framedblocks.common.config.ClientConfig;
 import xfacthd.framedblocks.common.config.DevToolsConfig;

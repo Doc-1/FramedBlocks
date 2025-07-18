@@ -8,7 +8,7 @@ import xfacthd.framedblocks.api.block.doubleblock.CamoGetter;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import xfacthd.framedblocks.api.block.doubleblock.DoubleBlockTopInteractionMode;
 import xfacthd.framedblocks.api.block.doubleblock.SolidityCheck;
-import xfacthd.framedblocks.api.type.IBlockType;
+import xfacthd.framedblocks.api.block.IBlockType;
 import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.Arrays;

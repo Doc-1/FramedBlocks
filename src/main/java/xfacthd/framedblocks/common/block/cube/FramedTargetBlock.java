@@ -31,7 +31,7 @@ import xfacthd.framedblocks.api.block.BlockUtils;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
-import xfacthd.framedblocks.api.type.IBlockType;
+import xfacthd.framedblocks.api.block.IBlockType;
 import xfacthd.framedblocks.common.block.IFramedBlockInternal;
 import xfacthd.framedblocks.common.blockentity.special.FramedTargetBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;

@@ -33,7 +33,7 @@ import xfacthd.framedblocks.api.model.util.ModelUtils;
 import xfacthd.framedblocks.api.model.wrapping.DelegateBlockModelPart;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.predicate.contex.ConTexMode;
-import xfacthd.framedblocks.api.type.IBlockType;
+import xfacthd.framedblocks.api.block.IBlockType;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.model.ReinforcementModel;
 import xfacthd.framedblocks.client.model.overlaygen.OverlayModelPartGenerator;

@@ -3,7 +3,6 @@ package xfacthd.framedblocks.api.block;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import xfacthd.framedblocks.api.type.IBlockType;
 
 public abstract class AbstractFramedDoubleBlock extends AbstractFramedBlock implements IFramedDoubleBlock
 {

@@ -38,7 +38,7 @@ import xfacthd.framedblocks.api.camo.empty.EmptyCamoContainerFactory;
 import xfacthd.framedblocks.api.component.FrameConfig;
 import xfacthd.framedblocks.api.datagen.loot.objects.NonTrivialCamoLootCondition;
 import xfacthd.framedblocks.api.datagen.loot.objects.SplitCamoLootFunction;
-import xfacthd.framedblocks.api.type.IBlockType;
+import xfacthd.framedblocks.api.block.IBlockType;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.registration.DeferredAuxDataType;
 import xfacthd.framedblocks.api.util.registration.DeferredBlockEntity;

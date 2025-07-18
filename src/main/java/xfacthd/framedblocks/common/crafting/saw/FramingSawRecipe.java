@@ -22,7 +22,7 @@ import net.minecraft.world.level.Level;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.datagen.recipes.AbstractFramingSawRecipeProvider;
 import xfacthd.framedblocks.api.datagen.recipes.builders.FramingSawRecipeBuilder;
-import xfacthd.framedblocks.api.type.IBlockType;
+import xfacthd.framedblocks.api.block.IBlockType;
 import xfacthd.framedblocks.api.camo.CamoList;
 import xfacthd.framedblocks.common.FBContent;
 

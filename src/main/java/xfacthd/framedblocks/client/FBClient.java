@@ -33,7 +33,7 @@ import xfacthd.framedblocks.api.model.wrapping.RegisterModelWrappersEvent;
 import xfacthd.framedblocks.api.model.wrapping.WrapHelper;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.render.debug.AttachDebugRenderersEvent;
-import xfacthd.framedblocks.api.type.IBlockType;
+import xfacthd.framedblocks.api.block.IBlockType;
 import xfacthd.framedblocks.api.util.ClientUtils;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.Utils;

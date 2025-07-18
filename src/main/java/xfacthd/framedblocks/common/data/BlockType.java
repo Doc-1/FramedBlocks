@@ -16,7 +16,7 @@ import xfacthd.framedblocks.api.shapes.CommonShapes;
 import xfacthd.framedblocks.api.shapes.ReloadableShapeProvider;
 import xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import xfacthd.framedblocks.api.shapes.ShapeProvider;
-import xfacthd.framedblocks.api.type.IBlockType;
+import xfacthd.framedblocks.api.block.IBlockType;
 import xfacthd.framedblocks.common.data.conpreds.ConnectionPredicates;
 import xfacthd.framedblocks.common.data.facepreds.FullFacePredicates;
 import xfacthd.framedblocks.common.data.shapes.MoreCommonShapes;

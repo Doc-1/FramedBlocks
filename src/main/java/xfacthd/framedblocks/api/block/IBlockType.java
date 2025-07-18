@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.api.type;
+package xfacthd.framedblocks.api.block;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
@@ -10,8 +10,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import org.jetbrains.annotations.ApiStatus;
-import xfacthd.framedblocks.api.block.FramedProperties;
-import xfacthd.framedblocks.api.block.IFramedDoubleBlock;
 import xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import xfacthd.framedblocks.api.block.render.FramedClientBlockExtensions;
 import xfacthd.framedblocks.api.predicate.contex.ConTexMode;
