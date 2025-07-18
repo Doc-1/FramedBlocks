@@ -3,7 +3,7 @@ package xfacthd.framedblocks.common.config;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.util.ConfigView;
 import xfacthd.framedblocks.client.model.SolidFrameMode;
-import xfacthd.framedblocks.client.screen.overlay.OverlayDisplayMode;
+import xfacthd.framedblocks.api.screen.overlay.OverlayDisplayMode;
 
 import java.util.regex.Pattern;
 

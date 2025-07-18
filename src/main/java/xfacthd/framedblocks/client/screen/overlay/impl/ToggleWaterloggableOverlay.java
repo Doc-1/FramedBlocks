@@ -1,10 +1,12 @@
-package xfacthd.framedblocks.client.screen.overlay;
+package xfacthd.framedblocks.client.screen.overlay.impl;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import xfacthd.framedblocks.api.screen.overlay.BlockInteractOverlay;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.config.ClientConfig;
 import xfacthd.framedblocks.common.FBContent;
@@ -28,24 +30,24 @@ public final class ToggleWaterloggableOverlay extends BlockInteractOverlay
 
     public ToggleWaterloggableOverlay()
     {
-        super("toggle_waterloggable", LINES_FALSE, LINES_TRUE, TEXTURE_FALSE, TEXTURE_TRUE, ClientConfig.VIEW::getToggleWaterlogMode);
+        super(LINES_FALSE, LINES_TRUE, TEXTURE_FALSE, TEXTURE_TRUE, ClientConfig.VIEW::getToggleWaterlogMode);
     }
 
     @Override
-    protected boolean isValidTool(ItemStack stack)
+    public boolean isValidTool(Player player, ItemStack stack)
     {
         return stack.is(FBContent.ITEM_FRAMED_HAMMER.value());
     }
 
     @Override
-    protected boolean isValidTarget(Target target)
+    public boolean isValidTarget(Target target)
     {
         Block block = target.state().getBlock();
         return block instanceof FramedPressurePlateBlock || block instanceof FramedWeightedPressurePlateBlock;
     }
 
     @Override
-    protected boolean getState(Target target)
+    public boolean getState(Target target)
     {
         return target.state().hasProperty(BlockStateProperties.WATERLOGGED);
     }

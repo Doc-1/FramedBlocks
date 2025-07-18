@@ -10,7 +10,7 @@ import xfacthd.framedblocks.api.util.CamoMessageVerbosity;
 import xfacthd.framedblocks.api.util.ConfigView;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.client.model.SolidFrameMode;
-import xfacthd.framedblocks.client.screen.overlay.OverlayDisplayMode;
+import xfacthd.framedblocks.api.screen.overlay.OverlayDisplayMode;
 
 public final class ClientConfig
 {

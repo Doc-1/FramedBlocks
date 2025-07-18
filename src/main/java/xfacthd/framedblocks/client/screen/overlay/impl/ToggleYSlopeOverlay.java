@@ -1,10 +1,12 @@
-package xfacthd.framedblocks.client.screen.overlay;
+package xfacthd.framedblocks.client.screen.overlay.impl;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.util.ConcatenatedListView;
 import xfacthd.framedblocks.api.block.FramedProperties;
+import xfacthd.framedblocks.api.screen.overlay.BlockInteractOverlay;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.block.IComplexSlopeSource;
 import xfacthd.framedblocks.common.config.ClientConfig;
@@ -49,39 +51,39 @@ public final class ToggleYSlopeOverlay extends BlockInteractOverlay
 
     public ToggleYSlopeOverlay()
     {
-        super("toggle_y_slope", LINES_FALSE_ALL, LINES_TRUE_ALL, TEXTURE_FALSE, TEXTURE_TRUE, ClientConfig.VIEW::getToggleYSlopeMode);
+        super(LINES_FALSE_ALL, LINES_TRUE_ALL, TEXTURE_FALSE, TEXTURE_TRUE, ClientConfig.VIEW::getToggleYSlopeMode);
     }
 
     @Override
-    protected boolean isValidTool(ItemStack stack)
+    public boolean isValidTool(Player player, ItemStack stack)
     {
         return stack.getItem() == FBContent.ITEM_FRAMED_WRENCH.value();
     }
 
     @Override
-    protected boolean isValidTarget(Target target)
+    public boolean isValidTarget(Target target)
     {
         return target.state().hasProperty(FramedProperties.Y_SLOPE);
     }
 
     @Override
-    protected boolean getState(Target target)
+    public boolean getState(Target target)
     {
         return target.state().getValue(FramedProperties.Y_SLOPE);
     }
 
     @Override
-    protected Texture getTexture(Target target, boolean state, Texture texFalse, Texture texTrue)
+    public Texture getTexture(Target target, boolean state)
     {
         if (target.state().getBlock() instanceof IComplexSlopeSource src && src.isHorizontalSlope(target.state()))
         {
             return state ? TEXTURE_ALT_TRUE : TEXTURE_ALT_FALSE;
         }
-        return super.getTexture(target, state, texFalse, texTrue);
+        return super.getTexture(target, state);
     }
 
     @Override
-    protected List<Component> getLines(Target target, boolean state, List<Component> linesFalse, List<Component> linesTrue)
+    public List<Component> getLines(Target target, boolean state)
     {
         if (target.state().getBlock() instanceof IComplexSlopeSource src && src.isHorizontalSlope(target.state()))
         {

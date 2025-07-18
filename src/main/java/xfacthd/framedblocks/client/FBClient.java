@@ -34,6 +34,7 @@ import xfacthd.framedblocks.api.model.wrapping.WrapHelper;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.render.debug.AttachDebugRenderersEvent;
 import xfacthd.framedblocks.api.block.IBlockType;
+import xfacthd.framedblocks.api.screen.overlay.RegisterBlockInteractOverlaysEvent;
 import xfacthd.framedblocks.api.util.ClientUtils;
 import xfacthd.framedblocks.api.util.FramedConstants;
 import xfacthd.framedblocks.api.util.Utils;
@@ -93,6 +94,7 @@ import xfacthd.framedblocks.client.screen.FramedStorageScreen;
 import xfacthd.framedblocks.client.screen.FramingSawScreen;
 import xfacthd.framedblocks.client.screen.PoweredFramingSawScreen;
 import xfacthd.framedblocks.client.screen.overlay.BlockInteractOverlayLayer;
+import xfacthd.framedblocks.client.screen.overlay.impl.*;
 import xfacthd.framedblocks.client.screen.pip.BlockPictureInPictureRenderer;
 import xfacthd.framedblocks.client.screen.pip.SpinningItemPictureInPictureRenderer;
 import xfacthd.framedblocks.client.screen.pip.SignBlockPictureInPictureRenderer;
@@ -135,7 +137,8 @@ public final class FBClient
         modBus.addListener(FBClient::onRegisterBlockColors);
         modBus.addListener(FBClient::onRegisterBlockItemModelProviders);
         modBus.addListener(FBClient::onRegisterItemTintProviders);
-        modBus.addListener(FBClient::onOverlayRegister);
+        modBus.addListener(FBClient::onRegisterGuiLayers);
+        modBus.addListener(FBClient::onRegisterBlockInteractOverlays);
         modBus.addListener(FBClient::onGeometryLoaderRegister);
         modBus.addListener(FBClient::onRegisterModelWrappers);
         modBus.addListener(FBClient::onBlockStateModelRegister);
@@ -240,9 +243,25 @@ public final class FBClient
         event.register(Utils.rl("target"), FramedTargetItemTintProvider.INSTANCE);
     }
 
-    private static void onOverlayRegister(final RegisterGuiLayersEvent event)
+    private static void onRegisterGuiLayers(final RegisterGuiLayersEvent event)
     {
+        BlockInteractOverlayLayer.init();
+
         event.registerAboveAll(Utils.rl("block_interact"), new BlockInteractOverlayLayer());
+    }
+
+    private static void onRegisterBlockInteractOverlays(final RegisterBlockInteractOverlaysEvent event)
+    {
+        event.register("state_lock", new StateLockOverlay());
+        event.register("toggle_waterloggable", new ToggleWaterloggableOverlay());
+        event.register("toggle_y_slope", new ToggleYSlopeOverlay());
+        event.register("reinforcement", new ReinforcementOverlay());
+        event.register("prism_offset", new PrismOffsetOverlay());
+        event.register("split_line", new SplitLineOverlay());
+        event.register("one_way_window", new OneWayWindowOverlay());
+        event.register("frame_background", new FrameBackgroundOverlay());
+        event.register("camo_rotation", new CamoRotationOverlay());
+        event.register("trapdoor_texture_rotation", new TrapdoorTextureRotationOverlay());
     }
 
     private static void onGeometryLoaderRegister(final ModelEvent.RegisterLoaders event)

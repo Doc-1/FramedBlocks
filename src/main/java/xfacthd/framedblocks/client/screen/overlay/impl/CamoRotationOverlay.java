@@ -1,13 +1,15 @@
-package xfacthd.framedblocks.client.screen.overlay;
+package xfacthd.framedblocks.client.screen.overlay.impl;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.block.IFramedBlock;
+import xfacthd.framedblocks.api.screen.overlay.BlockInteractOverlay;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.config.ClientConfig;
 import xfacthd.framedblocks.common.FBContent;
@@ -25,30 +27,30 @@ public final class CamoRotationOverlay extends BlockInteractOverlay
 
     public CamoRotationOverlay()
     {
-        super("camo_rotation", List.of(ROTATEABLE_FALSE), List.of(ROTATEABLE_TRUE), TEXTURE_FALSE, TEXTURE_TRUE, ClientConfig.VIEW::getCamoRotationMode);
+        super(List.of(ROTATEABLE_FALSE), List.of(ROTATEABLE_TRUE), TEXTURE_FALSE, TEXTURE_TRUE, ClientConfig.VIEW::getCamoRotationMode);
     }
 
     @Override
-    protected boolean isValidTool(ItemStack stack)
+    public boolean isValidTool(Player player, ItemStack stack)
     {
         return stack.getItem() == FBContent.ITEM_FRAMED_SCREWDRIVER.value();
     }
 
     @Override
-    protected boolean isValidTarget(Target target)
+    public boolean isValidTarget(Target target)
     {
         return target.state().getBlock() instanceof IFramedBlock;
     }
 
     @Override
-    protected boolean getState(Target target)
+    public boolean getState(Target target)
     {
-        if (level().getBlockEntity(target.pos()) instanceof FramedBlockEntity be)
+        if (target.level().getBlockEntity(target.pos()) instanceof FramedBlockEntity be)
         {
             HitResult hit = Minecraft.getInstance().hitResult;
             if (hit instanceof BlockHitResult blockHit)
             {
-                return be.getCamo(blockHit, player()).canRotateCamo();
+                return be.getCamo(blockHit, target.player()).canRotateCamo();
             }
         }
         return false;

@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.client.screen.overlay;
+package xfacthd.framedblocks.client.screen.overlay.impl;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -7,7 +7,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import xfacthd.framedblocks.api.screen.overlay.BlockInteractOverlay;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.config.ClientConfig;
 import xfacthd.framedblocks.common.FBContent;
@@ -39,34 +41,34 @@ public final class OneWayWindowOverlay extends BlockInteractOverlay
 
     public OneWayWindowOverlay()
     {
-        super("one_way_window", LINES, List.of(), TEXTURE_BG, TEXTURE_BG, ClientConfig.VIEW::getOneWayWindowMode);
+        super(LINES, List.of(), TEXTURE_BG, TEXTURE_BG, ClientConfig.VIEW::getOneWayWindowMode);
     }
 
     @Override
-    protected boolean isValidTool(ItemStack stack)
+    public boolean isValidTool(Player player, ItemStack stack)
     {
         return stack.is(FBContent.ITEM_FRAMED_WRENCH.value());
     }
 
     @Override
-    protected boolean isValidTarget(Target target)
+    public boolean isValidTarget(Target target)
     {
         if (target.state().getBlock() != FBContent.BLOCK_FRAMED_ONE_WAY_WINDOW.value())
         {
             return false;
         }
 
-        return FramedOneWayWindowBlock.isOwnedBy(level(), target.pos(), player());
+        return FramedOneWayWindowBlock.isOwnedBy(target.level(), target.pos(), target.player());
     }
 
     @Override
-    protected boolean getState(Target target)
+    public boolean getState(Target target)
     {
         return false;
     }
 
     @Override
-    protected List<Component> getLines(Target target, boolean state, List<Component> linesFalse, List<Component> linesTrue)
+    public List<Component> getLines(Target target, boolean state)
     {
         NullableDirection face = target.state().getValue(PropertyHolder.NULLABLE_FACE);
 
@@ -78,7 +80,7 @@ public final class OneWayWindowOverlay extends BlockInteractOverlay
     }
 
     @Override
-    protected void renderAfterIcon(GuiGraphics graphics, Texture tex, int texX, int texY, Target target)
+    public void renderAfterIcon(GuiGraphics graphics, Texture tex, int texX, int texY, Target target)
     {
         NullableDirection face = target.state().getValue(PropertyHolder.NULLABLE_FACE);
 

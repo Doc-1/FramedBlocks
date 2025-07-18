@@ -1,9 +1,11 @@
-package xfacthd.framedblocks.client.screen.overlay;
+package xfacthd.framedblocks.client.screen.overlay.impl;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import xfacthd.framedblocks.api.block.FramedProperties;
+import xfacthd.framedblocks.api.screen.overlay.BlockInteractOverlay;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.config.ClientConfig;
 import xfacthd.framedblocks.common.FBContent;
@@ -24,23 +26,23 @@ public final class PrismOffsetOverlay extends BlockInteractOverlay
 
     public PrismOffsetOverlay()
     {
-        super("prism_offset", LINES_FALSE, LINES_TRUE, TEXTURE_FALSE, TEXTURE_TRUE, ClientConfig.VIEW::getPrismOffsetMode);
+        super(LINES_FALSE, LINES_TRUE, TEXTURE_FALSE, TEXTURE_TRUE, ClientConfig.VIEW::getPrismOffsetMode);
     }
 
     @Override
-    protected boolean isValidTool(ItemStack stack)
+    public boolean isValidTool(Player player, ItemStack stack)
     {
         return stack.getItem() == FBContent.ITEM_FRAMED_HAMMER.value();
     }
 
     @Override
-    protected boolean isValidTarget(Target target)
+    public boolean isValidTarget(Target target)
     {
         return target.state().hasProperty(FramedProperties.OFFSET);
     }
 
     @Override
-    protected boolean getState(Target target)
+    public boolean getState(Target target)
     {
         return target.state().getValue(FramedProperties.OFFSET);
     }

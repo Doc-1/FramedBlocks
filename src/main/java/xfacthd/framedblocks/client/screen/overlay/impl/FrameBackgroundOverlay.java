@@ -1,9 +1,11 @@
-package xfacthd.framedblocks.client.screen.overlay;
+package xfacthd.framedblocks.client.screen.overlay.impl;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import xfacthd.framedblocks.api.screen.overlay.BlockInteractOverlay;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.config.ClientConfig;
 import xfacthd.framedblocks.common.FBContent;
@@ -28,29 +30,29 @@ public final class FrameBackgroundOverlay extends BlockInteractOverlay
 
     public FrameBackgroundOverlay()
     {
-        super("frame_background", LINES_FALSE, LINES_TRUE, TEXTURE_BG, TEXTURE_BG, ClientConfig.VIEW::getFrameBackgroundMode);
+        super(LINES_FALSE, LINES_TRUE, TEXTURE_BG, TEXTURE_BG, ClientConfig.VIEW::getFrameBackgroundMode);
     }
 
     @Override
-    protected boolean isValidTool(ItemStack stack)
+    public boolean isValidTool(Player player, ItemStack stack)
     {
         return stack.is(FBContent.ITEM_FRAMED_HAMMER.value());
     }
 
     @Override
-    protected boolean isValidTarget(Target target)
+    public boolean isValidTarget(Target target)
     {
         return target.state().getBlock() instanceof FramedItemFrameBlock;
     }
 
     @Override
-    protected boolean getState(Target target)
+    public boolean getState(Target target)
     {
         return target.state().getValue(PropertyHolder.LEATHER);
     }
 
     @Override
-    protected void renderAfterIcon(GuiGraphics graphics, Texture tex, int texX, int texY, Target target)
+    public void renderAfterIcon(GuiGraphics graphics, Texture tex, int texX, int texY, Target target)
     {
         TEXTURE_LEATHER.draw(graphics, texX + 3, texY + 3);
         if (!target.state().getValue(PropertyHolder.LEATHER))

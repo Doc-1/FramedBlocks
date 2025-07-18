@@ -1,11 +1,13 @@
-package xfacthd.framedblocks.client.screen.overlay;
+package xfacthd.framedblocks.client.screen.overlay.impl;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.block.IFramedBlock;
+import xfacthd.framedblocks.api.screen.overlay.BlockInteractOverlay;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.config.ClientConfig;
 
@@ -31,25 +33,25 @@ public final class ReinforcementOverlay extends BlockInteractOverlay
 
     public ReinforcementOverlay()
     {
-        super("reinforcement", LIST_FALSE, LIST_TRUE, TEXTURE_FALSE, TEXTURE_TRUE, ClientConfig.VIEW::getReinforcementMode);
+        super(LIST_FALSE, LIST_TRUE, TEXTURE_FALSE, TEXTURE_TRUE, ClientConfig.VIEW::getReinforcementMode);
     }
 
     @Override
-    protected boolean isValidTool(ItemStack stack)
+    public boolean isValidTool(Player player, ItemStack stack)
     {
         return stack.is(Utils.FRAMED_REINFORCEMENT.value());
     }
 
     @Override
-    protected boolean isValidTarget(Target target)
+    public boolean isValidTarget(Target target)
     {
         return target.state().getBlock() instanceof IFramedBlock;
     }
 
     @Override
-    protected boolean getState(Target target)
+    public boolean getState(Target target)
     {
-        if (level().getBlockEntity(target.pos()) instanceof FramedBlockEntity be)
+        if (target.level().getBlockEntity(target.pos()) instanceof FramedBlockEntity be)
         {
             return be.isReinforced();
         }

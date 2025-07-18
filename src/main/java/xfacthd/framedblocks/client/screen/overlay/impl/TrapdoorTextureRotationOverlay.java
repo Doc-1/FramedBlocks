@@ -1,8 +1,10 @@
-package xfacthd.framedblocks.client.screen.overlay;
+package xfacthd.framedblocks.client.screen.overlay.impl;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import xfacthd.framedblocks.api.screen.overlay.BlockInteractOverlay;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.door.FramedTrapDoorBlock;
@@ -25,23 +27,23 @@ public final class TrapdoorTextureRotationOverlay extends BlockInteractOverlay
 
     public TrapdoorTextureRotationOverlay()
     {
-        super("trapdoor_texture_rotation", LINES_FALSE, LINES_TRUE, TEXTURE_FALSE, TEXTURE_TRUE, ClientConfig.VIEW::getTrapdoorTextureRotationMode);
+        super(LINES_FALSE, LINES_TRUE, TEXTURE_FALSE, TEXTURE_TRUE, ClientConfig.VIEW::getTrapdoorTextureRotationMode);
     }
 
     @Override
-    protected boolean isValidTool(ItemStack stack)
+    public boolean isValidTool(Player player, ItemStack stack)
     {
         return stack.getItem() == FBContent.ITEM_FRAMED_HAMMER.value();
     }
 
     @Override
-    protected boolean isValidTarget(Target target)
+    public boolean isValidTarget(Target target)
     {
         return target.state().getBlock() instanceof FramedTrapDoorBlock;
     }
 
     @Override
-    protected boolean getState(Target target)
+    public boolean getState(Target target)
     {
         return target.state().getValue(PropertyHolder.ROTATE_TEXTURE);
     }

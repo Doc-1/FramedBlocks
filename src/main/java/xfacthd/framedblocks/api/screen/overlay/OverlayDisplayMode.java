@@ -1,4 +1,4 @@
-package xfacthd.framedblocks.client.screen.overlay;
+package xfacthd.framedblocks.api.screen.overlay;
 
 public enum OverlayDisplayMode
 {
