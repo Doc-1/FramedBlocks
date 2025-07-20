@@ -544,6 +544,7 @@ public final class FramedLanguageProvider extends LanguageProvider
         addConfigValue(ClientConfig.SHOW_BUTTON_PLATE_OVERLAY_VALUE, "Show button and pressure plate type overlay");
         addConfigValue(ClientConfig.SHOW_SPECIAL_CUBE_OVERLAY_VALUE, "Show special cube type overlay");
         addConfigValue(ClientConfig.RENDER_CAMO_IN_JADE_VALUE, "Render camo in Jade overlay");
+        addConfigValue(ClientConfig.MAX_OVERLAY_MODE_VALUE, "Max overlay display mode");
         addConfigValue(ClientConfig.STATE_LOCK_MODE_VALUE, "State lock overlay: Display mode");
         addConfigValue(ClientConfig.TOGGLE_WATERLOG_MODE_VALUE, "Toggle waterloggable overlay: Display mode");
         addConfigValue(ClientConfig.TOGGLE_Y_SLOPE_MODE_VALUE, "Toggle Y slope overlay: Display mode");

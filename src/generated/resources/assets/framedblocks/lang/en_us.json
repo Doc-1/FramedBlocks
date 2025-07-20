@@ -255,6 +255,8 @@
   "config.framedblocks.client.ghostRenderOpacity.tooltip": "Set the opacity of the placement preview. 30 is almost completely transparent, 255 is fully opaque\n Default: 170\n Range: 30 ~ 255",
   "config.framedblocks.client.itemFrameBackgroundMode": "Item Frame Background overlay: Display mode",
   "config.framedblocks.client.itemFrameBackgroundMode.tooltip": "Controls the visibility of the Item Frame Background overlay\n- If set to HIDDEN, the Item Frame Background overlay will be completely hidden.\n- If set to ICON, the Item Frame Background overlay will only show an icon.\n- If set to DETAILED, the Item Frame Background overlay will show detailed info.\nAllowed Values: HIDDEN, ICON, DETAILED",
+  "config.framedblocks.client.maxOverlayMode": "Max overlay display mode",
+  "config.framedblocks.client.maxOverlayMode.tooltip": "Controls the maximum visibility of all overlays\n- If set to HIDDEN, the overlays will be completely hidden.\n- If set to ICON, the overlays will only show an icon.\n- If set to DETAILED, the overlays will show detailed info.\nAllowed Values: HIDDEN, ICON, DETAILED",
   "config.framedblocks.client.oneWayWindowMode": "One-Way Window overlay: Display mode",
   "config.framedblocks.client.oneWayWindowMode.tooltip": "Controls the visibility of the One-Way Window overlay\n- If set to HIDDEN, the One-Way Window overlay will be completely hidden.\n- If set to ICON, the One-Way Window overlay will only show an icon.\n- If set to DETAILED, the One-Way Window overlay will show detailed info.\nAllowed Values: HIDDEN, ICON, DETAILED",
   "config.framedblocks.client.prismOffsetMode": "Prism offset overlay: Display mode",

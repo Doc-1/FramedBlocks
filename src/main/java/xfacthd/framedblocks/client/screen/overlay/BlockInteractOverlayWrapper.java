@@ -14,6 +14,7 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.screen.overlay.BlockInteractOverlay;
 import xfacthd.framedblocks.api.screen.overlay.OverlayDisplayMode;
+import xfacthd.framedblocks.common.config.ClientConfig;
 
 import java.util.List;
 
@@ -34,7 +35,8 @@ final class BlockInteractOverlayWrapper
 
     boolean render(GuiGraphics graphics, Player player)
     {
-        OverlayDisplayMode mode = overlay.getDisplayMode();
+        OverlayDisplayMode cfgMode = ClientConfig.VIEW.getMaxOverlayMode();
+        OverlayDisplayMode mode = cfgMode.constrain(overlay.getDisplayMode());
         if (mode == OverlayDisplayMode.HIDDEN)
         {
             return false;

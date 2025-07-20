@@ -39,6 +39,8 @@ public final class ExtConfigView
 
         boolean shouldRenderCamoInJade();
 
+        OverlayDisplayMode getMaxOverlayMode();
+
         OverlayDisplayMode getStateLockMode();
 
         OverlayDisplayMode getToggleWaterlogMode();

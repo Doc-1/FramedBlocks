@@ -33,6 +33,7 @@ public final class ClientConfig
     private static final String KEY_SHOW_BUTTON_PLATE_OVERLAY = "showButtonPlateTypeOverlay";
     private static final String KEY_SHOW_SPECIAL_CUBE_OVERLAY = "showSpecialCubeTypeOverlay";
     private static final String KEY_RENDER_CAMO_IN_JADE = "renderCamoInJade";
+    private static final String KEY_MAX_OVERLAY_MODE = "maxOverlayMode";
     private static final String KEY_STATE_LOCK_MODE = "stateLockMode";
     private static final String KEY_TOGGLE_WATERLOG_MODE = "toggleWaterlogMode";
     private static final String KEY_TOGGLE_Y_SLOPE_MODE = "toggleYSlopeMode";
@@ -70,6 +71,7 @@ public final class ClientConfig
     public static final ModConfigSpec.BooleanValue SHOW_SPECIAL_CUBE_OVERLAY_VALUE;
     public static final ModConfigSpec.BooleanValue RENDER_CAMO_IN_JADE_VALUE;
 
+    public static final ModConfigSpec.EnumValue<OverlayDisplayMode> MAX_OVERLAY_MODE_VALUE;
     public static final ModConfigSpec.EnumValue<OverlayDisplayMode> STATE_LOCK_MODE_VALUE;
     public static final ModConfigSpec.EnumValue<OverlayDisplayMode> TOGGLE_WATERLOG_MODE_VALUE;
     public static final ModConfigSpec.EnumValue<OverlayDisplayMode> TOGGLE_Y_SLOPE_MODE_VALUE;
@@ -99,6 +101,7 @@ public final class ClientConfig
     private static boolean showSpecialCubeOverlay = false;
     private static boolean renderCamoInJade = false;
 
+    private static OverlayDisplayMode maxOverlayMode = OverlayDisplayMode.DETAILED;
     private static OverlayDisplayMode stateLockMode = OverlayDisplayMode.DETAILED;
     private static OverlayDisplayMode toggleWaterlogMode = OverlayDisplayMode.DETAILED;
     private static OverlayDisplayMode toggleYSlopeMode = OverlayDisplayMode.DETAILED;
@@ -224,6 +227,15 @@ public final class ClientConfig
         builder.pop();
 
         builder.translation(TRANSLATION_CATEGORY_OVERLAY).push("overlay");
+        MAX_OVERLAY_MODE_VALUE = builder
+                .comment(
+                        "Controls the maximum visibility of all overlays",
+                        "- If set to HIDDEN, the overlays will be completely hidden.",
+                        "- If set to ICON, the overlays will only show an icon.",
+                        "- If set to DETAILED, the overlays will show detailed info."
+                )
+                .translation(translate(KEY_MAX_OVERLAY_MODE))
+                .defineEnum(KEY_MAX_OVERLAY_MODE, OverlayDisplayMode.DETAILED);
         STATE_LOCK_MODE_VALUE = builder
                 .comment(formatOverlayComments("State Lock"))
                 .translation(translate(KEY_STATE_LOCK_MODE))
@@ -309,6 +321,7 @@ public final class ClientConfig
             showSpecialCubeOverlay = SHOW_SPECIAL_CUBE_OVERLAY_VALUE.get();
             renderCamoInJade = RENDER_CAMO_IN_JADE_VALUE.get();
 
+            maxOverlayMode = MAX_OVERLAY_MODE_VALUE.get();
             stateLockMode = STATE_LOCK_MODE_VALUE.get();
             toggleWaterlogMode = TOGGLE_WATERLOG_MODE_VALUE.get();
             toggleYSlopeMode = TOGGLE_Y_SLOPE_MODE_VALUE.get();
@@ -423,6 +436,12 @@ public final class ClientConfig
         public boolean shouldRenderCamoInJade()
         {
             return renderCamoInJade;
+        }
+
+        @Override
+        public OverlayDisplayMode getMaxOverlayMode()
+        {
+            return maxOverlayMode;
         }
 
         @Override
