@@ -58,6 +58,8 @@ public final class ExtConfigView
         OverlayDisplayMode getCamoRotationMode();
 
         OverlayDisplayMode getTrapdoorTextureRotationMode();
+
+        OverlayDisplayMode getCopycatStyleMode();
     }
 
     public interface DevTools extends ConfigView.DevTools

@@ -256,6 +256,7 @@ public final class FBClient
         event.register("frame_background", new FrameBackgroundOverlay());
         event.register("camo_rotation", new CamoRotationOverlay());
         event.register("trapdoor_texture_rotation", new TrapdoorTextureRotationOverlay());
+        event.register("copycat_style", new CopycatStyleOverlay());
     }
 
     private static void onGeometryLoaderRegister(ModelEvent.RegisterLoaders event)
@@ -493,6 +494,7 @@ public final class FBClient
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_SOUL_LANTERN, FramedLanternGeometry::soul, WrapHelper.IGNORE_WATERLOGGED);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_HOPPER, FramedHopperGeometry::new, WrapHelper.IGNORE_ALWAYS);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_LAYERED_CUBE, FramedLayeredCubeGeometry::new, WrapHelper.IGNORE_DEFAULT);
+        WrapHelper.wrap(FBContent.BLOCK_FRAMED_LIGHTNING_ROD, FramedLightningRodGeometry::new, WrapHelper.IGNORE_WATERLOGGED);
     }
 
     private static void onBlockStateModelRegister(RegisterBlockStateModels event)

@@ -139,6 +139,7 @@ public final class FramedBlockTagProvider extends BlockTagsProvider
         pickaxeBlocks.add(FBContent.BLOCK_FRAMED_IRON_DOOR.value());
         pickaxeBlocks.add(FBContent.BLOCK_FRAMED_IRON_TRAP_DOOR.value());
         pickaxeBlocks.add(FBContent.BLOCK_FRAMED_IRON_GATE.value());
+        pickaxeBlocks.add(FBContent.BLOCK_FRAMED_LIGHTNING_ROD.value());
         pickaxeBlocks.add(FBContent.BLOCK_FRAMING_SAW.value());
         pickaxeBlocks.add(FBContent.BLOCK_POWERED_FRAMING_SAW.value());
 
