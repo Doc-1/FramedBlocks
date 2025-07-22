@@ -1,6 +1,7 @@
 package xfacthd.framedblocks;
 
 import com.mojang.logging.LogUtils;
+import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.neoforged.fml.CrashReportCallables;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.neoforge.common.NeoForge;
@@ -8,6 +9,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.common.world.poi.ExtendPoiTypesEvent;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import org.slf4j.Logger;
 import xfacthd.framedblocks.common.config.ClientConfig;
@@ -50,6 +52,7 @@ public final class FramedBlocks
         modBus.addListener(NetworkHandler::onRegisterPayloads);
         modBus.addListener(BlueprintBehaviours::onRegisterBlueprintCopyBehaviours);
         modBus.addListener(FramedDataMaps::onRegisterDataMapTypes);
+        modBus.addListener(FramedBlocks::onExtendPoiTypes);
 
         NeoForge.EVENT_BUS.addListener(EventHandler::onBlockLeftClick);
         NeoForge.EVENT_BUS.addListener(EventHandler::onServerShutdown);
@@ -90,6 +93,11 @@ public final class FramedBlocks
     {
         event.addListener(ShapeReloader.LISTENER_ID, ShapeReloader.INSTANCE);
         event.addListener(StateCacheBuilder.CacheReloader.LISTENER_ID, StateCacheBuilder.CacheReloader.INSTANCE);
+    }
+
+    private static void onExtendPoiTypes(ExtendPoiTypesEvent event)
+    {
+        event.addBlockToPoi(PoiTypes.LIGHTNING_ROD, FBContent.BLOCK_FRAMED_LIGHTNING_ROD.value());
     }
 
     private static String getBlockEntityWarning()

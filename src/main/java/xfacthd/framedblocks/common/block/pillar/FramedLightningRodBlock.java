@@ -31,7 +31,6 @@ import xfacthd.framedblocks.common.data.BlockType;
 
 import java.util.List;
 
-// TODO: add to PoiTypes.LIGHTNING_ROD
 public class FramedLightningRodBlock extends LightningRodBlock implements IFramedBlockInternal
 {
     public FramedLightningRodBlock(Properties props)
