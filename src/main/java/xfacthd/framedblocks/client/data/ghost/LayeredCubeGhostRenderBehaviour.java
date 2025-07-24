@@ -1,6 +1,5 @@
 package xfacthd.framedblocks.client.data.ghost;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -37,8 +36,7 @@ public final class LayeredCubeGhostRenderBehaviour implements GhostRenderBehavio
             BlockPlaceContext ctx,
             BlockState renderState,
             int renderPass,
-            ModelData data,
-            PoseStack poseStack
+            ModelData data
     )
     {
         BlockState prevState = ctx.getLevel().getBlockState(ctx.getClickedPos());

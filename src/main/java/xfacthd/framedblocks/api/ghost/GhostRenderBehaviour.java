@@ -247,12 +247,12 @@ public interface GhostRenderBehaviour
     /**
      * Return an additional offset to apply to the {@link PoseStack} before rendering.
      *
-     * @param stack The {@link ItemStack} in the players main hand
+     * @param stack        The {@link ItemStack} in the players main hand
      * @param proxiedStack The proxied {@code ItemStack} as returned from {@link GhostRenderBehaviour#getProxiedStack(ItemStack)}
-     * @param ctx The {@link BlockPlaceContext} to use for determining the resulting
-     * @param renderState The {@code BlockState} to render
-     * @param renderPass The current render pass index
-     * @param data The prepared {@code ModelData} to be given to the {@link BlockStateModel} that is to be rendered
+     * @param ctx          The {@link BlockPlaceContext} to use for determining the resulting
+     * @param renderState  The {@code BlockState} to render
+     * @param renderPass   The current render pass index
+     * @param data         The prepared {@code ModelData} to be given to the {@link BlockStateModel} that is to be rendered
      * @return The offset to apply to the {@link PoseStack} before rendering
      */
     default Vector3fc getRenderOffset(
@@ -261,8 +261,7 @@ public interface GhostRenderBehaviour
             BlockPlaceContext ctx,
             BlockState renderState,
             int renderPass,
-            ModelData data,
-            PoseStack poseStack
+            ModelData data
     )
     {
         return OFFSET_ZERO;

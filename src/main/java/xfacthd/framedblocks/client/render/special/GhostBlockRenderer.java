@@ -177,7 +177,7 @@ public final class GhostBlockRenderer
         profiler.pop(); //append_modeldata
 
         profiler.push("get_render_offset");
-        Vector3fc renderOffset = behaviour.getRenderOffset(stack, proxiedStack, context, renderState, renderPass, modelData, poseStack);
+        Vector3fc renderOffset = behaviour.getRenderOffset(stack, proxiedStack, context, renderState, renderPass, modelData);
         profiler.pop(); //get_render_offset
 
         MultiBufferSource.BufferSource buffers = mc().renderBuffers().bufferSource();

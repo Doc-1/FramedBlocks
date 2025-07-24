@@ -1,6 +1,5 @@
 package xfacthd.framedblocks.client.data.ghost;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.BlockItemStateProperties;
@@ -169,15 +168,14 @@ public final class BlueprintGhostRenderBehaviour implements GhostRenderBehaviour
             BlockPlaceContext ctx,
             BlockState renderState,
             int renderPass,
-            ModelData data,
-            PoseStack poseStack
+            ModelData data
     )
     {
         if (proxiedStack == null)
         {
             return OFFSET_ZERO;
         }
-        return proxyBehaviour(proxiedStack).getRenderOffset(proxiedStack, null, ctx, renderState, renderPass, data, poseStack);
+        return proxyBehaviour(proxiedStack).getRenderOffset(proxiedStack, null, ctx, renderState, renderPass, data);
     }
 
     private static GhostRenderBehaviour proxyBehaviour(ItemStack proxiedStack)
