@@ -23,6 +23,7 @@ import xfacthd.framedblocks.common.config.ClientConfig;
 public final class AppearanceHelper
 {
     private static final Logger LOGGER = LogUtils.getLogger();
+    private static final boolean CLIENT = FMLEnvironment.dist.isClient();
     private static final BlockState AIR = Blocks.AIR.defaultBlockState();
 
     public static BlockState getAppearance(
@@ -35,8 +36,13 @@ public final class AppearanceHelper
             @Nullable BlockPos queryPos
     )
     {
+        if (!CLIENT)
+        {
+            return AIR;
+        }
+
         ConTexMode cfgMode = ClientConfig.VIEW.getConTexMode();
-        if (!FMLEnvironment.dist.isClient() || cfgMode == ConTexMode.NONE)
+        if (cfgMode == ConTexMode.NONE)
         {
             return AIR;
         }
