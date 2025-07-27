@@ -14,7 +14,7 @@ public final class FramedBlockData extends AbstractFramedBlockData
 {
     public static final boolean[] NO_CULLED_FACES = new boolean[0];
     public static final FramedBlockData EMPTY = new FramedBlockData(EmptyCamoContainer.EMPTY, false);
-    private static final Direction[] DIRECTIONS = Direction.values();
+    private static final int FULL_FACE_INVERSION_MASK = 0b111111;
     private static final int FLAG_SECOND_PART = 1;
     private static final int FLAG_REINFORCED = 1 << 1;
     private static final int FLAG_EMISSIVE = 1 << 2;
@@ -91,13 +91,10 @@ public final class FramedBlockData extends AbstractFramedBlockData
      */
     public int computeFaceMask(StateCache stateCache, boolean forCached)
     {
-        int mask = 0;
-        for (Direction side : DIRECTIONS)
+        int mask = stateCache.getFullFaceMask();
+        if (forCached)
         {
-            if (stateCache.isFullFace(side) ^ forCached)
-            {
-                mask |= 1 << side.ordinal();
-            }
+            mask ^= FULL_FACE_INVERSION_MASK;
         }
         return mask & ~hidden;
     }

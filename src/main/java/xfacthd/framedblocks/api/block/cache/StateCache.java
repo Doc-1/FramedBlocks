@@ -115,6 +115,11 @@ public class StateCache
         return side != null && fullFace != 0 && (fullFace & (1 << side.ordinal())) != 0;
     }
 
+    public final byte getFullFaceMask()
+    {
+        return fullFace;
+    }
+
     public final boolean mayConnect(Direction side)
     {
         return mayConnect != 0 && (mayConnect & 1 << side.ordinal()) != 0;
