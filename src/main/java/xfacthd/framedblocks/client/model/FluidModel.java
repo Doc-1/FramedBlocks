@@ -21,8 +21,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.client.model.standalone.SimpleUnbakedStandaloneModel;
-import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 import xfacthd.framedblocks.api.util.ClientUtils;
 import xfacthd.framedblocks.api.util.Utils;
 
@@ -30,12 +28,8 @@ import java.util.Map;
 
 public final class FluidModel
 {
-    private static final ResourceLocation BARE_MODEL = Utils.rl("fluid/bare");
-    private static final ResourceLocation BARE_MODEL_SINGLE = Utils.rl("fluid/bare_single");
-    public static final StandaloneModelKey<Void> BARE_MODEL_KEY = new StandaloneModelKey<>(BARE_MODEL::toString);
-    public static final StandaloneModelKey<Void> BARE_MODEL_SINGLE_KEY = new StandaloneModelKey<>(BARE_MODEL_SINGLE::toString);
-    public static final SimpleUnbakedStandaloneModel<Void> BARE_UNBAKED_MODEL = unbaked(BARE_MODEL);
-    public static final SimpleUnbakedStandaloneModel<Void> BARE_UNBAKED_MODEL_SINGLE = unbaked(BARE_MODEL_SINGLE);
+    public static final ResourceLocation BARE_MODEL = Utils.rl("fluid/bare");
+    public static final ResourceLocation BARE_MODEL_SINGLE = Utils.rl("fluid/bare_single");
     private static final SpriteGetter TEXTURE_GETTER = new SpriteGetter()
     {
         @Override
@@ -113,11 +107,6 @@ public final class FluidModel
             return DUMMY_FLUID_TYPE_EXTENSIONS;
         }
         return IClientFluidTypeExtensions.of(fluid);
-    }
-
-    private static SimpleUnbakedStandaloneModel<Void> unbaked(ResourceLocation id)
-    {
-        return new SimpleUnbakedStandaloneModel<>(id, (model, baker) -> null);
     }
 
 

@@ -15,8 +15,8 @@ public interface BlockItemModelProvider
 
     Supplier<BlockStateModel> create(BlockState state, ModelBaker baker);
 
-    static Supplier<BlockStateModel> forGeometry(BlockState state, BlockState srcState, GeometryFactory geometry)
+    static Supplier<BlockStateModel> forGeometry(BlockState state, BlockState srcState, GeometryFactory geometry, ModelBaker baker)
     {
-        return InternalClientAPI.INSTANCE.createBlockItemModelProviderForGeometry(state, srcState, geometry);
+        return InternalClientAPI.INSTANCE.createBlockItemModelProviderForGeometry(state, srcState, geometry, baker);
     }
 }

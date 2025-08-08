@@ -73,8 +73,9 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
     private final boolean useBaseModel;
     private final boolean useSolidBase;
     private final StateCache stateCache;
+    private final ReinforcementModel reinforcement;
 
-    public FramedBlockModel(GeometryFactory.Context ctx, Geometry geometry)
+    public FramedBlockModel(GeometryFactory.Context ctx, Geometry geometry, ReinforcementModel reinforcement)
     {
         super(ctx.baseModel(), ctx.state(), geometry.getItemModelInfo());
         this.state = ctx.state();
@@ -84,6 +85,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         this.useBaseModel = geometry.useBaseModel();
         this.useSolidBase = geometry.useSolidNoCamoModel();
         this.stateCache = state.framedblocks$getCache();
+        this.reinforcement = reinforcement;
 
         Preconditions.checkState(
                 this.useBaseModel || !this.forceUngeneratedBaseModel,
@@ -163,8 +165,8 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         geometry.collectAdditionalPartsUncached(partConsumer, level, pos, random, extraData);
         if (reinforce)
         {
-            BlockModelPart reinforcement = ReinforcementModel.getFiltered(uncachedFaceMask, defaultAO.apply(TriState.DEFAULT));
-            partConsumer.accept(reinforcement, ReinforcementModel.SHADER_STATE, false, false, true, false, ReinforcementModel.SHADER_STATE, null);
+            BlockModelPart reinforcementPart = reinforcement.getFiltered(uncachedFaceMask, defaultAO.apply(TriState.DEFAULT));
+            partConsumer.accept(reinforcementPart, ReinforcementModel.SHADER_STATE, false, false, true, false, ReinforcementModel.SHADER_STATE, null);
         }
     }
 
@@ -271,7 +273,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         }
         if (reinforce)
         {
-            BlockModelPart srcPart = ReinforcementModel.getFiltered(xformAll ? 0b00111111 : cullMask, defaultAO.apply(TriState.DEFAULT));
+            BlockModelPart srcPart = reinforcement.getFiltered(xformAll ? 0b00111111 : cullMask, defaultAO.apply(TriState.DEFAULT));
             partConsumer.accept(srcPart, ReinforcementModel.SHADER_STATE, false, true, !xformAll, false, ReinforcementModel.SHADER_STATE, modifier);
         }
         random.setSeed(seed);

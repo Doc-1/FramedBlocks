@@ -3,40 +3,45 @@ package xfacthd.framedblocks.client.model;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
-import net.minecraft.client.resources.model.QuadCollection;
+import net.minecraft.client.resources.model.BlockModelRotation;
+import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.TriState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
-import net.neoforged.neoforge.client.model.standalone.StandaloneModelLoader;
-import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.util.ModelUtils;
 import xfacthd.framedblocks.api.util.Utils;
-
-import java.util.Objects;
 
 public final class ReinforcementModel
 {
     public static final BlockState SHADER_STATE = Blocks.OBSIDIAN.defaultBlockState();
     public static final ResourceLocation MODEL_ID = Utils.rl("block/framed_reinforcement");
-    public static final StandaloneModelKey<QuadCollection> MODEL_KEY = new StandaloneModelKey<>(MODEL_ID::toString);
+    private static final ModelBaker.SharedOperationKey<ReinforcementModel> REINFORCEMENT_KEY = ModelUtils.makeSharedOpsKey(
+            baker -> new ReinforcementModel(SimpleModelWrapper.bake(baker, ReinforcementModel.MODEL_ID, BlockModelRotation.X0_Y0))
+    );
     private static final Direction[] DIRECTIONS = Direction.values();
-    @Nullable
-    private static SimpleModelWrapper baseModel = null;
-    private static final BlockModelPart[] CACHED_FILTERED_PARTS = new BlockModelPart[256];
+    private final SimpleModelWrapper baseModel;
+    private final BlockModelPart[] cachedFilteredParts = new BlockModelPart[256];
 
-    public static BlockModelPart getFiltered(int faceMask, TriState ambientOcclusion)
+    public static ReinforcementModel getOrCreate(ModelBaker baker)
+    {
+        return baker.compute(REINFORCEMENT_KEY);
+    }
+
+    private ReinforcementModel(SimpleModelWrapper baseModel)
+    {
+        this.baseModel = baseModel;
+    }
+
+    public BlockModelPart getFiltered(int faceMask, TriState ambientOcclusion)
     {
         faceMask |= ambientOcclusion.ordinal() << 6;
 
-        BlockModelPart part = CACHED_FILTERED_PARTS[faceMask];
+        BlockModelPart part = cachedFilteredParts[faceMask];
         if (part == null)
         {
-            Objects.requireNonNull(baseModel);
-
             QuadMap quadMap = new QuadMap();
             for (Direction side : DIRECTIONS)
             {
@@ -45,7 +50,7 @@ public final class ReinforcementModel
                     quadMap.get(side).add(baseModel.getQuads(side).getFirst());
                 }
             }
-            CACHED_FILTERED_PARTS[faceMask] = part = ModelUtils.makeModelPart(
+            cachedFilteredParts[faceMask] = part = ModelUtils.makeModelPart(
                     quadMap,
                     ambientOcclusion,
                     baseModel.particleIcon(),
@@ -55,14 +60,4 @@ public final class ReinforcementModel
         }
         return part;
     }
-
-    public static void reload(StandaloneModelLoader.BakedModels models)
-    {
-        QuadCollection quads = Objects.requireNonNull(models.get(MODEL_KEY));
-        baseModel = new SimpleModelWrapper(quads, true, quads.getAll().getFirst().sprite(), ChunkSectionLayer.CUTOUT);
-    }
-
-
-
-    private ReinforcementModel() { }
 }

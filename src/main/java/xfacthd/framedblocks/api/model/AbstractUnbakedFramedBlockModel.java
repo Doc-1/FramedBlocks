@@ -38,7 +38,7 @@ public abstract class AbstractUnbakedFramedBlockModel implements BlockStateModel
         this.auxModels = ctx.auxModels();
     }
 
-    protected abstract BlockStateModel bakeCached(GeometryFactory.Context context);
+    protected abstract BlockStateModel bakeCached(GeometryFactory.Context context, ModelBaker baker);
 
     @Override
     public final BlockStateModel bake(BlockState ignoredState, ModelBaker baker)
@@ -64,7 +64,7 @@ public abstract class AbstractUnbakedFramedBlockModel implements BlockStateModel
                     AuxModelProvider auxModels = new AuxModelProviderImpl(state, bakedAuxModels, missingModel);
                     TextureLookup textures = TextureLookup.bindSpriteGetter(baker.sprites(), debugName);
                     GeometryFactory.Context context = new GeometryFactory.Context(state, bakedBase, auxModels, textures);
-                    cachedBakingResult = bakeCached(context);
+                    cachedBakingResult = bakeCached(context, baker);
                 }
             }
         }
@@ -85,7 +85,10 @@ public abstract class AbstractUnbakedFramedBlockModel implements BlockStateModel
         {
             auxModel.resolveDependencies(resolver);
         }
+        resolveSpecialDependencies(resolver);
     }
+
+    protected void resolveSpecialDependencies(Resolver resolver) {}
 
     private record AuxModelProviderImpl(BlockState state, Map<String, BlockStateModel> auxModels, BlockStateModel missingModel) implements AuxModelProvider
     {

@@ -25,7 +25,7 @@ public final class FenceBlockItemModelProvider implements BlockItemModelProvider
     @Override
     public Supplier<BlockStateModel> create(BlockState state, ModelBaker baker)
     {
-        return BlockItemModelProvider.forGeometry(state, state, FenceItemGeometry::new);
+        return BlockItemModelProvider.forGeometry(state, state, FenceItemGeometry::new, baker);
     }
 
     private static final class FenceItemGeometry extends Geometry

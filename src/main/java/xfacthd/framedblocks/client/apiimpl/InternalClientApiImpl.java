@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.block.model.SingleVariant;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.TriState;
@@ -35,6 +36,7 @@ import xfacthd.framedblocks.client.model.FramedBlockModelPart;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.item.tint.DynamicItemTintProvider;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
+import xfacthd.framedblocks.client.model.ReinforcementModel;
 import xfacthd.framedblocks.client.model.item.FramedBlockItemModel;
 import xfacthd.framedblocks.client.model.baked.FramedBlockModel;
 import xfacthd.framedblocks.client.model.unbaked.FramedBlockModelDefinition;
@@ -127,7 +129,7 @@ public final class InternalClientApiImpl implements InternalClientAPI
     }
 
     @Override
-    public Supplier<BlockStateModel> createBlockItemModelProviderForGeometry(BlockState state, BlockState srcState, GeometryFactory geometry)
+    public Supplier<BlockStateModel> createBlockItemModelProviderForGeometry(BlockState state, BlockState srcState, GeometryFactory geometry, ModelBaker baker)
     {
         return () ->
         {
@@ -137,7 +139,8 @@ public final class InternalClientApiImpl implements InternalClientAPI
                 baseModel = framedModel.getBaseModel();
             }
             GeometryFactory.Context ctx = new GeometryFactory.Context(state, baseModel, AuxModelProvider.invalid(), TextureLookup.runtime());
-            return new FramedBlockModel(ctx, geometry.create(ctx));
+            ReinforcementModel reinforcement = ReinforcementModel.getOrCreate(baker);
+            return new FramedBlockModel(ctx, geometry.create(ctx), reinforcement);
         };
     }
 }

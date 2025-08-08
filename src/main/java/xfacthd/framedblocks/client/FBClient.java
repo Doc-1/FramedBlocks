@@ -15,7 +15,6 @@ import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import net.neoforged.neoforge.client.model.standalone.SimpleUnbakedStandaloneModel;
 import net.neoforged.neoforge.common.NeoForge;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.block.IFramedDoubleBlock;
@@ -42,8 +41,6 @@ import xfacthd.framedblocks.client.data.BlockOutlineRenderers;
 import xfacthd.framedblocks.client.data.GhostRenderBehaviours;
 import xfacthd.framedblocks.client.data.extensions.block.NoEffectsClientBlockExtensions;
 import xfacthd.framedblocks.client.data.extensions.block.OneWayWindowClientBlockExtensions;
-import xfacthd.framedblocks.client.model.FluidModel;
-import xfacthd.framedblocks.client.model.ReinforcementModel;
 import xfacthd.framedblocks.client.model.baked.FramedBlockModel;
 import xfacthd.framedblocks.client.model.geometry.cube.*;
 import xfacthd.framedblocks.client.model.geometry.door.*;
@@ -68,6 +65,7 @@ import xfacthd.framedblocks.client.model.item.modelprovider.FenceBlockItemModelP
 import xfacthd.framedblocks.client.model.item.tintprovider.FramedTargetItemTintProvider;
 import xfacthd.framedblocks.client.model.loader.fallback.FallbackLoader;
 import xfacthd.framedblocks.client.model.overlaygen.OverlayQuadGenerator;
+import xfacthd.framedblocks.client.model.special.FramedChestLidModel;
 import xfacthd.framedblocks.client.model.unbaked.FramedBlockModelDefinition;
 import xfacthd.framedblocks.client.model.wrapping.ModelWrappingManager;
 import xfacthd.framedblocks.client.net.ClientNetworkHandler;
@@ -141,7 +139,6 @@ public final class FBClient
         modBus.addListener(FBClient::onGeometryLoaderRegister);
         modBus.addListener(FBClient::onRegisterModelWrappers);
         modBus.addListener(FBClient::onBlockStateModelRegister);
-        modBus.addListener(FBClient::onModelRegister);
         modBus.addListener(FBClient::onModelsLoaded);
         modBus.addListener(FBClient::onRegisterReloadListener);
         modBus.addListener(FBClient::onInitClientRegistries);
@@ -505,17 +502,9 @@ public final class FBClient
         event.registerDefinition(Utils.rl("wrapper"), FramedBlockModelDefinition.CODEC);
     }
 
-    private static void onModelRegister(ModelEvent.RegisterStandalone event)
-    {
-        event.register(FluidModel.BARE_MODEL_KEY, FluidModel.BARE_UNBAKED_MODEL);
-        event.register(FluidModel.BARE_MODEL_SINGLE_KEY, FluidModel.BARE_UNBAKED_MODEL_SINGLE);
-        event.register(ReinforcementModel.MODEL_KEY, SimpleUnbakedStandaloneModel.quadCollection(ReinforcementModel.MODEL_ID));
-    }
-
     private static void onModelsLoaded(ModelEvent.BakingCompleted event)
     {
         FluidCamoClientHandler.clearModelCache();
-        ReinforcementModel.reload(event.getBakingResult().standaloneModels());
         FramedBlockModel.collectCubeBaseModels(event.getBakingResult().blockStateModels());
 
         ModelWrappingManager.printWrappingInfo(event.getBakingResult().blockStateModels());
