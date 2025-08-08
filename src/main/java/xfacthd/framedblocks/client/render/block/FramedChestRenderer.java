@@ -7,9 +7,9 @@ import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
@@ -18,14 +18,12 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import xfacthd.framedblocks.api.block.FramedProperties;
-import xfacthd.framedblocks.api.model.wrapping.AuxModelProvider;
-import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
-import xfacthd.framedblocks.api.model.wrapping.TextureLookup;
+import xfacthd.framedblocks.api.model.standalone.StandaloneWrapperKey;
 import xfacthd.framedblocks.api.render.RenderUtils;
 import xfacthd.framedblocks.api.util.Utils;
-import xfacthd.framedblocks.client.model.baked.FramedBlockModel;
-import xfacthd.framedblocks.client.model.geometry.cube.FramedChestLidGeometry;
+import xfacthd.framedblocks.client.model.special.FramedChestLidModel;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.cube.FramedChestBlock;
 import xfacthd.framedblocks.common.blockentity.special.FramedChestBlockEntity;
@@ -33,18 +31,23 @@ import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.property.ChestState;
 import xfacthd.framedblocks.common.data.property.LatchType;
 
-import java.util.Map;
-
-public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlockEntity>
+public final class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlockEntity>
 {
-    private static final int DIRECTIONS = 4;
-    private static final int CHEST_TYPES = ChestType.values().length;
-    private static final int LATCH_TYPES = LatchType.values().length;
-    private static final FramedBlockModel[] LID_MODELS = new FramedBlockModel[DIRECTIONS * CHEST_TYPES * LATCH_TYPES];
+    private static final ResourceLocation BLOCKSTATE_LOC = Utils.rl("framed_chest_lid");
+    public static final StandaloneWrapperKey<FramedChestLidModel> WRAPPER_KEY = new StandaloneWrapperKey<>(FBContent.BLOCK_FRAMED_CHEST, BLOCKSTATE_LOC);
     private static final RandomSource RANDOM = RandomSource.create();
 
+    @Nullable
+    private final FramedChestLidModel lidModel;
+
     @SuppressWarnings("unused")
-    public FramedChestRenderer(BlockEntityRendererProvider.Context ctx) { }
+    public FramedChestRenderer(BlockEntityRendererProvider.Context ctx)
+    {
+        this.lidModel = ctx.getBlockRenderDispatcher()
+                .getBlockModelShaper()
+                .getModelManager()
+                .getStandaloneModel(WRAPPER_KEY.modelKey());
+    }
 
     @Override
     public void render(
@@ -58,7 +61,7 @@ public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlock
     )
     {
         Level level = be.getLevel();
-        if (level == null || be.isRemoved()) return;
+        if (level == null || be.isRemoved() || lidModel == null) return;
 
         BlockState state = be.getBlockState();
 
@@ -81,7 +84,7 @@ public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlock
         poseStack.mulPose(Utils.isX(dir) ? Axis.ZP.rotationDegrees(angle) : Axis.XN.rotationDegrees(angle));
         poseStack.translate(-xOff, -9F/16F, -zOff);
 
-        BlockStateModel model = LID_MODELS[makeModelIndex(dir, type, latch)];
+        BlockStateModel model = lidModel.getModel(dir, type, latch);
 
         RANDOM.setSeed(42);
         // Cannot use BlockRenderDispatcher#renderBatched() due to incorrect shading of rotated surfaces
@@ -128,50 +131,5 @@ public class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlock
     {
         BlockPos pos = blockEntity.getBlockPos();
         return new AABB(pos.getX() - .25, pos.getY() + .5625, pos.getZ() - .25, pos.getX() + 1.25, pos.getY() + 1.5, pos.getZ() + 1.25);
-    }
-
-
-
-    public static void onModelsLoaded(ModelBakery.BakingResult bakingResult)
-    {
-        Map<BlockState, BlockStateModel> registry = bakingResult.blockStateModels();
-        AuxModelProvider auxModels = AuxModelProvider.empty(bakingResult);
-        for (Direction dir : Direction.Plane.HORIZONTAL)
-        {
-            for (ChestType type : ChestType.values())
-            {
-                for (LatchType latch : LatchType.values())
-                {
-                    BlockState state = FBContent.BLOCK_FRAMED_CHEST.value().defaultBlockState()
-                            .setValue(FramedProperties.FACING_HOR, dir)
-                            .setValue(BlockStateProperties.CHEST_TYPE, type)
-                            .setValue(PropertyHolder.LATCH_TYPE, latch);
-
-                    BlockStateModel model = registry.get(state);
-                    if (model instanceof FramedBlockModel fbModel)
-                    {
-                        model = fbModel.getBaseModel();
-                    }
-                    GeometryFactory.Context ctx = new GeometryFactory.Context(state, model, auxModels, TextureLookup.runtime());
-                    LID_MODELS[makeModelIndex(dir, type, latch)] = new FramedBlockModel(ctx, new FramedChestLidGeometry(ctx));
-                }
-            }
-        }
-    }
-
-    private static int makeModelIndex(Direction dir, ChestType type, LatchType latch)
-    {
-        return dir.get2DDataValue() + (type.ordinal() * DIRECTIONS) + (latch.ordinal() * DIRECTIONS * CHEST_TYPES);
-    }
-
-    public static void clearModelCaches()
-    {
-        for (FramedBlockModel model : LID_MODELS)
-        {
-            if (model != null)
-            {
-                model.clearCache();
-            }
-        }
     }
 }

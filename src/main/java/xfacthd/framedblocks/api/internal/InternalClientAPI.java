@@ -20,12 +20,16 @@ import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.model.item.block.BlockItemModelProvider;
 import xfacthd.framedblocks.api.model.item.tint.DynamicItemTintProvider;
+import xfacthd.framedblocks.api.model.standalone.CachingModel;
+import xfacthd.framedblocks.api.model.standalone.StandaloneModelFactory;
+import xfacthd.framedblocks.api.model.standalone.StandaloneWrapperKey;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.model.wrapping.ModelFactory;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.util.Utils;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 @ApiStatus.Internal
@@ -43,13 +47,24 @@ public interface InternalClientAPI
 
     void registerCopyingModelWrapper(Holder<Block> block, Holder<Block> srcBlock, StateMerger stateMerger);
 
+    <T extends CachingModel> void registerStandaloneModelWrapper(
+            StandaloneWrapperKey<T> wrapperKey,
+            GeometryFactory blockGeometryFactory,
+            StandaloneModelFactory<T> modelFactory,
+            StateMerger stateMerger
+    );
+
     void enqueueClientTask(int delay, Runnable task);
 
     ItemModel.Unbaked createFramedBlockItemModel(Block block, BlockItemModelProvider modelProvider, DynamicItemTintProvider tintProvider, ResourceLocation baseModel);
 
     ExtendedBlockModelPart makeBlockModelPart(QuadMap quadMap, TriState partAO, TextureAtlasSprite particleSprite, ChunkSectionLayer chunkLayer, @Nullable BlockState shaderState);
 
-    BlockModelDefinition createFramedBlockDefinition(Either<BlockModelDefinition, SingleVariant.Unbaked> wrapped, Map<String, SingleVariant.Unbaked> auxModels);
+    BlockModelDefinition createFramedBlockDefinition(
+            Either<BlockModelDefinition, SingleVariant.Unbaked> wrapped,
+            Map<String, SingleVariant.Unbaked> auxModels,
+            Optional<StandaloneWrapperKey<?>> wrapperKey
+    );
 
     Supplier<BlockStateModel> createBlockItemModelProviderForGeometry(BlockState state, BlockState srcState, GeometryFactory geometry);
 }

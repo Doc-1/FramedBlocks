@@ -12,18 +12,22 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.neoforged.neoforge.client.model.block.CustomBlockModelDefinition;
+import xfacthd.framedblocks.api.model.standalone.StandaloneWrapperKey;
 import xfacthd.framedblocks.client.model.wrapping.ModelWrappingHandler;
 import xfacthd.framedblocks.client.model.wrapping.ModelWrappingManager;
+import xfacthd.framedblocks.client.model.wrapping.StandaloneWrapperKeys;
 import xfacthd.framedblocks.common.data.StateCacheBuilder;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public record FramedBlockModelDefinition(
         Either<BlockModelDefinition, SingleVariant.Unbaked> baseModel,
-        Map<String, SingleVariant.Unbaked> auxModels
+        Map<String, SingleVariant.Unbaked> auxModels,
+        Optional<StandaloneWrapperKey<?>> wrapperKey
 ) implements CustomBlockModelDefinition
 {
     public static final MapCodec<FramedBlockModelDefinition> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
@@ -32,7 +36,8 @@ public record FramedBlockModelDefinition(
             Codec.unboundedMap(Codec.STRING, SingleVariant.Unbaked.CODEC)
                     .optionalFieldOf("aux_models", Map.of())
                     .xmap(Map::copyOf, Function.identity())
-                    .forGetter(FramedBlockModelDefinition::auxModels)
+                    .forGetter(FramedBlockModelDefinition::auxModels),
+            StandaloneWrapperKeys.CODEC.optionalFieldOf("wrapper_key").forGetter(FramedBlockModelDefinition::wrapperKey)
     ).apply(inst, FramedBlockModelDefinition::new));
 
     @Override
@@ -48,11 +53,20 @@ public record FramedBlockModelDefinition(
         );
 
         StateCacheBuilder.ensureStateCachesInitialized();
-        ModelWrappingHandler handler = ModelWrappingManager.getHandler(states.any().getBlock());
+        ModelWrappingHandler handler = getWrappingHandler(states.any().getBlock());
         handler.reset();
         models.replaceAll((state, model) -> handler.wrapBlockModel(state, model, auxModels));
 
         return models;
+    }
+
+    private ModelWrappingHandler getWrappingHandler(Block block)
+    {
+        if (wrapperKey.isPresent())
+        {
+            return ModelWrappingManager.getHandler(wrapperKey.get());
+        }
+        return ModelWrappingManager.getHandler(block);
     }
 
     @Override

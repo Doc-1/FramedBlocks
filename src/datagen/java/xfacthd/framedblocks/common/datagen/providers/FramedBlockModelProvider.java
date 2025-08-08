@@ -2,6 +2,7 @@ package xfacthd.framedblocks.common.datagen.providers;
 
 import net.minecraft.client.data.models.MultiVariant;
 import net.minecraft.client.data.models.blockstates.ConditionBuilder;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.renderer.block.model.VariantMutator;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.resources.model.MissingBlockModel;
@@ -44,6 +45,7 @@ import xfacthd.framedblocks.client.model.geometry.cube.FramedMarkedCubeGeometry;
 import xfacthd.framedblocks.client.model.geometry.cube.FramedTargetGeometry;
 import xfacthd.framedblocks.client.model.geometry.interactive.FramedFlowerPotGeometry;
 import xfacthd.framedblocks.client.model.geometry.rail.FramedFancyRailGeometry;
+import xfacthd.framedblocks.client.render.block.FramedChestRenderer;
 import xfacthd.framedblocks.client.render.item.TankItemRenderer;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.compat.amendments.AmendmentsCompat;
@@ -52,6 +54,7 @@ import xfacthd.framedblocks.common.data.property.ChainType;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.Function;
 
 @SuppressWarnings({ "MethodMayBeStatic", "SameParameterValue" })
 public final class FramedBlockModelProvider extends AbstractFramedBlockModelProvider
@@ -599,14 +602,15 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         ResourceLocation chestLeft = Utils.rl("block/framed_chest_left");
         ResourceLocation chestRight = Utils.rl("block/framed_chest_right");
 
-        framedVariant(blockModels, FBContent.BLOCK_FRAMED_CHEST, gen ->
+        Function<MultiVariantGenerator.Empty, MultiVariantGenerator> generator = gen ->
                 gen.with(PropertyDispatch.initial(BlockStateProperties.CHEST_TYPE)
                         .select(ChestType.SINGLE, BlockModelGenerators.plainVariant(chest))
                         .select(ChestType.LEFT, BlockModelGenerators.plainVariant(chestLeft))
                         .select(ChestType.RIGHT, BlockModelGenerators.plainVariant(chestRight))
                 )
-                .with(BlockModelGenerators.ROTATION_HORIZONTAL_FACING)
-        );
+                .with(BlockModelGenerators.ROTATION_HORIZONTAL_FACING);
+        framedVariant(blockModels, FBContent.BLOCK_FRAMED_CHEST, generator);
+        framedStandaloneVariant(FramedChestRenderer.WRAPPER_KEY, generator);
 
         framedBlockItemModel(blockModels, FBContent.BLOCK_FRAMED_CHEST);
     }

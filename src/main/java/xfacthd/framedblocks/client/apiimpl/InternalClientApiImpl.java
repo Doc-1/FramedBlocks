@@ -23,6 +23,9 @@ import xfacthd.framedblocks.api.model.AbstractFramedBlockModel;
 import xfacthd.framedblocks.api.model.ExtendedBlockModelPart;
 import xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import xfacthd.framedblocks.api.model.item.block.BlockItemModelProvider;
+import xfacthd.framedblocks.api.model.standalone.CachingModel;
+import xfacthd.framedblocks.api.model.standalone.StandaloneModelFactory;
+import xfacthd.framedblocks.api.model.standalone.StandaloneWrapperKey;
 import xfacthd.framedblocks.api.model.util.ModelUtils;
 import xfacthd.framedblocks.api.model.wrapping.AuxModelProvider;
 import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
@@ -40,9 +43,11 @@ import xfacthd.framedblocks.client.model.unbaked.UnbakedCopyingFramedBlockModel;
 import xfacthd.framedblocks.client.model.unbaked.UnbakedFramedDoubleBlockModel;
 import xfacthd.framedblocks.client.model.wrapping.ModelWrappingHandler;
 import xfacthd.framedblocks.client.model.wrapping.ModelWrappingManager;
+import xfacthd.framedblocks.client.model.wrapping.StandaloneModelWrappingHandler;
 import xfacthd.framedblocks.client.util.ClientTaskQueue;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public final class InternalClientApiImpl implements InternalClientAPI
@@ -76,6 +81,20 @@ public final class InternalClientApiImpl implements InternalClientAPI
     }
 
     @Override
+    public <T extends CachingModel> void registerStandaloneModelWrapper(
+            StandaloneWrapperKey<T> wrapperKey,
+            GeometryFactory geometryFactory,
+            StandaloneModelFactory<T> modelFactory,
+            StateMerger stateMerger
+    )
+    {
+        Holder<Block> block = wrapperKey.block();
+        Preconditions.checkArgument(block.value() instanceof IFramedBlock, "Cannot register model wrapper for non-IFramedBlock");
+        ModelFactory blockModelFactory = ctx -> new UnbakedFramedBlockModel(ctx, geometryFactory);
+        ModelWrappingManager.register(wrapperKey, new StandaloneModelWrappingHandler<>(block, blockModelFactory, stateMerger, modelFactory));
+    }
+
+    @Override
     public void enqueueClientTask(int delay, Runnable task)
     {
         ClientTaskQueue.enqueueClientTask(delay, task);
@@ -98,9 +117,13 @@ public final class InternalClientApiImpl implements InternalClientAPI
     }
 
     @Override
-    public BlockModelDefinition createFramedBlockDefinition(Either<BlockModelDefinition, SingleVariant.Unbaked> wrapped, Map<String, SingleVariant.Unbaked> auxModels)
+    public BlockModelDefinition createFramedBlockDefinition(
+            Either<BlockModelDefinition, SingleVariant.Unbaked> wrapped,
+            Map<String, SingleVariant.Unbaked> auxModels,
+            Optional<StandaloneWrapperKey<?>> wrapperKey
+    )
     {
-        return new BlockModelDefinition(new FramedBlockModelDefinition(wrapped, auxModels));
+        return new BlockModelDefinition(new FramedBlockModelDefinition(wrapped, auxModels, wrapperKey));
     }
 
     @Override

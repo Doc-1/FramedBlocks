@@ -11,7 +11,7 @@ import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-public final class ModelWrappingHandler
+public sealed class ModelWrappingHandler permits StandaloneModelWrappingHandler
 {
     private final Map<BlockState, BlockStateModel.UnbakedRoot> visitedStates = new IdentityHashMap<>();
     private final Holder<Block> block;

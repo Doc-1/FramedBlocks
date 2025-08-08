@@ -11,12 +11,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.client.event.ModelEvent;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import xfacthd.framedblocks.api.model.AbstractFramedBlockModel;
+import xfacthd.framedblocks.api.model.standalone.CachingModel;
+import xfacthd.framedblocks.api.model.standalone.StandaloneWrapperKey;
 import xfacthd.framedblocks.api.model.wrapping.RegisterModelWrappersEvent;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.util.Utils;
+import xfacthd.framedblocks.client.model.unbaked.UnbakedStandaloneFramedBlockModel;
 import xfacthd.framedblocks.common.config.DevToolsConfig;
 import xfacthd.framedblocks.common.util.MarkdownTable;
 
@@ -33,6 +37,7 @@ public final class ModelWrappingManager
 {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Map<Block, ModelWrappingHandler> HANDLERS = new IdentityHashMap<>();
+    private static final Map<StandaloneWrapperKey<?>, StandaloneModelWrappingHandler<?>> STANDALONE_HANDLERS = new IdentityHashMap<>();
     private static boolean locked = true;
     @Nullable
     private static MarkdownTable stateMergerDebugOutput;
@@ -64,6 +69,13 @@ public final class ModelWrappingManager
         LOGGER.debug("Registered model wrappers for {} blocks in {}", HANDLERS.size(), stopwatch);
     }
 
+    public static void onRegisterStandaloneModels(ModelEvent.RegisterStandalone event)
+    {
+        STANDALONE_HANDLERS.forEach((wrapperKey, handler) ->
+                event.register(wrapperKey.modelKey(), new UnbakedStandaloneFramedBlockModel<>(wrapperKey, handler.getModelFactory()))
+        );
+    }
+
     public static void register(Holder<Block> block, ModelWrappingHandler handler)
     {
         if (locked)
@@ -80,9 +92,27 @@ public final class ModelWrappingManager
         debugStateMerger(block, handler.getStateMerger());
     }
 
+    public static void register(StandaloneWrapperKey<?> wrapperKey, StandaloneModelWrappingHandler<?> handler)
+    {
+        if (locked)
+        {
+            throw new IllegalStateException("ModelWrappingHandler registration is locked");
+        }
+
+        StandaloneModelWrappingHandler<?> oldHandler = STANDALONE_HANDLERS.put(wrapperKey, handler);
+        if (oldHandler != null)
+        {
+            throw new IllegalStateException("ModelWrappingHandler for wrapper key '" + wrapperKey + "' already registered");
+        }
+
+        StandaloneWrapperKeys.registerKey(wrapperKey);
+        debugStateMerger(wrapperKey.block(), wrapperKey.definitionFile().toString(), handler.getStateMerger());
+    }
+
     public static void reset()
     {
         HANDLERS.values().forEach(ModelWrappingHandler::reset);
+        STANDALONE_HANDLERS.values().forEach(ModelWrappingHandler::reset);
     }
 
     public static ModelWrappingHandler getHandler(Block block)
@@ -93,6 +123,17 @@ public final class ModelWrappingManager
             throw new NullPointerException("No ModelWrappingHandler registered for block '" + block + "'");
         }
         return handler;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends CachingModel> StandaloneModelWrappingHandler<T> getHandler(StandaloneWrapperKey<T> wrapperKey)
+    {
+        StandaloneModelWrappingHandler<?> handler = STANDALONE_HANDLERS.get(wrapperKey);
+        if (handler == null)
+        {
+            throw new NullPointerException("No ModelWrappingHandler registered for wrapper key '" + wrapperKey + "'");
+        }
+        return (StandaloneModelWrappingHandler<T>) handler;
     }
 
     public static void printWrappingInfo(Map<BlockState, BlockStateModel> models)
@@ -151,9 +192,13 @@ public final class ModelWrappingManager
 
     private static void debugStateMerger(Holder<Block> block, StateMerger stateMerger)
     {
-        if (stateMergerDebugOutput == null) return;
-
         String blockId = Utils.getKeyOrThrow(block).location().toString();
+        debugStateMerger(block, blockId, stateMerger);
+    }
+
+    private static void debugStateMerger(Holder<Block> block, String blockId, StateMerger stateMerger)
+    {
+        if (stateMergerDebugOutput == null) return;
 
         Pattern debugFilterPattern = DevToolsConfig.VIEW.getStateMergerDebugFilter();
         if (debugFilterPattern != null)

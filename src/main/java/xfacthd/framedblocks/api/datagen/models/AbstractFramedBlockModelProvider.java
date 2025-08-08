@@ -1,10 +1,12 @@
 package xfacthd.framedblocks.api.datagen.models;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 import com.mojang.math.Quadrant;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.client.data.models.MultiVariant;
+import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerator;
 import net.minecraft.client.data.models.blockstates.ConditionBuilder;
 import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
@@ -21,6 +23,8 @@ import net.minecraft.client.renderer.block.model.multipart.CombinedCondition;
 import net.minecraft.client.renderer.block.model.multipart.Condition;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
@@ -30,8 +34,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.client.model.generators.template.ExtendedModelTemplateBuilder;
 import net.neoforged.neoforge.common.util.TransformationHelper;
+import xfacthd.framedblocks.api.model.standalone.StandaloneWrapperKey;
 import xfacthd.framedblocks.api.util.Utils;
 
+import java.nio.file.Path;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -51,9 +61,13 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
             .select(Direction.WEST, BlockModelGenerators.Y_ROT_90)
             .select(Direction.EAST, BlockModelGenerators.Y_ROT_270);
 
+    private final PackOutput.PathProvider standalonePathProvider;
+    private final Map<StandaloneWrapperKey<?>, FramedBlockModelDefinitionGenerator> standaloneDefinitions = new IdentityHashMap<>();
+
     protected AbstractFramedBlockModelProvider(PackOutput output, String modId)
     {
         super(output, modId);
+        this.standalonePathProvider = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, StandaloneWrapperKey.STANDALONE_DEFINITION_FOLDER);
     }
 
     protected static void variant(BlockModelGenerators blockModels, Holder<Block> block, Function<MultiVariantGenerator.Empty, MultiVariantGenerator> generator)
@@ -76,7 +90,7 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
     protected static FramedBlockModelDefinitionGenerator framedVariant(BlockModelGenerators blockModels, Holder<Block> block, Function<MultiVariantGenerator.Empty, MultiVariantGenerator> generator)
     {
         BlockModelDefinition definition = generator.apply(MultiVariantGenerator.dispatch(block.value())).create();
-        FramedBlockModelDefinitionGenerator framedDefinition = new FramedBlockModelDefinitionGenerator(block.value(), definition);
+        FramedBlockModelDefinitionGenerator framedDefinition = new FramedBlockModelDefinitionGenerator(block.value(), definition, Optional.empty());
         blockModels.blockStateOutput.accept(framedDefinition);
         return framedDefinition;
     }
@@ -84,7 +98,7 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
     protected static FramedBlockModelDefinitionGenerator framedVariant(BlockModelGenerators blockModels, Holder<Block> block, MultiVariant baseVariant, UnaryOperator<MultiVariantGenerator> generator)
     {
         BlockModelDefinition definition = generator.apply(MultiVariantGenerator.dispatch(block.value(), baseVariant)).create();
-        FramedBlockModelDefinitionGenerator framedDefinition = new FramedBlockModelDefinitionGenerator(block.value(), definition);
+        FramedBlockModelDefinitionGenerator framedDefinition = new FramedBlockModelDefinitionGenerator(block.value(), definition, Optional.empty());
         blockModels.blockStateOutput.accept(framedDefinition);
         return framedDefinition;
     }
@@ -92,7 +106,7 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
     protected static FramedBlockModelDefinitionGenerator framedMultiPart(BlockModelGenerators blockModels, Holder<Block> block, UnaryOperator<MultiPartGenerator> generator)
     {
         BlockModelDefinition definition = generator.apply(MultiPartGenerator.multiPart(block.value())).create();
-        FramedBlockModelDefinitionGenerator framedDefinition = new FramedBlockModelDefinitionGenerator(block.value(), definition);
+        FramedBlockModelDefinitionGenerator framedDefinition = new FramedBlockModelDefinitionGenerator(block.value(), definition, Optional.empty());
         blockModels.blockStateOutput.accept(framedDefinition);
         return framedDefinition;
     }
@@ -104,7 +118,7 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
 
     protected static FramedBlockModelDefinitionGenerator simpleFramedBlock(BlockModelGenerators blockModels, Holder<Block> block, ResourceLocation model)
     {
-        FramedBlockModelDefinitionGenerator framedDefinition = new FramedBlockModelDefinitionGenerator(block.value(), singleVariant(model));
+        FramedBlockModelDefinitionGenerator framedDefinition = new FramedBlockModelDefinitionGenerator(block.value(), singleVariant(model), Optional.empty());
         blockModels.blockStateOutput.accept(framedDefinition);
         return framedDefinition;
     }
@@ -120,6 +134,39 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
     {
         FramedBlockModelDefinitionGenerator framedDefinition = simpleFramedBlock(blockModels, block, model);
         framedBlockItemModel(blockModels, block, builderConsumer);
+        return framedDefinition;
+    }
+
+    protected final FramedBlockModelDefinitionGenerator framedStandaloneVariant(
+            StandaloneWrapperKey<?> wrapperKey, Function<MultiVariantGenerator.Empty, MultiVariantGenerator> generator
+    )
+    {
+        Holder<Block> block = wrapperKey.block();
+        BlockModelDefinition definition = generator.apply(MultiVariantGenerator.dispatch(block.value())).create();
+        FramedBlockModelDefinitionGenerator framedDefinition = new FramedBlockModelDefinitionGenerator(block.value(), definition, Optional.of(wrapperKey));
+        registerStandaloneDefinition(framedDefinition);
+        return framedDefinition;
+    }
+
+    protected final FramedBlockModelDefinitionGenerator framedStandaloneVariant(
+            StandaloneWrapperKey<?> wrapperKey, MultiVariant baseVariant, UnaryOperator<MultiVariantGenerator> generator
+    )
+    {
+        Holder<Block> block = wrapperKey.block();
+        BlockModelDefinition definition = generator.apply(MultiVariantGenerator.dispatch(block.value(), baseVariant)).create();
+        FramedBlockModelDefinitionGenerator framedDefinition = new FramedBlockModelDefinitionGenerator(block.value(), definition, Optional.of(wrapperKey));
+        registerStandaloneDefinition(framedDefinition);
+        return framedDefinition;
+    }
+
+    protected final FramedBlockModelDefinitionGenerator framedStandaloneMultiPart(
+            StandaloneWrapperKey<?> wrapperKey, UnaryOperator<MultiPartGenerator> generator
+    )
+    {
+        Holder<Block> block = wrapperKey.block();
+        BlockModelDefinition definition = generator.apply(MultiPartGenerator.multiPart(block.value())).create();
+        FramedBlockModelDefinitionGenerator framedDefinition = new FramedBlockModelDefinitionGenerator(block.value(), definition, Optional.of(wrapperKey));
+        registerStandaloneDefinition(framedDefinition);
         return framedDefinition;
     }
 
@@ -243,6 +290,30 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
     protected static Condition and(ConditionBuilder... conditions)
     {
         return new CombinedCondition(CombinedCondition.Operation.AND, Stream.of(conditions).map(ConditionBuilder::build).toList());
+    }
+
+    private void registerStandaloneDefinition(FramedBlockModelDefinitionGenerator definition)
+    {
+        StandaloneWrapperKey<?> wrapperKey = definition.getWrapperKey();
+        FramedBlockModelDefinitionGenerator old = standaloneDefinitions.putIfAbsent(wrapperKey, definition);
+        if (old != null)
+        {
+            throw new IllegalStateException("Duplicate standalone model definition for '" + wrapperKey + "'");
+        }
+    }
+
+    @Override
+    @SuppressWarnings("DataFlowIssue") // BlockModelDefinitionGenerator#create() will never return null
+    public CompletableFuture<?> run(CachedOutput output)
+    {
+        CompletableFuture<?> future = super.run(output);
+        if (!standaloneDefinitions.isEmpty())
+        {
+            Map<StandaloneWrapperKey<?>, BlockModelDefinition> definitions = Maps.transformValues(standaloneDefinitions, BlockModelDefinitionGenerator::create);
+            Function<StandaloneWrapperKey<?>, Path> pathGetter = wrapperKey -> standalonePathProvider.json(wrapperKey.definitionFile());
+            future = CompletableFuture.allOf(future, DataProvider.saveAll(output, BlockModelDefinition.CODEC, pathGetter, definitions));
+        }
+        return future;
     }
 
     @Override

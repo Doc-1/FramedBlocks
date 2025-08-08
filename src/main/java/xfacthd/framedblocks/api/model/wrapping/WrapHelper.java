@@ -13,6 +13,9 @@ import xfacthd.framedblocks.api.block.render.NullCullPredicate;
 import xfacthd.framedblocks.api.internal.InternalClientAPI;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
 import xfacthd.framedblocks.api.model.item.ItemModelInfo;
+import xfacthd.framedblocks.api.model.standalone.CachingModel;
+import xfacthd.framedblocks.api.model.standalone.StandaloneModelFactory;
+import xfacthd.framedblocks.api.model.standalone.StandaloneWrapperKey;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import xfacthd.framedblocks.api.util.Utils;
 
@@ -162,6 +165,26 @@ public final class WrapHelper
     public static void copy(Holder<Block> block, Holder<Block> srcBlock, StateMerger stateMerger)
     {
         InternalClientAPI.INSTANCE.registerCopyingModelWrapper(block, srcBlock, stateMerger);
+    }
+
+    public static <T extends CachingModel> void wrapStandalone(
+            StandaloneWrapperKey<T> wrapperKey,
+            GeometryFactory blockGeometryFactory,
+            StandaloneModelFactory<T> modelFactory,
+            Set<Property<?>> ignoredProps
+    )
+    {
+        wrapStandalone(wrapperKey, blockGeometryFactory, modelFactory, StateMerger.ignoring(ignoredProps));
+    }
+
+    public static <T extends CachingModel> void wrapStandalone(
+            StandaloneWrapperKey<T> wrapperKey,
+            GeometryFactory blockGeometryFactory,
+            StandaloneModelFactory<T> modelFactory,
+            StateMerger stateMerger
+    )
+    {
+        InternalClientAPI.INSTANCE.registerStandaloneModelWrapper(wrapperKey, blockGeometryFactory, modelFactory, stateMerger);
     }
 
 

@@ -156,6 +156,7 @@ public final class FBClient
         modBus.addListener(GhostRenderBehaviours::onRegisterGhostRenderBehaviours);
         modBus.addListener(FramedRenderPipelines::onRegisterRenderPipelines);
         modBus.addListener(ClientNetworkHandler::onRegisterPayloadHandlers);
+        modBus.addListener(ModelWrappingManager::onRegisterStandaloneModels);
 
         NeoForge.EVENT_BUS.addListener(ClientTaskQueue::onClientTick);
         NeoForge.EVENT_BUS.addListener(BlockOutlineRenderer::onRenderBlockHighlight);
@@ -495,6 +496,8 @@ public final class FBClient
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_HOPPER, FramedHopperGeometry::new, WrapHelper.IGNORE_ALWAYS);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_LAYERED_CUBE, FramedLayeredCubeGeometry::new, WrapHelper.IGNORE_DEFAULT);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_LIGHTNING_ROD, FramedLightningRodGeometry::new, WrapHelper.IGNORE_WATERLOGGED);
+
+        WrapHelper.wrapStandalone(FramedChestRenderer.WRAPPER_KEY, FramedChestLidGeometry::new, FramedChestLidModel::new, WrapHelper.IGNORE_WATERLOGGED);
     }
 
     private static void onBlockStateModelRegister(RegisterBlockStateModels event)
@@ -512,7 +515,6 @@ public final class FBClient
     private static void onModelsLoaded(ModelEvent.BakingCompleted event)
     {
         FluidCamoClientHandler.clearModelCache();
-        FramedChestRenderer.onModelsLoaded(event.getBakingResult());
         ReinforcementModel.reload(event.getBakingResult().standaloneModels());
         FramedBlockModel.collectCubeBaseModels(event.getBakingResult().blockStateModels());
 
