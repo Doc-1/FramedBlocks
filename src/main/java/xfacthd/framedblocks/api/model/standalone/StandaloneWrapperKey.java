@@ -34,4 +34,10 @@ public final class StandaloneWrapperKey<T extends CachingModel>
     {
         return modelKey;
     }
+
+    @Override
+    public String toString()
+    {
+        return "StandaloneWrapperKey{block=" + block + ", definitionFile=" + definitionFile + "}";
+    }
 }
