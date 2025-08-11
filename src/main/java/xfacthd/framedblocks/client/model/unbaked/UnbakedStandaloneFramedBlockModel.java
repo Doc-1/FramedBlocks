@@ -7,10 +7,7 @@ import com.mojang.serialization.JsonOps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockModelDefinition;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.resources.model.MissingBlockModel;
 import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ResolvedModel;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -24,6 +21,7 @@ import org.slf4j.Logger;
 import xfacthd.framedblocks.api.model.standalone.CachingModel;
 import xfacthd.framedblocks.api.model.standalone.StandaloneModelFactory;
 import xfacthd.framedblocks.api.model.standalone.StandaloneWrapperKey;
+import xfacthd.framedblocks.api.model.util.ModelUtils;
 
 import java.io.Reader;
 import java.util.ArrayList;
@@ -57,8 +55,7 @@ public final class UnbakedStandaloneFramedBlockModel<T extends CachingModel> imp
         Function<BlockState, BlockStateModel> modelProvider;
         if (unbakedModels.isEmpty())
         {
-            ResolvedModel model = baker.getModel(MissingBlockModel.LOCATION);
-            BlockStateModel missing = ModelBakery.MissingModels.bake(model, baker.sprites()).block();
+            BlockStateModel missing = baker.compute(ModelUtils.MISSING_MODEL_KEY);
             modelProvider = $ -> missing;
         }
         else
