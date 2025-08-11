@@ -42,7 +42,7 @@ public final class ReinforcementModel
         BlockModelPart part = cachedFilteredParts[faceMask];
         if (part == null)
         {
-            QuadMap quadMap = new QuadMap();
+            QuadMap quadMap = new QuadMapImpl();
             for (Direction side : DIRECTIONS)
             {
                 if ((faceMask & (1 << side.ordinal())) != 0)

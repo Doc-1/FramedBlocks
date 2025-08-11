@@ -14,6 +14,7 @@ import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.OverlayPartGenerator;
 import xfacthd.framedblocks.api.model.util.ModelUtils;
 import xfacthd.framedblocks.api.util.Utils;
+import xfacthd.framedblocks.client.model.QuadMapImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public final class OverlayModelPartGenerator implements OverlayPartGenerator
     {
         Preconditions.checkState(!flushed, "OverlayPartGenerator was already flushed");
 
-        QuadMap quadMap = new QuadMap();
+        QuadMap quadMap = new QuadMapImpl();
         for (BlockModelPart part : staticParts)
         {
             for (Direction side : cullfaces)

@@ -24,7 +24,6 @@ import xfacthd.framedblocks.api.model.ExtendedBlockModelPart;
 import xfacthd.framedblocks.api.model.cache.QuadCacheKey;
 import xfacthd.framedblocks.api.model.data.FramedBlockData;
 import xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
-import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.geometry.DefaultAO;
 import xfacthd.framedblocks.api.model.geometry.Geometry;
 import xfacthd.framedblocks.api.model.geometry.PartConsumer;
@@ -35,6 +34,7 @@ import xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import xfacthd.framedblocks.api.predicate.contex.ConTexMode;
 import xfacthd.framedblocks.api.block.IBlockType;
 import xfacthd.framedblocks.api.util.Utils;
+import xfacthd.framedblocks.client.model.QuadMapImpl;
 import xfacthd.framedblocks.client.model.ReinforcementModel;
 import xfacthd.framedblocks.client.model.overlaygen.OverlayModelPartGenerator;
 import xfacthd.framedblocks.common.FBContent;
@@ -98,6 +98,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
     }
 
     @Override
+    @SuppressWarnings("ForLoopReplaceableByForEach")
     public void collectParts(BlockAndTintGetter level, BlockPos pos, BlockState unusedState, RandomSource random, List<BlockModelPart> partsOut)
     {
         ModelData extraData = level.getModelData(pos);
@@ -137,9 +138,9 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         PartConsumer partConsumer = makePartConsumer(partsOut, uncachedFaceMask, defaultAO, camoEmissive, forceEmissive, secondPart);
 
         BlockState camoState = camoContent.getAsBlockState();
-        for (BlockModelPart modelPart : srcPartsUncached)
+        for (int i = 0; i < srcPartsUncached.size(); i++)
         {
-            partConsumer.accept(modelPart, camoState, false, true, true, true, camoState, null);
+            partConsumer.accept(srcPartsUncached.get(i), camoState, false, true, true, true, camoState, null);
         }
         if (!empty || !forceUngeneratedBaseModel)
         {
@@ -156,9 +157,9 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
                 partCache.put(key, cachedParts);
             }
             int cachedFaceMask = fbData.computeFaceMask(stateCache, true);
-            for (ExtendedBlockModelPart part : cachedParts)
+            for (int i = 0; i < cachedParts.size(); i++)
             {
-                partsOut.add(new CullableBlockModelPart(part, cachedFaceMask));
+                partsOut.add(new CullableBlockModelPart(cachedParts.get(i), cachedFaceMask));
             }
         }
         random.setSeed(seed);
@@ -183,8 +184,10 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         {
             Preconditions.checkArgument(!(includeNull && reclaimFromNull), "Cannot both include null faces and reclaim cullable faces from them");
 
-            QuadMap quadMap = new QuadMap();
-            boolean hasModifier = modifier != null;
+            QuadMapImpl quadMap = new QuadMapImpl();
+            boolean hasListModifier = modifier != null;
+            boolean hasPostModifiers = (camoPart && camoEmissive) || forceEmissive || invertTintIndex;
+            boolean hasAnyModifiers = hasListModifier || hasPostModifiers;
             for (Direction side : DIRECTIONS_WITH_NULL)
             {
                 boolean nullSide = side == null;
@@ -192,20 +195,26 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
                 if (!nullSide && cullNonNull && isSideHidden(cullMask, side)) continue;
 
                 List<BakedQuad> srcQuads = part.getQuads(side);
-                ArrayList<BakedQuad> quads = hasModifier ? new ArrayList<>(srcQuads.size()) : quadMap.get(side);
+                if (!hasAnyModifiers && !srcQuads.isEmpty())
+                {
+                    quadMap.set(side, srcQuads);
+                    continue;
+                }
+
+                ArrayList<BakedQuad> quads = hasListModifier ? new ArrayList<>(srcQuads.size()) : quadMap.get(side);
                 Utils.copyAll(srcQuads, quads);
                 if (!nullSide && quads.isEmpty() && reclaimFromNull)
                 {
                     ModelUtils.getFilteredNullQuads(quads, part, side);
                 }
-                if (hasModifier)
+                if (hasListModifier)
                 {
                     modifier.modify(quadMap, quads, side);
                     // Copy to final destination at the end in case the modifier wants to iterate or clear the list
                     Utils.copyAll(quads, quadMap.get(side));
                 }
             }
-            if ((camoPart && camoEmissive) || forceEmissive || invertTintIndex)
+            if (hasPostModifiers)
             {
                 for (Direction side : DIRECTIONS_WITH_NULL)
                 {

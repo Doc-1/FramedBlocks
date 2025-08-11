@@ -36,6 +36,7 @@ import xfacthd.framedblocks.client.model.FramedBlockModelPart;
 import xfacthd.framedblocks.api.model.data.QuadMap;
 import xfacthd.framedblocks.api.model.item.tint.DynamicItemTintProvider;
 import xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
+import xfacthd.framedblocks.client.model.QuadMapImpl;
 import xfacthd.framedblocks.client.model.ReinforcementModel;
 import xfacthd.framedblocks.client.model.item.FramedBlockItemModel;
 import xfacthd.framedblocks.client.model.baked.FramedBlockModel;
@@ -115,7 +116,7 @@ public final class InternalClientApiImpl implements InternalClientAPI
         {
             shaderState = null;
         }
-        return new FramedBlockModelPart(quadMap.build(), partAO, particleSprite, chunkLayer, shaderState);
+        return new FramedBlockModelPart(((QuadMapImpl) quadMap).build(), partAO, particleSprite, chunkLayer, shaderState);
     }
 
     @Override
