@@ -554,7 +554,7 @@ public final class Utils
     @ApiStatus.Internal
     public static <T> T loadService(Class<T> clazz)
     {
-        return ServiceLoader.load(clazz)
+        return ServiceLoader.load(clazz, Utils.class.getClassLoader())
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException("Failed to load service for " + clazz.getName()));
     }
