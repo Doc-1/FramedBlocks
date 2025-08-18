@@ -160,11 +160,6 @@ public final class BlockUtils
         builder.framedblocks$removeProperty(property);
     }
 
-    public static <T extends Comparable<T>> T tryGetValue(BlockState state, Property<T> property, T _default)
-    {
-        return state.hasProperty(property) ? state.getValue(property) : _default;
-    }
-
     @Nullable
     @SuppressWarnings("unchecked")
     public static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createBlockEntityTicker(

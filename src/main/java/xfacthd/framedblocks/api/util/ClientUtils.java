@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
@@ -62,11 +61,6 @@ public final class ClientUtils
     {
         graphics.renderFakeItem(stack, x, y, 0);
         graphics.fill(x, y, x + 16, y + 16, 0x80888888);
-    }
-
-    public static boolean isLeftHand(ItemDisplayContext ctx)
-    {
-        return ctx == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || ctx == ItemDisplayContext.THIRD_PERSON_LEFT_HAND;
     }
 
     public static TextureAtlasSprite getBlockSprite(ResourceLocation id)

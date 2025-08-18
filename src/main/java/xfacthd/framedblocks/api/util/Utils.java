@@ -24,7 +24,6 @@ import net.minecraft.util.TriState;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -55,7 +54,6 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 public final class Utils
@@ -360,19 +358,6 @@ public final class Utils
         return dest;
     }
 
-    @SuppressWarnings("ForLoopReplaceableByForEach")
-    public static <T> ArrayList<T> copyAllWithModifier(List<T> src, ArrayList<T> dest, UnaryOperator<T> modifier)
-    {
-        if (src.isEmpty()) return dest;
-
-        dest.ensureCapacity(dest.size() + src.size());
-        for (int i = 0; i < src.size(); i++)
-        {
-            dest.add(modifier.apply(src.get(i)));
-        }
-        return dest;
-    }
-
     public static TagKey<Block> blockTag(String name)
     {
         return blockTag(FramedConstants.MOD_ID, name);
@@ -443,11 +428,6 @@ public final class Utils
         return holder.unwrapKey().orElseThrow(
                 () -> new IllegalArgumentException("Direct holders and unbound reference holders are not supported")
         );
-    }
-
-    public static boolean isHandContext(ItemDisplayContext ctx)
-    {
-        return ctx.firstPerson() || ctx == ItemDisplayContext.THIRD_PERSON_LEFT_HAND || ctx == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
     }
 
     /**
