@@ -839,7 +839,9 @@ final class SkipPredicateGeneratorData
 
             int paramStart = line.indexOf("(");
             int paramEnd = line.lastIndexOf(")");
-            String name = line.substring(0, line.indexOf("(")).trim();
+            int commentStart = line.indexOf("/");
+            int nameEnd = commentStart > -1 ? Math.min(commentStart, paramStart) : paramStart;
+            String name = line.substring(0, nameEnd).trim();
             if (name.startsWith("//"))
             {
                 continue;
