@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    "framedblocks:framed_split_pillar_socket"
+  ],
+  "result": {
+    "count": 1,
+    "id": "framedblocks:framed_pillar_socket"
+  }
+}

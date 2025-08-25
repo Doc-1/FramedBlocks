@@ -172,6 +172,8 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_FANCY_ACTIVATOR_RAIL_SLOPE, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_PILLAR, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_HALF_PILLAR, cube, builder -> builder.itemBaseModel(THIN_BLOCK_LOC));
+        simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_PILLAR_SOCKET, cube);
+        simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_SPLIT_PILLAR_SOCKET, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_POST, cube);
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_PRISM, cube, builder -> builder.itemBaseModel(THIN_BLOCK_LOC));
         simpleFramedBlockWithItem(blockModels, FBContent.BLOCK_FRAMED_ELEVATED_INNER_PRISM, cube);

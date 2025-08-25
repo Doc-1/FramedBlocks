@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": "framedblocks:framed_half_pillar",
+    "S": "framedblocks:framed_slab"
+  },
+  "pattern": [
+    "P",
+    "S"
+  ],
+  "result": {
+    "count": 1,
+    "id": "framedblocks:framed_pillar_socket"
+  }
+}

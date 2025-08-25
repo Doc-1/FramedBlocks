@@ -523,6 +523,14 @@ public final class FramingSawRecipeProvider extends AbstractFramingSawRecipeProv
                 .material(CUBE_MATERIAL_VALUE / 8)
                 .save(output);
 
+        sawRecipe(FBContent.BLOCK_FRAMED_PILLAR_SOCKET)
+                .material(CUBE_MATERIAL_VALUE / 8 * 5)
+                .save(output);
+
+        sawRecipe(FBContent.BLOCK_FRAMED_SPLIT_PILLAR_SOCKET)
+                .material(CUBE_MATERIAL_VALUE / 8 * 5)
+                .save(output);
+
         sawRecipe(FBContent.BLOCK_FRAMED_POST)
                 .material(CUBE_MATERIAL_VALUE / 8)
                 .save(output);
