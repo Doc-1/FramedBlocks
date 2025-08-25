@@ -42,7 +42,7 @@ public class FramedTubeGeometry extends Geometry
                         .apply(Modifiers.cut(Direction.Axis.Z, 1F - thickness))
                         .export(quadMap.get(quadDir));
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cut(Direction.WEST, thickness / 16))
+                        .apply(Modifiers.cut(Direction.WEST, thickness))
                         .apply(Modifiers.cut(Direction.Axis.Z, 1F - thickness))
                         .export(quadMap.get(quadDir));
             }
