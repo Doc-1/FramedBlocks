@@ -1,20 +1,20 @@
 {
     "net/minecraft/client/multiplayer/MultiPlayerGameMode": [
-        "xfacthd/framedblocks/client/util/duck/DefaultedAccessorMultiPlayerGameMode"
+        "io/github/xfacthd/framedblocks/client/util/duck/DefaultedAccessorMultiPlayerGameMode"
     ],
     "net/minecraft/client/renderer/block/BlockModelShaper": [
-        "xfacthd/framedblocks/client/util/duck/DefaultedAccessorBlockModelShaper"
+        "io/github/xfacthd/framedblocks/client/util/duck/DefaultedAccessorBlockModelShaper"
     ],
     "net/minecraft/client/renderer/item/ItemStackRenderState$LayerRenderState": [
-        "xfacthd/framedblocks/client/render/item/IDynamicTintableItemStackRenderStateLayer"
+        "io/github/xfacthd/framedblocks/client/render/item/IDynamicTintableItemStackRenderStateLayer"
     ],
     "net/minecraft/client/resources/model/ModelManager": [
-        "xfacthd/framedblocks/client/util/duck/DefaultedAccessorModelManager"
+        "io/github/xfacthd/framedblocks/client/util/duck/DefaultedAccessorModelManager"
     ],
     "net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase": [
-        "xfacthd/framedblocks/api/internal/duck/StateCacheAccessor"
+        "io/github/xfacthd/framedblocks/api/internal/duck/StateCacheAccessor"
     ],
     "net/minecraft/world/level/block/state/StateDefinition$Builder": [
-        "xfacthd/framedblocks/api/internal/duck/StateDefinitionBuilderAccessor"
+        "io/github/xfacthd/framedblocks/api/internal/duck/StateDefinitionBuilderAccessor"
     ]
 }

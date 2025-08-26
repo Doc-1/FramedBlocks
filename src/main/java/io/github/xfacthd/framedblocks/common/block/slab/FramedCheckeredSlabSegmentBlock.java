@@ -1,0 +1,98 @@
+package io.github.xfacthd.framedblocks.common.block.slab;
+
+import io.github.xfacthd.framedblocks.api.block.FramedProperties;
+import io.github.xfacthd.framedblocks.api.block.PlacementStateBuilder;
+import io.github.xfacthd.framedblocks.api.util.Utils;
+import io.github.xfacthd.framedblocks.common.block.FramedBlock;
+import io.github.xfacthd.framedblocks.common.data.BlockType;
+import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import org.jetbrains.annotations.Nullable;
+
+public class FramedCheckeredSlabSegmentBlock extends FramedBlock
+{
+    public FramedCheckeredSlabSegmentBlock(Properties props)
+    {
+        super(BlockType.FRAMED_CHECKERED_SLAB_SEGMENT, props);
+        registerDefaultState(defaultBlockState()
+                .setValue(FramedProperties.TOP, false)
+                .setValue(PropertyHolder.SECOND, false)
+        );
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
+    {
+        super.createBlockStateDefinition(builder);
+        builder.add(FramedProperties.TOP, PropertyHolder.SECOND, BlockStateProperties.WATERLOGGED);
+    }
+
+    @Override
+    @Nullable
+    public BlockState getStateForPlacement(BlockPlaceContext ctx)
+    {
+        return PlacementStateBuilder.of(this, ctx)
+                .withTop()
+                .withCustom((state, modCtx) -> state.setValue(
+                        PropertyHolder.SECOND, Utils.isX(ctx.getHorizontalDirection())
+                ))
+                .withWater()
+                .build();
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Direction side, Rotation rot)
+    {
+        if (Utils.isY(side))
+        {
+            if (rot != Rotation.NONE && rot != Rotation.CLOCKWISE_180)
+            {
+                return state.cycle(PropertyHolder.SECOND);
+            }
+        }
+        else
+        {
+            if (rot != Rotation.NONE)
+            {
+                return state.cycle(FramedProperties.TOP);
+            }
+        }
+        return super.rotate(state, rot);
+    }
+
+    @Override
+    protected BlockState rotate(BlockState state, Rotation rot)
+    {
+        return rotate(state, Direction.UP, rot);
+    }
+
+    @Override
+    protected BlockState mirror(BlockState state, Mirror mirror)
+    {
+        if (mirror != Mirror.NONE)
+        {
+            return state.cycle(PropertyHolder.SECOND);
+        }
+        return super.mirror(state, mirror);
+    }
+
+    @Override
+    @Nullable
+    public BlockState getItemModelSource()
+    {
+        return null;
+    }
+
+    @Override
+    public BlockState getJadeRenderState(BlockState state)
+    {
+        return state;
+    }
+}

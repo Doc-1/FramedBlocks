@@ -1,8 +1,8 @@
 {
     "required": true,
-    "package": "xfacthd.framedblocks.mixin",
+    "package": "io.github.xfacthd.framedblocks.mixin",
     "compatibilityLevel": "JAVA_21",
-    "plugin": "xfacthd.framedblocks.common.util.FramedMixinConfigPlugin",
+    "plugin": "io.github.xfacthd.framedblocks.common.util.FramedMixinConfigPlugin",
     "mixins": [
         "InvokerBlock",
         "InvokerBlockItem",

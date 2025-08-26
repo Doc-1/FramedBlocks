@@ -1,0 +1,58 @@
+package io.github.xfacthd.framedblocks.client.model.geometry.interactive;
+
+import io.github.xfacthd.framedblocks.api.model.data.QuadMap;
+import io.github.xfacthd.framedblocks.api.model.geometry.Geometry;
+import io.github.xfacthd.framedblocks.api.model.quad.Modifiers;
+import io.github.xfacthd.framedblocks.api.model.quad.QuadModifier;
+import io.github.xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
+import io.github.xfacthd.framedblocks.api.util.Utils;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.neoforged.neoforge.model.data.ModelData;
+
+public class FramedPressurePlateGeometry extends Geometry
+{
+    private final boolean pressed;
+    private final boolean useBaseModel;
+
+    public FramedPressurePlateGeometry(GeometryFactory.Context ctx)
+    {
+        this(ctx.state().getValue(BlockStateProperties.POWERED), false);
+    }
+
+    protected FramedPressurePlateGeometry(boolean powered, boolean useBaseModel)
+    {
+        this.pressed = powered;
+        this.useBaseModel = useBaseModel;
+    }
+
+    @Override
+    public void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData modelData)
+    {
+        Direction quadDir = quad.direction();
+        float height = pressed ? .5F / 16F : 1F / 16F;
+
+        if (Utils.isY(quadDir))
+        {
+            boolean up = quadDir == Direction.UP;
+            QuadModifier.of(quad)
+                    .apply(Modifiers.cutTopBottom(1F/16F, 1F/16F, 15F/16F, 15F/16F))
+                    .applyIf(Modifiers.setPosition(height), up)
+                    .export(quadMap.get(up ? null : Direction.DOWN));
+        }
+        else
+        {
+            QuadModifier.of(quad)
+                    .apply(Modifiers.cutSide(1F/16F, 0F, 15F/16F, height))
+                    .apply(Modifiers.setPosition(15F/16F))
+                    .export(quadMap.get(null));
+        }
+    }
+
+    @Override
+    public boolean useBaseModel()
+    {
+        return useBaseModel;
+    }
+}

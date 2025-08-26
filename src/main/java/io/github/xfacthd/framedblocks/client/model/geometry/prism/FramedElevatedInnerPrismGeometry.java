@@ -1,0 +1,144 @@
+package io.github.xfacthd.framedblocks.client.model.geometry.prism;
+
+import io.github.xfacthd.framedblocks.api.block.FramedProperties;
+import io.github.xfacthd.framedblocks.api.model.data.QuadMap;
+import io.github.xfacthd.framedblocks.api.model.geometry.Geometry;
+import io.github.xfacthd.framedblocks.api.model.quad.Modifiers;
+import io.github.xfacthd.framedblocks.api.model.quad.QuadModifier;
+import io.github.xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
+import io.github.xfacthd.framedblocks.api.util.Utils;
+import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
+import io.github.xfacthd.framedblocks.common.data.property.DirectionAxis;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.core.Direction;
+import net.neoforged.neoforge.model.data.ModelData;
+
+public class FramedElevatedInnerPrismGeometry extends Geometry
+{
+    private final Direction facing;
+    private final Direction.Axis axis;
+    private final boolean ySlope;
+
+    public FramedElevatedInnerPrismGeometry(GeometryFactory.Context ctx)
+    {
+        DirectionAxis dirAxis = ctx.state().getValue(PropertyHolder.FACING_AXIS);
+        this.facing = dirAxis.direction();
+        this.axis = dirAxis.axis();
+        this.ySlope = ctx.state().getValue(FramedProperties.Y_SLOPE);
+    }
+
+    @Override
+    public void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData modelData)
+    {
+        boolean yFacing = Utils.isY(facing);
+        boolean yAxis = axis == Direction.Axis.Y;
+        Direction quadFace = quad.direction();
+        boolean quadOnFacingAxis = quadFace.getAxis() == facing.getAxis();
+        boolean quadOnAxis = quadFace.getAxis() == axis;
+
+        if (!ySlope && yFacing && !quadOnAxis && !quadOnFacingAxis) // Slopes for Y facing without Y_SLOPE
+        {
+            boolean up = facing == Direction.UP;
+            QuadModifier.of(quad)
+                    .apply(Modifiers.cut(facing.getOpposite(), .5F))
+                    .apply(Modifiers.makeVerticalSlope(up, 45))
+                    .export(quadMap.get(null));
+        }
+        else if (ySlope && yFacing && quadFace == facing) // Slopes for Y facing with Y_SLOPE
+        {
+            Direction onAxis = Direction.fromAxisAndDirection(axis, Direction.AxisDirection.POSITIVE);
+
+            Direction offAxisCW = onAxis.getClockWise();
+            QuadModifier.of(quad)
+                    .apply(Modifiers.cut(offAxisCW, .5F))
+                    .apply(Modifiers.makeVerticalSlope(offAxisCW, 45))
+                    .export(quadMap.get(null));
+
+            Direction offAxisCCW = onAxis.getCounterClockWise();
+            QuadModifier.of(quad)
+                    .apply(Modifiers.cut(offAxisCCW, .5F))
+                    .apply(Modifiers.makeVerticalSlope(offAxisCCW, 45))
+                    .export(quadMap.get(null));
+        }
+        else if (!yFacing && yAxis && !quadOnAxis && quadOnFacingAxis) // Slopes for horizontal facing and Y axis without Y_SLOPE
+        {
+            QuadModifier.of(quad)
+                    .apply(Modifiers.cut(facing.getClockWise(), .5F))
+                    .apply(Modifiers.makeHorizontalSlope(true, 45))
+                    .export(quadMap.get(null));
+
+            QuadModifier.of(quad)
+                    .apply(Modifiers.cut(facing.getCounterClockWise(), .5F))
+                    .apply(Modifiers.makeHorizontalSlope(false, 45))
+                    .export(quadMap.get(null));
+        }
+        else if (!ySlope && !yFacing && !yAxis && quadFace == facing)
+        {
+            QuadModifier.of(quad)
+                    .apply(Modifiers.cut(Direction.UP, .5F))
+                    .apply(Modifiers.makeVerticalSlope(true, 45))
+                    .export(quadMap.get(null));
+
+            QuadModifier.of(quad)
+                    .apply(Modifiers.cut(Direction.DOWN, .5F))
+                    .apply(Modifiers.makeVerticalSlope(false, 45))
+                    .export(quadMap.get(null));
+        }
+        else if (ySlope && !yFacing && !yAxis && Utils.isY(quadFace)) // Slopes for horizontal facing and Y axis with Y_SLOPE
+        {
+            QuadModifier.of(quad)
+                    .apply(Modifiers.cut(facing.getOpposite(), .5F))
+                    .apply(Modifiers.makeVerticalSlope(facing, 45))
+                    .export(quadMap.get(null));
+        }
+        else if (quadOnAxis)
+        {
+            if (yAxis)
+            {
+                QuadModifier.of(quad)
+                        .apply(Modifiers.cut(facing.getClockWise(), .5F))
+                        .apply(Modifiers.cut(facing, 0F, 1F))
+                        .export(quadMap.get(quadFace));
+
+                QuadModifier.of(quad)
+                        .apply(Modifiers.cut(facing.getCounterClockWise(), .5F))
+                        .apply(Modifiers.cut(facing, 1F, 0F))
+                        .export(quadMap.get(quadFace));
+            }
+            else if (yFacing)
+            {
+                QuadModifier.of(quad)
+                        .apply(Modifiers.cut(quadFace.getClockWise(), .5F))
+                        .apply(Modifiers.cut(facing, 0F, 1F))
+                        .export(quadMap.get(quadFace));
+
+                QuadModifier.of(quad)
+                        .apply(Modifiers.cut(quadFace.getCounterClockWise(), .5F))
+                        .apply(Modifiers.cut(facing, 1F, 0F))
+                        .export(quadMap.get(quadFace));
+            }
+            else //!yAxis && !yFacing
+            {
+                QuadModifier.of(quad)
+                        .apply(Modifiers.cut(Direction.DOWN, .5F))
+                        .apply(Modifiers.cut(facing, 1F, 0F))
+                        .export(quadMap.get(quadFace));
+
+                QuadModifier.of(quad)
+                        .apply(Modifiers.cut(Direction.UP, .5F))
+                        .apply(Modifiers.cut(facing, 0F, 1F))
+                        .export(quadMap.get(quadFace));
+            }
+        }
+    }
+
+    @Override
+    public boolean transformAllQuads()
+    {
+        if (ySlope)
+        {
+            return true;
+        }
+        return Utils.isY(facing) || axis == Direction.Axis.Y;
+    }
+}

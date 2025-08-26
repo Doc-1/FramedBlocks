@@ -1,0 +1,35 @@
+package io.github.xfacthd.framedblocks.common.data.conpreds.slopepanelcorner;
+
+import io.github.xfacthd.framedblocks.api.block.FramedProperties;
+import io.github.xfacthd.framedblocks.api.predicate.contex.NonDetailedConnectionPredicate;
+import io.github.xfacthd.framedblocks.api.util.Utils;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+
+public final class LargeDoubleCornerSlopePanelConnectionPredicate extends NonDetailedConnectionPredicate
+{
+    @Override
+    public boolean canConnectFullEdge(BlockState state, Direction side, @Nullable Direction edge)
+    {
+        Direction dir = state.getValue(FramedProperties.FACING_HOR);
+
+        if (side == dir.getOpposite() || side == dir.getClockWise())
+        {
+            return true;
+        }
+        else if (Utils.isY(side))
+        {
+            return edge == dir.getOpposite() || edge == dir.getClockWise();
+        }
+        else if (side == dir)
+        {
+            return edge == dir.getClockWise();
+        }
+        else if (side == dir.getCounterClockWise())
+        {
+            return edge == dir.getOpposite();
+        }
+        return false;
+    }
+}

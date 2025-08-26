@@ -1,0 +1,94 @@
+package io.github.xfacthd.framedblocks.client.model.geometry.slab;
+
+import io.github.xfacthd.framedblocks.api.block.FramedProperties;
+import io.github.xfacthd.framedblocks.api.model.data.QuadMap;
+import io.github.xfacthd.framedblocks.api.model.geometry.Geometry;
+import io.github.xfacthd.framedblocks.api.model.quad.Modifiers;
+import io.github.xfacthd.framedblocks.api.model.quad.QuadModifier;
+import io.github.xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
+import io.github.xfacthd.framedblocks.api.util.Utils;
+import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.core.Direction;
+import net.neoforged.neoforge.model.data.ModelData;
+
+public class FramedCheckeredSlabSegmentGeometry extends Geometry
+{
+    private final boolean top;
+    private final boolean second;
+
+    public FramedCheckeredSlabSegmentGeometry(GeometryFactory.Context ctx)
+    {
+        this.top = ctx.state().getValue(FramedProperties.TOP);
+        this.second = ctx.state().getValue(PropertyHolder.SECOND);
+    }
+
+    @Override
+    public void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData modelData)
+    {
+        Direction quadDir = quad.direction();
+        if (Utils.isY(quadDir))
+        {
+            boolean up = quadDir == Direction.UP;
+            Direction xDir = (second ^ up) ? Direction.WEST : Direction.EAST;
+
+            if (up == top)
+            {
+                QuadModifier.of(quad)
+                        .apply(Modifiers.cut(Direction.SOUTH, .5F))
+                        .apply(Modifiers.cut(xDir, .5F))
+                        .export(quadMap.get(quadDir));
+
+                QuadModifier.of(quad)
+                        .apply(Modifiers.cut(Direction.NORTH, .5F))
+                        .apply(Modifiers.cut(xDir.getOpposite(), .5F))
+                        .export(quadMap.get(quadDir));
+            }
+            else
+            {
+                QuadModifier.of(quad)
+                        .apply(Modifiers.cut(Direction.SOUTH, .5F))
+                        .apply(Modifiers.cut(xDir.getOpposite(), .5F))
+                        .apply(Modifiers.setPosition(.5F))
+                        .export(quadMap.get(null));
+
+                QuadModifier.of(quad)
+                        .apply(Modifiers.cut(Direction.NORTH, .5F))
+                        .apply(Modifiers.cut(xDir, .5F))
+                        .apply(Modifiers.setPosition(.5F))
+                        .export(quadMap.get(null));
+            }
+        }
+        else
+        {
+            Direction horDir = Utils.isX(quadDir) ^ second ? quadDir.getCounterClockWise() : quadDir.getClockWise();
+
+            if (!top)
+            {
+                QuadModifier.of(quad)
+                        .apply(Modifiers.cut(Direction.UP, .5F))
+                        .apply(Modifiers.cut(horDir, .5F))
+                        .export(quadMap.get(quadDir));
+
+                QuadModifier.of(quad)
+                        .apply(Modifiers.cut(Direction.UP, .5F))
+                        .apply(Modifiers.cut(horDir.getOpposite(), .5F))
+                        .apply(Modifiers.setPosition(.5F))
+                        .export(quadMap.get(null));
+            }
+            else
+            {
+                QuadModifier.of(quad)
+                        .apply(Modifiers.cut(Direction.DOWN, .5F))
+                        .apply(Modifiers.cut(horDir.getOpposite(), .5F))
+                        .export(quadMap.get(quadDir));
+
+                QuadModifier.of(quad)
+                        .apply(Modifiers.cut(Direction.DOWN, .5F))
+                        .apply(Modifiers.cut(horDir, .5F))
+                        .apply(Modifiers.setPosition(.5F))
+                        .export(quadMap.get(null));
+            }
+        }
+    }
+}

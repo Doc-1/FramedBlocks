@@ -1,0 +1,28 @@
+package io.github.xfacthd.framedblocks.api.model.item;
+
+import io.github.xfacthd.framedblocks.api.camo.CamoList;
+import io.github.xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
+import io.github.xfacthd.framedblocks.api.model.data.FramedBlockData;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.model.data.ModelData;
+
+public interface ItemModelInfo
+{
+    ItemModelInfo DEFAULT = new ItemModelInfo() {};
+
+    /**
+     * {@return whether the associated item model requires data even when no camos are present}
+     */
+    default boolean isDataRequired()
+    {
+        return false;
+    }
+
+    /**
+     * {@return the {@link ModelData} containing the camos from the item data in the format required for the associated item's model}
+     */
+    default ModelData buildItemModelData(BlockState state, CamoList camos)
+    {
+        return ModelData.of(AbstractFramedBlockData.PROPERTY, new FramedBlockData(camos.getCamo(0), false));
+    }
+}

@@ -1,0 +1,80 @@
+package io.github.xfacthd.framedblocks.common.block.slab;
+
+import io.github.xfacthd.framedblocks.api.block.BlockUtils;
+import io.github.xfacthd.framedblocks.api.block.FramedProperties;
+import io.github.xfacthd.framedblocks.api.block.PlacementStateBuilder;
+import io.github.xfacthd.framedblocks.api.util.Utils;
+import io.github.xfacthd.framedblocks.common.block.FramedBlock;
+import io.github.xfacthd.framedblocks.common.data.BlockType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import org.jetbrains.annotations.Nullable;
+
+public class FramedMasonryCornerSegmentBlock extends FramedBlock
+{
+    public FramedMasonryCornerSegmentBlock(Properties props)
+    {
+        super(BlockType.FRAMED_MASONRY_CORNER_SEGMENT, props);
+        registerDefaultState(defaultBlockState().setValue(FramedProperties.TOP, false));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
+    {
+        super.createBlockStateDefinition(builder);
+        builder.add(FramedProperties.FACING_HOR, FramedProperties.TOP, BlockStateProperties.WATERLOGGED);
+    }
+
+    @Override
+    @Nullable
+    public BlockState getStateForPlacement(BlockPlaceContext ctx)
+    {
+        return PlacementStateBuilder.of(this, ctx)
+                .withHorizontalFacing()
+                .withTop()
+                .withWater()
+                .build();
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Direction face, Rotation rot)
+    {
+        if (!Utils.isY(face) && rot != Rotation.NONE)
+        {
+            return state.cycle(FramedProperties.TOP);
+        }
+        return super.rotate(state, face, rot);
+    }
+
+    @Override
+    protected BlockState rotate(BlockState state, Rotation rot)
+    {
+        Direction dir = state.getValue(FramedProperties.FACING_HOR);
+        return state.setValue(FramedProperties.FACING_HOR, rot.rotate(dir));
+    }
+
+    @Override
+    protected BlockState mirror(BlockState state, Mirror mirror)
+    {
+        return BlockUtils.mirrorCornerBlock(state, mirror);
+    }
+
+    @Override
+    @Nullable
+    public BlockState getItemModelSource()
+    {
+        return null;
+    }
+
+    @Override
+    public BlockState getJadeRenderState(BlockState state)
+    {
+        return state;
+    }
+}
