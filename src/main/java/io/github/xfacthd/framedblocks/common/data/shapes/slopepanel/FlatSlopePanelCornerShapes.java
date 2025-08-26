@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.slopepanel;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
@@ -16,6 +14,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class FlatSlopePanelCornerShapes implements SplitShapeGenerator
 {
@@ -36,20 +38,20 @@ public final class FlatSlopePanelCornerShapes implements SplitShapeGenerator
     }
 
     @Override
-    public ShapeProvider generate(ImmutableList<BlockState> states)
+    public ShapeProvider generate(List<BlockState> states)
     {
         return generate(states, shapes);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(ImmutableList<BlockState> states)
+    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
     {
         return generate(states, occlusionShapes);
     }
 
-    private static ShapeProvider generate(ImmutableList<BlockState> states, ShapeCache<ShapeKey> cache)
+    private static ShapeProvider generate(List<BlockState> states, ShapeCache<ShapeKey> cache)
     {
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         int maskFront = 0b100;
         VoxelShape[] shapes = new VoxelShape[4 * 4 * 2];
@@ -68,10 +70,10 @@ public final class FlatSlopePanelCornerShapes implements SplitShapeGenerator
             HorizontalRotation rot = state.getValue(PropertyHolder.ROTATION);
             int front = state.getValue(PropertyHolder.FRONT) ? maskFront : 0;
             int idx = dir.get2DDataValue() | front | (rot.ordinal() << 3);
-            builder.put(state, shapes[idx]);
+            map.put(state, shapes[idx]);
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
     private static ShapeCache<ShapeKey> makeCache(ShapeCache<SlopePanelShape> cache, BooleanOp joinOp)

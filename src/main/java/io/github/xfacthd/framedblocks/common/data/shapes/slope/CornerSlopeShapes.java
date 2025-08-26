@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.slope;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
@@ -17,6 +15,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class CornerSlopeShapes implements SplitShapeGenerator
@@ -32,20 +32,20 @@ public final class CornerSlopeShapes implements SplitShapeGenerator
     }
 
     @Override
-    public ShapeProvider generate(ImmutableList<BlockState> states)
+    public ShapeProvider generate(List<BlockState> states)
     {
         return generate(states, SlopeShapes.SHAPES);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(ImmutableList<BlockState> states)
+    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
     {
         return generate(states, SlopeShapes.OCCLUSION_SHAPES);
     }
 
-    private ShapeProvider generate(ImmutableList<BlockState> states, ShapeCache<SlopeType> shapeCache)
+    private ShapeProvider generate(List<BlockState> states, ShapeCache<SlopeType> shapeCache)
     {
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         VoxelShape shapeSlopeBottom = shapeCache.get(SlopeType.BOTTOM);
         VoxelShape shapeSlopeTop = shapeCache.get(SlopeType.TOP);
@@ -89,10 +89,10 @@ public final class CornerSlopeShapes implements SplitShapeGenerator
         {
             CornerType type = state.getValue(PropertyHolder.CORNER_TYPE);
             Direction dir = state.getValue(FramedProperties.FACING_HOR);
-            builder.put(state, shapes.get(new ShapeKey(dir, type)));
+            map.put(state, shapes.get(new ShapeKey(dir, type)));
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
 

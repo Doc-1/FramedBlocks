@@ -1,6 +1,5 @@
 package io.github.xfacthd.framedblocks.api.shapes;
 
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
@@ -8,6 +7,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.IdentityHashMap;
+import java.util.Map;
 
 public final class CommonShapes
 {
@@ -62,14 +64,14 @@ public final class CommonShapes
     {
         return states ->
         {
-            ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+            Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
             for (BlockState state : states)
             {
-                builder.put(state, SLAB.get(state.getValue(topProp)));
+                map.put(state, SLAB.get(state.getValue(topProp)));
             }
 
-            return ShapeProvider.of(builder.build());
+            return ShapeProvider.of(map);
         };
     }
 
@@ -77,15 +79,15 @@ public final class CommonShapes
     {
         return states ->
         {
-            ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+            Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
             for (BlockState state : states)
             {
                 Direction dir = state.getValue(dirProp);
-                builder.put(state, PANEL.get(dir));
+                map.put(state, PANEL.get(dir));
             }
 
-            return ShapeProvider.of(builder.build());
+            return ShapeProvider.of(map);
         };
     }
 
@@ -93,7 +95,7 @@ public final class CommonShapes
     {
         return states ->
         {
-            ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+            Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
             for (BlockState state : states)
             {
@@ -102,14 +104,12 @@ public final class CommonShapes
                 {
                     dir = dir.getOpposite();
                 }
-                builder.put(state, PANEL.get(dir));
+                map.put(state, PANEL.get(dir));
             }
 
-            return ShapeProvider.of(builder.build());
+            return ShapeProvider.of(map);
         };
     }
-
-
 
     private CommonShapes() { }
 }

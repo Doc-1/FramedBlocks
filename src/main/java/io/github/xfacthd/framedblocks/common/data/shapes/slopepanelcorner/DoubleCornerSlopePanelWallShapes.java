@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.slopepanelcorner;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.CommonShapes;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
@@ -14,11 +12,15 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
 public final class DoubleCornerSlopePanelWallShapes
 {
-    public static ShapeProvider generateSmall(ImmutableList<BlockState> states)
+    public static ShapeProvider generateSmall(List<BlockState> states)
     {
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         for (BlockState state : states)
         {
@@ -31,15 +33,15 @@ public final class DoubleCornerSlopePanelWallShapes
                 case RIGHT -> new CommonShapes.DirBoolKey(dir.getClockWise(), true);
                 case LEFT ->  new CommonShapes.DirBoolKey(dir.getCounterClockWise(), false);
             };
-            builder.put(state, CommonShapes.SLAB_EDGE.get(key));
+            map.put(state, CommonShapes.SLAB_EDGE.get(key));
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
-    public static ShapeProvider generateLarge(ImmutableList<BlockState> states)
+    public static ShapeProvider generateLarge(List<BlockState> states)
     {
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         VoxelShape[] shapes = new VoxelShape[4 * 4];
         for (HorizontalRotation rot : HorizontalRotation.values())
@@ -53,10 +55,10 @@ public final class DoubleCornerSlopePanelWallShapes
             Direction dir = state.getValue(FramedProperties.FACING_HOR);
             HorizontalRotation rot = state.getValue(PropertyHolder.ROTATION);
             int idx = dir.get2DDataValue() | (rot.ordinal() << 2);
-            builder.put(state, shapes[idx]);
+            map.put(state, shapes[idx]);
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
 

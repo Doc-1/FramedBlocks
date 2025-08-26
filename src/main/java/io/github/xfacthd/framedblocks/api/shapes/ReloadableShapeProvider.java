@@ -1,21 +1,21 @@
 package io.github.xfacthd.framedblocks.api.shapes;
 
-import com.google.common.collect.ImmutableList;
 import io.github.xfacthd.framedblocks.api.internal.InternalAPI;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.ApiStatus;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 
 public final class ReloadableShapeProvider implements ShapeProvider
 {
     private final ShapeGenerator generator;
-    private final ImmutableList<BlockState> states;
+    private final List<BlockState> states;
     private ShapeProvider wrapped;
 
-    public static ShapeProvider of(ShapeGenerator generator, ImmutableList<BlockState> states)
+    public static ShapeProvider of(ShapeGenerator generator, List<BlockState> states)
     {
         if (!FMLEnvironment.production && generator != ShapeGenerator.EMPTY)
         {
@@ -24,7 +24,7 @@ public final class ReloadableShapeProvider implements ShapeProvider
         return generator.generate(states);
     }
 
-    private ReloadableShapeProvider(ShapeGenerator generator, ImmutableList<BlockState> states)
+    private ReloadableShapeProvider(ShapeGenerator generator, List<BlockState> states)
     {
         this.generator = generator;
         this.states = states;
@@ -57,7 +57,7 @@ public final class ReloadableShapeProvider implements ShapeProvider
     }
 
     @ApiStatus.Internal
-    public ImmutableList<BlockState> getStates()
+    public List<BlockState> getStates()
     {
         return states;
     }

@@ -1,7 +1,6 @@
 package io.github.xfacthd.framedblocks.common.data;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
 import io.github.xfacthd.framedblocks.api.block.IBlockType;
 import io.github.xfacthd.framedblocks.api.predicate.contex.ConTexMode;
 import io.github.xfacthd.framedblocks.api.predicate.contex.ConnectionPredicate;
@@ -38,6 +37,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -349,13 +349,13 @@ public enum BlockType implements IBlockType
     }
 
     @Override
-    public ShapeProvider generateShapes(ImmutableList<BlockState> states)
+    public ShapeProvider generateShapes(List<BlockState> states)
     {
         return ReloadableShapeProvider.of(shapeGen, states);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(ImmutableList<BlockState> states, ShapeProvider shapes)
+    public ShapeProvider generateOcclusionShapes(List<BlockState> states, ShapeProvider shapes)
     {
         if (separateOcclusionShapes)
         {

@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.slopeedge;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
@@ -14,6 +12,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class ThreewayCornerSlopeEdgeShapes implements SplitShapeGenerator
 {
@@ -33,18 +35,18 @@ public final class ThreewayCornerSlopeEdgeShapes implements SplitShapeGenerator
     }
 
     @Override
-    public ShapeProvider generate(ImmutableList<BlockState> states)
+    public ShapeProvider generate(List<BlockState> states)
     {
         return generate(states, inner ? INNER_SHAPES : OUTER_SHAPES);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(ImmutableList<BlockState> states)
+    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
     {
         return generate(states, inner ? INNER_OCCLUSION_SHAPES : OUTER_OCCLUSION_SHAPES);
     }
 
-    private static ShapeProvider generate(ImmutableList<BlockState> states, ShapeCache<ShapeKey> cache)
+    private static ShapeProvider generate(List<BlockState> states, ShapeCache<ShapeKey> cache)
     {
         VoxelShape[] shapes = new VoxelShape[4 * 2 * 2];
 
@@ -61,7 +63,7 @@ public final class ThreewayCornerSlopeEdgeShapes implements SplitShapeGenerator
             );
         }
 
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = new ImmutableMap.Builder<>();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         for (BlockState state : states)
         {
@@ -72,10 +74,10 @@ public final class ThreewayCornerSlopeEdgeShapes implements SplitShapeGenerator
             }
             boolean top = state.getValue(FramedProperties.TOP);
             boolean altType = state.getValue(PropertyHolder.ALT_TYPE);
-            builder.put(state, shapes[makeShapeIndex(dir, top, altType)]);
+            map.put(state, shapes[makeShapeIndex(dir, top, altType)]);
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
     private static int makeShapeIndex(Direction dir, boolean top, boolean altType)

@@ -7,13 +7,17 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public final class MapBackedShapeProvider implements ShapeProvider
+final class MapBackedShapeProvider implements ShapeProvider
 {
     private final Map<BlockState, VoxelShape> shapes;
 
-    public MapBackedShapeProvider(Map<BlockState, VoxelShape> shapes)
+    MapBackedShapeProvider(Map<BlockState, VoxelShape> shapes)
     {
-        this.shapes = new IdentityHashMap<>(shapes);
+        if (!(shapes instanceof IdentityHashMap<BlockState, VoxelShape>))
+        {
+            shapes = new IdentityHashMap<>(shapes);
+        }
+        this.shapes = shapes;
     }
 
     @Override

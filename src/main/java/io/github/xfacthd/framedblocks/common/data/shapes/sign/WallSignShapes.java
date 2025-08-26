@@ -1,31 +1,33 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.sign;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
 public final class WallSignShapes
 {
-    public static ShapeProvider generate(ImmutableList<BlockState> states)
+    public static ShapeProvider generate(List<BlockState> states)
     {
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         for (BlockState state : states)
         {
             switch (state.getValue(FramedProperties.FACING_HOR))
             {
-                case NORTH -> builder.put(state, Block.box(0.0D, 4.5D, 14.0D, 16.0D, 12.5D, 16.0D));
-                case EAST -> builder.put(state, Block.box(0.0D, 4.5D, 0.0D, 2.0D, 12.5D, 16.0D));
-                case SOUTH -> builder.put(state, Block.box(0.0D, 4.5D, 0.0D, 16.0D, 12.5D, 2.0D));
-                case WEST -> builder.put(state, Block.box(14.0D, 4.5D, 0.0D, 16.0D, 12.5D, 16.0D));
+                case NORTH -> map.put(state, Block.box(0.0D, 4.5D, 14.0D, 16.0D, 12.5D, 16.0D));
+                case EAST -> map.put(state, Block.box(0.0D, 4.5D, 0.0D, 2.0D, 12.5D, 16.0D));
+                case SOUTH -> map.put(state, Block.box(0.0D, 4.5D, 0.0D, 16.0D, 12.5D, 2.0D));
+                case WEST -> map.put(state, Block.box(14.0D, 4.5D, 0.0D, 16.0D, 12.5D, 16.0D));
             }
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
 

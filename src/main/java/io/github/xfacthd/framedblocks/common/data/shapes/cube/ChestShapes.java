@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.cube;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
 import io.github.xfacthd.framedblocks.common.block.cube.FramedChestBlock;
 import net.minecraft.core.Direction;
@@ -11,9 +9,13 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
 public final class ChestShapes
 {
-    public static ShapeProvider generate(ImmutableList<BlockState> states)
+    public static ShapeProvider generate(List<BlockState> states)
     {
         VoxelShape shapeSingle = Block.box(1D, 0D, 1D, 15D, 14D, 15D);
         VoxelShape[] conShapes = new VoxelShape[] {
@@ -23,23 +25,23 @@ public final class ChestShapes
                 Block.box(1D, 0D, 1D, 16D, 14D, 15D)
         };
 
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         for (BlockState state : states)
         {
             ChestType type = state.getValue(BlockStateProperties.CHEST_TYPE);
             if (type == ChestType.SINGLE)
             {
-                builder.put(state, shapeSingle);
+                map.put(state, shapeSingle);
             }
             else
             {
                 Direction conDir = FramedChestBlock.getConnectionDirection(state);
-                builder.put(state, conShapes[conDir.get2DDataValue()]);
+                map.put(state, conShapes[conDir.get2DDataValue()]);
             }
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
 

@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.slopepanelcorner;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
@@ -14,6 +12,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class ExtendedCornerSlopePanelShapes implements SplitShapeGenerator
 {
@@ -30,20 +32,20 @@ public final class ExtendedCornerSlopePanelShapes implements SplitShapeGenerator
     }
 
     @Override
-    public ShapeProvider generate(ImmutableList<BlockState> states)
+    public ShapeProvider generate(List<BlockState> states)
     {
         return generate(states, ExtendedSlopePanelShapes.SHAPES);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(ImmutableList<BlockState> states)
+    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
     {
         return generate(states, ExtendedSlopePanelShapes.OCCLUSION_SHAPES);
     }
 
-    private ShapeProvider generate(ImmutableList<BlockState> states, ShapeCache<HorizontalRotation> cache)
+    private ShapeProvider generate(List<BlockState> states, ShapeCache<HorizontalRotation> cache)
     {
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         VoxelShape bottomSlopeShape = cache.get(HorizontalRotation.UP);
         VoxelShape bottomShape = Shapes.joinUnoptimized(
@@ -65,9 +67,9 @@ public final class ExtendedCornerSlopePanelShapes implements SplitShapeGenerator
         {
             Direction dir = state.getValue(FramedProperties.FACING_HOR);
             boolean top = state.getValue(FramedProperties.TOP);
-            builder.put(state, shapes[dir.get2DDataValue() + (top ? 4 : 0)]);
+            map.put(state, shapes[dir.get2DDataValue() + (top ? 4 : 0)]);
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 }

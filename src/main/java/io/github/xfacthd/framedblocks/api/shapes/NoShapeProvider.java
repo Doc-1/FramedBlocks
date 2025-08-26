@@ -5,9 +5,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.function.BiConsumer;
 
-public final class NoShapeProvider implements ShapeProvider
+final class NoShapeProvider implements ShapeProvider
 {
-    public static final NoShapeProvider INSTANCE = new NoShapeProvider();
+    static final NoShapeProvider INSTANCE = new NoShapeProvider();
 
     private NoShapeProvider() { }
 

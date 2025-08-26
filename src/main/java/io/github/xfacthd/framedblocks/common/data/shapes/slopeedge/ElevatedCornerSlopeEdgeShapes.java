@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.slopeedge;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.CommonShapes;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
@@ -13,6 +11,10 @@ import io.github.xfacthd.framedblocks.common.data.shapes.SplitShapeGenerator;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class ElevatedCornerSlopeEdgeShapes implements SplitShapeGenerator
 {
@@ -33,18 +35,18 @@ public final class ElevatedCornerSlopeEdgeShapes implements SplitShapeGenerator
     }
 
     @Override
-    public ShapeProvider generate(ImmutableList<BlockState> states)
+    public ShapeProvider generate(List<BlockState> states)
     {
         return generate(states, edgeShapes, baseShapes);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(ImmutableList<BlockState> states)
+    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
     {
         return generate(states, edgeOcclusionShapes, baseShapes);
     }
 
-    private static ShapeProvider generate(ImmutableList<BlockState> states, ShapeCache<CornerSlopeEdgeShapes.ShapeKey> edgeShapes, ShapeCache<CornerType> baseShapes)
+    private static ShapeProvider generate(List<BlockState> states, ShapeCache<CornerSlopeEdgeShapes.ShapeKey> edgeShapes, ShapeCache<CornerType> baseShapes)
     {
         VoxelShape[] shapes = new VoxelShape[4 * 6];
         for (CornerType type : CornerType.values())
@@ -54,14 +56,14 @@ public final class ElevatedCornerSlopeEdgeShapes implements SplitShapeGenerator
             ShapeUtils.makeHorizontalRotations(shape, Direction.NORTH, shapes, type, ElevatedCornerSlopeEdgeShapes::makeIndex);
         }
 
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
         for (BlockState state : states)
         {
             Direction dir = state.getValue(FramedProperties.FACING_HOR);
             CornerType type = state.getValue(PropertyHolder.CORNER_TYPE);
-            builder.put(state, shapes[makeIndex(dir, type)]);
+            map.put(state, shapes[makeIndex(dir, type)]);
         }
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
     private static int makeIndex(Direction dir, CornerType type)

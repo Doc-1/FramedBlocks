@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.cube;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
@@ -13,24 +11,28 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
 public final class CornerTubeShapes
 {
-    public static ShapeProvider generate(ImmutableList<BlockState> states)
+    public static ShapeProvider generate(List<BlockState> states)
     {
         VoxelShape[] thinShapes = makeShapes(2);
         VoxelShape[] thickShapes = makeShapes(3);
 
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         for (BlockState state : states)
         {
             CornerTubeOrientation orientation = state.getValue(PropertyHolder.CORNER_TYPE_ORIENTATION);
             boolean thick = state.getValue(PropertyHolder.THICK);
             VoxelShape shape = (thick ? thickShapes : thinShapes)[orientation.ordinal()];
-            builder.put(state, shape);
+            map.put(state, shape);
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
     private static VoxelShape[] makeShapes(int thickness)

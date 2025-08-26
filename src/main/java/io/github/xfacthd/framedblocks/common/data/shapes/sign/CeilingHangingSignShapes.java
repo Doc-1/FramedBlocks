@@ -1,18 +1,20 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.sign;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
 public final class CeilingHangingSignShapes
 {
-    public static ShapeProvider generate(ImmutableList<BlockState> states)
+    public static ShapeProvider generate(List<BlockState> states)
     {
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         VoxelShape shapeZeroEight = Block.box(1, 0, 7, 15, 10, 9);
         VoxelShape shapeFourTwelve = Block.box(7, 0, 1, 9, 10, 15);
@@ -21,7 +23,7 @@ public final class CeilingHangingSignShapes
         for (BlockState state : states)
         {
             int rot = state.getValue(BlockStateProperties.ROTATION_16);
-            builder.put(state, switch (rot)
+            map.put(state, switch (rot)
             {
                 case 0, 8 -> shapeZeroEight;
                 case 4, 12 -> shapeFourTwelve;
@@ -29,7 +31,7 @@ public final class CeilingHangingSignShapes
             });
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
 

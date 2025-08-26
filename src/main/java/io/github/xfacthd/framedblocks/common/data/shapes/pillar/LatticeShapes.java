@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.pillar;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
@@ -9,6 +7,10 @@ import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class LatticeShapes implements ShapeGenerator
 {
@@ -25,9 +27,9 @@ public final class LatticeShapes implements ShapeGenerator
     }
 
     @Override
-    public ShapeProvider generate(ImmutableList<BlockState> states)
+    public ShapeProvider generate(List<BlockState> states)
     {
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         VoxelShape centerShape = Block.box(minSize, minSize, minSize, maxSize, maxSize, maxSize);
         VoxelShape xShape = Block.box(0, minSize, minSize, 16, maxSize, maxSize);
@@ -61,9 +63,9 @@ public final class LatticeShapes implements ShapeGenerator
             int x = state.getValue(FramedProperties.X_AXIS) ? maskX : 0;
             int y = state.getValue(FramedProperties.Y_AXIS) ? maskY : 0;
             int z = state.getValue(FramedProperties.Z_AXIS) ? maskZ : 0;
-            builder.put(state, shapes[x | y | z]);
+            map.put(state, shapes[x | y | z]);
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 }

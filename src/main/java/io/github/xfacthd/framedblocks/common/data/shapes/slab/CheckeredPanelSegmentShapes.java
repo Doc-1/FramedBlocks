@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.slab;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
@@ -12,9 +10,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
 public final class CheckeredPanelSegmentShapes
 {
-    public static ShapeProvider generate(ImmutableList<BlockState> states)
+    public static ShapeProvider generate(List<BlockState> states)
     {
         VoxelShape shapeFirst = ShapeUtils.orUnoptimized(
                 Block.box(0, 0, 0,  8,  8,  8),
@@ -34,15 +36,15 @@ public final class CheckeredPanelSegmentShapes
             shapes[idx + 4] = ShapeUtils.rotateShapeAroundY(Direction.NORTH, dir, x ? shapeFirst : shapeSecond);
         }
 
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
         for (BlockState state : states)
         {
             Direction dir = state.getValue(FramedProperties.FACING_HOR);
             boolean second = state.getValue(PropertyHolder.SECOND);
             int idx = dir.get2DDataValue() + (second ? 4 : 0);
-            builder.put(state, shapes[idx]);
+            map.put(state, shapes[idx]);
         }
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
 

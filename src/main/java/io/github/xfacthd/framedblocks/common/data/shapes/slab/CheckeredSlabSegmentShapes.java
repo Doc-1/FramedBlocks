@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.slab;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
@@ -11,9 +9,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
 public final class CheckeredSlabSegmentShapes
 {
-    public static ShapeProvider generate(ImmutableList<BlockState> states)
+    public static ShapeProvider generate(List<BlockState> states)
     {
         VoxelShape shapeBotFirst = ShapeUtils.or(
                 Block.box(0, 0, 0,  8,  8,  8),
@@ -26,14 +28,14 @@ public final class CheckeredSlabSegmentShapes
         VoxelShape shapeBotSecond = ShapeUtils.rotateShapeAroundY(Direction.NORTH, Direction.EAST, shapeBotFirst);
         VoxelShape shapeTopSecond = ShapeUtils.rotateShapeAroundY(Direction.NORTH, Direction.EAST, shapeTopFirst);
 
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
         for (BlockState state : states)
         {
             boolean top = state.getValue(FramedProperties.TOP);
             boolean second = state.getValue(PropertyHolder.SECOND);
-            builder.put(state, second ? (top ? shapeTopSecond : shapeBotSecond) : (top ? shapeTopFirst : shapeBotFirst));
+            map.put(state, second ? (top ? shapeTopSecond : shapeBotSecond) : (top ? shapeTopFirst : shapeBotFirst));
         }
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
 

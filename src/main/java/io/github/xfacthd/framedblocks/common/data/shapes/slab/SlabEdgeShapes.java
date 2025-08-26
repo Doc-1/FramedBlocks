@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.slab;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.CommonShapes;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
@@ -9,20 +7,24 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
 public final class SlabEdgeShapes
 {
-    public static ShapeProvider generate(ImmutableList<BlockState> states)
+    public static ShapeProvider generate(List<BlockState> states)
     {
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         for (BlockState state : states)
         {
             Direction dir = state.getValue(FramedProperties.FACING_HOR);
             boolean top = state.getValue(FramedProperties.TOP);
-            builder.put(state, CommonShapes.SLAB_EDGE.get(new CommonShapes.DirBoolKey(dir, top)));
+            map.put(state, CommonShapes.SLAB_EDGE.get(new CommonShapes.DirBoolKey(dir, top)));
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
 

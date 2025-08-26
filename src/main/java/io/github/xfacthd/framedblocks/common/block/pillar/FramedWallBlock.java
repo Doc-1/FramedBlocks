@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.block.pillar;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.block.BlockUtils;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
@@ -38,6 +36,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -187,17 +186,10 @@ public class FramedWallBlock extends WallBlock implements IFramedBlockInternal
 
     private ShapeProvider makeShapeProvider(ShapeGenerator generator)
     {
-        ImmutableList<BlockState> states = stateDefinition.getPossibleStates();
-        return ReloadableShapeProvider.of(generator, states);
+        return ReloadableShapeProvider.of(generator, stateDefinition.getPossibleStates());
     }
 
-
-
-    private static ShapeProvider generateShapes(
-            ImmutableList<BlockState> states,
-            float lowHeight,
-            float tallHeight
-    )
+    private static ShapeProvider generateShapes(List<BlockState> states, float lowHeight, float tallHeight)
     {
         boolean sameHeight = lowHeight == tallHeight;
 
@@ -244,7 +236,7 @@ public class FramedWallBlock extends WallBlock implements IFramedBlockInternal
         }
         shapes[0] = Shapes.block();
 
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
         for (BlockState state : states)
         {
             int key = makeShapeKey(
@@ -254,9 +246,9 @@ public class FramedWallBlock extends WallBlock implements IFramedBlockInternal
                     state.getValue(SOUTH),
                     state.getValue(WEST)
             );
-            builder.put(state, shapes[key]);
+            map.put(state, shapes[key]);
         }
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
     private static VoxelShape getWallShape(WallSide side, Direction dir, VoxelShape[] lowShapes, VoxelShape[] tallShapes)

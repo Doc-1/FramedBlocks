@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.slopeslab;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
@@ -12,6 +10,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
 public final class InverseDoubleSlopeSlabShapes implements SplitShapeGenerator
 {
     public static final InverseDoubleSlopeSlabShapes INSTANCE = new InverseDoubleSlopeSlabShapes();
@@ -21,28 +23,28 @@ public final class InverseDoubleSlopeSlabShapes implements SplitShapeGenerator
     private InverseDoubleSlopeSlabShapes() { }
 
     @Override
-    public ShapeProvider generate(ImmutableList<BlockState> states)
+    public ShapeProvider generate(List<BlockState> states)
     {
         return generate(states, SHAPES);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(ImmutableList<BlockState> states)
+    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
     {
         return generate(states, OCCLUSION_SHAPES);
     }
 
-    private static ShapeProvider generate(ImmutableList<BlockState> states, ShapeCache<Direction> cache)
+    private static ShapeProvider generate(List<BlockState> states, ShapeCache<Direction> cache)
     {
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         for (BlockState state : states)
         {
             Direction dir = state.getValue(FramedProperties.FACING_HOR);
-            builder.put(state, cache.get(dir));
+            map.put(state, cache.get(dir));
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
     private static ShapeCache<Direction> makeCache(ShapeCache<SlopeSlabShape> cache)

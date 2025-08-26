@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.pillar;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.shapes.CommonShapes;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
@@ -12,21 +10,23 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class PillarSocketShapes
 {
     private static final ShapeCache<Direction> SHAPES = ShapeCache.createEnum(Direction.class, PillarSocketShapes::createShapes);
 
-    public static ShapeProvider generate(ImmutableList<BlockState> states)
+    public static ShapeProvider generate(List<BlockState> states)
     {
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
         for (BlockState state : states)
         {
             Direction dir = state.getValue(BlockStateProperties.FACING);
-            builder.put(state, SHAPES.get(dir));
+            map.put(state, SHAPES.get(dir));
         }
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
     private static void createShapes(Map<Direction, VoxelShape> map)

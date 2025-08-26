@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.slope;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.CommonShapes;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
@@ -13,6 +11,10 @@ import io.github.xfacthd.framedblocks.common.data.shapes.SplitShapeGenerator;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class HalfSlopeShapes implements SplitShapeGenerator
 {
@@ -56,20 +58,20 @@ public final class HalfSlopeShapes implements SplitShapeGenerator
     });
 
     @Override
-    public ShapeProvider generate(ImmutableList<BlockState> states)
+    public ShapeProvider generate(List<BlockState> states)
     {
         return generateShapes(states, SHAPES);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(ImmutableList<BlockState> states)
+    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
     {
         return generateShapes(states, OCCLUSION_SHAPES);
     }
 
-    private static ShapeProvider generateShapes(ImmutableList<BlockState> states, ShapeCache<ShapeKey> shapeCache)
+    private static ShapeProvider generateShapes(List<BlockState> states, ShapeCache<ShapeKey> shapeCache)
     {
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         int maskTop = 0b0100;
         int maskRight = 0b1000;
@@ -90,10 +92,10 @@ public final class HalfSlopeShapes implements SplitShapeGenerator
             int top = state.getValue(FramedProperties.TOP) ? maskTop : 0;
             int right = state.getValue(PropertyHolder.RIGHT) ? maskRight : 0;
             int idx = dir.get2DDataValue() | (top | right);
-            builder.put(state, shapes[idx]);
+            map.put(state, shapes[idx]);
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
 

@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.cube;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import net.minecraft.core.Direction;
@@ -10,12 +8,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
 public final class LayeredCubeShapes
 {
     private static final int LAYER_COUNT = 8;
     private static final int DIR_COUNT = Direction.values().length;
 
-    public static ShapeProvider generate(ImmutableList<BlockState> states)
+    public static ShapeProvider generate(List<BlockState> states)
     {
         VoxelShape[] shapes = new VoxelShape[LAYER_COUNT * DIR_COUNT];
         for (int i = 1; i <= LAYER_COUNT; i++)
@@ -29,16 +31,16 @@ public final class LayeredCubeShapes
             ShapeUtils.makeHorizontalRotations(layerShapeNorth, Direction.NORTH, shapes, index(Direction.NORTH, i));
         }
 
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         for (BlockState state : states)
         {
             Direction dir = state.getValue(BlockStateProperties.FACING);
             int layers = state.getValue(BlockStateProperties.LAYERS);
-            builder.put(state, shapes[index(dir, layers)]);
+            map.put(state, shapes[index(dir, layers)]);
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
     private static int index(Direction dir, int layers)

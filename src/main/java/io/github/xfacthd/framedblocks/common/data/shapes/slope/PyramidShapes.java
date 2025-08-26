@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.slope;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
@@ -14,6 +12,9 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public final class PyramidShapes implements SplitShapeGenerator
@@ -122,19 +123,19 @@ public final class PyramidShapes implements SplitShapeGenerator
     }
 
     @Override
-    public ShapeProvider generate(ImmutableList<BlockState> states)
+    public ShapeProvider generate(List<BlockState> states)
     {
         return generate(states, northShape, null, null);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(ImmutableList<BlockState> states)
+    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
     {
         return generate(states, northOcclusionShape, northOcclusionShapePost, northOcclusionShapePillar);
     }
 
     private static ShapeProvider generate(
-            ImmutableList<BlockState> states,
+            List<BlockState> states,
             Supplier<VoxelShape> northShape,
             @Nullable Supplier<VoxelShape> northShapePost,
             @Nullable Supplier<VoxelShape> northShapePillar
@@ -164,7 +165,7 @@ public final class PyramidShapes implements SplitShapeGenerator
                 shapeNorthPillar != null ? ShapeUtils.makeHorizontalRotations(shapeNorthPillar, Direction.NORTH) : horShapesNone
         };
 
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = new ImmutableMap.Builder<>();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         for (BlockState state : states)
         {
@@ -176,9 +177,9 @@ public final class PyramidShapes implements SplitShapeGenerator
                 case DOWN -> downShapes[conIndex];
                 default -> horShapes[conIndex][facing.get2DDataValue()];
             };
-            builder.put(state, shape);
+            map.put(state, shape);
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 }

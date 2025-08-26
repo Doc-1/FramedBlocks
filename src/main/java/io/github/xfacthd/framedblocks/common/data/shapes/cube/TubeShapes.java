@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.cube;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
@@ -11,9 +9,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
 public final class TubeShapes
 {
-    public static ShapeProvider generate(ImmutableList<BlockState> states)
+    public static ShapeProvider generate(List<BlockState> states)
     {
         VoxelShape shapeThinY = ShapeUtils.or(
                 Block.box( 0, 0,  0, 16, 16,  2),
@@ -33,7 +35,7 @@ public final class TubeShapes
         VoxelShape shapeThickZ = ShapeUtils.rotateShapeAroundX(Direction.UP, Direction.SOUTH, shapeThickY);
         VoxelShape shapeThickX = ShapeUtils.rotateShapeAroundZ(Direction.UP, Direction.EAST, shapeThickY);
 
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         for (BlockState state : states)
         {
@@ -44,10 +46,10 @@ public final class TubeShapes
                 case Y -> thick ? shapeThickY : shapeThinY;
                 case Z -> thick ? shapeThickZ : shapeThinZ;
             };
-            builder.put(state, shape);
+            map.put(state, shape);
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
 

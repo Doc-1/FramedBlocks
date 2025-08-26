@@ -1,6 +1,5 @@
 package io.github.xfacthd.framedblocks.api.block;
 
-import com.google.common.collect.ImmutableList;
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import io.github.xfacthd.framedblocks.api.block.render.FramedClientBlockExtensions;
 import io.github.xfacthd.framedblocks.api.predicate.contex.ConTexMode;
@@ -17,6 +16,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import org.jetbrains.annotations.ApiStatus;
+
+import java.util.List;
 
 public interface IBlockType
 {
@@ -36,14 +37,14 @@ public interface IBlockType
      * {return a {@link ShapeProvider} used to provide the main shapes of the block, to be returned from
      * {@link Block#getShape(BlockState, BlockGetter, BlockPos, CollisionContext)}}
      */
-    ShapeProvider generateShapes(ImmutableList<BlockState> states);
+    ShapeProvider generateShapes(List<BlockState> states);
 
     /**
      * {@return the {@link ShapeProvider} used to provide the occlusion shapes of the block, to be returned from
      * {@link Block#getOcclusionShape(BlockState, BlockGetter, BlockPos)}, or the given provider if the main shapes
      * should be used as the occlusion shapes}
      */
-    default ShapeProvider generateOcclusionShapes(ImmutableList<BlockState> states, ShapeProvider shapes)
+    default ShapeProvider generateOcclusionShapes(List<BlockState> states, ShapeProvider shapes)
     {
         return shapes;
     }

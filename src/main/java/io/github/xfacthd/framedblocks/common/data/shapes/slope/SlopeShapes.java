@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.slope;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
@@ -13,6 +11,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public final class SlopeShapes implements SplitShapeGenerator
@@ -48,30 +49,30 @@ public final class SlopeShapes implements SplitShapeGenerator
     });
 
     @Override
-    public ShapeProvider generate(ImmutableList<BlockState> states)
+    public ShapeProvider generate(List<BlockState> states)
     {
         return generate(states, FINAL_SHAPES);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(ImmutableList<BlockState> states)
+    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
     {
         return generate(states, FINAL_OCCLUSION_SHAPES);
     }
 
-    private static ShapeProvider generate(ImmutableList<BlockState> states, ShapeCache<ShapeKey> shapes)
+    private static ShapeProvider generate(List<BlockState> states, ShapeCache<ShapeKey> shapes)
     {
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         for (BlockState state : states)
         {
             ISlopeBlock block = (ISlopeBlock) state.getBlock();
             SlopeType type = block.getSlopeType(state);
             Direction dir = block.getFacing(state);
-            builder.put(state, shapes.get(new ShapeKey(dir, type)));
+            map.put(state, shapes.get(new ShapeKey(dir, type)));
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
     private static ShapeCache<SlopeType> makeCache(Supplier<VoxelShape> bottomShapeFactory)

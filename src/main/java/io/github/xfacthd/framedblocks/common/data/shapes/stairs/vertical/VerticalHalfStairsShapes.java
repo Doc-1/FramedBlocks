@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.stairs.vertical;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
@@ -10,11 +8,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
 public final class VerticalHalfStairsShapes
 {
-    public static ShapeProvider generate(ImmutableList<BlockState> states)
+    public static ShapeProvider generate(List<BlockState> states)
     {
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         VoxelShape shapeBottom = ShapeUtils.orUnoptimized(
                 Block.box(0, 0, 8, 16, 8, 16),
@@ -32,10 +34,10 @@ public final class VerticalHalfStairsShapes
         {
             Direction dir = state.getValue(FramedProperties.FACING_HOR).getOpposite();
             boolean top = state.getValue(FramedProperties.TOP);
-            builder.put(state, shapes[dir.get2DDataValue() + (top ? 4 : 0)]);
+            map.put(state, shapes[dir.get2DDataValue() + (top ? 4 : 0)]);
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
 

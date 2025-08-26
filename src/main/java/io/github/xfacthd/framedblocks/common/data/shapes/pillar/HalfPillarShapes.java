@@ -1,18 +1,20 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.pillar;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
 public final class HalfPillarShapes
 {
-    public static ShapeProvider generate(ImmutableList<BlockState> states)
+    public static ShapeProvider generate(List<BlockState> states)
     {
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         VoxelShape shapeNorth = Block.box(4, 4, 0, 12, 12,  8);
         VoxelShape shapeSouth = Block.box(4, 4, 8, 12, 12, 16);
@@ -23,7 +25,7 @@ public final class HalfPillarShapes
 
         for (BlockState state : states)
         {
-            builder.put(state, switch (state.getValue(BlockStateProperties.FACING))
+            map.put(state, switch (state.getValue(BlockStateProperties.FACING))
             {
                 case NORTH -> shapeNorth;
                 case EAST -> shapeEast;
@@ -34,7 +36,7 @@ public final class HalfPillarShapes
             });
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 
 

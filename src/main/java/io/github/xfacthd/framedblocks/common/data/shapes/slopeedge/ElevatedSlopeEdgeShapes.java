@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.slopeedge;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
@@ -16,23 +14,27 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
 public final class ElevatedSlopeEdgeShapes implements SplitShapeGenerator
 {
     public static final ElevatedSlopeEdgeShapes INSTANCE = new ElevatedSlopeEdgeShapes();
 
     @Override
-    public ShapeProvider generate(ImmutableList<BlockState> states)
+    public ShapeProvider generate(List<BlockState> states)
     {
         return generate(states, SlopeEdgeShapes.SHAPES);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(ImmutableList<BlockState> states)
+    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
     {
         return generate(states, SlopeEdgeShapes.OCCLUSION_SHAPES);
     }
 
-    private static ShapeProvider generate(ImmutableList<BlockState> states, ShapeCache<SlopeEdgeShapes.ShapeKey> cache)
+    private static ShapeProvider generate(List<BlockState> states, ShapeCache<SlopeEdgeShapes.ShapeKey> cache)
     {
         VoxelShape shapeBottom = ShapeUtils.orUnoptimized(
                 ShapeUtils.orUnoptimized(Block.box(0, 0, 0, 16, 8, 16), Block.box(0, 8, 0, 16, 16, 8)),
@@ -53,16 +55,16 @@ public final class ElevatedSlopeEdgeShapes implements SplitShapeGenerator
         ShapeUtils.makeHorizontalRotations(shapeHorizontal, Direction.NORTH, shapes, SlopeType.HORIZONTAL.ordinal() << 2);
         ShapeUtils.makeHorizontalRotations(shapeTop, Direction.NORTH, shapes, SlopeType.TOP.ordinal() << 2);
 
-        ImmutableMap.Builder<BlockState, VoxelShape> builder = new ImmutableMap.Builder<>();
+        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
         for (BlockState state : states)
         {
             SlopeType type = state.getValue(PropertyHolder.SLOPE_TYPE);
             Direction dir = state.getValue(FramedProperties.FACING_HOR);
             int idx = (type.ordinal() << 2) + dir.get2DDataValue();
-            builder.put(state, shapes[idx]);
+            map.put(state, shapes[idx]);
         }
 
-        return ShapeProvider.of(builder.build());
+        return ShapeProvider.of(map);
     }
 }
