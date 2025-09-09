@@ -1,8 +1,18 @@
 package io.github.xfacthd.framedblocks.client.render.special;
 
 import com.google.common.base.Preconditions;
+import com.mojang.blaze3d.buffers.GpuBuffer;
+import com.mojang.blaze3d.buffers.GpuBufferSlice;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.systems.RenderPass;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import io.github.xfacthd.framedblocks.api.camo.CamoList;
 import io.github.xfacthd.framedblocks.api.ghost.GhostRenderBehaviour;
 import io.github.xfacthd.framedblocks.api.ghost.RegisterGhostRenderBehavioursEvent;
@@ -17,9 +27,7 @@ import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
@@ -38,14 +46,16 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModLoader;
-import net.neoforged.neoforge.client.NeoForgeRenderTypes;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.model.data.ModelData;
 import org.joml.Vector3fc;
+import org.joml.Vector4f;
 
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
 
 @SuppressWarnings("ConstantConditions")
 public final class GhostBlockRenderer
@@ -53,9 +63,10 @@ public final class GhostBlockRenderer
     private static final RandomSource RANDOM = RandomSource.create();
     private static final Map<Item, GhostRenderBehaviour> RENDER_BEHAVIOURS = new IdentityHashMap<>();
     private static final GhostRenderBehaviour DEFAULT_BEHAVIOUR = new GhostRenderBehaviour() {};
-    private static final String PROFILER_KEY = FramedConstants.MOD_ID + "_ghost_block";
+    private static final String DEBUG_NAME = FramedConstants.MOD_ID + "_ghost_block";
     private static final float SCALE = 1.0001F;
     private static final List<BlockModelPart> PART_SCRATCH_LIST = new ObjectArrayList<>();
+    private static final ByteBufferBuilder BUFFER_BUILDER = new ByteBufferBuilder(RenderType.TRANSIENT_BUFFER_SIZE);
 
     public static void onRenderLevelStage(RenderLevelStageEvent.AfterParticles event)
     {
@@ -65,7 +76,7 @@ public final class GhostBlockRenderer
         }
 
         ProfilerFiller profiler = Profiler.get();
-        profiler.push(PROFILER_KEY);
+        profiler.push(DEBUG_NAME);
         try
         {
             tryDrawGhostBlock(event.getPoseStack(), profiler);
@@ -125,17 +136,36 @@ public final class GhostBlockRenderer
         BlockState hitState = mc().level.getBlockState(hit.getBlockPos());
         profiler.pop(); //make_context
 
+        profiler.push("setup_buffer");
+        GhostBlockRenderConfig config = GhostBlockRenderConfig.get();
+        RenderPipeline pipeline = config.getPipeline();
+        BufferBuilder buffer = new BufferBuilder(BUFFER_BUILDER, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
+        VertexConsumer ghostBuffer = new GhostVertexConsumer(buffer, ClientConfig.VIEW.getGhostRenderOpacity());
+        profiler.pop(); //setup_buffer
+
         int passCount = behaviour.getPassCount(stack, proxiedStack);
         for (int pass = 0; pass < passCount; pass++)
         {
-            if (!drawGhostBlock(poseStack, profiler, behaviour, stack, proxiedStack, hit, context, hitState, pass))
+            if (!drawGhostBlock(ghostBuffer, poseStack, profiler, behaviour, stack, proxiedStack, hit, context, hitState, pass))
             {
                 break;
             }
         }
+
+        profiler.push("upload");
+        MeshData meshData = buffer.build();
+        if (meshData != null)
+        {
+            try (meshData)
+            {
+                uploadAndDraw(config, meshData);
+            }
+        }
+        profiler.pop(); //upload
     }
 
     private static boolean drawGhostBlock(
+            VertexConsumer buffer,
             PoseStack poseStack,
             ProfilerFiller profiler,
             GhostRenderBehaviour behaviour,
@@ -180,16 +210,14 @@ public final class GhostBlockRenderer
         Vector3fc renderOffset = behaviour.getRenderOffset(stack, proxiedStack, context, renderState, renderPass, modelData);
         profiler.pop(); //get_render_offset
 
-        MultiBufferSource.BufferSource buffers = mc().renderBuffers().bufferSource();
-
-        doRenderGhostBlock(poseStack, buffers, profiler, renderPos, renderState, renderOffset, modelData);
+        doRenderGhostBlock(buffer, poseStack, profiler, renderPos, renderState, renderOffset, modelData);
 
         return true;
     }
 
     private static void doRenderGhostBlock(
+            VertexConsumer builder,
             PoseStack poseStack,
-            MultiBufferSource.BufferSource buffers,
             ProfilerFiller profiler,
             BlockPos renderPos,
             BlockState renderState,
@@ -198,34 +226,77 @@ public final class GhostBlockRenderer
     )
     {
         profiler.push("prepare");
-
-        RenderType bufferType = ClientConfig.VIEW.useAltGhostRenderer() ?
-                Sheets.translucentItemSheet() :
-                NeoForgeRenderTypes.TRANSLUCENT_ON_PARTICLES_TARGET.get();
-        int opacity = ClientConfig.VIEW.getGhostRenderOpacity();
-
         Vec3 offset = Vec3.atLowerCornerOf(renderPos).subtract(mc().gameRenderer.getMainCamera().getPosition());
-        VertexConsumer builder = new GhostVertexConsumer(buffers.getBuffer(bufferType), opacity);
         BlockAndTintGetter level = new SingleBlockFakeLevel(mc().level, renderPos, renderPos, renderState, null, modelData);
-
         profiler.pop(); //prepare
 
-        profiler.push("draw");
+        profiler.push("render");
         BlockStateModel model = ModelUtils.getModel(renderState);
         poseStack.pushPose();
         poseStack.translate(renderOffset.x(), renderOffset.y(), renderOffset.z());
         poseStack.translate(offset.x + .5, offset.y + .5, offset.z + .5);
         poseStack.scale(SCALE, SCALE, SCALE); // Scale up very slightly to avoid z-fighting with replaceable blocks like snow layers
         poseStack.translate(-.5F, -.5F, -.5F);
-        PART_SCRATCH_LIST.clear();
         model.collectParts(level, renderPos, renderState, RANDOM, PART_SCRATCH_LIST);
         mc().getBlockRenderer().renderBatched(renderState, renderPos, level, poseStack, type -> builder, false, PART_SCRATCH_LIST);
+        PART_SCRATCH_LIST.clear();
         poseStack.popPose();
-        profiler.pop(); //draw
+        profiler.pop(); //render
+    }
 
-        profiler.push("upload");
-        buffers.endBatch(bufferType);
-        profiler.pop(); //upload
+    private static void uploadAndDraw(GhostBlockRenderConfig config, MeshData meshData)
+    {
+        meshData.sortQuads(BUFFER_BUILDER, RenderSystem.getProjectionType().vertexSorting());
+
+        config.setupRenderState();
+
+        RenderPipeline pipeline = config.getPipeline();
+        VertexFormat vertexFormat = pipeline.getVertexFormat();
+        GpuBuffer vertexBuffer = vertexFormat.uploadImmediateVertexBuffer(meshData.vertexBuffer());
+        GpuBuffer indexBuffer;
+        VertexFormat.IndexType indexType;
+        if (meshData.indexBuffer() != null)
+        {
+            indexBuffer = vertexFormat.uploadImmediateIndexBuffer(meshData.indexBuffer());
+            indexType = meshData.drawState().indexType();
+        }
+        else
+        {
+            RenderSystem.AutoStorageIndexBuffer autoIndexBuffer = RenderSystem.getSequentialBuffer(meshData.drawState().mode());
+            indexBuffer = autoIndexBuffer.getBuffer(meshData.drawState().indexCount());
+            indexType = autoIndexBuffer.type();
+        }
+
+        GpuBufferSlice dynamicUniforms = RenderSystem.getDynamicUniforms()
+                .writeTransform(
+                        RenderSystem.getModelViewMatrix(),
+                        new Vector4f(1.0F, 1.0F, 1.0F, 1.0F),
+                        RenderSystem.getModelOffset(),
+                        RenderSystem.getTextureMatrix(),
+                        RenderSystem.getShaderLineWidth()
+                );
+
+        RenderTarget target = config.getRenderTarget();
+        try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(
+                () -> DEBUG_NAME,
+                target.getColorTextureView(),
+                OptionalInt.empty(),
+                target.getDepthTextureView(),
+                OptionalDouble.empty()
+        ))
+        {
+            renderPass.setPipeline(pipeline);
+            RenderSystem.bindDefaultUniforms(renderPass);
+            renderPass.setUniform("DynamicTransforms", dynamicUniforms);
+            renderPass.setVertexBuffer(0, vertexBuffer);
+            renderPass.setIndexBuffer(indexBuffer, indexType);
+
+            config.setupSamplers(renderPass);
+
+            renderPass.drawIndexed(0, 0, meshData.drawState().indexCount(), 1);
+        }
+
+        config.clearRenderState();
     }
 
 
