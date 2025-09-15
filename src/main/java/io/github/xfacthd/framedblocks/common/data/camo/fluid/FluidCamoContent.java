@@ -71,6 +71,12 @@ public final class FluidCamoContent extends CamoContent<FluidCamoContent>
     }
 
     @Override
+    public boolean isIgnitedByLava(BlockGetter level, BlockPos pos, Direction face)
+    {
+        return false;
+    }
+
+    @Override
     public float getShadeBrightness(BlockGetter level, BlockPos pos, float frameShade)
     {
         return 1F;

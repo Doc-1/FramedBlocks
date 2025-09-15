@@ -57,6 +57,13 @@ public abstract class CamoContent<C extends CamoContent<C>> implements QuadCache
     public abstract int getFireSpreadSpeed(BlockGetter level, BlockPos pos, Direction face);
 
     /**
+     * {@return whether the given side of this camo can catch fire from lava}
+     * @apiNote This does not imply that the fire will destroy the block
+     * @see IBlockStateExtension#ignitedByLava(BlockGetter, BlockPos, Direction)
+     */
+    public abstract boolean isIgnitedByLava(BlockGetter level, BlockPos pos, Direction face);
+
+    /**
      * {@return the shade brightness of this camo}
      * @see BlockBehaviour.BlockStateBase#getShadeBrightness(BlockGetter, BlockPos)
      */

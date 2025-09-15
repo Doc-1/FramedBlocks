@@ -72,6 +72,12 @@ public final class BlockCamoContent extends CamoContent<BlockCamoContent>
     }
 
     @Override
+    public boolean isIgnitedByLava(BlockGetter level, BlockPos pos, Direction face)
+    {
+        return state.ignitedByLava(level, pos, face);
+    }
+
+    @Override
     public float getShadeBrightness(BlockGetter level, BlockPos pos, float frameShade)
     {
         return Math.max(state.getShadeBrightness(level, pos), frameShade);

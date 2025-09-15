@@ -376,6 +376,21 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
         return false;
     }
 
+    @Override
+    default boolean ignitedByLava(BlockState state, BlockGetter level, BlockPos pos, Direction side)
+    {
+        if (ConfigView.Server.INSTANCE.areBlocksFireproof())
+        {
+            return false;
+        }
+
+        if (level.getBlockEntity(pos) instanceof FramedBlockEntity be)
+        {
+            return be.isCamoIgnitedByLava(side);
+        }
+        return IBlockExtension.super.ignitedByLava(state, level, pos, side);
+    }
+
     default boolean handleBlockLeftClick(BlockState state, Level level, BlockPos pos, Player player)
     {
         return false;

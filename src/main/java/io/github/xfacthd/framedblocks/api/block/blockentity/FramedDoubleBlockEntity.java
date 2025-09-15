@@ -219,6 +219,8 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity
     @Override
     public boolean isCamoFlammable(Direction face)
     {
+        if (isReinforced()) return false;
+
         CamoContainer<?, ?> camo = getCamo(face);
         if (camo.isEmpty() && (!getCamo().isEmpty() || !camoContainer.isEmpty()))
         {
@@ -235,6 +237,8 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity
     @Override
     public int getCamoFlammability(Direction face)
     {
+        if (isReinforced()) return 0;
+
         int flammabilityOne = super.getCamoFlammability(face);
         int flammabilityTwo = camoContainer.getContent().getFlammability(level(), worldPosition, face);
         return FLAMMABILITY_MERGER.apply(flammabilityOne, flammabilityTwo);
@@ -243,9 +247,29 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity
     @Override
     public int getCamoFireSpreadSpeed(Direction face)
     {
+        if (isReinforced()) return 0;
+
         int spreadSpeedOne = super.getCamoFireSpreadSpeed(face);
         int spreadSpeedTwo = camoContainer.getContent().getFireSpreadSpeed(level(), worldPosition, face);
         return FLAMMABILITY_MERGER.apply(spreadSpeedOne, spreadSpeedTwo);
+    }
+
+    @Override
+    public boolean isCamoIgnitedByLava(Direction face)
+    {
+        if (isReinforced()) return false;
+
+        CamoContainer<?, ?> camo = getCamo(face);
+        if (camo.isEmpty() && (!getCamo().isEmpty() || !camoContainer.isEmpty()))
+        {
+            return (getCamo().isEmpty() || getCamo().getContent().isIgnitedByLava(level(), worldPosition, face)) &&
+                   (camoContainer.isEmpty() || camoContainer.getContent().isIgnitedByLava(level(), worldPosition, face));
+        }
+        else if (!camo.isEmpty())
+        {
+            return camo.getContent().isIgnitedByLava(level(), worldPosition, face);
+        }
+        return true;
     }
 
     @Override

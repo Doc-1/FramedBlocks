@@ -549,6 +549,11 @@ public class FramedBlockEntity extends BlockEntity
         return camoContainer.isEmpty() ? -1 : camoContainer.getContent().getFireSpreadSpeed(level(), worldPosition, face);
     }
 
+    public boolean isCamoIgnitedByLava(Direction face)
+    {
+        return !reinforced && camoContainer.getContent().isIgnitedByLava(level(), worldPosition, face);
+    }
+
     public final void setGlowing(boolean glowing)
     {
         if (this.glowing != glowing)
