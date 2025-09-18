@@ -40,6 +40,7 @@ abstract sealed class GhostBlockRenderConfig
     {
         renderPass.bindSampler("Sampler0", RenderSystem.getShaderTexture(0));
         renderPass.bindSampler("Sampler1", RenderSystem.getShaderTexture(1));
+        renderPass.bindSampler("Sampler2", RenderSystem.getShaderTexture(2));
     }
 
     abstract RenderPipeline getPipeline();
@@ -76,13 +77,6 @@ abstract sealed class GhostBlockRenderConfig
         {
             super.clearRenderState();
             Minecraft.getInstance().gameRenderer.overlayTexture().teardownOverlayColor();
-        }
-
-        @Override
-        void setupSamplers(RenderPass renderPass)
-        {
-            super.setupSamplers(renderPass);
-            renderPass.bindSampler("Sampler2", RenderSystem.getShaderTexture(2));
         }
 
         @Override
