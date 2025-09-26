@@ -35,7 +35,7 @@ final class SkipPredicateGeneratorData
                             Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
                             Property.internal("SlopeType", "type", "SLOPE_TYPE", PropType.CUSTOM)
                     )
-                    .dirs(new TestDir("TriangleDir", "Tri", null, "slope_tri_xz", "slope_tri_y")),
+                    .dirs(new TestDir("TriangleDir", "Tri", null, TestDirIds.SLOPE_TRI_XZ, TestDirIds.SLOPE_TRI_Y)),
             entry("FRAMED_HALF_SLOPE", "slope")
                     .props(
                             Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
@@ -43,8 +43,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("boolean", "right", "RIGHT", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("TriangleDir", "Tri", null, "slope_tri_xz"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_vert", "half_y")
+                            new TestDir("TriangleDir", "Tri", null, TestDirIds.SLOPE_TRI_XZ),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_VERT, TestDirIds.HALF_Y)
                     ),
             entry("FRAMED_VERTICAL_HALF_SLOPE", "slope")
                     .props(
@@ -52,8 +52,8 @@ final class SkipPredicateGeneratorData
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("TriangleDir", "Tri", null, "slope_tri_y"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_hor")
+                            new TestDir("TriangleDir", "Tri", null, TestDirIds.SLOPE_TRI_Y),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_HOR)
                     ),
             entry("FRAMED_CORNER_SLOPE", "slope")
                     .shortName("Corner")
@@ -61,27 +61,27 @@ final class SkipPredicateGeneratorData
                             Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
                             Property.internal("CornerType", "type", "CORNER_TYPE", PropType.CUSTOM)
                     )
-                    .dirs(new TestDir("TriangleDir", "Tri", null, "slope_tri_xz", "slope_tri_y")),
+                    .dirs(new TestDir("TriangleDir", "Tri", null, TestDirIds.SLOPE_TRI_XZ, TestDirIds.SLOPE_TRI_Y)),
             entry("FRAMED_INNER_CORNER_SLOPE", "slope")
                     .shortName("InnerCorner")
                     .props(
                             Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
                             Property.internal("CornerType", "type", "CORNER_TYPE", PropType.CUSTOM)
                     )
-                    .dirs(new TestDir("TriangleDir", "Tri", null, "slope_tri_xz", "slope_tri_y")),
+                    .dirs(new TestDir("TriangleDir", "Tri", null, TestDirIds.SLOPE_TRI_XZ, TestDirIds.SLOPE_TRI_Y)),
             entry("FRAMED_THREEWAY_CORNER", "slope")
                     .props(
                             Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
                     )
-                    .dirs(new TestDir("TriangleDir", "Tri", null, "slope_tri_xz", "slope_tri_y"))
+                    .dirs(new TestDir("TriangleDir", "Tri", null, TestDirIds.SLOPE_TRI_XZ, TestDirIds.SLOPE_TRI_Y))
                     .altTypes("FRAMED_PRISM_CORNER"),
             entry("FRAMED_INNER_THREEWAY_CORNER", "slope")
                     .props(
                             Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
                     )
-                    .dirs(new TestDir("TriangleDir", "Tri", null, "slope_tri_xz", "slope_tri_y"))
+                    .dirs(new TestDir("TriangleDir", "Tri", null, TestDirIds.SLOPE_TRI_XZ, TestDirIds.SLOPE_TRI_Y))
                     .altTypes("FRAMED_INNER_PRISM_CORNER"),
             entry("FRAMED_SLOPE_EDGE", "slopeedge")
                     .props(
@@ -90,8 +90,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("boolean", "alt", "ALT_TYPE", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("QuarterTriangleDir", "Tri", null, "slope_edge_tri"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_hor", "half_xz_vert", "half_y")
+                            new TestDir("QuarterTriangleDir", "Tri", null, TestDirIds.SLOPE_EDGE_TRI_XZ, TestDirIds.SLOPE_EDGE_TRI_Y),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_HOR, TestDirIds.HALF_XZ_VERT, TestDirIds.HALF_Y)
                     ),
             entry("FRAMED_ELEVATED_SLOPE_EDGE", "slopeedge")
                     .props(
@@ -99,8 +99,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("SlopeType", "type", "SLOPE_TYPE", PropType.CUSTOM)
                     )
                     .dirs(
-                            new TestDir("TriangleDir", "Tri", null, "elev_slope_edge_tri"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_hor", "half_xz_vert", "half_y")
+                            new TestDir("TriangleDir", "Tri", null, TestDirIds.ELEV_SLOPE_EDGE_TRI_XZ, TestDirIds.ELEV_SLOPE_EDGE_TRI_Y),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_HOR, TestDirIds.HALF_XZ_VERT, TestDirIds.HALF_Y)
                     ),
             entry("FRAMED_CORNER_SLOPE_EDGE", "slopeedge")
                     .props(
@@ -109,8 +109,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("boolean", "alt", "ALT_TYPE", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("QuarterTriangleDir", "Tri", null, "slope_edge_tri"),
-                            new TestDir("CornerDir", "Corner", null, "corner_xz", "corner_y")
+                            new TestDir("QuarterTriangleDir", "Tri", null, TestDirIds.SLOPE_EDGE_TRI_XZ, TestDirIds.SLOPE_EDGE_TRI_Y),
+                            new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_XZ, TestDirIds.CORNER_Y)
                     ),
             entry("FRAMED_INNER_CORNER_SLOPE_EDGE", "slopeedge")
                     .props(
@@ -119,9 +119,9 @@ final class SkipPredicateGeneratorData
                             Property.internal("boolean", "alt", "ALT_TYPE", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("QuarterTriangleDir", "Tri", null, "slope_edge_tri"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_hor", "half_xz_vert", "half_y"),
-                            new TestDir("TriangleDir", "Stair", null, "stair_xz", "stair_y")
+                            new TestDir("QuarterTriangleDir", "Tri", null, TestDirIds.SLOPE_EDGE_TRI_XZ, TestDirIds.SLOPE_EDGE_TRI_Y),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_HOR, TestDirIds.HALF_XZ_VERT, TestDirIds.HALF_Y),
+                            new TestDir("TriangleDir", "Stair", null, TestDirIds.STAIR_XZ, TestDirIds.STAIR_Y)
                     ),
             entry("FRAMED_ELEVATED_CORNER_SLOPE_EDGE", "slopeedge")
                     .props(
@@ -129,9 +129,9 @@ final class SkipPredicateGeneratorData
                             Property.internal("CornerType", "type", "CORNER_TYPE", PropType.CUSTOM)
                     )
                     .dirs(
-                            new TestDir("TriangleDir", "Tri", null, "elev_slope_edge_tri"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_hor", "half_xz_vert", "half_y"),
-                            new TestDir("CornerDir", "Corner", null, "corner_xz", "corner_y")
+                            new TestDir("TriangleDir", "Tri", null, TestDirIds.ELEV_SLOPE_EDGE_TRI_XZ, TestDirIds.ELEV_SLOPE_EDGE_TRI_Y),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_HOR, TestDirIds.HALF_XZ_VERT, TestDirIds.HALF_Y),
+                            new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_XZ, TestDirIds.CORNER_Y)
                     ),
             entry("FRAMED_ELEVATED_INNER_CORNER_SLOPE_EDGE", "slopeedge")
                     .props(
@@ -139,8 +139,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("CornerType", "type", "CORNER_TYPE", PropType.CUSTOM)
                     )
                     .dirs(
-                            new TestDir("TriangleDir", "Tri", null, "elev_slope_edge_tri"),
-                            new TestDir("TriangleDir", "Stair", null, "stair_xz", "stair_y")
+                            new TestDir("TriangleDir", "Tri", null, TestDirIds.ELEV_SLOPE_EDGE_TRI_XZ, TestDirIds.ELEV_SLOPE_EDGE_TRI_Y),
+                            new TestDir("TriangleDir", "Stair", null, TestDirIds.STAIR_XZ, TestDirIds.STAIR_Y)
                     ),
             entry("FRAMED_THREEWAY_CORNER_SLOPE_EDGE", "slopeedge")
                     .props(
@@ -149,7 +149,7 @@ final class SkipPredicateGeneratorData
                             Property.internal("boolean", "right", "RIGHT", PropType.PRIMITIVE),
                             Property.internal("boolean", "alt", "ALT_TYPE", PropType.PRIMITIVE)
                     )
-                    .dirs(new TestDir("QuarterTriangleDir", "Tri", null, "slope_edge_tri")),
+                    .dirs(new TestDir("QuarterTriangleDir", "Tri", null, TestDirIds.SLOPE_EDGE_TRI_XZ, TestDirIds.SLOPE_EDGE_TRI_Y)),
             entry("FRAMED_INNER_THREEWAY_CORNER_SLOPE_EDGE", "slopeedge")
                     .props(
                             Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
@@ -158,35 +158,35 @@ final class SkipPredicateGeneratorData
                             Property.internal("boolean", "alt", "ALT_TYPE", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("QuarterTriangleDir", "Tri", null, "slope_edge_tri"),
-                            new TestDir("TriangleDir", "Stair", null, "stair_xz", "stair_y")
+                            new TestDir("QuarterTriangleDir", "Tri", null, TestDirIds.SLOPE_EDGE_TRI_XZ, TestDirIds.SLOPE_EDGE_TRI_Y),
+                            new TestDir("TriangleDir", "Stair", null, TestDirIds.STAIR_XZ, TestDirIds.STAIR_Y)
                     ),
             entry("FRAMED_SLAB", "slab")
                     .props(Property.api("boolean", "top", "TOP", PropType.PRIMITIVE))
-                    .dirs(new TestDir("HalfDir", "Half", null, "half_xz_hor")),
+                    .dirs(new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_HOR)),
             entry("FRAMED_SLAB_EDGE", "slab")
                     .props(
                             Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("HalfDir", "Half", null, "half_xz_hor", "half_y"),
-                            new TestDir("CornerDir", "Corner", null, "corner_xz")
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_HOR, TestDirIds.HALF_Y),
+                            new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_XZ)
                     ),
             entry("FRAMED_SLAB_CORNER", "slab")
                     .props(
                             Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
                     )
-                    .dirs(new TestDir("CornerDir", "Corner", null, "corner_xz", "corner_y")),
+                    .dirs(new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_XZ, TestDirIds.CORNER_Y)),
             entry("FRAMED_PANEL", "slab")
                     .props(Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE))
-                    .dirs(new TestDir("HalfDir", "Half", null, "half_xz_vert", "half_y")),
+                    .dirs(new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_VERT, TestDirIds.HALF_Y)),
             entry("FRAMED_CORNER_PILLAR", "pillar")
                     .props(Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE))
                     .dirs(
-                            new TestDir("HalfDir", "Half", null, "half_xz_vert"),
-                            new TestDir("CornerDir", "Corner", null, "corner_y")
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_VERT),
+                            new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_Y)
                     ),
             entry("FRAMED_STAIRS", "stairs")
                     .props(
@@ -195,9 +195,9 @@ final class SkipPredicateGeneratorData
                             Property.vanilla("Half", "half", "HALF", PropType.VANILLA)
                     )
                     .dirs(
-                            new TestDir("TriangleDir", "Stair", null, "stair_xz", "stair_y"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_hor", "half_y"),
-                            new TestDir("CornerDir", "Corner", null, "corner_y")
+                            new TestDir("TriangleDir", "Stair", null, TestDirIds.STAIR_XZ, TestDirIds.STAIR_Y),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_HOR, TestDirIds.HALF_Y),
+                            new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_Y)
                     ),
             entry("FRAMED_HALF_STAIRS", "stairs")
                     .props(
@@ -206,9 +206,9 @@ final class SkipPredicateGeneratorData
                             Property.internal("boolean", "right", "RIGHT", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("TriangleDir", "Stair", null, "stair_xz"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_vert", "half_y"),
-                            new TestDir("CornerDir", "Corner", null, "corner_xz", "corner_y")
+                            new TestDir("TriangleDir", "Stair", null, TestDirIds.STAIR_XZ),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_VERT, TestDirIds.HALF_Y),
+                            new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_XZ, TestDirIds.CORNER_Y)
                     ),
             entry("FRAMED_SLOPED_STAIRS", "stairs")
                     .props(
@@ -216,8 +216,8 @@ final class SkipPredicateGeneratorData
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("TriangleDir", "Tri", null, "slope_tri_y"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_hor")
+                            new TestDir("TriangleDir", "Tri", null, TestDirIds.SLOPE_TRI_Y),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_HOR)
                     ),
             entry("FRAMED_VERTICAL_STAIRS", "stairs")
                     .props(
@@ -225,9 +225,9 @@ final class SkipPredicateGeneratorData
                             Property.internal("StairsType", "type", "STAIRS_TYPE", PropType.CUSTOM)
                     )
                     .dirs(
-                            new TestDir("TriangleDir", "Stair", null, "stair_xz", "stair_y"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_vert", "half_y"),
-                            new TestDir("CornerDir", "Corner", null, "corner_xz", "corner_y")
+                            new TestDir("TriangleDir", "Stair", null, TestDirIds.STAIR_XZ, TestDirIds.STAIR_Y),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_VERT, TestDirIds.HALF_Y),
+                            new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_XZ, TestDirIds.CORNER_Y)
                     ),
             entry("FRAMED_VERTICAL_HALF_STAIRS", "stairs")
                     .props(
@@ -235,9 +235,9 @@ final class SkipPredicateGeneratorData
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("TriangleDir", "Stair", null, "stair_y"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_hor"),
-                            new TestDir("CornerDir", "Corner", null, "corner_xz")
+                            new TestDir("TriangleDir", "Stair", null, TestDirIds.STAIR_Y),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_HOR),
+                            new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_XZ)
                     ),
             entry("FRAMED_VERTICAL_SLOPED_STAIRS", "stairs")
                     .props(
@@ -245,8 +245,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("HorizontalRotation", "rot", "ROTATION", PropType.CUSTOM)
                     )
                     .dirs(
-                            new TestDir("TriangleDir", "Tri", null, "slope_tri_xz"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_vert", "half_y")
+                            new TestDir("TriangleDir", "Tri", null, TestDirIds.SLOPE_TRI_XZ),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_VERT, TestDirIds.HALF_Y)
                     ),
             entry("FRAMED_THREEWAY_CORNER_PILLAR", "pillar")
                     .props(
@@ -254,19 +254,19 @@ final class SkipPredicateGeneratorData
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("TriangleDir", "Stair", null, "stair_xz", "stair_y"),
-                            new TestDir("CornerDir", "Corner", null, "corner_xz", "corner_y")
+                            new TestDir("TriangleDir", "Stair", null, TestDirIds.STAIR_XZ, TestDirIds.STAIR_Y),
+                            new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_XZ, TestDirIds.CORNER_Y)
                     ),
             entry("FRAMED_WALL", "pillar")
                     .props(Property.vanilla("boolean", "up", "UP", PropType.PRIMITIVE))
                     .dirs(
-                            new TestDir(null, "WallArm", List.of(), "wall_arm"),
-                            new TestDir("boolean", "Pillar", null, "pillar_vert")
+                            new TestDir(null, "WallArm", List.of(), TestDirIds.WALL_ARM),
+                            new TestDir("boolean", "Pillar", null, TestDirIds.PILLAR_VERT)
                     ),
             entry("FRAMED_FENCE", "pillar")
                     .dirs(
-                            new TestDir(null, "FenceArm", List.of(), "fence_arm"),
-                            new TestDir("boolean", "Post", List.of(), "post_vert")
+                            new TestDir(null, "FenceArm", List.of(), TestDirIds.FENCE_ARM),
+                            new TestDir("boolean", "Post", List.of(), TestDirIds.POST_VERT)
                     )
                     .oneWayTest("FRAMED_FENCE_GATE", new TestDir(null, "FenceArmToGate", List.of(), "fence_arm_gate")),
             entry("FRAMED_FENCE_GATE", "door"),
@@ -276,7 +276,7 @@ final class SkipPredicateGeneratorData
                             Property.vanilla("DoorHingeSide", "hinge", "DOOR_HINGE", PropType.VANILLA),
                             Property.vanilla("boolean", "open", "OPEN", PropType.PRIMITIVE)
                     )
-                    .dirs(new TestDir("HalfDir", "DoorEdge", null, "door_edge_hor_y", "door_edge_vert"))
+                    .dirs(new TestDir("HalfDir", "DoorEdge", null, TestDirIds.DOOR_EDGE_HOR_Y, TestDirIds.DOOR_EDGE_VERT))
                     .altTypes("FRAMED_IRON_DOOR"),
             entry("FRAMED_TRAPDOOR", "door")
                     .props(
@@ -284,7 +284,7 @@ final class SkipPredicateGeneratorData
                             Property.vanilla("Half", "half", "HALF", PropType.VANILLA),
                             Property.vanilla("boolean", "open", "OPEN", PropType.PRIMITIVE)
                     )
-                    .dirs(new TestDir("HalfDir", "DoorEdge", null, "door_edge_hor_xz", "door_edge_hor_y", "door_edge_vert"))
+                    .dirs(new TestDir("HalfDir", "DoorEdge", null, TestDirIds.DOOR_EDGE_HOR_XZ, TestDirIds.DOOR_EDGE_HOR_Y, TestDirIds.DOOR_EDGE_VERT))
                     .altTypes("FRAMED_IRON_TRAPDOOR"),
             entry("FRAMED_PRESSURE_PLATE", IGNORED_PKG),
             entry("FRAMED_WATERLOGGABLE_PRESSURE_PLATE", IGNORED_PKG),
@@ -324,7 +324,7 @@ final class SkipPredicateGeneratorData
                             Property.api("boolean", "zAxis", "Z_AXIS", PropType.PRIMITIVE)
                                     .withEarlyExit()
                     )
-                    .dirs(new TestDir("boolean", "Post", null, "post_hor", "post_vert")),
+                    .dirs(new TestDir("boolean", "Post", null, TestDirIds.POST_HOR, TestDirIds.POST_VERT)),
             entry("FRAMED_THICK_LATTICE", "pillar")
                     .props(
                             Property.api("boolean", "xAxis", "X_AXIS", PropType.PRIMITIVE)
@@ -334,7 +334,7 @@ final class SkipPredicateGeneratorData
                             Property.api("boolean", "zAxis", "Z_AXIS", PropType.PRIMITIVE)
                                     .withEarlyExit()
                     )
-                    .dirs(new TestDir("boolean", "Pillar", null, "pillar_hor", "pillar_vert")),
+                    .dirs(new TestDir("boolean", "Pillar", null, TestDirIds.PILLAR_HOR, TestDirIds.PILLAR_VERT)),
             entry("FRAMED_CHEST", "misc"),
             entry("FRAMED_SECRET_STORAGE", IGNORED_PKG),
             entry("FRAMED_TANK", IGNORED_PKG),
@@ -346,7 +346,7 @@ final class SkipPredicateGeneratorData
                             Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE)
                                     .withPropLookup("io/github/xfacthd/framedblocks/common/block/ISlopeBlock", "slopeBlock", "getFacing")
                     )
-                    .dirs(new TestDir("TriangleDir", "Tri", null, "slope_tri_xz"))
+                    .dirs(new TestDir("TriangleDir", "Tri", null, TestDirIds.SLOPE_TRI_XZ))
                     .altTypes(
                             "FRAMED_POWERED_RAIL_SLOPE",
                             "FRAMED_DETECTOR_RAIL_SLOPE",
@@ -359,35 +359,35 @@ final class SkipPredicateGeneratorData
             entry("FRAMED_FLOWER_POT", IGNORED_PKG),
             entry("FRAMED_PILLAR", "pillar")
                     .props(Property.vanilla("Direction.Axis", "axis", "AXIS", PropType.PRIMITIVE).withEarlyExit())
-                    .dirs(new TestDir("boolean", "Pillar", null, "pillar_hor", "pillar_vert")),
+                    .dirs(new TestDir("boolean", "Pillar", null, TestDirIds.PILLAR_HOR, TestDirIds.PILLAR_VERT)),
             entry("FRAMED_HALF_PILLAR", "pillar")
                     .props(Property.vanilla("Direction", "dir", "FACING", PropType.PRIMITIVE).withEarlyExit())
-                    .dirs(new TestDir("boolean", "Pillar", null, "pillar_hor", "pillar_vert")),
+                    .dirs(new TestDir("boolean", "Pillar", null, TestDirIds.PILLAR_HOR, TestDirIds.PILLAR_VERT)),
             entry("FRAMED_PILLAR_SOCKET", "pillar")
                     .props(Property.vanilla("Direction", "dir", "FACING", PropType.PRIMITIVE))
                     .dirs(
-                            new TestDir("HalfDir", "Half", null, "half_xz_hor", "half_xz_vert", "half_y"),
-                            new TestDir("boolean", "Pillar", null, "pillar_hor", "pillar_vert")
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_HOR, TestDirIds.HALF_XZ_VERT, TestDirIds.HALF_Y),
+                            new TestDir("boolean", "Pillar", null, TestDirIds.PILLAR_HOR, TestDirIds.PILLAR_VERT)
                     ),
             entry("FRAMED_POST", "pillar")
                     .props(Property.vanilla("Direction.Axis", "axis", "AXIS", PropType.PRIMITIVE).withEarlyExit())
-                    .dirs(new TestDir("boolean", "Post", null, "post_hor", "post_vert")),
+                    .dirs(new TestDir("boolean", "Post", null, TestDirIds.POST_HOR, TestDirIds.POST_VERT)),
             entry("FRAMED_COLLAPSIBLE_BLOCK", "misc"),
             entry("FRAMED_COLLAPSIBLE_COPYCAT_BLOCK", "misc"),
             entry("FRAMED_BOUNCY_CUBE", IGNORED_PKG),
             entry("FRAMED_REDSTONE_BLOCK", IGNORED_PKG),
             entry("FRAMED_PRISM", "prism")
                     .props(Property.internal("DirectionAxis", "dirAxis", "FACING_AXIS", PropType.CUSTOM).withEarlyExit())
-                    .dirs(new TestDir("HalfDir", "Tri", null, "prism_tri_xz_hor", "prism_tri_xz_vert", "prism_tri_y")),
+                    .dirs(new TestDir("HalfDir", "Tri", null, TestDirIds.PRISM_TRI_XZ_HOR, TestDirIds.PRISM_TRI_XZ_VERT, TestDirIds.PRISM_TRI_Y)),
             entry("FRAMED_ELEVATED_INNER_PRISM", "prism")
                     .props(Property.internal("DirectionAxis", "dirAxis", "FACING_AXIS", PropType.CUSTOM).withEarlyExit())
-                    .dirs(new TestDir("HalfDir", "Tri", null, "elev_inner_prism_tri_xz_hor", "elev_inner_prism_tri_xz_vert", "elev_inner_prism_tri_y")),
+                    .dirs(new TestDir("HalfDir", "Tri", null, TestDirIds.ELEV_INNER_PRISM_TRI_XZ_HOR, TestDirIds.ELEV_INNER_PRISM_TRI_XZ_VERT, TestDirIds.ELEV_INNER_PRISM_TRI_Y)),
             entry("FRAMED_SLOPED_PRISM", "prism")
                     .props(Property.internal("CompoundDirection", "cmpDir", "FACING_DIR", PropType.CUSTOM).withEarlyExit())
-                    .dirs(new TestDir("HalfDir", "Tri", null, "prism_tri_xz_hor", "prism_tri_xz_vert", "prism_tri_y")),
+                    .dirs(new TestDir("HalfDir", "Tri", null, TestDirIds.PRISM_TRI_XZ_HOR, TestDirIds.PRISM_TRI_XZ_VERT, TestDirIds.PRISM_TRI_Y)),
             entry("FRAMED_ELEVATED_INNER_SLOPED_PRISM", "prism")
                     .props(Property.internal("CompoundDirection", "cmpDir", "FACING_DIR", PropType.CUSTOM).withEarlyExit())
-                    .dirs(new TestDir("HalfDir", "Tri", null, "elev_inner_prism_tri_xz_hor", "elev_inner_prism_tri_xz_vert", "elev_inner_prism_tri_y")),
+                    .dirs(new TestDir("HalfDir", "Tri", null, TestDirIds.ELEV_INNER_PRISM_TRI_XZ_HOR, TestDirIds.ELEV_INNER_PRISM_TRI_XZ_VERT, TestDirIds.ELEV_INNER_PRISM_TRI_Y)),
             entry("FRAMED_SLOPE_SLAB", "slopeslab")
                     .props(
                             Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
@@ -395,8 +395,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("boolean", "topHalf", "TOP_HALF", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "slope_slab_tri_bot", "slope_slab_tri_top"),
-                            new TestDir("HalfDir", "Half", List.of("dir", "topHalf"), "half_xz_hor")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.SLOPE_SLAB_TRI_BOT, TestDirIds.SLOPE_SLAB_TRI_TOP),
+                            new TestDir("HalfDir", "Half", List.of("dir", "topHalf"), TestDirIds.HALF_XZ_HOR)
                     ),
             entry("FRAMED_ELEVATED_SLOPE_SLAB", "slopeslab")
                     .props(
@@ -404,14 +404,14 @@ final class SkipPredicateGeneratorData
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "elev_slope_slab_tri"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_hor")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.ELEV_SLOPE_SLAB_TRI),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_HOR)
                     ),
             entry("FRAMED_COMPOUND_SLOPE_SLAB", "slopeslab")
                     .props(Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE))
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "cmp_slope_slab_tri"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_hor")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.CMP_SLOPE_SLAB_TRI),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_HOR)
                     ),
             entry("FRAMED_FLAT_SLOPE_SLAB_CORNER", "slopeslab")
                     .props(
@@ -419,7 +419,7 @@ final class SkipPredicateGeneratorData
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE),
                             Property.internal("boolean", "topHalf", "TOP_HALF", PropType.PRIMITIVE)
                     )
-                    .dirs(new TestDir("HalfTriangleDir", "Tri", null, "slope_slab_tri_bot", "slope_slab_tri_top")),
+                    .dirs(new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.SLOPE_SLAB_TRI_BOT, TestDirIds.SLOPE_SLAB_TRI_TOP)),
             entry("FRAMED_FLAT_INNER_SLOPE_SLAB_CORNER", "slopeslab")
                     .props(
                             Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
@@ -427,8 +427,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("boolean", "topHalf", "TOP_HALF", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "slope_slab_tri_bot", "slope_slab_tri_top"),
-                            new TestDir("HalfDir", "Half", List.of("dir", "topHalf"), "half_xz_hor")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.SLOPE_SLAB_TRI_BOT, TestDirIds.SLOPE_SLAB_TRI_TOP),
+                            new TestDir("HalfDir", "Half", List.of("dir", "topHalf"), TestDirIds.HALF_XZ_HOR)
                     ),
             entry("FRAMED_FLAT_ELEV_SLOPE_SLAB_CORNER", "slopeslab")
                     .props(
@@ -436,15 +436,15 @@ final class SkipPredicateGeneratorData
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "elev_slope_slab_tri"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_hor")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.ELEV_SLOPE_SLAB_TRI),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_HOR)
                     ),
             entry("FRAMED_FLAT_ELEV_INNER_SLOPE_SLAB_CORNER", "slopeslab")
                     .props(
                             Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
                     )
-                    .dirs(new TestDir("HalfTriangleDir", "Tri", null, "elev_slope_slab_tri")),
+                    .dirs(new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.ELEV_SLOPE_SLAB_TRI)),
             entry("FRAMED_SLOPE_PANEL", "slopepanel")
                     .props(
                             Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
@@ -452,8 +452,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("boolean", "front", "FRONT", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "slope_panel_tri_xz_back", "slope_panel_tri_xz_front", "slope_panel_tri_y_back", "slope_panel_tri_y_front"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_vert", "half_y")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.SLOPE_PANEL_TRI_XZ_BACK, TestDirIds.SLOPE_PANEL_TRI_XZ_FRONT, TestDirIds.SLOPE_PANEL_TRI_Y_BACK, TestDirIds.SLOPE_PANEL_TRI_Y_FRONT),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_VERT, TestDirIds.HALF_Y)
                     ),
             entry("FRAMED_EXTENDED_SLOPE_PANEL", "slopepanel")
                     .props(
@@ -461,8 +461,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("HorizontalRotation", "rot", "ROTATION", PropType.CUSTOM)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "ext_slope_panel_tri_xz", "ext_slope_panel_tri_y"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_vert", "half_y")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.EXT_SLOPE_PANEL_TRI_XZ, TestDirIds.EXT_SLOPE_PANEL_TRI_Y),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_VERT, TestDirIds.HALF_Y)
                     ),
             entry("FRAMED_COMPOUND_SLOPE_PANEL", "slopepanel")
                     .props(
@@ -470,8 +470,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("HorizontalRotation", "rot", "ROTATION", PropType.CUSTOM)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "cmp_slope_panel_tri_xz", "cmp_slope_panel_tri_y"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_vert", "half_y")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.CMP_SLOPE_PANEL_TRI_XZ, TestDirIds.CMP_SLOPE_PANEL_TRI_Y),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_VERT, TestDirIds.HALF_Y)
                     ),
             entry("FRAMED_FLAT_SLOPE_PANEL_CORNER", "slopepanel")
                     .props(
@@ -479,7 +479,7 @@ final class SkipPredicateGeneratorData
                             Property.internal("HorizontalRotation", "rot", "ROTATION", PropType.CUSTOM),
                             Property.internal("boolean", "front", "FRONT", PropType.PRIMITIVE)
                     )
-                    .dirs(new TestDir("HalfTriangleDir", "Tri", null, "slope_panel_tri_xz_back", "slope_panel_tri_xz_front", "slope_panel_tri_y_back", "slope_panel_tri_y_front")),
+                    .dirs(new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.SLOPE_PANEL_TRI_XZ_BACK, TestDirIds.SLOPE_PANEL_TRI_XZ_FRONT, TestDirIds.SLOPE_PANEL_TRI_Y_BACK, TestDirIds.SLOPE_PANEL_TRI_Y_FRONT)),
             entry("FRAMED_FLAT_INNER_SLOPE_PANEL_CORNER", "slopepanel")
                     .props(
                             Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
@@ -487,8 +487,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("boolean", "front", "FRONT", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "slope_panel_tri_xz_back", "slope_panel_tri_xz_front", "slope_panel_tri_y_back", "slope_panel_tri_y_front"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_vert", "half_y")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.SLOPE_PANEL_TRI_XZ_BACK, TestDirIds.SLOPE_PANEL_TRI_XZ_FRONT, TestDirIds.SLOPE_PANEL_TRI_Y_BACK, TestDirIds.SLOPE_PANEL_TRI_Y_FRONT),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_VERT, TestDirIds.HALF_Y)
                     ),
             entry("FRAMED_FLAT_EXT_SLOPE_PANEL_CORNER", "slopepanel")
                     .props(
@@ -496,23 +496,23 @@ final class SkipPredicateGeneratorData
                             Property.internal("HorizontalRotation", "rot", "ROTATION", PropType.CUSTOM)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "ext_slope_panel_tri_xz", "ext_slope_panel_tri_y"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_vert", "half_y")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.EXT_SLOPE_PANEL_TRI_XZ, TestDirIds.EXT_SLOPE_PANEL_TRI_Y),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_VERT, TestDirIds.HALF_Y)
                     ),
             entry("FRAMED_FLAT_EXT_INNER_SLOPE_PANEL_CORNER", "slopepanel")
                     .props(
                             Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
                             Property.internal("HorizontalRotation", "rot", "ROTATION", PropType.CUSTOM)
                     )
-                    .dirs(new TestDir("HalfTriangleDir", "Tri", null, "ext_slope_panel_tri_xz", "ext_slope_panel_tri_y")),
+                    .dirs(new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.EXT_SLOPE_PANEL_TRI_XZ, TestDirIds.EXT_SLOPE_PANEL_TRI_Y)),
             entry("FRAMED_SMALL_CORNER_SLOPE_PANEL", "slopepanelcorner")
                     .props(
                             Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "slope_panel_tri_xz_back"),
-                            new TestDir("CornerDir", "Corner", null, "corner_y")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.SLOPE_PANEL_TRI_XZ_BACK),
+                            new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_Y)
                     ),
             entry("FRAMED_SMALL_CORNER_SLOPE_PANEL_W", "slopepanelcorner")
                     .props(
@@ -520,8 +520,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("HorizontalRotation", "rot", "ROTATION", PropType.CUSTOM)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "slope_slab_tri_bot", "slope_panel_tri_y_back"),
-                            new TestDir("CornerDir", "Corner", null, "corner_xz")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.SLOPE_SLAB_TRI_BOT, TestDirIds.SLOPE_PANEL_TRI_Y_BACK),
+                            new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_XZ)
                     ),
             entry("FRAMED_LARGE_CORNER_SLOPE_PANEL", "slopepanelcorner")
                     .props(
@@ -529,8 +529,8 @@ final class SkipPredicateGeneratorData
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "slope_panel_tri_xz_front"),
-                            new TestDir("TriangleDir", "Stair", null, "stair_y")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.SLOPE_PANEL_TRI_XZ_FRONT),
+                            new TestDir("TriangleDir", "Stair", null, TestDirIds.STAIR_Y)
                     ),
             entry("FRAMED_LARGE_CORNER_SLOPE_PANEL_W", "slopepanelcorner")
                     .props(
@@ -538,8 +538,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("HorizontalRotation", "rot", "ROTATION", PropType.CUSTOM)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "slope_slab_tri_top", "slope_panel_tri_y_front"),
-                            new TestDir("TriangleDir", "Stair", null, "stair_xz")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.SLOPE_SLAB_TRI_TOP, TestDirIds.SLOPE_PANEL_TRI_Y_FRONT),
+                            new TestDir("TriangleDir", "Stair", null, TestDirIds.STAIR_XZ)
                     ),
             entry("FRAMED_SMALL_INNER_CORNER_SLOPE_PANEL", "slopepanelcorner")
                     .props(
@@ -547,8 +547,8 @@ final class SkipPredicateGeneratorData
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "slope_panel_tri_xz_front"),
-                            new TestDir("CornerDir", "Corner", null, "corner_y")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.SLOPE_PANEL_TRI_XZ_FRONT),
+                            new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_Y)
                     ),
             entry("FRAMED_SMALL_INNER_CORNER_SLOPE_PANEL_W", "slopepanelcorner")
                     .props(
@@ -556,8 +556,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("HorizontalRotation", "rot", "ROTATION", PropType.CUSTOM)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "slope_slab_tri_top", "slope_panel_tri_y_front"),
-                            new TestDir("CornerDir", "Corner", null, "corner_xz")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.SLOPE_SLAB_TRI_TOP, TestDirIds.SLOPE_PANEL_TRI_Y_FRONT),
+                            new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_XZ)
                     ),
             entry("FRAMED_LARGE_INNER_CORNER_SLOPE_PANEL", "slopepanelcorner")
                     .props(
@@ -565,8 +565,8 @@ final class SkipPredicateGeneratorData
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "slope_panel_tri_xz_back"),
-                            new TestDir("TriangleDir", "Stair", null, "stair_y")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.SLOPE_PANEL_TRI_XZ_BACK),
+                            new TestDir("TriangleDir", "Stair", null, TestDirIds.STAIR_Y)
                     ),
             entry("FRAMED_LARGE_INNER_CORNER_SLOPE_PANEL_W", "slopepanelcorner")
                     .props(
@@ -574,8 +574,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("HorizontalRotation", "rot", "ROTATION", PropType.CUSTOM)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "slope_slab_tri_bot", "slope_panel_tri_y_back"),
-                            new TestDir("TriangleDir", "Stair", null, "stair_xz")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.SLOPE_SLAB_TRI_BOT, TestDirIds.SLOPE_PANEL_TRI_Y_BACK),
+                            new TestDir("TriangleDir", "Stair", null, TestDirIds.STAIR_XZ)
                     ),
             entry("FRAMED_EXT_CORNER_SLOPE_PANEL", "slopepanelcorner")
                     .props(
@@ -583,8 +583,8 @@ final class SkipPredicateGeneratorData
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "ext_slope_panel_tri_xz"),
-                            new TestDir("CornerDir", "Corner", null, "corner_y")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.EXT_SLOPE_PANEL_TRI_XZ),
+                            new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_Y)
                     ),
             entry("FRAMED_EXT_CORNER_SLOPE_PANEL_W", "slopepanelcorner")
                     .props(
@@ -592,8 +592,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("HorizontalRotation", "rot", "ROTATION", PropType.CUSTOM)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "elev_slope_slab_tri", "ext_slope_panel_tri_y"),
-                            new TestDir("CornerDir", "Corner", null, "corner_xz")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.ELEV_SLOPE_SLAB_TRI, TestDirIds.EXT_SLOPE_PANEL_TRI_Y),
+                            new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_XZ)
                     ),
             entry("FRAMED_EXT_INNER_CORNER_SLOPE_PANEL", "slopepanelcorner")
                     .props(
@@ -601,8 +601,8 @@ final class SkipPredicateGeneratorData
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "ext_slope_panel_tri_xz"),
-                            new TestDir("TriangleDir", "Stair", null, "stair_y")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.EXT_SLOPE_PANEL_TRI_XZ),
+                            new TestDir("TriangleDir", "Stair", null, TestDirIds.STAIR_Y)
                     ),
             entry("FRAMED_EXT_INNER_CORNER_SLOPE_PANEL_W", "slopepanelcorner")
                     .props(
@@ -610,8 +610,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("HorizontalRotation", "rot", "ROTATION", PropType.CUSTOM)
                     )
                     .dirs(
-                            new TestDir("HalfTriangleDir", "Tri", null, "elev_slope_slab_tri", "ext_slope_panel_tri_y"),
-                            new TestDir("TriangleDir", "Stair", null, "stair_xz")
+                            new TestDir("HalfTriangleDir", "Tri", null, TestDirIds.ELEV_SLOPE_SLAB_TRI, TestDirIds.EXT_SLOPE_PANEL_TRI_Y),
+                            new TestDir("TriangleDir", "Stair", null, TestDirIds.STAIR_XZ)
                     ),
             entry("FRAMED_PYRAMID", "slope")
                     .props(
@@ -621,9 +621,9 @@ final class SkipPredicateGeneratorData
                                     .withEarlyExit()
                     )
                     .dirs(
-                            new TestDir("boolean", "Post", null, "post_hor", "post_vert")
+                            new TestDir("boolean", "Post", null, TestDirIds.POST_HOR, TestDirIds.POST_VERT)
                                     .withExcludedTypes("FRAMED_PYRAMID", "FRAMED_ELEVATED_PYRAMID_SLAB", "FRAMED_UPPER_PYRAMID_SLAB"),
-                            new TestDir("boolean", "Pillar", null, "pillar_hor", "pillar_vert")
+                            new TestDir("boolean", "Pillar", null, TestDirIds.PILLAR_HOR, TestDirIds.PILLAR_VERT)
                                     .withExcludedTypes("FRAMED_PYRAMID", "FRAMED_ELEVATED_PYRAMID_SLAB", "FRAMED_UPPER_PYRAMID_SLAB")
                     ),
             entry("FRAMED_PYRAMID_SLAB", "slope"),
@@ -633,10 +633,10 @@ final class SkipPredicateGeneratorData
                             Property.internal("PillarConnection", "connection", "PILLAR_CONNECTION", PropType.CUSTOM)
                     )
                     .dirs(
-                            new TestDir("HalfDir", "Half", List.of("dir"), "half_xz_hor", "half_xz_vert", "half_y"),
-                            new TestDir("boolean", "Post", null, "post_hor", "post_vert")
+                            new TestDir("HalfDir", "Half", List.of("dir"), TestDirIds.HALF_XZ_HOR, TestDirIds.HALF_XZ_VERT, TestDirIds.HALF_Y),
+                            new TestDir("boolean", "Post", null, TestDirIds.POST_HOR, TestDirIds.POST_VERT)
                                     .withExcludedTypes("FRAMED_ELEVATED_PYRAMID_SLAB", "FRAMED_PYRAMID", "FRAMED_UPPER_PYRAMID_SLAB"),
-                            new TestDir("boolean", "Pillar", null, "pillar_hor", "pillar_vert")
+                            new TestDir("boolean", "Pillar", null, TestDirIds.PILLAR_HOR, TestDirIds.PILLAR_VERT)
                                     .withExcludedTypes("FRAMED_ELEVATED_PYRAMID_SLAB", "FRAMED_PYRAMID", "FRAMED_UPPER_PYRAMID_SLAB")
                     ),
             entry("FRAMED_UPPER_PYRAMID_SLAB", "slope").props(
@@ -646,9 +646,9 @@ final class SkipPredicateGeneratorData
                                     .withEarlyExit()
                     )
                     .dirs(
-                            new TestDir("boolean", "Post", null, "post_hor", "post_vert")
+                            new TestDir("boolean", "Post", null, TestDirIds.POST_HOR, TestDirIds.POST_VERT)
                                     .withExcludedTypes("FRAMED_UPPER_PYRAMID_SLAB", "FRAMED_PYRAMID", "FRAMED_ELEVATED_PYRAMID_SLAB"),
-                            new TestDir("boolean", "Pillar", null, "pillar_hor", "pillar_vert")
+                            new TestDir("boolean", "Pillar", null, TestDirIds.PILLAR_HOR, TestDirIds.PILLAR_VERT)
                                     .withExcludedTypes("FRAMED_UPPER_PYRAMID_SLAB", "FRAMED_PYRAMID", "FRAMED_ELEVATED_PYRAMID_SLAB")
                     ),
             entry("FRAMED_TARGET", IGNORED_PKG),
@@ -658,7 +658,7 @@ final class SkipPredicateGeneratorData
                             Property.vanilla("DoorHingeSide", "hinge", "DOOR_HINGE", PropType.VANILLA),
                             Property.vanilla("boolean", "open", "OPEN", PropType.PRIMITIVE)
                     )
-                    .dirs(new TestDir("HalfDir", "DoorEdge", null, "door_edge_hor_y", "door_edge_vert"))
+                    .dirs(new TestDir("HalfDir", "DoorEdge", null, TestDirIds.DOOR_EDGE_HOR_Y, TestDirIds.DOOR_EDGE_VERT))
                     .altTypes("FRAMED_IRON_GATE"),
             entry("FRAMED_ITEM_FRAME", IGNORED_PKG),
             entry("FRAMED_GLOWING_ITEM_FRAME", IGNORED_PKG),
@@ -674,21 +674,21 @@ final class SkipPredicateGeneratorData
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("HalfDir", "Half", null, "half_y"),
-                            new TestDir("CornerDir", "Corner", null, "corner_xz"),
-                            new TestDir("TriangleDir", "Stair", null, "stair_xz")
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_Y),
+                            new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_XZ),
+                            new TestDir("TriangleDir", "Stair", null, TestDirIds.STAIR_XZ)
                     ),
             entry("FRAMED_CHECKERED_CUBE_SEGMENT", "slab")
                     .props(Property.internal("boolean", "second", "SECOND", PropType.PRIMITIVE))
-                    .dirs(new TestDir("DiagCornerDir", "DiagCorner", null, "checker_xz", "checker_y")),
+                    .dirs(new TestDir("DiagCornerDir", "DiagCorner", null, TestDirIds.CHECKER_XZ, TestDirIds.CHECKER_Y)),
             entry("FRAMED_CHECKERED_SLAB_SEGMENT", "slab")
                     .props(
                             Property.api("boolean", "top", "TOP", PropType.PRIMITIVE),
                             Property.internal("boolean", "second", "SECOND", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("DiagCornerDir", "DiagCorner", null, "checker_y"),
-                            new TestDir("CornerDir", "Corner", null, "corner_xz")
+                            new TestDir("DiagCornerDir", "DiagCorner", null, TestDirIds.CHECKER_Y),
+                            new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_XZ)
                     ),
             entry("FRAMED_CHECKERED_PANEL_SEGMENT", "slab")
                     .props(
@@ -696,8 +696,8 @@ final class SkipPredicateGeneratorData
                             Property.internal("boolean", "second", "SECOND", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("DiagCornerDir", "DiagCorner", null, "checker_xz"),
-                            new TestDir("CornerDir", "Corner", null, "corner_xz", "corner_y")
+                            new TestDir("DiagCornerDir", "DiagCorner", null, TestDirIds.CHECKER_XZ),
+                            new TestDir("CornerDir", "Corner", null, TestDirIds.CORNER_XZ, TestDirIds.CORNER_Y)
                     ),
             entry("FRAMED_TUBE", "misc")
                     .props(
@@ -705,21 +705,21 @@ final class SkipPredicateGeneratorData
                                     .withEarlyExit(),
                             Property.internal("boolean", "thick", "THICK", PropType.PRIMITIVE)
                     )
-                    .dirs(new TestDir("TubeOpening", "Opening", null, "tube_opening")),
+                    .dirs(new TestDir("TubeOpening", "Opening", null, TestDirIds.TUBE_OPENING)),
             entry("FRAMED_CORNER_TUBE", "misc")
                     .props(
                             Property.internal("CornerTubeOrientation", "orientation", "CORNER_TYPE_ORIENTATION", PropType.CUSTOM)
                                     .withEarlyExit(),
                             Property.internal("boolean", "thick", "THICK", PropType.PRIMITIVE)
                     )
-                    .dirs(new TestDir("TubeOpening", "Opening", null, "tube_opening")),
+                    .dirs(new TestDir("TubeOpening", "Opening", null, TestDirIds.TUBE_OPENING)),
             entry("FRAMED_CHAIN", "pillar"),
             entry("FRAMED_LANTERN", IGNORED_PKG),
             entry("FRAMED_SOUL_LANTERN", IGNORED_PKG),
             entry("FRAMED_HOPPER", "misc")
                     .dirs(
-                            new TestDir("boolean", "HopperSide", null, "hopper_side"),
-                            new TestDir("TubeOpening", "Opening", null, "tube_opening")
+                            new TestDir("boolean", "HopperSide", null, TestDirIds.HOPPER_SIDE),
+                            new TestDir("TubeOpening", "Opening", null, TestDirIds.TUBE_OPENING)
                                     .withExcludedTypes("FRAMED_HOPPER")
                     ),
             entry("FRAMED_LAYERED_CUBE", "misc")
@@ -728,11 +728,12 @@ final class SkipPredicateGeneratorData
                             Property.vanilla("int", "layers", "LAYERS", PropType.PRIMITIVE)
                     )
                     .dirs(
-                            new TestDir("int", "Layers", null, "layers_dir"),
-                            new TestDir("HalfDir", "Half", null, "half_xz_hor", "half_xz_vert", "half_y")
+                            new TestDir("int", "Layers", null, TestDirIds.LAYERS_DIR),
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_HOR, TestDirIds.HALF_XZ_VERT, TestDirIds.HALF_Y)
                                     .withExcludedTypes("FRAMED_LAYERED_CUBE")
                     ),
-            entry("FRAMED_LIGHTNING_ROD", IGNORED_PKG)
+            entry("FRAMED_LIGHTNING_ROD", IGNORED_PKG),
+            entry("FRAMED_PATH", IGNORED_PKG)
     );
 
     private static EntryBuilder entry(String type, String subPackage)
