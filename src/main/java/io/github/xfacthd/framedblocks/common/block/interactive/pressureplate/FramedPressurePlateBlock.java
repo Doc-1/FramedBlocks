@@ -176,7 +176,7 @@ public class FramedPressurePlateBlock extends PressurePlateBlock implements IFra
                 BlockType.FRAMED_PRESSURE_PLATE,
                 BlockSetType.OAK,
                 IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_PRESSURE_PLATE)
-                        .noCollission()
+                        .noCollision()
                         .strength(0.5F)
         );
     }
@@ -187,7 +187,7 @@ public class FramedPressurePlateBlock extends PressurePlateBlock implements IFra
                 BlockType.FRAMED_WATERLOGGABLE_PRESSURE_PLATE,
                 BlockSetType.OAK,
                 IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_WATERLOGGABLE_PRESSURE_PLATE)
-                        .noCollission()
+                        .noCollision()
                         .strength(0.5F)
         );
     }
@@ -199,7 +199,7 @@ public class FramedPressurePlateBlock extends PressurePlateBlock implements IFra
                 BlockSetType.STONE,
                 IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_STONE_PRESSURE_PLATE)
                         .requiresCorrectToolForDrops()
-                        .noCollission()
+                        .noCollision()
                         .strength(0.5F)
         );
     }
@@ -211,7 +211,7 @@ public class FramedPressurePlateBlock extends PressurePlateBlock implements IFra
                 BlockSetType.STONE,
                 IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_WATERLOGGABLE_STONE_PRESSURE_PLATE)
                         .requiresCorrectToolForDrops()
-                        .noCollission()
+                        .noCollision()
                         .strength(0.5F)
         );
     }
@@ -223,7 +223,7 @@ public class FramedPressurePlateBlock extends PressurePlateBlock implements IFra
                 OBSIDIAN,
                 IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_OBSIDIAN_PRESSURE_PLATE)
                         .requiresCorrectToolForDrops()
-                        .noCollission()
+                        .noCollision()
                         .strength(0.5F)
         );
     }
@@ -235,7 +235,7 @@ public class FramedPressurePlateBlock extends PressurePlateBlock implements IFra
                 OBSIDIAN,
                 IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_WATERLOGGABLE_OBSIDIAN_PRESSURE_PLATE)
                         .requiresCorrectToolForDrops()
-                        .noCollission()
+                        .noCollision()
                         .strength(0.5F)
         );
     }

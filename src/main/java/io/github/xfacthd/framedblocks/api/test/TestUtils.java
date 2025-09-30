@@ -36,7 +36,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.extensions.common.IClientBlockExtensions;
 import net.neoforged.neoforge.common.CommonHooks;
 import org.slf4j.Logger;
@@ -330,7 +329,7 @@ public final class TestUtils
                                 );
                             });
 
-                    if (FMLEnvironment.dist.isClient())
+                    if (Utils.CLIENT_DIST)
                     {
                         ClientGuard.testHasParticleOverride(helper, state);
                     }

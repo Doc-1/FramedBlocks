@@ -1,8 +1,8 @@
 package io.github.xfacthd.framedblocks.common.util;
 
 import io.github.xfacthd.framedblocks.FramedBlocks;
+import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.data.BlockType;
-import net.neoforged.fml.loading.FMLEnvironment;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -23,7 +23,7 @@ public abstract class BlockTypeMap<T>
     public final void initialize()
     {
         fill();
-        if (!FMLEnvironment.production)
+        if (!Utils.PRODUCTION)
         {
             check();
         }

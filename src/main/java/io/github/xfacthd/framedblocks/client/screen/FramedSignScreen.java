@@ -11,13 +11,14 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.SignText;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.UnknownNullability;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -117,22 +118,22 @@ public class FramedSignScreen extends Screen
     }
 
     @Override
-    public boolean charTyped(char character, int modifiers)
+    public boolean charTyped(CharacterEvent event)
     {
-        inputUtil.charTyped(character);
+        inputUtil.charTyped(event);
         return true;
     }
 
     @Override
-    public boolean keyPressed(int key, int scanCode, int modifiers)
+    public boolean keyPressed(KeyEvent event)
     {
-        if (key == GLFW.GLFW_KEY_UP)
+        if (event.isUp())
         {
             currLine = currLine - 1 & 3;
             inputUtil.setCursorToEnd();
             return true;
         }
-        else if (key == GLFW.GLFW_KEY_DOWN || key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_KP_ENTER)
+        else if (event.isDown() || event.isConfirmation())
         {
             currLine = currLine + 1 & 3;
             inputUtil.setCursorToEnd();
@@ -140,7 +141,7 @@ public class FramedSignScreen extends Screen
         }
         else
         {
-            return inputUtil.keyPressed(key) || super.keyPressed(key, scanCode, modifiers);
+            return inputUtil.keyPressed(event) || super.keyPressed(event);
         }
     }
 

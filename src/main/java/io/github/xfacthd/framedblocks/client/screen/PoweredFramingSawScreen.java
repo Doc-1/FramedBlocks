@@ -15,6 +15,7 @@ import net.minecraft.Optionull;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -263,14 +264,14 @@ public class PoweredFramingSawScreen extends AbstractContainerScreen<PoweredFram
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int btn)
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick)
     {
-        if (mouseX >= targetStackX && mouseX < targetStackX + 18 && mouseY >= targetStackY && mouseY < targetStackY + 18)
+        if (event.x() >= targetStackX && event.x() < targetStackX + 18 && event.y() >= targetStackY && event.y() < targetStackY + 18)
         {
             selectRecipe(menu.getCarried());
             return true;
         }
-        return super.mouseClicked(mouseX, mouseY, btn);
+        return super.mouseClicked(event, doubleClick);
     }
 
     public boolean isMouseOverRecipeSlot(double mouseX, double mouseY)

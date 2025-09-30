@@ -3,7 +3,7 @@
   "additives": [
     {
       "count": 1,
-      "ingredient": "minecraft:chain"
+      "ingredient": "minecraft:iron_chain"
     }
   ],
   "material": 3072,

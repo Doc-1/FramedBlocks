@@ -10,7 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.ModLoader;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.gui.GuiLayer;
 
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public final class BlockInteractOverlayLayer implements GuiLayer
         {
             if (overlay.render(graphics, player))
             {
-                if (FMLEnvironment.production) break;
+                if (Utils.PRODUCTION) break;
 
                 if (renderedOverlay != null)
                 {

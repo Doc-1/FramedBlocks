@@ -65,7 +65,7 @@ public final class ClientUtils
 
     public static TextureAtlasSprite getBlockSprite(ResourceLocation id)
     {
-        return Minecraft.getInstance().getTextureAtlas(BLOCK_ATLAS).apply(id);
+        return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(BLOCK_ATLAS).getSprite(id);
     }
 
 

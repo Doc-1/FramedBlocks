@@ -1,9 +1,9 @@
 package io.github.xfacthd.framedblocks.api.shapes;
 
 import io.github.xfacthd.framedblocks.api.internal.InternalAPI;
+import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public final class ReloadableShapeProvider implements ShapeProvider
 
     public static ShapeProvider of(ShapeGenerator generator, List<BlockState> states)
     {
-        if (!FMLEnvironment.production && generator != ShapeGenerator.EMPTY)
+        if (!Utils.PRODUCTION && generator != ShapeGenerator.EMPTY)
         {
             return new ReloadableShapeProvider(generator, states);
         }

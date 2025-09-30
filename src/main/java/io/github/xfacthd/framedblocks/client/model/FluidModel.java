@@ -35,7 +35,8 @@ public final class FluidModel
         @Override
         public TextureAtlasSprite get(Material material, ModelDebugName modelName)
         {
-            return material.sprite();
+            boolean block = material.atlasLocation().equals(ClientUtils.BLOCK_ATLAS);
+            return ClientUtils.getBlockSprite(block ? material.texture() : MissingTextureAtlasSprite.getLocation());
         }
 
         @Override

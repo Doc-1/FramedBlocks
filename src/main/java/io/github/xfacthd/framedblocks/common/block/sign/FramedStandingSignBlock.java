@@ -31,7 +31,7 @@ public class FramedStandingSignBlock extends AbstractFramedSignBlock
 
     public FramedStandingSignBlock(Properties props)
     {
-        super(BlockType.FRAMED_SIGN, props.noCollission());
+        super(BlockType.FRAMED_SIGN, props.noCollision());
     }
 
     @Override

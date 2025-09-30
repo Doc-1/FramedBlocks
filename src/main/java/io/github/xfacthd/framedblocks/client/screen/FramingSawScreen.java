@@ -21,6 +21,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.item.TrackingItemStackRenderState;
@@ -441,7 +443,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
             return;
         }
 
-        if (hasShiftDown())
+        if (Minecraft.getInstance().hasShiftDown())
         {
             for (ItemStack option : items)
             {
@@ -451,7 +453,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
         }
         else
         {
-            Component keyName = InputConstants.getKey(GLFW.GLFW_KEY_LEFT_SHIFT, -1).getDisplayName();
+            Component keyName = InputConstants.getKey(new KeyEvent(GLFW.GLFW_KEY_LEFT_SHIFT, -1, 0)).getDisplayName();
             components.add(Component.translatable(
                     TOOLTIP_PRESS_TO_SHOW,
                     Component.literal("").append(keyName).withStyle(ChatFormatting.GOLD)
@@ -541,12 +543,12 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button)
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick)
     {
         scrolling = false;
 
         GuiEventListener focused = getFocused();
-        if (focused != null && !focused.isMouseOver(mouseX, mouseY))
+        if (focused != null && !focused.isMouseOver(event.x(), event.y()))
         {
             setFocused(null);
         }
@@ -558,8 +560,8 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
         for (int idx = firstIndex; idx < lastIdx; ++idx)
         {
             int relIdx = idx - firstIndex;
-            double recRelX = mouseX - (double)(x + relIdx % RECIPE_COLS * RECIPE_WIDTH);
-            double recRelY = mouseY - (double)(y + relIdx / RECIPE_COLS * RECIPE_HEIGHT);
+            double recRelX = event.x() - (double)(x + relIdx % RECIPE_COLS * RECIPE_WIDTH);
+            double recRelY = event.y() - (double)(y + relIdx / RECIPE_COLS * RECIPE_HEIGHT);
             if (recRelX < 0 || recRelY < 0 || recRelX > RECIPE_WIDTH || recRelY > RECIPE_HEIGHT)
             {
                 continue;
@@ -587,17 +589,17 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
         {
             x = leftPos + SCROLL_BAR_X;
             y = topPos + SCROLL_BAR_Y;
-            if (mouseX >= (double) x && mouseX < (double) (x + SCROLL_BTN_WIDTH) && mouseY >= (double) y && mouseY < (double) (y + SCROLL_BAR_HEIGHT))
+            if (event.x() >= (double) x && event.x() < (double) (x + SCROLL_BTN_WIDTH) && event.y() >= (double) y && event.y() < (double) (y + SCROLL_BAR_HEIGHT))
             {
                 scrolling = true;
             }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY)
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY)
     {
         if (scrolling && isScrollBarActive())
         {
@@ -605,14 +607,14 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
             float botY = topY + SCROLL_BAR_HEIGHT;
             float freeScrollHeight = botY - topY - SCROLL_BTN_HEIGHT;
 
-            scrollOffset = ((float) mouseY - topY - (SCROLL_BTN_HEIGHT / 2F)) / freeScrollHeight;
+            scrollOffset = ((float) event.y() - topY - (SCROLL_BTN_HEIGHT / 2F)) / freeScrollHeight;
             scrollOffset = Mth.clamp(scrollOffset, 0F, 1F);
             firstIndex = calculateFirstIndex(getHiddenRows());
 
             return true;
         }
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
@@ -630,14 +632,14 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers)
+    public boolean keyPressed(KeyEvent event)
     {
         // Prevent typing E in the search box from closing the screen
-        if (searchBox.isFocused() && Objects.requireNonNull(minecraft).options.keyInventory.matches(keyCode, scanCode))
+        if (searchBox.isFocused() && Objects.requireNonNull(minecraft).options.keyInventory.matches(event))
         {
             return true;
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     @Nullable

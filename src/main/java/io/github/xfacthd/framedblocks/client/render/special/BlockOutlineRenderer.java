@@ -7,6 +7,7 @@ import io.github.xfacthd.framedblocks.FramedBlocks;
 import io.github.xfacthd.framedblocks.api.block.IBlockType;
 import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
 import io.github.xfacthd.framedblocks.api.render.OutlineRenderer;
+import io.github.xfacthd.framedblocks.api.render.SimpleOutlineRenderer;
 import io.github.xfacthd.framedblocks.api.render.RegisterOutlineRenderersEvent;
 import io.github.xfacthd.framedblocks.common.config.ClientConfig;
 import io.github.xfacthd.framedblocks.common.config.DevToolsConfig;
@@ -23,8 +24,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.fml.ModLoader;
-import net.neoforged.neoforge.client.ClientHooks;
-import net.neoforged.neoforge.client.event.RenderHighlightEvent;
+import net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -35,17 +36,17 @@ import java.util.Set;
 public final class BlockOutlineRenderer
 {
     private static final int DEFAULT_LINE_COLOR = ARGB.color(0x66, 0xFF000000);
-    private static final Map<IBlockType, OutlineRenderer> OUTLINE_RENDERERS = new IdentityHashMap<>();
+    private static final Map<IBlockType, OutlineRenderer<?>> OUTLINE_RENDERERS = new IdentityHashMap<>();
     private static final Set<IBlockType> ERRORED_TYPES = new HashSet<>();
 
-    public static void onRenderBlockHighlight(RenderHighlightEvent.Block event)
+    public static void onRenderBlockHighlight(ExtractBlockOutlineRenderStateEvent event)
     {
         if (!ClientConfig.VIEW.useFancySelectionBoxes() && !DevToolsConfig.VIEW.isOcclusionShapeDebugRenderingEnabled())
         {
             return;
         }
 
-        BlockHitResult result = event.getTarget();
+        BlockHitResult result = event.getHitResult();
         ClientLevel level = Objects.requireNonNull(Minecraft.getInstance().level);
         BlockState state = level.getBlockState(result.getBlockPos());
         if (!(state.getBlock() instanceof IFramedBlock block))
@@ -55,57 +56,71 @@ public final class BlockOutlineRenderer
 
         if (DevToolsConfig.VIEW.isOcclusionShapeDebugRenderingEnabled())
         {
-            if (ClientHooks.isInTranslucentBlockOutlinePass(level, result.getBlockPos(), state) != event.isForTranslucentBlocks()) return;
-
             VoxelShape shape = state.getOcclusionShape();
-            boolean highContrast = Minecraft.getInstance().options.highContrastBlockOutline().get();
             Vec3 offset = Vec3.atLowerCornerOf(result.getBlockPos()).subtract(event.getCamera().getPosition());
 
-            if (highContrast)
+            event.addCustomRenderer((renderState, buffer, poseStack, translucentPass, levelRenderState) ->
             {
-                VertexConsumer builder = event.getMultiBufferSource().getBuffer(RenderType.secondaryBlockOutline());
-                ShapeRenderer.renderShape(event.getPoseStack(), builder, shape, offset.x, offset.y, offset.z, 0xFF000000);
-            }
-            VertexConsumer builder = event.getMultiBufferSource().getBuffer(RenderType.lines());
-            int lineColor = highContrast ? CommonColors.HIGH_CONTRAST_DIAMOND : DEFAULT_LINE_COLOR;
-            ShapeRenderer.renderShape(event.getPoseStack(), builder, shape, offset.x, offset.y, offset.z, lineColor);
-
-            event.setCanceled(true);
+                if (translucentPass == renderState.isTranslucent())
+                {
+                    boolean highContrast = renderState.highContrast();
+                    if (highContrast)
+                    {
+                        VertexConsumer builder = buffer.getBuffer(RenderType.secondaryBlockOutline());
+                        ShapeRenderer.renderShape(poseStack, builder, shape, offset.x, offset.y, offset.z, 0xFF000000);
+                    }
+                    VertexConsumer builder = buffer.getBuffer(RenderType.lines());
+                    int lineColor = highContrast ? CommonColors.HIGH_CONTRAST_DIAMOND : DEFAULT_LINE_COLOR;
+                    ShapeRenderer.renderShape(poseStack, builder, shape, offset.x, offset.y, offset.z, lineColor);
+                }
+                return true;
+            });
             return;
         }
 
         IBlockType type = block.getBlockType();
         if (type.hasSpecialHitbox())
         {
-            if (ClientHooks.isInTranslucentBlockOutlinePass(level, result.getBlockPos(), state) == event.isForTranslucentBlocks())
+            OutlineRenderer<Object> renderer = getRenderer(type);
+            if (renderer == null)
             {
-                OutlineRenderer renderer = OUTLINE_RENDERERS.get(type);
-                if (renderer == null)
+                if (ERRORED_TYPES.add(type))
                 {
-                    if (ERRORED_TYPES.add(type))
-                    {
-                        FramedBlocks.LOGGER.error("IBlockType '{}' requests custom outline rendering but no OutlineRender was registered!", type.getName());
-                    }
-                    return;
+                    FramedBlocks.LOGGER.error("IBlockType '{}' requests custom outline rendering but no OutlineRender was registered!", type.getName());
                 }
-
-                PoseStack mstack = event.getPoseStack();
-                Vec3 offset = Vec3.atLowerCornerOf(result.getBlockPos()).subtract(event.getCamera().getPosition());
-
-                mstack.pushPose();
-                mstack.translate(offset.x, offset.y, offset.z);
-                mstack.translate(.5, .5, .5);
-                renderer.rotateMatrix(mstack, state);
-                mstack.translate(-.5, -.5, -.5);
-
-                AbstractLineDrawer drawer = createDrawer(mstack.last(), event.getMultiBufferSource());
-                renderer.draw(state, level, result.getBlockPos(), drawer);
-                drawer.finish();
-
-                mstack.popPose();
+                return;
             }
-            event.setCanceled(true);
+
+            Object data = renderer.extractOutlineData(state, level, result.getBlockPos());
+            if (data == null) return;
+
+            Vec3 offset = Vec3.atLowerCornerOf(result.getBlockPos()).subtract(event.getCamera().getPosition());
+            event.addCustomRenderer((renderState, buffer, poseStack, translucentPass, levelRenderState) ->
+            {
+                if (translucentPass == renderState.isTranslucent())
+                {
+                    poseStack.pushPose();
+                    poseStack.translate(offset.x, offset.y, offset.z);
+                    poseStack.translate(.5, .5, .5);
+                    renderer.rotateMatrix(poseStack, state);
+                    poseStack.translate(-.5, -.5, -.5);
+
+                    AbstractLineDrawer drawer = createDrawer(poseStack.last(), buffer);
+                    renderer.draw(state, data, drawer);
+                    drawer.finish();
+
+                    poseStack.popPose();
+                }
+                return true;
+            });
         }
+    }
+
+    @Nullable
+    @SuppressWarnings("unchecked")
+    private static OutlineRenderer<Object> getRenderer(IBlockType type)
+    {
+        return (OutlineRenderer<Object>) OUTLINE_RENDERERS.get(type);
     }
 
     private static AbstractLineDrawer createDrawer(PoseStack.Pose pose, MultiBufferSource buffer)
@@ -135,7 +150,7 @@ public final class BlockOutlineRenderer
         return OUTLINE_RENDERERS.containsKey(type);
     }
 
-    private static abstract class AbstractLineDrawer implements OutlineRenderer.LineDrawer
+    private static abstract class AbstractLineDrawer implements SimpleOutlineRenderer.LineDrawer
     {
         final PoseStack.Pose pose;
 

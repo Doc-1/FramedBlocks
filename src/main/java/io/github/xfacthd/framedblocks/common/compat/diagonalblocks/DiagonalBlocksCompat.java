@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.event.BlockEntityTypeAddBlocksEvent;
@@ -38,7 +37,7 @@ public final class DiagonalBlocksCompat
             try
             {
                 GuardedAccess.init(modBus);
-                if (FMLEnvironment.dist.isClient())
+                if (Utils.CLIENT_DIST)
                 {
                     GuardedClientAccess.init(modBus);
                 }

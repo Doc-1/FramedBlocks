@@ -154,7 +154,7 @@ public class FramedWeightedPressurePlateBlock extends WeightedPressurePlateBlock
                 15,
                 BlockSetType.GOLD,
                 IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_GOLD_PRESSURE_PLATE)
-                        .noCollission()
+                        .noCollision()
                         .strength(0.5F)
         );
     }
@@ -166,7 +166,7 @@ public class FramedWeightedPressurePlateBlock extends WeightedPressurePlateBlock
                 15,
                 BlockSetType.GOLD,
                 IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_WATERLOGGABLE_GOLD_PRESSURE_PLATE)
-                        .noCollission()
+                        .noCollision()
                         .strength(0.5F)
         );
     }
@@ -179,7 +179,7 @@ public class FramedWeightedPressurePlateBlock extends WeightedPressurePlateBlock
                 BlockSetType.IRON,
                 IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_IRON_PRESSURE_PLATE)
                         .requiresCorrectToolForDrops()
-                        .noCollission()
+                        .noCollision()
                         .strength(0.5F)
         );
     }
@@ -192,7 +192,7 @@ public class FramedWeightedPressurePlateBlock extends WeightedPressurePlateBlock
                 BlockSetType.IRON,
                 IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_WATERLOGGABLE_IRON_PRESSURE_PLATE)
                         .requiresCorrectToolForDrops()
-                        .noCollission()
+                        .noCollision()
                         .strength(0.5F)
         );
     }

@@ -37,7 +37,7 @@ public class FramedTorchBlock extends TorchBlock implements IFramedBlockInternal
     {
         this(ParticleTypes.FLAME, props
                 .pushReaction(PushReaction.DESTROY)
-                .noCollission()
+                .noCollision()
                 .strength(0.5F)
                 .sound(SoundType.WOOD)
                 .lightLevel(state -> 14)

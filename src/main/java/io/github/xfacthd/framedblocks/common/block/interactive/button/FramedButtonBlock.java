@@ -45,7 +45,7 @@ public class FramedButtonBlock extends ButtonBlock implements IFramedBlockIntern
     {
         super(blockSet, pressTime, props
                 .pushReaction(PushReaction.DESTROY)
-                .noCollission()
+                .noCollision()
                 .strength(0.5F)
                 .sound(SoundType.WOOD)
                 .noOcclusion()

@@ -5,7 +5,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.xfacthd.framedblocks.FramedBlocks;
-import io.github.xfacthd.framedblocks.client.util.NoAnimationResourceMetadata;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.atlas.SpriteResourceLoader;
@@ -15,6 +14,7 @@ import net.minecraft.client.resources.metadata.animation.AnimationFrame;
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.metadata.MetadataSectionType;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceMetadata;
@@ -93,7 +93,9 @@ public record AnimationSplitterSource(ResourceLocation resource, List<Frame> fra
 
                 NativeImage imageOut = new NativeImage(NativeImage.Format.RGBA, frameW, frameH, false);
                 image.copyRect(imageOut, srcX, srcY, 0, 0, frameW, frameH, false, false);
-                return new SpriteContents(frame.outLoc, new FrameSize(frameW, frameH), imageOut, new NoAnimationResourceMetadata(srcMeta));
+                SpriteContents contents = loader.loadSprite(texPath, resource);
+                List<MetadataSectionType.WithValue<?>> metaSections = contents != null ? contents.framedblocks$getAdditionalMetadata() : List.of();
+                return new SpriteContents(frame.outLoc, new FrameSize(frameW, frameH), imageOut, Optional.empty(), metaSections);
             }
             catch (Exception e)
             {

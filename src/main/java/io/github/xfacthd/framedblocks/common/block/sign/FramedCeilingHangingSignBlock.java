@@ -42,7 +42,7 @@ public class FramedCeilingHangingSignBlock extends AbstractFramedHangingSignBloc
 {
     public FramedCeilingHangingSignBlock(Properties props)
     {
-        super(BlockType.FRAMED_HANGING_SIGN, props.noCollission());
+        super(BlockType.FRAMED_HANGING_SIGN, props.noCollision());
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.ATTACHED, false));
     }
 

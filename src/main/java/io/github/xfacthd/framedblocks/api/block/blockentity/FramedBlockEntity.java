@@ -33,7 +33,6 @@ import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.BlockItemStateProperties;
@@ -273,7 +272,7 @@ public class FramedBlockEntity extends BlockEntity
 
             if (!player.isCreative())
             {
-                stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
+                stack.hurtAndBreak(1, player, hand.asEquipmentSlot());
             }
 
             Utils.giveToPlayer(player, new ItemStack(Utils.FRAMED_REINFORCEMENT.value()), true);
@@ -695,7 +694,7 @@ public class FramedBlockEntity extends BlockEntity
         return getBlock().getBlockType();
     }
 
-    protected final Level level()
+    public final Level level()
     {
         return Objects.requireNonNull(level, "BlockEntity#level accessed before it was set");
     }

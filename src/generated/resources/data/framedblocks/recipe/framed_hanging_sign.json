@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "C": "minecraft:chain",
+    "C": "minecraft:iron_chain",
     "F": "framedblocks:framed_cube"
   },
   "pattern": [

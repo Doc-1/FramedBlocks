@@ -6,19 +6,23 @@ import com.mojang.math.Axis;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Unit;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Quaternionfc;
 
 /**
  * Provide custom outline rendering for blocks with non-axis-aligned edges such as slopes.
+ * Use {@link SimpleOutlineRenderer} for blocks which only need the {@link BlockState} for
+ * rendering the outline.
  * <p>
  * Must be registered in {@link RegisterOutlineRenderersEvent}
  */
-public interface OutlineRenderer
+public interface OutlineRenderer<T>
 {
-    OutlineRenderer NO_OP = new NoopOutlineRenderer();
+    OutlineRenderer<Unit> NO_OP = new NoopOutlineRenderer();
 
     /**
      * Array of {@link Quaternionfc}s for rotating around the Y axis according to the horizontal direction.<br>
@@ -27,20 +31,19 @@ public interface OutlineRenderer
     Quaternionfc[] YN_DIR = makeQuaternionArray();
 
     /**
+     * Extract additional data required for rendering which is not available from just the {@link BlockState}.
+     *
+     * @return additional data or null to fall back to vanilla rendering
+     */
+    @Nullable
+    T extractOutlineData(BlockState state, Level level, BlockPos pos);
+
+    /**
      * Draw the outlines of the block. Provides access to the {@link BlockState}, {@link Level} and {@link BlockPos}
      * of the block being targeted for cases that require access to the block's
      * {@link net.minecraft.world.level.block.entity.BlockEntity}
      */
-    default void draw(BlockState state, Level level, BlockPos pos, LineDrawer drawer)
-    {
-        draw(state, drawer);
-    }
-
-    /**
-     * Draw the outlines of the block. Provides access to the {@link BlockState} of the block being targeted,
-     * sufficient for most blocks
-     */
-    void draw(BlockState state, LineDrawer drawer);
+    void draw(BlockState state, T data, LineDrawer drawer);
 
     /**
      * Get the horizontal {@link Direction} the block is facing in

@@ -6,7 +6,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,7 +49,7 @@ public final class DevToolsConfig
 
     public static void init(IEventBus modBus, ModContainer modContainer)
     {
-        if (!FMLEnvironment.production)
+        if (!Utils.PRODUCTION)
         {
             modBus.addListener((ModConfigEvent.Loading event) -> onConfigReloaded(event));
             modBus.addListener((ModConfigEvent.Reloading event) -> onConfigReloaded(event));
@@ -60,7 +59,7 @@ public final class DevToolsConfig
 
     static
     {
-        if (FMLEnvironment.production)
+        if (Utils.PRODUCTION)
         {
             SPEC = null;
             DOUBLE_BLOCK_PART_DEBUG_VALUE = null;
@@ -160,7 +159,7 @@ public final class DevToolsConfig
 
     public static final class ViewImpl implements ExtConfigView.DevTools
     {
-        private static final boolean IN_DEV = !FMLEnvironment.production;
+        private static final boolean IN_DEV = !Utils.PRODUCTION;
 
         @Override
         public boolean isDoubleBlockPartHitDebugRendererEnabled()

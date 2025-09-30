@@ -12,12 +12,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelProperty;
 
 import java.util.Optional;
 
 public class FramedTargetBlockEntity extends FramedBlockEntity
 {
     public static final DyeColor DEFAULT_COLOR = DyeColor.RED;
+    public static final ModelProperty<DyeColor> COLOR_PROPERTY = new ModelProperty<>();
 
     private DyeColor overlayColor = DEFAULT_COLOR;
 
@@ -46,6 +49,12 @@ public class FramedTargetBlockEntity extends FramedBlockEntity
     public int getOverlayColor()
     {
         return overlayColor.getTextColor();
+    }
+
+    @Override
+    protected void attachAdditionalModelData(ModelData.Builder builder)
+    {
+        builder.with(COLOR_PROPERTY, overlayColor);
     }
 
     @Override

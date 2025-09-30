@@ -22,6 +22,7 @@ import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Blocks;
@@ -61,12 +62,12 @@ public class DoubleBlockPartDebugRenderer implements BlockDebugRenderer<FramedDo
         BlockStateModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(partState);
 
         OutlineBufferSource outlineBuffer = Minecraft.getInstance().renderBuffers().outlineBufferSource();
-        outlineBuffer.setColor(
+        outlineBuffer.setColor(ARGB.color(
+                0xFF,
                 secondary ? 0x00 : 0xFF,
                 secondary ? 0xFF : 0x00,
-                0x00,
-                0xFF
-        );
+                0x00
+        ));
 
         ModelData modelData = be.getModelData().derive().with(AbstractFramedBlockData.PROPERTY, MODEL_DATA).build();
         BlockAndTintGetter level = new SingleBlockFakeLevel(Objects.requireNonNull(be.getLevel()), be.getBlockPos(), partState, be, modelData);

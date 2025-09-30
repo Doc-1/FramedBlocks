@@ -35,6 +35,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -59,6 +60,8 @@ import java.util.stream.Collectors;
 public final class Utils
 {
     private static final ResourceLocation RL_TEMPLATE = Utils.rl(FramedConstants.MOD_ID, "");
+    public static final boolean PRODUCTION = FMLEnvironment.isProduction();
+    public static final boolean CLIENT_DIST = FMLEnvironment.getDist().isClient();
     private static final Direction[] DIRECTIONS = Direction.values();
     private static final Direction[] HORIZONTAL_DIRECTIONS = Direction.Plane.HORIZONTAL.stream().toArray(Direction[]::new);
     public static final TagKey<Block> FRAMEABLE = blockTag("frameable");

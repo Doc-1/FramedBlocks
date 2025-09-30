@@ -5,9 +5,8 @@ import com.mojang.serialization.MapCodec;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.client.render.block.FramedTankRenderer;
 import io.github.xfacthd.framedblocks.common.FBContent;
-import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -27,7 +26,16 @@ public final class TankItemRenderer implements SpecialModelRenderer<SimpleFluidC
     private TankItemRenderer() { }
 
     @Override
-    public void render(@Nullable SimpleFluidContent content, ItemDisplayContext ctx, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay, boolean hasGlint)
+    public void submit(
+            @Nullable SimpleFluidContent content,
+            ItemDisplayContext ctx,
+            PoseStack poseStack,
+            SubmitNodeCollector submitNodeCollector,
+            int light,
+            int overlay,
+            boolean hasGlint,
+            int outlineColor
+    )
     {
         if (content == null || content.isEmpty()) return;
 
@@ -37,7 +45,7 @@ public final class TankItemRenderer implements SpecialModelRenderer<SimpleFluidC
         int tint = fluidExt.getTintColor();
         ChunkSectionLayer chunkLayer = ItemBlockRenderTypes.getRenderLayer(content.getFluid().defaultFluidState());
 
-        FramedTankRenderer.renderContents(poseStack, buffer, chunkLayer, light, content.getAmount(), stillTex, flowTex, tint);
+        FramedTankRenderer.renderContents(poseStack, submitNodeCollector, chunkLayer, light, content.getAmount(), stillTex, flowTex, tint);
     }
 
     @Override
@@ -63,7 +71,7 @@ public final class TankItemRenderer implements SpecialModelRenderer<SimpleFluidC
         private Unbaked() { }
 
         @Override
-        public SpecialModelRenderer<?> bake(EntityModelSet entityModels)
+        public SpecialModelRenderer<?> bake(BakingContext ctx)
         {
             return TankItemRenderer.INSTANCE;
         }

@@ -4,6 +4,7 @@ import io.github.xfacthd.framedblocks.api.camo.CamoClientHandler;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainerHelper;
 import io.github.xfacthd.framedblocks.api.camo.CamoContent;
 import io.github.xfacthd.framedblocks.api.util.ClientUtils;
+import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.particle.FluidParticleOptions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,7 +24,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.MapColor;
-import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.Nullable;
 
 public final class FluidCamoContent extends CamoContent<FluidCamoContent>
@@ -136,7 +136,7 @@ public final class FluidCamoContent extends CamoContent<FluidCamoContent>
     @Override
     public int getTintColor(BlockAndTintGetter level, BlockPos pos, int tintIdx)
     {
-        if (FMLEnvironment.dist.isClient())
+        if (Utils.CLIENT_DIST)
         {
             return ClientUtils.getFluidColor(level, pos, fluid.defaultFluidState());
         }
@@ -146,7 +146,7 @@ public final class FluidCamoContent extends CamoContent<FluidCamoContent>
     @Override
     public int getTintColor(ItemStack stack, int tintIdx)
     {
-        if (FMLEnvironment.dist.isClient())
+        if (Utils.CLIENT_DIST)
         {
             return ClientUtils.getFluidColor(fluid.defaultFluidState());
         }

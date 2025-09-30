@@ -3,6 +3,7 @@ package io.github.xfacthd.framedblocks.client.screen.widget;
 import io.github.xfacthd.framedblocks.common.compat.searchables.SearchablesCompat;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -28,9 +29,9 @@ public final class SearchEditBox extends EditBox
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int btn)
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick)
     {
-        if (btn == GLFW.GLFW_MOUSE_BUTTON_RIGHT && this.isMouseOver(mouseX, mouseY))
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT && isMouseOver(event.x(), event.y()))
         {
             setValue("");
             if (!NO_DELAY)
@@ -39,7 +40,7 @@ public final class SearchEditBox extends EditBox
             }
             return true;
         }
-        return super.mouseClicked(mouseX, mouseY, btn);
+        return super.mouseClicked(event, doubleClick);
     }
 
     private void onSearchChanged(String text)

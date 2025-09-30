@@ -3,15 +3,17 @@ package io.github.xfacthd.framedblocks.client.render.block;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import io.github.xfacthd.framedblocks.api.util.Utils;
+import io.github.xfacthd.framedblocks.client.render.block.state.FramedItemFrameRenderState;
 import io.github.xfacthd.framedblocks.common.blockentity.special.FramedItemFrameBlockEntity;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MapRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.state.MapRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
@@ -25,39 +27,31 @@ import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix4f;
+import org.jetbrains.annotations.Nullable;
 
-public class FramedItemFrameRenderer implements BlockEntityRenderer<FramedItemFrameBlockEntity>
+public class FramedItemFrameRenderer implements BlockEntityRenderer<FramedItemFrameBlockEntity, FramedItemFrameRenderState>
 {
     private static final double ITEM_Z_OFF = 0.4375D;
     private static final float DIR_OFF_MULT = 0.49875F;
     private static final float MAP_SCALE = 0.0078125F;
     private static final double MAX_NAMETAG_DIST_SQR = 64D * 64D;
 
-    private final ItemRenderer itemRenderer;
+    private final ItemModelResolver itemModelResolver;
     private final MapRenderState mapRenderState = new MapRenderState();
     private final MapRenderer mapRenderer;
 
     public FramedItemFrameRenderer(BlockEntityRendererProvider.Context ctx)
     {
-        this.itemRenderer = ctx.getItemRenderer();
+        this.itemModelResolver = ctx.itemModelResolver();
         this.mapRenderer = Minecraft.getInstance().getMapRenderer();
     }
 
     @Override
-    public void render(
-            FramedItemFrameBlockEntity be,
-            float partialTick,
-            PoseStack poseStack,
-            MultiBufferSource buffer,
-            int packedLight,
-            int packedOverlay,
-            Vec3 cameraPos
-    )
+    public void submit(FramedItemFrameRenderState renderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera)
     {
         poseStack.pushPose();
 
-        Direction dir = be.getBlockState().getValue(BlockStateProperties.FACING).getOpposite();
+        Direction dir = renderState.direction;
         float dirOff = Utils.isPositive(dir) ? 0 : 1;
         poseStack.translate(
                 dir.getStepX() * DIR_OFF_MULT + (Utils.isX(dir) ? dirOff : .5F),
@@ -73,69 +67,110 @@ public class FramedItemFrameRenderer implements BlockEntityRenderer<FramedItemFr
         }
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - yRot));
 
-        ItemStack item = be.getItem();
-        MapId mapId = item.get(DataComponents.MAP_ID);
         //noinspection ConstantConditions
-        MapItemSavedData mapData = MapItem.getSavedData(item, be.getLevel());
-
         poseStack.translate(0.0D, 0.0D, ITEM_Z_OFF);
-        float itemRotation = mapData != null ? (be.getRotation() % 4 * 2) : be.getRotation();
+        float itemRotation = renderState.mapId != null ? (renderState.rotation % 4 * 2) : renderState.rotation;
         poseStack.mulPose(Axis.ZP.rotationDegrees(itemRotation * 360.0F / 8.0F));
 
-        if (mapId != null && mapData != null)
+        if (renderState.mapId != null)
         {
             poseStack.mulPose(Axis.ZP.rotationDegrees(180.0F));
 
             poseStack.scale(MAP_SCALE, MAP_SCALE, MAP_SCALE);
             poseStack.translate(-64.0D, -64.0D, -1.0D);
 
-            int mapLight = be.isGlowingFrame() ? 0x00F000D2 : packedLight;
-            mapRenderer.extractRenderState(mapId, mapData, mapRenderState);
-            mapRenderer.render(mapRenderState, poseStack, buffer, true, mapLight);
+            int mapLight = renderState.isGlowFrame ? 0x00F000D2 : renderState.lightCoords;
+            mapRenderer.render(mapRenderState, poseStack, submitNodeCollector, true, mapLight);
         }
-        else
+        else if (!renderState.item.isEmpty())
         {
             poseStack.scale(0.5F, 0.5F, 0.5F);
 
-            int itemLight = be.isGlowingFrame() ? 0x00F000F0 : packedLight;
-            itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, itemLight, OverlayTexture.NO_OVERLAY, poseStack, buffer, be.getLevel(), 0);
+            int itemLight = renderState.isGlowFrame ? 0x00F000F0 : renderState.lightCoords;
+            renderState.item.submit(poseStack, submitNodeCollector, itemLight, OverlayTexture.NO_OVERLAY, 0);
         }
 
         poseStack.popPose();
 
-        renderCustomItemName(be, poseStack, buffer, packedLight);
+        if (renderState.nameTag != null)
+        {
+            renderCustomItemName(renderState, renderState.nameTag, poseStack, submitNodeCollector, camera);
+        }
     }
 
-    private static void renderCustomItemName(FramedItemFrameBlockEntity be, PoseStack poseStack, MultiBufferSource buffer, int packedLight)
+    @Override
+    public FramedItemFrameRenderState createRenderState()
     {
-        ItemStack stack = be.getItem();
+        return new FramedItemFrameRenderState();
+    }
 
-        if (!Minecraft.renderNames() || stack.isEmpty() || !stack.has(DataComponents.CUSTOM_NAME)) return;
+    @Override
+    public void extractRenderState(
+            FramedItemFrameBlockEntity blockEntity,
+            FramedItemFrameRenderState renderState,
+            float partialTick,
+            Vec3 cameraPos,
+            @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay
+    )
+    {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPos, crumblingOverlay);
+
+        renderState.direction = blockEntity.getBlockState().getValue(BlockStateProperties.FACING).getOpposite();
+        renderState.rotation = blockEntity.getRotation();
+        renderState.isGlowFrame = blockEntity.isGlowingFrame();
+
+        ItemStack stack = blockEntity.getItem();
+        this.itemModelResolver.updateForTopItem(renderState.item, stack, ItemDisplayContext.FIXED, blockEntity.level(), blockEntity, 0);
+
+        if (stack.isEmpty()) return;
+
+        extractMapData(blockEntity, renderState, stack);
+        extractNameTag(blockEntity, renderState, stack);
+    }
+
+    private void extractMapData(FramedItemFrameBlockEntity blockEntity, FramedItemFrameRenderState renderState, ItemStack stack)
+    {
+        MapId mapId = stack.get(DataComponents.MAP_ID);
+        if (mapId == null) return;
+
+        MapItemSavedData mapData = MapItem.getSavedData(stack, blockEntity.level());
+        if (mapData == null) return;
+
+        mapRenderer.extractRenderState(mapId, mapData, renderState.mapRenderState);
+        renderState.mapId = mapId;
+    }
+
+    private static void extractNameTag(FramedItemFrameBlockEntity blockEntity, FramedItemFrameRenderState renderState, ItemStack stack)
+    {
+        if (!Minecraft.renderNames() || !stack.has(DataComponents.CUSTOM_NAME)) return;
         if (!(Minecraft.getInstance().hitResult instanceof BlockHitResult hitResult)) return;
-        if (!be.getBlockPos().equals(hitResult.getBlockPos())) return;
+        if (!blockEntity.getBlockPos().equals(hitResult.getBlockPos())) return;
 
         Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
         double dist = camera.getPosition().distanceToSqr(hitResult.getLocation());
-        if (dist > MAX_NAMETAG_DIST_SQR) return;
+        if (dist <= MAX_NAMETAG_DIST_SQR)
+        {
+            renderState.nameTag = stack.getHoverName();
+            renderState.distanceToCameraSq = dist;
+        }
+    }
 
-        Direction dir = be.getBlockState().getValue(BlockStateProperties.FACING);
+    private static void renderCustomItemName(
+            FramedItemFrameRenderState renderState,
+            Component nameTag,
+            PoseStack poseStack,
+            SubmitNodeCollector submitNodeCollector,
+            CameraRenderState camera
+    )
+    {
+        Direction dir = renderState.direction.getOpposite();
         float dx = .5F + (dir.getStepX() * .46875F) - (dir.getStepX() * .3F);
         float dz = .5F + (dir.getStepZ() * .46875F) - (dir.getStepZ() * .3F);
 
         poseStack.pushPose();
-        poseStack.translate(dx, 1.25F, dz);
-        poseStack.mulPose(camera.rotation());
-        poseStack.scale(-0.025F, -0.025F, 0.025F);
+        poseStack.translate(dx, .75F, dz);
 
-        Font font = Minecraft.getInstance().font;
-        Component name = stack.getHoverName();
-
-        Matrix4f pose = poseStack.last().pose();
-        int alpha = (int)(Minecraft.getInstance().options.getBackgroundOpacity(0.25F) * 255.0F) << 24;
-        float x = -font.width(name) / 2F;
-
-        font.drawInBatch(name, x, 0F, 553648127, false, pose, buffer, Font.DisplayMode.SEE_THROUGH, alpha, packedLight);
-        font.drawInBatch(name, x, 0F, -1, false, pose, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
+        submitNodeCollector.submitNameTag(poseStack, Vec3.ZERO, 0, nameTag, true, renderState.lightCoords, renderState.distanceToCameraSq, camera);
 
         poseStack.popPose();
     }

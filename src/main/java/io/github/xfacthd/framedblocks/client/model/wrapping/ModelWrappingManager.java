@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.fml.ModLoader;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -157,7 +156,7 @@ public final class ModelWrappingManager
                 HANDLERS.size()
         );
 
-        if (!FMLEnvironment.production)
+        if (!Utils.PRODUCTION)
         {
             Map<BlockStateModel, Block> nonWrappedModels = new Reference2ObjectOpenHashMap<>();
             for (Block block : HANDLERS.keySet())

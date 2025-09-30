@@ -7,16 +7,18 @@ import io.github.xfacthd.framedblocks.api.model.standalone.StandaloneWrapperKey;
 import io.github.xfacthd.framedblocks.api.render.RenderUtils;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.client.model.special.FramedChestLidModel;
+import io.github.xfacthd.framedblocks.client.render.block.state.FramedChestRenderState;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.block.cube.FramedChestBlock;
 import io.github.xfacthd.framedblocks.common.blockentity.special.FramedChestBlockEntity;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.ChestState;
 import io.github.xfacthd.framedblocks.common.data.property.LatchType;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,7 +33,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public final class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlockEntity>
+import java.util.Objects;
+
+public final class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlockEntity, FramedChestRenderState>
 {
     private static final ResourceLocation BLOCKSTATE_LOC = Utils.rl("framed_chest_lid");
     public static final StandaloneWrapperKey<FramedChestLidModel> WRAPPER_KEY = new StandaloneWrapperKey<>(FBContent.BLOCK_FRAMED_CHEST, BLOCKSTATE_LOC);
@@ -43,64 +47,75 @@ public final class FramedChestRenderer implements BlockEntityRenderer<FramedChes
     @SuppressWarnings("unused")
     public FramedChestRenderer(BlockEntityRendererProvider.Context ctx)
     {
-        this.lidModel = ctx.getBlockRenderDispatcher()
+        this.lidModel = ctx.blockRenderDispatcher()
                 .getBlockModelShaper()
                 .getModelManager()
                 .getStandaloneModel(WRAPPER_KEY.modelKey());
     }
 
     @Override
-    public void render(
-            FramedChestBlockEntity be,
-            float partialTicks,
-            PoseStack poseStack,
-            MultiBufferSource buffer,
-            int light,
-            int overlay,
-            Vec3 cameraPos
-    )
+    public void submit(FramedChestRenderState renderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera)
     {
-        Level level = be.getLevel();
-        if (level == null || be.isRemoved() || lidModel == null) return;
-
-        BlockState state = be.getBlockState();
-
-        var result = FramedChestBlock.combine(be, true);
-        ChestState chestState = result.apply(FramedChestBlock.STATE_COMBINER);
-
-        Direction dir = state.getValue(FramedProperties.FACING_HOR);
-        ChestType type = state.getValue(BlockStateProperties.CHEST_TYPE);
-        LatchType latch = state.getValue(PropertyHolder.LATCH_TYPE);
-
-        long lastChange = result.apply(FramedChestBlock.OPENNESS_COMBINER).orElse(0L);
-        float angle = calculateAngle(level, chestState, dir, lastChange, partialTicks);
-
-        float xOff = Utils.isX(dir) ? (Utils.isPositive(dir) ? 1F/16F : 15F/16F) : 0;
-        float zOff = Utils.isZ(dir) ? (Utils.isPositive(dir) ? 1F/16F : 15F/16F) : 0;
-
         poseStack.pushPose();
 
+        float xOff = renderState.rotOriginX;
+        float zOff = renderState.rotOriginZ;
         poseStack.translate(xOff, 9F/16F, zOff);
-        poseStack.mulPose(Utils.isX(dir) ? Axis.ZP.rotationDegrees(angle) : Axis.XN.rotationDegrees(angle));
+        poseStack.mulPose(renderState.lidAngle);
         poseStack.translate(-xOff, -9F/16F, -zOff);
-
-        BlockStateModel model = lidModel.getModel(dir, type, latch);
 
         RANDOM.setSeed(42);
         // Cannot use BlockRenderDispatcher#renderBatched() due to incorrect shading of rotated surfaces
-        RenderUtils.renderModel(
-                state,
-                level,
-                be.getBlockPos(),
-                poseStack.last(),
-                buffer,
-                model,
+        RenderUtils.submitModel(
+                renderState.state,
+                renderState.level,
+                renderState.pos,
+                poseStack,
+                submitNodeCollector,
+                renderState.model,
                 RANDOM,
-                light,
+                renderState.lightCoords,
                 OverlayTexture.NO_OVERLAY
         );
 
         poseStack.popPose();
+    }
+
+    @Override
+    public FramedChestRenderState createRenderState()
+    {
+        return new FramedChestRenderState();
+    }
+
+    @Override
+    public void extractRenderState(
+            FramedChestBlockEntity blockEntity,
+            FramedChestRenderState renderState,
+            float partialTick,
+            Vec3 cameraPos,
+            @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay
+    )
+    {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPos, crumblingOverlay);
+
+        Level level = Objects.requireNonNull(blockEntity.getLevel());
+        renderState.level = level;
+        renderState.pos = blockEntity.getBlockPos();
+        BlockState state = renderState.state = blockEntity.getBlockState();
+
+        Direction dir = state.getValue(FramedProperties.FACING_HOR);
+        ChestType type = state.getValue(BlockStateProperties.CHEST_TYPE);
+        LatchType latch = state.getValue(PropertyHolder.LATCH_TYPE);
+        renderState.model = Objects.requireNonNull(lidModel).getModel(dir, type, latch);
+
+        var result = FramedChestBlock.combine(blockEntity, true);
+        ChestState chestState = result.apply(FramedChestBlock.STATE_COMBINER);
+        long lastChange = result.apply(FramedChestBlock.OPENNESS_COMBINER).orElse(0L);
+        float angle = calculateAngle(level, chestState, dir, lastChange, partialTick);
+        renderState.lidAngle = Utils.isX(dir) ? Axis.ZP.rotationDegrees(angle) : Axis.XN.rotationDegrees(angle);
+
+        renderState.rotOriginX = Utils.isX(dir) ? (Utils.isPositive(dir) ? 1F/16F : 15F/16F) : 0;
+        renderState.rotOriginZ = Utils.isZ(dir) ? (Utils.isPositive(dir) ? 1F/16F : 15F/16F) : 0;
     }
 
     private static float calculateAngle(Level level, ChestState chestState, Direction dir, long lastChange, float partialTicks)
@@ -122,6 +137,8 @@ public final class FramedChestRenderer implements BlockEntityRenderer<FramedChes
     @Override
     public boolean shouldRender(FramedChestBlockEntity be, Vec3 camera)
     {
+        if (lidModel == null || be.isRemoved()) return false;
+
         ChestState state = FramedChestBlock.combine(be, true).apply(FramedChestBlock.STATE_COMBINER);
         return state != ChestState.CLOSED && BlockEntityRenderer.super.shouldRender(be, camera);
     }

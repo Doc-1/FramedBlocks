@@ -377,7 +377,7 @@ public final class FramingSawRecipeProvider extends AbstractFramingSawRecipeProv
 
         sawRecipe(FBContent.BLOCK_FRAMED_HANGING_SIGN, 2)
                 .material(CUBE_MATERIAL_VALUE / 2)
-                .additive(additive(Items.CHAIN))
+                .additive(additive(Items.IRON_CHAIN))
                 .save(output);
 
         sawRecipe(FBContent.BLOCK_FRAMED_TORCH, 4)

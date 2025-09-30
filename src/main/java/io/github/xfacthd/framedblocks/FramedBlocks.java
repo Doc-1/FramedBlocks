@@ -2,6 +2,7 @@ package io.github.xfacthd.framedblocks;
 
 import com.mojang.logging.LogUtils;
 import io.github.xfacthd.framedblocks.api.util.FramedConstants;
+import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.capability.CapabilitySetup;
 import io.github.xfacthd.framedblocks.common.compat.CompatHandler;
@@ -27,7 +28,6 @@ import net.neoforged.fml.CrashReportCallables;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.world.poi.ExtendPoiTypesEvent;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
@@ -63,7 +63,7 @@ public final class FramedBlocks
         NeoForge.EVENT_BUS.addListener(FramingSawRecipeCache::onRecipesReceived);
         NeoForge.EVENT_BUS.addListener(FramedDataMaps::onDataMapsUpdated);
 
-        if (!FMLEnvironment.production)
+        if (!Utils.PRODUCTION)
         {
             NeoForge.EVENT_BUS.addListener(FramedBlocks::onAddDebugReloadListener);
         }

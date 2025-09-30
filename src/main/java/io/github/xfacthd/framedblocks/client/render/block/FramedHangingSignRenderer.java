@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import io.github.xfacthd.framedblocks.common.block.sign.AbstractFramedSignBlock;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Vector3f;
 
 public class FramedHangingSignRenderer extends FramedSignRenderer
@@ -18,7 +17,7 @@ public class FramedHangingSignRenderer extends FramedSignRenderer
     }
 
     @Override
-    protected void applyTransforms(PoseStack poseStack, float yRot, BlockState state)
+    protected void applyTransforms(PoseStack poseStack, float yRot, boolean standing)
     {
         poseStack.translate(0.5D, 0.9375D, 0.5D);
         poseStack.mulPose(Axis.YP.rotationDegrees(yRot));

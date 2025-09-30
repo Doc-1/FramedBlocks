@@ -3,8 +3,10 @@ package io.github.xfacthd.framedblocks.api.model.item;
 import io.github.xfacthd.framedblocks.api.camo.CamoList;
 import io.github.xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import io.github.xfacthd.framedblocks.api.model.data.FramedBlockData;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
 
 public interface ItemModelInfo
 {
@@ -24,5 +26,14 @@ public interface ItemModelInfo
     default ModelData buildItemModelData(BlockState state, CamoList camos)
     {
         return ModelData.of(AbstractFramedBlockData.PROPERTY, new FramedBlockData(camos.getCamo(0), false));
+    }
+
+    /**
+     * {@return additional data needed to correctly cache item model geometry}
+     */
+    @Nullable
+    default Object computeCacheKey(ItemStack stack)
+    {
+        return null;
     }
 }

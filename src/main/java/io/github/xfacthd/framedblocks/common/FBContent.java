@@ -14,6 +14,7 @@ import io.github.xfacthd.framedblocks.api.component.FrameConfig;
 import io.github.xfacthd.framedblocks.api.datagen.loot.objects.NonTrivialCamoLootCondition;
 import io.github.xfacthd.framedblocks.api.datagen.loot.objects.SplitCamoLootFunction;
 import io.github.xfacthd.framedblocks.api.util.FramedConstants;
+import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.api.util.registration.*;
 import io.github.xfacthd.framedblocks.common.block.cube.*;
 import io.github.xfacthd.framedblocks.common.block.door.*;
@@ -90,7 +91,6 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraft.world.level.storage.loot.providers.number.LootNumberProviderType;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -929,7 +929,7 @@ public final class FBContent
                 .collect(Collectors.toSet());
 
         DeferredBlockEntity<T> result = registerBlockEntity(factory, types[0].getName(), blocks, true, opOnlyNbt);
-        if (!FMLEnvironment.production && Arrays.stream(types).anyMatch(BlockType::isDoubleBlock))
+        if (!Utils.PRODUCTION && Arrays.stream(types).anyMatch(BlockType::isDoubleBlock))
         {
             storeBlockEntityType(DOUBLE_BLOCK_ENTITIES, result);
         }

@@ -3,6 +3,7 @@ package io.github.xfacthd.framedblocks.client.util;
 import io.github.xfacthd.framedblocks.FramedBlocks;
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import io.github.xfacthd.framedblocks.api.util.FramedConstants;
+import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -17,7 +18,7 @@ import org.lwjgl.glfw.GLFW;
 
 public final class KeyMappings
 {
-    public static final String KEY_CATEGORY = FramedConstants.MOD_ID + ".key.categories.framedblocks";
+    public static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(Utils.rl("main"));
     public static final Lazy<KeyMapping> KEYMAPPING_UPDATE_CULLING = makeKeyMapping("update_cull", GLFW.GLFW_KEY_F9);
     public static final Lazy<KeyMapping> KEYMAPPING_WIPE_CACHE = makeKeyMapping("wipe_cache", -1);
 
@@ -30,6 +31,8 @@ public final class KeyMappings
 
     public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event)
     {
+        event.registerCategory(KEY_CATEGORY);
+
         event.register(KEYMAPPING_UPDATE_CULLING.get());
         event.register(KEYMAPPING_WIPE_CACHE.get());
     }

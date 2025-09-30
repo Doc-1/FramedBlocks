@@ -4,6 +4,7 @@ import io.github.xfacthd.framedblocks.api.block.render.FramedBlockColor;
 import io.github.xfacthd.framedblocks.client.model.geometry.cube.FramedTargetGeometry;
 import io.github.xfacthd.framedblocks.common.blockentity.special.FramedTargetBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -17,13 +18,19 @@ public final class FramedTargetBlockColor extends FramedBlockColor
     @Override
     public int getColor(BlockState state, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos, int tintIndex)
     {
-        if (tintIndex == FramedTargetGeometry.OVERLAY_TINT_IDX && level != null && pos != null)
+        if (tintIndex != FramedTargetGeometry.OVERLAY_TINT_IDX)
         {
-            if (level.getBlockEntity(pos) instanceof FramedTargetBlockEntity be)
+            return super.getColor(state, level, pos, tintIndex);
+        }
+
+        if (level != null && pos != null)
+        {
+            DyeColor overlayColor = level.getModelData(pos).get(FramedTargetBlockEntity.COLOR_PROPERTY);
+            if (overlayColor != null)
             {
-                return be.getOverlayColor();
+                return overlayColor.getTextColor();
             }
         }
-        return super.getColor(state, level, pos, tintIndex);
+        return DyeColor.RED.getTextColor();
     }
 }

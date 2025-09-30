@@ -34,7 +34,7 @@ public class FramedRedstoneWallTorchBlock extends RedstoneWallTorchBlock impleme
     public FramedRedstoneWallTorchBlock(Properties props)
     {
         super(props.pushReaction(PushReaction.DESTROY)
-                .noCollission()
+                .noCollision()
                 .instabreak()
                 .sound(SoundType.WOOD)
                 .lightLevel(state -> state.getValue(BlockStateProperties.LIT) ? 7 : 0)

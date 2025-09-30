@@ -30,7 +30,7 @@ public class FramedWallSignBlock extends AbstractFramedSignBlock
 
     public FramedWallSignBlock(Properties props)
     {
-        super(BlockType.FRAMED_WALL_SIGN, props.noCollission());
+        super(BlockType.FRAMED_WALL_SIGN, props.noCollision());
     }
 
     @Override

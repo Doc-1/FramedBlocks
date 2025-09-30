@@ -3,28 +3,32 @@ package io.github.xfacthd.framedblocks.client.render.block;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import io.github.xfacthd.framedblocks.api.render.Quaternions;
+import io.github.xfacthd.framedblocks.client.render.block.state.FramedSignRenderState;
 import io.github.xfacthd.framedblocks.common.block.sign.AbstractFramedSignBlock;
 import io.github.xfacthd.framedblocks.common.block.sign.FramedStandingSignBlock;
 import io.github.xfacthd.framedblocks.common.blockentity.special.FramedSignBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.AbstractSignRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix4f;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.List;
 
-public class FramedSignRenderer implements BlockEntityRenderer<FramedSignBlockEntity>
+public class FramedSignRenderer implements BlockEntityRenderer<FramedSignBlockEntity, FramedSignRenderState>
 {
     private static final float RENDER_SCALE = 0.6666667F;
     private static final Vector3f TEXT_OFFSET = new Vector3f(0F, 5.6F/16F, 1.024F/16F);
@@ -34,35 +38,53 @@ public class FramedSignRenderer implements BlockEntityRenderer<FramedSignBlockEn
 
     public FramedSignRenderer(BlockEntityRendererProvider.Context ctx)
     {
-        font = ctx.getFont();
+        font = ctx.font();
     }
 
     @Override
-    public void render(
-            FramedSignBlockEntity sign,
-            float partialTicks,
-            PoseStack poseStack,
-            MultiBufferSource buffer,
-            int light,
-            int overlay,
-            Vec3 cameraPos
-    )
+    public void submit(FramedSignRenderState renderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera)
     {
-        BlockState state = sign.getBlockState();
-        if (!(state.getBlock() instanceof AbstractFramedSignBlock signBlock))
-        {
-            return;
-        }
-
-        BlockPos pos = sign.getBlockPos();
-        int lineHeight = signBlock.getTextLineHeight();
-        int lineWidth = signBlock.getMaxTextLineWidth();
+        int light = renderState.lightCoords;
+        Vector3f textOffset = renderState.textOffset;
+        int lineHeight = renderState.lineHeight;
+        int lineWidth = renderState.lineWidth;
+        boolean outline = renderState.outline;
 
         poseStack.pushPose();
-        applyTransforms(poseStack, -signBlock.getYRotationDegrees(state), state);
-        renderText(pos, signBlock, sign.getText(true), poseStack, buffer, light, lineHeight, lineWidth, true);
-        renderText(pos, signBlock, sign.getText(false), poseStack, buffer, light, lineHeight, lineWidth, false);
+        applyTransforms(poseStack, renderState.yRot, renderState.standing);
+        renderText(renderState.frontText, poseStack, submitNodeCollector, light, textOffset, lineHeight, lineWidth, outline, true);
+        renderText(renderState.backText, poseStack, submitNodeCollector, light, textOffset, lineHeight, lineWidth, outline, false);
         poseStack.popPose();
+    }
+
+    @Override
+    public FramedSignRenderState createRenderState()
+    {
+        return new FramedSignRenderState();
+    }
+
+    @Override
+    public void extractRenderState(
+            FramedSignBlockEntity blockEntity,
+            FramedSignRenderState renderState,
+            float partialTick,
+            Vec3 cameraPos,
+            @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay
+    )
+    {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPos, crumblingOverlay);
+
+        BlockState state = blockEntity.getBlockState();
+        if (!(state.getBlock() instanceof AbstractFramedSignBlock signBlock)) return;
+
+        renderState.standing = state.getBlock() instanceof FramedStandingSignBlock;
+        renderState.yRot = -signBlock.getYRotationDegrees(state);
+        renderState.frontText = blockEntity.getText(true);
+        renderState.backText = blockEntity.getText(false);
+        renderState.textOffset = getTextOffset(signBlock);
+        renderState.lineHeight = signBlock.getTextLineHeight();
+        renderState.lineWidth = signBlock.getMaxTextLineWidth();
+        renderState.outline = AbstractSignRenderer.isOutlineVisible(blockEntity.getBlockPos());
     }
 
     @Override
@@ -76,24 +98,23 @@ public class FramedSignRenderer implements BlockEntityRenderer<FramedSignBlockEn
         return BlockEntityRenderer.super.getRenderBoundingBox(blockEntity);
     }
 
-    protected void applyTransforms(PoseStack poseStack, float yRot, BlockState state)
+    protected void applyTransforms(PoseStack poseStack, float yRot, boolean standing)
     {
         poseStack.translate(.5F, .75F * RENDER_SCALE, .5F);
         poseStack.mulPose(Axis.YP.rotationDegrees(yRot));
-        if (!(state.getBlock() instanceof FramedStandingSignBlock))
+        if (!standing)
         {
             poseStack.translate(0F, -5F/16F, -7F/16F);
         }
     }
 
-    private void applyTextTransforms(PoseStack poseStack, AbstractFramedSignBlock signBlock, boolean front)
+    private void applyTextTransforms(PoseStack poseStack, Vector3f offset, boolean front)
     {
         if (!front)
         {
             poseStack.mulPose(Quaternions.YP_180);
         }
 
-        Vector3f offset = getTextOffset(signBlock);
         poseStack.translate(offset.x, offset.y, offset.z);
         float scale = 0.015625F * getSignTextRenderScale();
         poseStack.scale(scale, -scale, scale);
@@ -111,19 +132,19 @@ public class FramedSignRenderer implements BlockEntityRenderer<FramedSignBlockEn
     }
 
     private void renderText(
-            BlockPos pos,
-            AbstractFramedSignBlock signBlock,
             SignText text,
             PoseStack poseStack,
-            MultiBufferSource buffer,
+            SubmitNodeCollector submitNodeCollector,
             int light,
+            Vector3f textOffset,
             int lineHeight,
             int lineWidth,
+            boolean outlineVisible,
             boolean front
     )
     {
         poseStack.pushPose();
-        applyTextTransforms(poseStack, signBlock, front);
+        applyTextTransforms(poseStack, textOffset, front);
 
         int darkColor = AbstractSignRenderer.getDarkColor(text);
         int textColor;
@@ -132,7 +153,7 @@ public class FramedSignRenderer implements BlockEntityRenderer<FramedSignBlockEn
         if (text.hasGlowingText())
         {
             textColor = text.getColor().getTextColor();
-            outline = AbstractSignRenderer.isOutlineVisible(pos, textColor);
+            outline = textColor == DyeColor.BLACK.getTextColor() || outlineVisible;
             textLight = LightTexture.FULL_BRIGHT;
         }
         else
@@ -150,20 +171,12 @@ public class FramedSignRenderer implements BlockEntityRenderer<FramedSignBlockEn
         });
 
         int centerY = 4 * lineHeight / 2;
-        Matrix4f pose = poseStack.last().pose();
         for (int idx = 0; idx < 4; ++idx)
         {
             FormattedCharSequence line = lines[idx];
             float textX = (float) -font.width(line) / 2;
             float textY = idx * lineHeight - centerY;
-            if (outline)
-            {
-                font.drawInBatch8xOutline(line, textX, textY, textColor, darkColor, pose, buffer, textLight);
-            }
-            else
-            {
-                font.drawInBatch(line, textX, textY, textColor, false, pose, buffer, Font.DisplayMode.POLYGON_OFFSET, 0, textLight);
-            }
+            submitNodeCollector.submitText(poseStack, textX, textY, line, false, Font.DisplayMode.POLYGON_OFFSET, textLight, textColor, 0, outline ? darkColor : 0);
         }
 
         poseStack.popPose();

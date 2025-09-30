@@ -32,7 +32,7 @@ public class FramedLeverBlock extends LeverBlock implements IFramedBlockInternal
     public FramedLeverBlock(Properties props)
     {
         super(props.pushReaction(PushReaction.DESTROY)
-                .noCollission()
+                .noCollision()
                 .strength(.5F)
                 .noOcclusion()
                 .sound(SoundType.WOOD)

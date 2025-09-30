@@ -7,6 +7,7 @@ import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
@@ -32,6 +33,33 @@ public final class RenderUtils
             return Sheets.solidBlockSheet();
         }
         return RenderTypeHelper.getEntityRenderType(blockRenderType);
+    }
+
+    public static void submitModel(
+            BlockState state,
+            BlockAndTintGetter level,
+            BlockPos pos,
+            PoseStack poseStack,
+            SubmitNodeCollector submitNodeCollector,
+            BlockStateModel model,
+            RandomSource random,
+            int light,
+            int overlay
+    )
+    {
+        for (BlockModelPart part : model.collectParts(level, pos, state, random))
+        {
+            RenderType renderType = getEntityRenderType(part.getRenderType(state));
+            submitNodeCollector.submitCustomGeometry(poseStack, renderType, (pose, buffer) ->
+            {
+                for (Direction side : DIRECTIONS)
+                {
+                    renderQuadList(state, level, pos, pose, buffer, part.getQuads(side), light, overlay);
+                }
+
+                renderQuadList(state, level, pos, pose, buffer, part.getQuads(null), light, overlay);
+            });
+        }
     }
 
     public static void renderModel(

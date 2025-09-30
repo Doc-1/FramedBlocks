@@ -318,7 +318,7 @@ public final class FramedLanguageProvider extends LanguageProvider
 
     private void addSpecialTranslations()
     {
-        add(KeyMappings.KEY_CATEGORY, "FramedBlocks");
+        add(KeyMappings.KEY_CATEGORY.label(), "FramedBlocks");
         add(KeyMappings.KEYMAPPING_UPDATE_CULLING.get().getName(), "Update culling cache");
         add(KeyMappings.KEYMAPPING_WIPE_CACHE.get().getName(), "Clear model cache");
 

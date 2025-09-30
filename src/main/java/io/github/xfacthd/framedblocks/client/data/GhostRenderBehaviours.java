@@ -80,6 +80,7 @@ public final class GhostRenderBehaviours
         ));
         event.registerBlock(new BoardGhostRenderBehaviour(), FBContent.BLOCK_FRAMED_BOARD);
         event.registerBlock(new LayeredCubeGhostRenderBehaviour(), FBContent.BLOCK_FRAMED_LAYERED_CUBE);
+        event.registerBlock(new TargetGhostRenderBehaviour(), FBContent.BLOCK_FRAMED_TARGET);
     }
 
 

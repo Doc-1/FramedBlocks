@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.xfacthd.framedblocks.FramedBlocks;
+import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.data.component.FramedMap;
 import net.minecraft.core.BlockPos;
@@ -16,7 +17,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.saveddata.maps.MapDecorationType;
 import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
-import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -89,7 +89,7 @@ public abstract class MixinMapItemSavedData implements FramedMap.MarkerRemover
         else
         {
             FramedBlocks.LOGGER.error("Failed to wrap MapItemSavedData.CODEC, map markers for Framed Item Frames will NOT persist!");
-            if (!FMLEnvironment.production)
+            if (!Utils.PRODUCTION)
             {
                 throw new RuntimeException("Failed to wrap MapItemSavedData.CODEC");
             }

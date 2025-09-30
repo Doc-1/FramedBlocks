@@ -5,13 +5,14 @@ import io.github.xfacthd.framedblocks.common.particle.FluidParticleOptions;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
@@ -19,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public final class FluidSpriteParticle extends TextureSheetParticle
+public final class FluidSpriteParticle extends SingleQuadParticle
 {
     private final BlockPos pos;
     private final float uo;
@@ -28,7 +29,7 @@ public final class FluidSpriteParticle extends TextureSheetParticle
 
     public FluidSpriteParticle(ClientLevel level, double x, double y, double z, double sx, double sy, double sz, Fluid fluid)
     {
-        super(level, x, y, z, sx, sy, sz);
+        super(level, x, y, z, sx, sy, sz, resolveSprite(fluid));
         this.pos = BlockPos.containing(x, y, z);
         this.gravity = 1F;
         this.quadSize /= 2F;
@@ -40,18 +41,21 @@ public final class FluidSpriteParticle extends TextureSheetParticle
         this.rCol = .6F * (float)(tint >> 16 & 0xFF) / 255F;
         this.gCol = .6F * (float)(tint >>  8 & 0xFF) / 255F;
         this.bCol = .6F * (float)(tint       & 0xFF) / 255F;
+    }
 
+    private static TextureAtlasSprite resolveSprite(Fluid fluid)
+    {
         ResourceLocation stillTex = Objects.requireNonNullElse(
                 IClientFluidTypeExtensions.of(fluid).getStillTexture(),
                 MissingTextureAtlasSprite.getLocation()
         );
-        setSprite(ClientUtils.getBlockSprite(stillTex));
+        return ClientUtils.getBlockSprite(stillTex);
     }
 
     @Override
-    public ParticleRenderType getRenderType()
+    public Layer getLayer()
     {
-        return ParticleRenderType.TERRAIN_SHEET;
+        return Layer.TERRAIN;
     }
 
     @Override
@@ -87,13 +91,21 @@ public final class FluidSpriteParticle extends TextureSheetParticle
         return LightTexture.pack(block, LightTexture.sky(light));
     }
 
-
-
     public static final class Provider implements ParticleProvider<FluidParticleOptions>
     {
         @Nullable
         @Override
-        public Particle createParticle(FluidParticleOptions options, ClientLevel level, double x, double y, double z, double sx, double sy, double sz)
+        public Particle createParticle(
+                FluidParticleOptions options,
+                ClientLevel level,
+                double x,
+                double y,
+                double z,
+                double sx,
+                double sy,
+                double sz,
+                RandomSource random
+        )
         {
             if (options.fluid() != Fluids.EMPTY)
             {

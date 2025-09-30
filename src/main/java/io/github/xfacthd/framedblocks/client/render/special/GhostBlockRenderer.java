@@ -48,6 +48,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.model.data.ModelData;
+import org.joml.Vector3f;
 import org.joml.Vector3fc;
 import org.joml.Vector4f;
 
@@ -271,7 +272,7 @@ public final class GhostBlockRenderer
                 .writeTransform(
                         RenderSystem.getModelViewMatrix(),
                         new Vector4f(1.0F, 1.0F, 1.0F, 1.0F),
-                        RenderSystem.getModelOffset(),
+                        new Vector3f(),
                         RenderSystem.getTextureMatrix(),
                         RenderSystem.getShaderLineWidth()
                 );

@@ -14,7 +14,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -23,7 +22,6 @@ import org.slf4j.Logger;
 public final class AppearanceHelper
 {
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final boolean CLIENT = FMLEnvironment.dist.isClient();
     private static final BlockState AIR = Blocks.AIR.defaultBlockState();
 
     public static BlockState getAppearance(
@@ -36,7 +34,7 @@ public final class AppearanceHelper
             @Nullable BlockPos queryPos
     )
     {
-        if (!CLIENT)
+        if (!Utils.CLIENT_DIST)
         {
             return AIR;
         }

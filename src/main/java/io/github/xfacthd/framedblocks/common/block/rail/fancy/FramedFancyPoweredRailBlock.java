@@ -38,7 +38,7 @@ public class FramedFancyPoweredRailBlock extends PoweredRailBlock implements IFr
     private FramedFancyPoweredRailBlock(BlockType type, Properties props, boolean isPoweredRail)
     {
         super(IFramedBlock.applyDefaultProperties(props, type)
-                .noCollission(),
+                .noCollision(),
                 isPoweredRail
         );
         this.type = type;

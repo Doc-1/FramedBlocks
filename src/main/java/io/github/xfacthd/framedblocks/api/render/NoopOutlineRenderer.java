@@ -3,7 +3,7 @@ package io.github.xfacthd.framedblocks.api.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-final class NoopOutlineRenderer implements OutlineRenderer
+final class NoopOutlineRenderer implements SimpleOutlineRenderer
 {
     @Override
     public void draw(BlockState state, LineDrawer drawer)

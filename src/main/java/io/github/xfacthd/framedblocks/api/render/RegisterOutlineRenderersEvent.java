@@ -9,10 +9,10 @@ import java.util.function.BiConsumer;
 
 public final class RegisterOutlineRenderersEvent extends Event implements IModBusEvent
 {
-    private final BiConsumer<IBlockType, OutlineRenderer> registrar;
+    private final BiConsumer<IBlockType, OutlineRenderer<?>> registrar;
 
     @ApiStatus.Internal
-    public RegisterOutlineRenderersEvent(BiConsumer<IBlockType, OutlineRenderer> registrar)
+    public RegisterOutlineRenderersEvent(BiConsumer<IBlockType, OutlineRenderer<?>> registrar)
     {
         this.registrar = registrar;
     }
@@ -21,7 +21,7 @@ public final class RegisterOutlineRenderersEvent extends Event implements IModBu
      * Register an {@link OutlineRenderer} for the given {@link IBlockType}
      * @param type The {@link IBlockType}, must return true for {@link IBlockType#hasSpecialHitbox()}
      */
-    public void register(IBlockType type, OutlineRenderer renderer)
+    public void register(IBlockType type, OutlineRenderer<?> renderer)
     {
         registrar.accept(type, renderer);
     }

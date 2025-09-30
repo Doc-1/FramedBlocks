@@ -1,9 +1,9 @@
 package io.github.xfacthd.framedblocks.client.data.outline;
 
-import io.github.xfacthd.framedblocks.api.render.OutlineRenderer;
+import io.github.xfacthd.framedblocks.api.render.SimpleOutlineRenderer;
 import net.minecraft.world.level.block.state.BlockState;
 
-public final class InverseDoubleSlopeSlabOutlineRenderer implements OutlineRenderer
+public final class InverseDoubleSlopeSlabOutlineRenderer implements SimpleOutlineRenderer
 {
     public static final InverseDoubleSlopeSlabOutlineRenderer INSTANCE = new InverseDoubleSlopeSlabOutlineRenderer();
 

@@ -6,28 +6,24 @@ import io.github.xfacthd.framedblocks.api.model.geometry.PartConsumer;
 import io.github.xfacthd.framedblocks.api.model.item.ItemModelInfo;
 import io.github.xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import io.github.xfacthd.framedblocks.api.util.Utils;
+import io.github.xfacthd.framedblocks.common.FBContent;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
 
 public class FramedTargetGeometry extends Geometry
 {
     public static final ResourceLocation OVERLAY_LOCATION = Utils.rl("block/target_overlay");
     public static final String OVERLAY_KEY = "overlay";
     public static final int OVERLAY_TINT_IDX = 1024;
-    private static final ItemModelInfo ITEM_MODEL_INFO = new ItemModelInfo()
-    {
-        @Override
-        public boolean isDataRequired()
-        {
-            return true;
-        }
-    };
+    private static final ItemModelInfo ITEM_MODEL_INFO = new TargetItemModelInfo();
 
     private final BlockState state;
     private final BlockStateModel overlayModel;
@@ -51,5 +47,21 @@ public class FramedTargetGeometry extends Geometry
     public ItemModelInfo getItemModelInfo()
     {
         return ITEM_MODEL_INFO;
+    }
+
+    private static final class TargetItemModelInfo implements ItemModelInfo
+    {
+        @Override
+        public boolean isDataRequired()
+        {
+            return true;
+        }
+
+        @Override
+        @Nullable
+        public Object computeCacheKey(ItemStack stack)
+        {
+            return stack.get(FBContent.DC_TYPE_TARGET_COLOR);
+        }
     }
 }

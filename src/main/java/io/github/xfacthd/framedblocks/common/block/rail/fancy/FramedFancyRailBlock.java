@@ -35,7 +35,7 @@ public class FramedFancyRailBlock extends RailBlock implements IFramedBlockInter
 {
     public FramedFancyRailBlock(Properties props)
     {
-        super(IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_FANCY_RAIL).noCollission());
+        super(IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_FANCY_RAIL).noCollision());
         BlockUtils.configureStandardProperties(this);
     }
 

@@ -578,7 +578,7 @@ public final class FramedRecipeProvider extends AbstractFramedRecipeProvider
                 .pattern("FFF")
                 .pattern("FFF")
                 .define('F', FBContent.BLOCK_FRAMED_CUBE.value())
-                .define('C', Items.CHAIN)
+                .define('C', Items.IRON_CHAIN)
                 .unlockedBy(FBContent.BLOCK_FRAMED_CUBE)
                 .save(output);
 

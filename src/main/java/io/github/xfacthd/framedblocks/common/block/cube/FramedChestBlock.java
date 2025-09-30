@@ -290,13 +290,13 @@ public class FramedChestBlock extends FramedStorageBlock
     }
 
     @Override
-    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos)
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction side)
     {
         if (ChestBlock.isChestBlockedAt(level, pos))
         {
             return 0;
         }
-        return super.getAnalogOutputSignal(state, level, pos);
+        return super.getAnalogOutputSignal(state, level, pos, side);
     }
 
     @Override

@@ -31,7 +31,7 @@ public final class FramedMixinConfigPlugin implements IMixinConfigPlugin
     {
         if (DEV_ONLY_MIXINS.contains(mixinClassName))
         {
-            return !FMLEnvironment.production;
+            return !FMLEnvironment.isProduction();
         }
         return true;
     }

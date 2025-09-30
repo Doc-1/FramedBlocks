@@ -5,11 +5,11 @@
     "net/minecraft/client/renderer/block/BlockModelShaper": [
         "io/github/xfacthd/framedblocks/client/util/duck/DefaultedAccessorBlockModelShaper"
     ],
-    "net/minecraft/client/renderer/item/ItemStackRenderState$LayerRenderState": [
-        "io/github/xfacthd/framedblocks/client/render/item/IDynamicTintableItemStackRenderStateLayer"
-    ],
     "net/minecraft/client/resources/model/ModelManager": [
         "io/github/xfacthd/framedblocks/client/util/duck/DefaultedAccessorModelManager"
+    ],
+    "net/minecraft/client/renderer/texture/SpriteContents": [
+        "io/github/xfacthd/framedblocks/client/util/duck/DefaultedAccessorSpriteContents"
     ],
     "net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase": [
         "io/github/xfacthd/framedblocks/api/internal/duck/StateCacheAccessor"

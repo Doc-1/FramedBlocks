@@ -4,9 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import io.github.xfacthd.framedblocks.api.render.debug.AttachDebugRenderersEvent;
 import io.github.xfacthd.framedblocks.api.render.debug.BlockDebugRenderer;
+import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.config.DevToolsConfig;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
-import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -19,7 +19,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModLoader;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.event.FrameGraphSetupEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -51,10 +50,9 @@ public final class FramedBlockDebugRenderer
         if (renderers.isEmpty()) return;
 
         DeltaTracker delta = event.getPartialTick();
-        Camera camera = event.getCamera();
         PoseStack poseStack = event.getPoseStack();
 
-        Vec3 offset = Vec3.atLowerCornerOf(pos).subtract(camera.getPosition());
+        Vec3 offset = Vec3.atLowerCornerOf(pos).subtract(event.getCamera().pos);
         poseStack.pushPose();
         poseStack.translate(offset.x, offset.y, offset.z);
 
@@ -88,7 +86,7 @@ public final class FramedBlockDebugRenderer
 
     public static void init()
     {
-        if (FMLEnvironment.production) return;
+        if (Utils.PRODUCTION) return;
 
         ModLoader.postEvent(new AttachDebugRenderersEvent((type, renderer) ->
         {

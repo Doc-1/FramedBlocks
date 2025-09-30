@@ -9,6 +9,7 @@ import io.github.xfacthd.framedblocks.api.datagen.recipes.builders.FramingSawRec
 import io.github.xfacthd.framedblocks.api.internal.InternalAPI;
 import io.github.xfacthd.framedblocks.api.shapes.ReloadableShapeProvider;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
+import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 import io.github.xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeAdditive;
 import io.github.xfacthd.framedblocks.common.data.appearance.AppearanceHelper;
@@ -27,7 +28,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -71,14 +71,14 @@ public final class InternalApiImpl implements InternalAPI
     @Override
     public void registerShapeCache(ShapeCache<?> cache)
     {
-        Preconditions.checkState(!FMLEnvironment.production, "Reloading shapes is not supported in production");
+        Preconditions.checkState(!Utils.PRODUCTION, "Reloading shapes is not supported in production");
         ShapeReloader.addCache(cache);
     }
 
     @Override
     public void registerReloadableShapeProvider(ReloadableShapeProvider provider)
     {
-        Preconditions.checkState(!FMLEnvironment.production, "Reloading shapes is not supported in production");
+        Preconditions.checkState(!Utils.PRODUCTION, "Reloading shapes is not supported in production");
         ShapeReloader.addProvider(provider);
     }
 

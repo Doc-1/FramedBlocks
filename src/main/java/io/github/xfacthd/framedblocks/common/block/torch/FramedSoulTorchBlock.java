@@ -17,7 +17,7 @@ public class FramedSoulTorchBlock extends FramedTorchBlock
     {
         super(ParticleTypes.SOUL_FIRE_FLAME, props
                 .pushReaction(PushReaction.DESTROY)
-                .noCollission()
+                .noCollision()
                 .strength(0.5F)
                 .sound(SoundType.WOOD)
                 .lightLevel(state -> 14)

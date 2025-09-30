@@ -35,7 +35,7 @@ public class FramedRedstoneTorchBlock extends RedstoneTorchBlock implements IFra
     public FramedRedstoneTorchBlock(Properties props)
     {
         super(props.pushReaction(PushReaction.DESTROY)
-                .noCollission()
+                .noCollision()
                 .instabreak()
                 .sound(SoundType.WOOD)
                 .lightLevel(state -> state.getValue(BlockStateProperties.LIT) ? 7 : 0)

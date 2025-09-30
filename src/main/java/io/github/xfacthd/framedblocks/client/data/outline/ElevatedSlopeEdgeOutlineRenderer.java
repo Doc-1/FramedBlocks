@@ -1,12 +1,12 @@
 package io.github.xfacthd.framedblocks.client.data.outline;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import io.github.xfacthd.framedblocks.api.render.OutlineRenderer;
+import io.github.xfacthd.framedblocks.api.render.SimpleOutlineRenderer;
 import io.github.xfacthd.framedblocks.api.render.Quaternions;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import net.minecraft.world.level.block.state.BlockState;
 
-public final class ElevatedSlopeEdgeOutlineRenderer implements OutlineRenderer
+public final class ElevatedSlopeEdgeOutlineRenderer implements SimpleOutlineRenderer
 {
     public static final ElevatedSlopeEdgeOutlineRenderer INSTANCE = new ElevatedSlopeEdgeOutlineRenderer();
 
@@ -46,7 +46,7 @@ public final class ElevatedSlopeEdgeOutlineRenderer implements OutlineRenderer
     @Override
     public void rotateMatrix(PoseStack poseStack, BlockState state)
     {
-        OutlineRenderer.super.rotateMatrix(poseStack, state);
+        SimpleOutlineRenderer.super.rotateMatrix(poseStack, state);
         switch (state.getValue(PropertyHolder.SLOPE_TYPE))
         {
             case TOP -> poseStack.mulPose(Quaternions.ZP_180);

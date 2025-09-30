@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderers;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
@@ -32,9 +32,17 @@ public final class TankItemModel<T> implements ItemModel
     }
 
     @Override
-    public void update(ItemStackRenderState state, ItemStack stack, ItemModelResolver resolver, ItemDisplayContext ctx, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed)
+    public void update(
+            ItemStackRenderState state,
+            ItemStack stack,
+            ItemModelResolver resolver,
+            ItemDisplayContext ctx,
+            @Nullable ClientLevel level,
+            @Nullable ItemOwner owner,
+            int seed
+    )
     {
-        baseModel.update(state, stack, resolver, ctx, level, entity, seed);
+        baseModel.update(state, stack, resolver, ctx, level, owner, seed);
 
         CamoList camoList = stack.getOrDefault(FBContent.DC_TYPE_CAMO_LIST, CamoList.EMPTY);
         if (camoList.getCamo(0).getContent().isSolid()) return;
@@ -68,7 +76,7 @@ public final class TankItemModel<T> implements ItemModel
         @Override
         public ItemModel bake(BakingContext ctx)
         {
-            SpecialModelRenderer<?> renderer = specialModel.bake(ctx.entityModelSet());
+            SpecialModelRenderer<?> renderer = specialModel.bake(ctx);
             if (renderer != null)
             {
                 return new TankItemModel<>(base.bake(ctx), renderer);

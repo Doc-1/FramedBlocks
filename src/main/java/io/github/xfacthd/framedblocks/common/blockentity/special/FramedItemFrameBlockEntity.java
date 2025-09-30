@@ -14,8 +14,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
@@ -26,11 +28,12 @@ import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.Objects;
 
-public class FramedItemFrameBlockEntity extends FramedBlockEntity
+public class FramedItemFrameBlockEntity extends FramedBlockEntity implements ItemOwner
 {
     public static final int ROTATION_STEPS = 8;
     private static final int MAP_UPDATE_INTERVAL = 10;
@@ -212,6 +215,20 @@ public class FramedItemFrameBlockEntity extends FramedBlockEntity
         {
             drops.add(getCloneItem());
         }
+    }
+
+    @Override
+    public Vec3 position()
+    {
+        return new Vec3(worldPosition);
+    }
+
+    @Override
+    public float getVisualRotationYInDegrees()
+    {
+        Direction facing = getBlockState().getValue(BlockStateProperties.FACING).getOpposite();
+        int yRot = facing.getAxis().isVertical() ? 90 * facing.getAxisDirection().getStep() : 0;
+        return Mth.wrapDegrees(180 + facing.get2DDataValue() * 90 + getRotation() * 45 + yRot);
     }
 
     // Network

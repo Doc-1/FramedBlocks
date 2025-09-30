@@ -51,7 +51,7 @@ public class FramedItemFrameBlock extends FramedBlock
     public FramedItemFrameBlock(BlockType type, Properties props)
     {
         super(type, props, modProps -> modProps.instabreak()
-                .noCollission()
+                .noCollision()
                 .isSuffocating((s, l, p) -> false)
                 .isViewBlocking((s, l, p) -> false)
                 .sound(type == BlockType.FRAMED_ITEM_FRAME ? NORMAL_SOUND : GLOWING_SOUND)

@@ -7,6 +7,7 @@ import io.github.xfacthd.framedblocks.common.blockentity.special.FramedTankBlock
 import io.github.xfacthd.framedblocks.common.data.BlockType;
 import io.github.xfacthd.framedblocks.common.item.block.FramedTankBlockItem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -56,7 +57,7 @@ public class FramedTankBlock extends FramedBlock
     }
 
     @Override
-    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos)
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction side)
     {
         if (level.getBlockEntity(pos) instanceof FramedTankBlockEntity be)
         {

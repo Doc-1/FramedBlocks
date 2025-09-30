@@ -1,11 +1,11 @@
 package io.github.xfacthd.framedblocks.api.model.data;
 
 import io.github.xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
+import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.TriState;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.loading.FMLEnvironment;
 
 public final class FramedDoubleBlockData extends AbstractFramedBlockData
 {
@@ -27,7 +27,7 @@ public final class FramedDoubleBlockData extends AbstractFramedBlockData
     {
         if (partState == partStateOne) return dataOne;
         if (partState == partStateTwo) return dataTwo;
-        if (!FMLEnvironment.production)
+        if (!Utils.PRODUCTION)
         {
             throw new IllegalArgumentException("Received invalid part state " + partState + ", expected " + partStateOne + " or " + partStateTwo);
         }

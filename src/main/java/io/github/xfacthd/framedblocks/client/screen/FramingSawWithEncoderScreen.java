@@ -18,6 +18,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
@@ -266,20 +267,20 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button)
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick)
     {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_1)
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_1)
         {
-            if (mouseX >= leftPos + TAB_X && mouseX <= leftPos)
+            if (event.x() >= leftPos + TAB_X && event.x() <= leftPos)
             {
                 int value = 0;
                 boolean hit = false;
-                if (mouseY >= topPos + TAB_TOP_Y && mouseY <= topPos + TAB_BOT_Y)
+                if (event.y() >= topPos + TAB_TOP_Y && event.y() <= topPos + TAB_BOT_Y)
                 {
                     value = FramingSawWithEncoderMenu.MENU_BUTTON_MODE_CRAFTING;
                     hit = true;
                 }
-                else if (mouseY >= topPos + TAB_BOT_Y && mouseY <= topPos + (TAB_BOT_Y + TAB_HEIGHT))
+                else if (event.y() >= topPos + TAB_BOT_Y && event.y() <= topPos + (TAB_BOT_Y + TAB_HEIGHT))
                 {
                     value = FramingSawWithEncoderMenu.MENU_BUTTON_MODE_ENCODING;
                     hit = true;
@@ -300,7 +301,7 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
                 for (int i = 0; i < 1 + recipe.getAdditives().size(); i++)
                 {
                     Slot slot = menu.getSlot(i);
-                    if (isHovering(slot.x, slot.y, 16, 16, mouseX, mouseY))
+                    if (isHovering(slot.x, slot.y, 16, 16, event.x(), event.y()))
                     {
                         if (isValidEncodingInput(recipe, i, carried))
                         {
@@ -312,7 +313,7 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
             }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     private boolean isValidEncodingInput(FramingSawRecipe recipe, int slot, ItemStack stack)

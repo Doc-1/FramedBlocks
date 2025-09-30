@@ -26,10 +26,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChiseledBookShelfBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SelectableSlotContainer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -39,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.OptionalInt;
 
-public class FramedChiseledBookshelfBlock extends FramedBlock
+public class FramedChiseledBookshelfBlock extends FramedBlock implements SelectableSlotContainer
 {
     public FramedChiseledBookshelfBlock(Properties props)
     {
@@ -97,7 +97,7 @@ public class FramedChiseledBookshelfBlock extends FramedBlock
                 return InteractionResult.TRY_WITH_EMPTY_HAND;
             }
 
-            OptionalInt slot = ((ChiseledBookShelfBlock) Blocks.CHISELED_BOOKSHELF).getHitSlot(hit, state);
+            OptionalInt slot = getHitSlot(hit, state.getValue(FramedProperties.FACING_HOR));
             if (slot.isEmpty())
             {
                 return InteractionResult.PASS;
@@ -118,7 +118,7 @@ public class FramedChiseledBookshelfBlock extends FramedBlock
     {
         if (level.getBlockEntity(pos) instanceof FramedChiseledBookshelfBlockEntity be)
         {
-            OptionalInt slot = ((ChiseledBookShelfBlock) Blocks.CHISELED_BOOKSHELF).getHitSlot(hit, state);
+            OptionalInt slot = getHitSlot(hit, state.getValue(FramedProperties.FACING_HOR));
             if (slot.isEmpty())
             {
                 return InteractionResult.PASS;
@@ -173,6 +173,18 @@ public class FramedChiseledBookshelfBlock extends FramedBlock
     }
 
     @Override
+    public int getRows()
+    {
+        return 2;
+    }
+
+    @Override
+    public int getColumns()
+    {
+        return 3;
+    }
+
+    @Override
     protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean isMoving)
     {
         level.updateNeighbourForOutputSignal(pos, this);
@@ -185,7 +197,7 @@ public class FramedChiseledBookshelfBlock extends FramedBlock
     }
 
     @Override
-    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos)
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction side)
     {
         if (level.getBlockEntity(pos) instanceof FramedChiseledBookshelfBlockEntity be)
         {

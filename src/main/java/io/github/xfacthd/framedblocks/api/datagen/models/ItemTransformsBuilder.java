@@ -16,6 +16,7 @@ final class ItemTransformsBuilder
     private ItemTransform gui = ItemTransform.NO_TRANSFORM;
     private ItemTransform ground = ItemTransform.NO_TRANSFORM;
     private ItemTransform fixed = ItemTransform.NO_TRANSFORM;
+    private ItemTransform fixedFromBottom = ItemTransform.NO_TRANSFORM;
 
     public ItemTransformsBuilder thirdPersonLeftHand(ItemTransform xform)
     {
@@ -65,9 +66,15 @@ final class ItemTransformsBuilder
         return this;
     }
 
+    public ItemTransformsBuilder fixedFromBottom(ItemTransform xform)
+    {
+        this.fixedFromBottom = xform;
+        return this;
+    }
+
     public ItemTransforms build()
     {
-        return new ItemTransforms(thirdPersonLeftHand, thirdPersonRightHand, firstPersonLeftHand, firstPersonRightHand, head, gui, ground, fixed, ImmutableMap.of());
+        return new ItemTransforms(thirdPersonLeftHand, thirdPersonRightHand, firstPersonLeftHand, firstPersonRightHand, head, gui, ground, fixed, fixedFromBottom, ImmutableMap.of());
     }
 
 

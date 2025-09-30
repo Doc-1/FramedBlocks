@@ -7,6 +7,8 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
+import net.minecraft.client.renderer.state.LevelRenderState;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,7 +28,15 @@ public class MixinLevelRenderer
     private GraphicsStatus framedblocks$lastGraphicsMode = GraphicsStatus.FANCY;
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void framedblocks$captureInitialGraphicsMode(Minecraft mc, EntityRenderDispatcher entityRenderDispatcher, BlockEntityRenderDispatcher blockEntityRenderDispatcher, RenderBuffers buffers, CallbackInfo ci)
+    private void framedblocks$captureInitialGraphicsMode(
+            Minecraft mc,
+            EntityRenderDispatcher entityRenderDispatcher,
+            BlockEntityRenderDispatcher blockEntityRenderDispatcher,
+            RenderBuffers buffers,
+            LevelRenderState levelRenderState,
+            FeatureRenderDispatcher featureRenderDispatcher,
+            CallbackInfo ci
+    )
     {
         framedblocks$lastGraphicsMode = mc.options.graphicsMode().get();
     }

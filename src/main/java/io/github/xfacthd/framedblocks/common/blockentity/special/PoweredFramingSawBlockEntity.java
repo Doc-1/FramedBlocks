@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
@@ -100,7 +99,7 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
 
     public static void tick(Level level, BlockPos pos, BlockState state, PoweredFramingSawBlockEntity be)
     {
-        if (!FMLEnvironment.production && INSERT_ENERGY_DEBUG)
+        if (!Utils.PRODUCTION && INSERT_ENERGY_DEBUG)
         {
             be.energyStorage.receiveEnergy(be.energyStorage.getMaxReceive(), false);
         }

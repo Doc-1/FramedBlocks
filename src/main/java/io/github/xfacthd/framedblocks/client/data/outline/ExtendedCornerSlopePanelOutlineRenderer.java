@@ -3,9 +3,10 @@ package io.github.xfacthd.framedblocks.client.data.outline;
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.render.OutlineRenderer;
+import io.github.xfacthd.framedblocks.api.render.SimpleOutlineRenderer;
 import net.minecraft.world.level.block.state.BlockState;
 
-public final class ExtendedCornerSlopePanelOutlineRenderer implements OutlineRenderer
+public final class ExtendedCornerSlopePanelOutlineRenderer implements SimpleOutlineRenderer
 {
     @Override
     public void draw(BlockState state, LineDrawer drawer)
@@ -34,7 +35,7 @@ public final class ExtendedCornerSlopePanelOutlineRenderer implements OutlineRen
     @Override
     public void rotateMatrix(PoseStack poseStack, BlockState state)
     {
-        OutlineRenderer.super.rotateMatrix(poseStack, state);
+        SimpleOutlineRenderer.super.rotateMatrix(poseStack, state);
 
         if (state.getValue(FramedProperties.TOP))
         {

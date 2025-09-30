@@ -19,22 +19,22 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.event.RenderHighlightEvent;
+import net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent;
 
 public final class CollapsibleBlockIndicatorRenderer
 {
     private static final float[] VERTEX_NO_OFFSET = new float[] { 1F, 1F, 1F, 1F };
 
-    public static void onRenderBlockHighlight(RenderHighlightEvent.Block event)
+    public static void onRenderBlockHighlight(ExtractBlockOutlineRenderStateEvent event)
     {
         //noinspection ConstantConditions
         ItemStack heldItem = Minecraft.getInstance().player.getMainHandItem();
-        if (heldItem.getItem() != FBContent.ITEM_FRAMED_HAMMER.value() || !event.isForTranslucentBlocks())
+        if (heldItem.getItem() != FBContent.ITEM_FRAMED_HAMMER.value())
         {
             return;
         }
 
-        BlockHitResult hit = event.getTarget();
+        BlockHitResult hit = event.getHitResult();
         Level level = Minecraft.getInstance().level;
         //noinspection ConstantConditions
         BlockState state = level.getBlockState(hit.getBlockPos());
@@ -50,28 +50,36 @@ public final class CollapsibleBlockIndicatorRenderer
             return;
         }
 
-        PoseStack poseStack = event.getPoseStack();
         Vec3 offset = Vec3.atLowerCornerOf(hit.getBlockPos()).subtract(event.getCamera().getPosition());
-        VertexConsumer builder = event.getMultiBufferSource().getBuffer(FramedRenderTypes.LINES_NO_DEPTH);
-
-        poseStack.pushPose();
-        poseStack.translate(offset.x + .5, offset.y + .5, offset.z + .5);
-        if (faceDir == Direction.DOWN)
-        {
-            poseStack.mulPose(Quaternions.XP_180);
-        }
-        else if (faceDir != Direction.UP)
-        {
-            poseStack.mulPose(OutlineRenderer.YN_DIR[faceDir.get2DDataValue()]);
-            poseStack.mulPose(Quaternions.XP_90);
-        }
-        poseStack.translate(-.5, -.5, -.5);
-
+        Vec3 hitLocation = hit.getLocation();
         float[] vY = getVertexHeights(level, hit.getBlockPos(), face);
-        drawSectionOverlay(builder, poseStack, vY);
-        drawCornerMarkers(builder, poseStack, faceDir, hit, vY);
 
-        poseStack.popPose();
+        event.addCustomRenderer((renderState, buffer, poseStack, translucentPass, levelRenderState) ->
+        {
+            if (translucentPass)
+            {
+                VertexConsumer builder = buffer.getBuffer(FramedRenderTypes.LINES_NO_DEPTH);
+
+                poseStack.pushPose();
+                poseStack.translate(offset.x + .5, offset.y + .5, offset.z + .5);
+                if (faceDir == Direction.DOWN)
+                {
+                    poseStack.mulPose(Quaternions.XP_180);
+                }
+                else if (faceDir != Direction.UP)
+                {
+                    poseStack.mulPose(OutlineRenderer.YN_DIR[faceDir.get2DDataValue()]);
+                    poseStack.mulPose(Quaternions.XP_90);
+                }
+                poseStack.translate(-.5, -.5, -.5);
+
+                drawSectionOverlay(builder, poseStack, vY);
+                drawCornerMarkers(builder, poseStack, faceDir, hitLocation, vY);
+
+                poseStack.popPose();
+            }
+            return false;
+        });
     }
 
     private static float[] getVertexHeights(Level level, BlockPos pos, NullableDirection face)
@@ -112,10 +120,10 @@ public final class CollapsibleBlockIndicatorRenderer
     }
 
     private static void drawCornerMarkers(
-            VertexConsumer builder, PoseStack poseStack, Direction faceDir, BlockHitResult hit, float[] vY
+            VertexConsumer builder, PoseStack poseStack, Direction faceDir, Vec3 hitLocation, float[] vY
     )
     {
-        int vert = FramedCollapsibleBlockEntity.vertexFromHit(faceDir, Utils.fraction(hit.getLocation()));
+        int vert = FramedCollapsibleBlockEntity.vertexFromHit(faceDir, Utils.fraction(hitLocation));
         if (vert == 0 || vert == 4)
         {
             drawCubeFrame(builder, poseStack,  0.25F/16F,  0.25F/16F, vY[0]);

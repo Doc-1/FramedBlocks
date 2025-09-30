@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.107'
+    id 'net.neoforged.moddev' version '2.0.110'
 }
 
 version = mod_version
@@ -62,6 +62,9 @@ neoForge {
         client {
             client()
             gameDirectory = project.file('run')
+
+            // TODO: this should be moved to a NeoForge patch or MDG
+            programArgument '--offlineDeveloperMode'
         }
 
         server {
@@ -192,7 +195,7 @@ dependencies {
 
     compileOnly("mezz.jei:jei-${jei_mc_version}-common-api:${jei_version}")
     compileOnly("mezz.jei:jei-${jei_mc_version}-neoforge-api:${jei_version}")
-    runtimeOnly("mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}")
+    //runtimeOnly("mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}")
 
     compileOnly("dev.emi:emi-neoforge:${emi_version}+${emi_mc_version}:api")
     //runtimeOnly("dev.emi:emi-neoforge:${emi_version}+${emi_mc_version}")
@@ -212,7 +215,7 @@ dependencies {
     //compileOnly("snownee.jade:Jade-NeoForge:${jade_mc_version}-${jade_version}")
     compileOnly("curse.maven:jade-324717:6713216")
 
-    implementation("curse.maven:atlasviewer-633577:${atlasviewer_coord}")
+    compileOnly("curse.maven:atlasviewer-633577:${atlasviewer_coord}")
 
     compileOnly("com.blamejared.searchables:Searchables-neoforge-${searchables_mc_version}:${searchables_version}")
 

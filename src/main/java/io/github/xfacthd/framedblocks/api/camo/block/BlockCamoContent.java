@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.MapColor;
-import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.Nullable;
 
 public final class BlockCamoContent extends CamoContent<BlockCamoContent>
@@ -136,7 +135,7 @@ public final class BlockCamoContent extends CamoContent<BlockCamoContent>
     @Override
     public int getTintColor(BlockAndTintGetter level, BlockPos pos, int tintIdx)
     {
-        if (FMLEnvironment.dist.isClient())
+        if (Utils.CLIENT_DIST)
         {
             return ClientUtils.getBlockColor(level, pos, state, tintIdx);
         }
@@ -146,7 +145,7 @@ public final class BlockCamoContent extends CamoContent<BlockCamoContent>
     @Override
     public int getTintColor(ItemStack stack, int tintIdx)
     {
-        if (FMLEnvironment.dist.isClient())
+        if (Utils.CLIENT_DIST)
         {
             return ClientUtils.getBlockColor(null, null, state, tintIdx);
         }

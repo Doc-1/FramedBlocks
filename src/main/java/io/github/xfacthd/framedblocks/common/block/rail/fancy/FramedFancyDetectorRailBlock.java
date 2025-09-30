@@ -35,7 +35,7 @@ public class FramedFancyDetectorRailBlock extends DetectorRailBlock implements I
 {
     public FramedFancyDetectorRailBlock(Properties props)
     {
-        super(IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_FANCY_DETECTOR_RAIL).noCollission());
+        super(IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_FANCY_DETECTOR_RAIL).noCollision());
         BlockUtils.configureStandardProperties(this);
     }
 

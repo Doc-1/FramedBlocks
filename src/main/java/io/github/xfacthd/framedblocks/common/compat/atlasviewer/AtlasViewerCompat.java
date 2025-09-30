@@ -7,7 +7,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.loading.FMLEnvironment;
 import xfacthd.atlasviewer.client.api.RegisterSpriteSourceDetailsEvent;
 
 public final class AtlasViewerCompat
@@ -21,7 +20,7 @@ public final class AtlasViewerCompat
         {
             try
             {
-                if (FMLEnvironment.dist.isClient())
+                if (Utils.CLIENT_DIST)
                 {
                     GuardedClientAccess.init(modBus);
                 }

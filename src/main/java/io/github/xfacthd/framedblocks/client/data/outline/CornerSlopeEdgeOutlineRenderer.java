@@ -2,12 +2,13 @@ package io.github.xfacthd.framedblocks.client.data.outline;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.xfacthd.framedblocks.api.render.OutlineRenderer;
+import io.github.xfacthd.framedblocks.api.render.SimpleOutlineRenderer;
 import io.github.xfacthd.framedblocks.api.render.Quaternions;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.CornerType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public final class CornerSlopeEdgeOutlineRenderer implements OutlineRenderer
+public final class CornerSlopeEdgeOutlineRenderer implements SimpleOutlineRenderer
 {
     @Override
     public void draw(BlockState state, LineDrawer drawer)
@@ -55,7 +56,7 @@ public final class CornerSlopeEdgeOutlineRenderer implements OutlineRenderer
     @Override
     public void rotateMatrix(PoseStack poseStack, BlockState state)
     {
-        OutlineRenderer.super.rotateMatrix(poseStack, state);
+        SimpleOutlineRenderer.super.rotateMatrix(poseStack, state);
 
         CornerType type = state.getValue(PropertyHolder.CORNER_TYPE);
         if (!type.isHorizontal())

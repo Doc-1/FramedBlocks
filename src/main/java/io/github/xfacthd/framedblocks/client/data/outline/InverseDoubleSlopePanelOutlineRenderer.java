@@ -1,12 +1,12 @@
 package io.github.xfacthd.framedblocks.client.data.outline;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import io.github.xfacthd.framedblocks.api.render.OutlineRenderer;
+import io.github.xfacthd.framedblocks.api.render.SimpleOutlineRenderer;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.HorizontalRotation;
 import net.minecraft.world.level.block.state.BlockState;
 
-public final class InverseDoubleSlopePanelOutlineRenderer implements OutlineRenderer
+public final class InverseDoubleSlopePanelOutlineRenderer implements SimpleOutlineRenderer
 {
     public static final InverseDoubleSlopePanelOutlineRenderer INSTANCE = new InverseDoubleSlopePanelOutlineRenderer();
 
@@ -37,7 +37,7 @@ public final class InverseDoubleSlopePanelOutlineRenderer implements OutlineRend
     @Override
     public void rotateMatrix(PoseStack poseStack, BlockState state)
     {
-        OutlineRenderer.super.rotateMatrix(poseStack, state);
+        SimpleOutlineRenderer.super.rotateMatrix(poseStack, state);
 
         HorizontalRotation rotation = state.getValue(PropertyHolder.ROTATION);
         poseStack.mulPose(SlopePanelOutlineRenderer.ROTATIONS[rotation.ordinal()]);

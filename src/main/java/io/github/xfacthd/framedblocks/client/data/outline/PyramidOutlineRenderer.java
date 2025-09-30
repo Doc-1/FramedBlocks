@@ -2,7 +2,7 @@ package io.github.xfacthd.framedblocks.client.data.outline;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import io.github.xfacthd.framedblocks.api.render.OutlineRenderer;
+import io.github.xfacthd.framedblocks.api.render.SimpleOutlineRenderer;
 import io.github.xfacthd.framedblocks.api.render.Quaternions;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import net.minecraft.core.Direction;
@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.joml.Quaternionf;
 
-public sealed class PyramidOutlineRenderer implements OutlineRenderer permits PyramidSlabOutlineRenderer, ElevatedPyramidSlabOutlineRenderer
+public sealed class PyramidOutlineRenderer implements SimpleOutlineRenderer permits PyramidSlabOutlineRenderer, ElevatedPyramidSlabOutlineRenderer
 {
     private static final Quaternionf[] XN_DIR = makeQuaternionArray();
 

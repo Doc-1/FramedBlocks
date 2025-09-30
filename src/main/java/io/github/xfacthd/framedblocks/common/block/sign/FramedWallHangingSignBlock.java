@@ -29,7 +29,7 @@ public class FramedWallHangingSignBlock extends AbstractFramedHangingSignBlock
 {
     public FramedWallHangingSignBlock(Properties props)
     {
-        super(BlockType.FRAMED_WALL_HANGING_SIGN, props.noCollission());
+        super(BlockType.FRAMED_WALL_HANGING_SIGN, props.noCollision());
     }
 
     @Override

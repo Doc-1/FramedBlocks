@@ -19,8 +19,6 @@ import io.github.xfacthd.framedblocks.api.util.ConfigView;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderType;
@@ -42,8 +40,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -51,6 +50,7 @@ import net.minecraft.world.level.EmptyBlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.RenderTypeHelper;
+import net.neoforged.neoforge.client.model.IQuadTransformer;
 import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
@@ -69,7 +69,7 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
     private static final Direction[] DIRECTIONS = Arrays.copyOf(Direction.values(), 7);
     private static final ResourceLocation ERROR_MODEL_LOCATION = Utils.rl("item/error");
 
-    private final Map<CamoList, ModelSet> itemModelCache = new Object2ObjectOpenHashMap<>();
+    private final Map<Object, ModelSet> itemModelCache = new Object2ObjectOpenHashMap<>();
     private final BlockState state;
     private final Supplier<BlockStateModel> modelSupplier;
     private final boolean nonStandardModelProvider;
@@ -118,7 +118,7 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
             ItemModelResolver resolver,
             ItemDisplayContext ctx,
             @Nullable ClientLevel level,
-            @Nullable LivingEntity entity,
+            @Nullable ItemOwner owner,
             int seed
     )
     {
@@ -126,7 +126,7 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
         ItemModelInfo itemModelInfo;
         if (!(model instanceof AbstractFramedBlockModel blockModel) || (itemModelInfo = blockModel.getItemModelInfo()) == null)
         {
-            errorModel.update(renderState, stack, resolver, ctx, level, entity, seed);
+            errorModel.update(renderState, stack, resolver, ctx, level, owner, seed);
             return;
         }
 
@@ -140,7 +140,7 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
         }
         catch (Throwable ignored)
         {
-            errorModel.update(renderState, stack, resolver, ctx, level, entity, seed);
+            errorModel.update(renderState, stack, resolver, ctx, level, owner, seed);
             return;
         }
 
@@ -148,6 +148,10 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
         if (!modelSet.camos.isEmpty())
         {
             renderState.appendModelIdentityElement(modelSet.camos);
+        }
+        if (modelSet.userData != null)
+        {
+            renderState.appendModelIdentityElement(modelSet.userData);
         }
         if (modelSet.animated)
         {
@@ -160,16 +164,14 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
             layer.prepareQuadList().addAll(layerModel.quads);
             layer.setRenderType(layerModel.renderType);
             modelSet.properties.applyToLayer(layer, ctx);
-            if (modelSet.tintValues != null)
-            {
-                layer.framedblocks$setDynamicItemTintValues(modelSet.tintValues);
-            }
         }
     }
 
     private ModelSet getOrCreateModelSet(ItemStack stack, CamoList camos, ItemModelInfo itemModelInfo)
     {
-        ModelSet modelSet = itemModelCache.get(camos);
+        Object userData = itemModelInfo.computeCacheKey(stack);
+        Object cacheKey = userData != null ? new CompoundCacheKey(camos, userData) : camos;
+        ModelSet modelSet = itemModelCache.get(cacheKey);
         if (modelSet == null)
         {
             BlockStateModel model = modelSupplier.get();
@@ -177,7 +179,8 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
             BlockAndTintGetter level = new ModelPartCollectionFakeLevel(state, data);
 
             List<ModelEntry> models = new ArrayList<>();
-            IntSet tintIndices = new IntOpenHashSet();
+            Int2IntMap tintValues = new Int2IntOpenHashMap();
+            tintValues.defaultReturnValue(-1);
             boolean animated = false;
 
             RANDOM.setSeed(42);
@@ -189,14 +192,15 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
                     RANDOM.setSeed(42);
                     Utils.copyAll(modelPart.getQuads(face), allQuads);
                 }
-                for (BakedQuad quad : allQuads)
+                for (int i = 0; i < allQuads.size(); i++)
                 {
+                    BakedQuad quad = allQuads.get(i);
                     int tintIndex = quad.tintIndex();
                     if (tintIndex != -1)
                     {
-                        tintIndices.add(tintIndex);
+                        allQuads.set(i, bakeTint(quad, tintProvider, stack, camos, tintValues));
                     }
-                    if (quad.sprite().isAnimated())
+                    if (quad.sprite().contents().isAnimated())
                     {
                         animated = true;
                     }
@@ -206,27 +210,39 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
             }
 
             ModelRenderProperties renderProps = new ModelRenderProperties(true, model.particleIcon(EmptyBlockAndTintGetter.INSTANCE, BlockPos.ZERO, state), itemTransforms);
-            modelSet = new ModelSet(models, collectTintValues(tintIndices, tintProvider, stack, camos), renderProps, camos, animated);
-            itemModelCache.put(camos, modelSet);
+            modelSet = new ModelSet(models, renderProps, camos, userData, animated);
+            itemModelCache.put(cacheKey, modelSet);
         }
         return modelSet;
     }
 
-    @Nullable
-    private static Int2IntMap collectTintValues(IntSet tintIndices, DynamicItemTintProvider tintProvider, ItemStack stack, CamoList camos)
+    private static BakedQuad bakeTint(BakedQuad quad, DynamicItemTintProvider tintProvider, ItemStack stack, CamoList camos, Int2IntMap tintValues)
     {
-        if (tintIndices.isEmpty()) return null;
-
-        Int2IntMap tintValues = new Int2IntOpenHashMap();
-        for (int tintIndex : tintIndices)
+        int index = quad.tintIndex();
+        if (!tintValues.containsKey(index))
         {
-            int color = tintProvider.getColor(stack, camos, tintIndex);
-            if (color != -1)
-            {
-                tintValues.put(tintIndex, color);
-            }
+            tintValues.put(index, ARGB.toABGR(tintProvider.getColor(stack, camos, index)));
         }
-        return tintValues.isEmpty() ? null : tintValues;
+        int tint = tintValues.get(index);
+        if (tint == -1) return quad;
+
+        int[] originalVerts = quad.vertices();
+        int[] vertices = Arrays.copyOf(originalVerts, originalVerts.length);
+        BakedQuad newQuad = new BakedQuad(
+                vertices,
+                -1,
+                quad.direction(),
+                quad.sprite(),
+                quad.shade(),
+                quad.lightEmission(),
+                quad.hasAmbientOcclusion()
+        );
+        for (int vert = 0; vert < 4; vert++)
+        {
+            int offset = vert * IQuadTransformer.STRIDE + IQuadTransformer.COLOR;
+            vertices[offset] = ARGB.multiply(vertices[offset], tint);
+        }
+        return newQuad;
     }
 
     public ItemTransforms getItemTransforms()
@@ -246,13 +262,11 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
         }
     }
 
+    private record CompoundCacheKey(CamoList camos, Object userData) { }
 
-
-    private record ModelSet(List<ModelEntry> models, @Nullable Int2IntMap tintValues, ModelRenderProperties properties, CamoList camos, boolean animated) { }
+    private record ModelSet(List<ModelEntry> models, ModelRenderProperties properties, CamoList camos, @Nullable Object userData, boolean animated) { }
 
     private record ModelEntry(List<BakedQuad> quads, RenderType renderType) { }
-
-
 
     public record Unbaked(Block block, BlockItemModelProvider modelProvider, DynamicItemTintProvider tintProvider, ResourceLocation baseModel) implements ItemModel.Unbaked
     {
