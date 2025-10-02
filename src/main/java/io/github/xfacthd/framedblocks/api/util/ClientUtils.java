@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -65,7 +66,7 @@ public final class ClientUtils
 
     public static TextureAtlasSprite getBlockSprite(ResourceLocation id)
     {
-        return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(BLOCK_ATLAS).getSprite(id);
+        return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(id);
     }
 
 
