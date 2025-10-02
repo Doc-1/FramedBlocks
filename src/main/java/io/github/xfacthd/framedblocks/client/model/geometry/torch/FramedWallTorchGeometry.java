@@ -97,8 +97,6 @@ public class FramedWallTorchGeometry extends Geometry
                         Modifiers.rotateCentered(Direction.Axis.Y, yAngle, false).accept(data);
     }
 
-
-
     public static FramedWallTorchGeometry normal(GeometryFactory.Context ctx)
     {
         return new FramedWallTorchGeometry(ctx, Blocks.WALL_TORCH.defaultBlockState(), HEIGHT);
@@ -107,6 +105,11 @@ public class FramedWallTorchGeometry extends Geometry
     public static FramedWallTorchGeometry soul(GeometryFactory.Context ctx)
     {
         return new FramedWallTorchGeometry(ctx, Blocks.SOUL_WALL_TORCH.defaultBlockState(), HEIGHT);
+    }
+
+    public static FramedWallTorchGeometry copper(GeometryFactory.Context ctx)
+    {
+        return new FramedWallTorchGeometry(ctx, Blocks.COPPER_WALL_TORCH.defaultBlockState(), HEIGHT);
     }
 
     public static FramedWallTorchGeometry redstone(GeometryFactory.Context ctx)

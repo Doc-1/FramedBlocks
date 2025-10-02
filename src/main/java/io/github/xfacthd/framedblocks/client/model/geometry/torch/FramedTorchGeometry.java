@@ -70,8 +70,6 @@ public class FramedTorchGeometry extends Geometry
         return true;
     }
 
-
-
     public static FramedTorchGeometry normal(GeometryFactory.Context ctx)
     {
         return new FramedTorchGeometry(ctx, Blocks.TORCH.defaultBlockState(), HEIGHT);
@@ -80,6 +78,11 @@ public class FramedTorchGeometry extends Geometry
     public static FramedTorchGeometry soul(GeometryFactory.Context ctx)
     {
         return new FramedTorchGeometry(ctx, Blocks.SOUL_TORCH.defaultBlockState(), HEIGHT);
+    }
+
+    public static FramedTorchGeometry copper(GeometryFactory.Context ctx)
+    {
+        return new FramedTorchGeometry(ctx, Blocks.COPPER_TORCH.defaultBlockState(), HEIGHT);
     }
 
     public static FramedTorchGeometry redstone(GeometryFactory.Context ctx)

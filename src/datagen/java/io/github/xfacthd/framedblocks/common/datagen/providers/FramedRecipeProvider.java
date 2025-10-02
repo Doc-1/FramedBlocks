@@ -600,6 +600,16 @@ public final class FramedRecipeProvider extends AbstractFramedRecipeProvider
                 .unlockedBy(FBContent.BLOCK_FRAMED_CUBE)
                 .save(output);
 
+        shapedBuildingBlock(FBContent.BLOCK_FRAMED_COPPER_TORCH.value(), 4)
+                .pattern("N")
+                .pattern("C")
+                .pattern("F")
+                .define('N', Items.COPPER_NUGGET)
+                .define('C', ItemTags.COALS)
+                .define('F', FBContent.BLOCK_FRAMED_CUBE.value())
+                .unlockedBy(FBContent.BLOCK_FRAMED_CUBE)
+                .save(output);
+
         shapedBuildingBlock(FBContent.BLOCK_FRAMED_REDSTONE_TORCH.value(), 4)
                 .pattern("R")
                 .pattern("F")
@@ -1478,6 +1488,15 @@ public final class FramedRecipeProvider extends AbstractFramedRecipeProvider
                 .define('C', FBContent.BLOCK_FRAMED_SLAB_CORNER.value())
                 .define('T', Items.SOUL_TORCH)
                 .unlockedBy(Items.SOUL_TORCH)
+                .save(output);
+
+        shapedBuildingBlock(FBContent.BLOCK_FRAMED_COPPER_LANTERN.value())
+                .pattern("CCC")
+                .pattern("CTC")
+                .pattern("CCC")
+                .define('C', FBContent.BLOCK_FRAMED_SLAB_CORNER.value())
+                .define('T', Items.COPPER_TORCH)
+                .unlockedBy(Items.COPPER_TORCH)
                 .save(output);
 
 

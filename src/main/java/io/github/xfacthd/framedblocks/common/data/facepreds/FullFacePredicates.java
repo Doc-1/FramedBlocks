@@ -124,6 +124,8 @@ public final class FullFacePredicates extends BlockTypeMap<FullFacePredicate>
         put(BlockType.FRAMED_WALL_TORCH, FullFacePredicate.FALSE);
         put(BlockType.FRAMED_SOUL_TORCH, FullFacePredicate.FALSE);
         put(BlockType.FRAMED_SOUL_WALL_TORCH, FullFacePredicate.FALSE);
+        put(BlockType.FRAMED_COPPER_TORCH, FullFacePredicate.FALSE);
+        put(BlockType.FRAMED_COPPER_WALL_TORCH, FullFacePredicate.FALSE);
         put(BlockType.FRAMED_REDSTONE_TORCH, FullFacePredicate.FALSE);
         put(BlockType.FRAMED_REDSTONE_WALL_TORCH, FullFacePredicate.FALSE);
         put(BlockType.FRAMED_BOARD, new BoardFullFacePredicate());
@@ -253,6 +255,7 @@ public final class FullFacePredicates extends BlockTypeMap<FullFacePredicate>
         put(BlockType.FRAMED_CHAIN, FullFacePredicate.FALSE);
         put(BlockType.FRAMED_LANTERN, FullFacePredicate.FALSE);
         put(BlockType.FRAMED_SOUL_LANTERN, FullFacePredicate.FALSE);
+        put(BlockType.FRAMED_COPPER_LANTERN, FullFacePredicate.FALSE);
         put(BlockType.FRAMED_HOPPER, FullFacePredicate.FALSE);
         put(BlockType.FRAMED_LAYERED_CUBE, new LayeredCubeFullFacePredicate());
         put(BlockType.FRAMED_LIGHTNING_ROD, FullFacePredicate.FALSE);

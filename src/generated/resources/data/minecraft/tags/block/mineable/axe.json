@@ -97,6 +97,8 @@
     "framedblocks:framed_wall_torch",
     "framedblocks:framed_soul_torch",
     "framedblocks:framed_soul_wall_torch",
+    "framedblocks:framed_copper_torch",
+    "framedblocks:framed_copper_wall_torch",
     "framedblocks:framed_redstone_torch",
     "framedblocks:framed_redstone_wall_torch",
     "framedblocks:framed_board",
@@ -223,6 +225,7 @@
     "framedblocks:framed_chain",
     "framedblocks:framed_lantern",
     "framedblocks:framed_soul_lantern",
+    "framedblocks:framed_copper_lantern",
     "framedblocks:framed_hopper",
     "framedblocks:framed_layered_cube",
     "framedblocks:framed_path"

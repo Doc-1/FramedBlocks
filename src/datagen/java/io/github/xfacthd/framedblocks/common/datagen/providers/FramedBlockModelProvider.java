@@ -283,6 +283,8 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         registerFramedWallTorch(blockModels);
         registerFramedSoulTorch(blockModels);
         registerFramedSoulWallTorch(blockModels);
+        registerFramedCopperTorch(blockModels);
+        registerFramedCopperWallTorch(blockModels);
         registerFramedRedstoneTorch(blockModels);
         registerFramedRedstoneWallTorch(blockModels);
         registerFramedCornerStrip(blockModels, cube);
@@ -308,6 +310,7 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         registerFramedChain(blockModels, cube);
         registerFramedLantern(blockModels);
         registerFramedSoulLantern(blockModels);
+        registerFramedCopperLantern(blockModels);
 
         registerFramingSaw(blockModels);
         registerPoweredFramingSaw(blockModels);
@@ -530,6 +533,37 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         framedVariant(
                 blockModels,
                 FBContent.BLOCK_FRAMED_SOUL_WALL_TORCH,
+                BlockModelGenerators.plainVariant(wallTorch),
+                gen -> gen.with(BlockModelGenerators.ROTATION_TORCH)
+        );
+    }
+
+    private void registerFramedCopperTorch(BlockModelGenerators blockModels)
+    {
+        framedBlockFromTemplate(
+                blockModels,
+                FBContent.BLOCK_FRAMED_COPPER_TORCH,
+                ModelTemplates.create("framedblocks:framed_torch", TextureSlot.TOP, TextureSlot.PARTICLE),
+                new TextureMapping()
+                        .put(TextureSlot.TOP, mcLocation("block/copper_torch"))
+                        .put(TextureSlot.PARTICLE, Utils.rl("block/framed_copper_torch"))
+        );
+        blockModels.registerSimpleFlatItemModel(FBContent.BLOCK_FRAMED_COPPER_TORCH.value());
+    }
+
+    private void registerFramedCopperWallTorch(BlockModelGenerators blockModels)
+    {
+        ResourceLocation wallTorch = blockModelFromTemplate(
+                blockModels,
+                FBContent.BLOCK_FRAMED_COPPER_WALL_TORCH,
+                ModelTemplates.create("framedblocks:framed_wall_torch", TextureSlot.TOP, TextureSlot.PARTICLE),
+                new TextureMapping()
+                        .put(TextureSlot.TOP, mcLocation("block/copper_torch"))
+                        .put(TextureSlot.PARTICLE, Utils.rl("block/framed_copper_torch"))
+        );
+        framedVariant(
+                blockModels,
+                FBContent.BLOCK_FRAMED_COPPER_WALL_TORCH,
                 BlockModelGenerators.plainVariant(wallTorch),
                 gen -> gen.with(BlockModelGenerators.ROTATION_TORCH)
         );
@@ -1094,6 +1128,26 @@ public final class FramedBlockModelProvider extends AbstractFramedBlockModelProv
         );
 
         blockModels.registerSimpleFlatItemModel(FBContent.BLOCK_FRAMED_SOUL_LANTERN.value().asItem());
+    }
+
+    private void registerFramedCopperLantern(BlockModelGenerators blockModels)
+    {
+        ResourceLocation standing = ModelLocationUtils.getModelLocation(FBContent.BLOCK_FRAMED_COPPER_LANTERN.value());
+        ResourceLocation hanging = ModelLocationUtils.getModelLocation(FBContent.BLOCK_FRAMED_COPPER_LANTERN.value(), "_hanging");
+        ResourceLocation chainStanding = modLocation("block/framed_lantern_chain_standing");
+        ResourceLocation chainHanging = modLocation("block/framed_lantern_chain_hanging");
+
+        ConditionBuilder standingCondition = BlockModelGenerators.condition().term(BlockStateProperties.HANGING, false);
+        ConditionBuilder hangingCondition = BlockModelGenerators.condition().term(BlockStateProperties.HANGING, true);
+        ConditionBuilder chainCondition = BlockModelGenerators.condition().term(PropertyHolder.CHAIN_TYPE, ChainType.METAL);
+        framedMultiPart(blockModels, FBContent.BLOCK_FRAMED_COPPER_LANTERN, gen -> gen
+                .with(standingCondition, BlockModelGenerators.plainVariant(standing))
+                .with(hangingCondition, BlockModelGenerators.plainVariant(hanging))
+                .with(and(chainCondition, standingCondition), BlockModelGenerators.plainVariant(chainStanding))
+                .with(and(chainCondition, hangingCondition), BlockModelGenerators.plainVariant(chainHanging))
+        );
+
+        blockModels.registerSimpleFlatItemModel(FBContent.BLOCK_FRAMED_COPPER_LANTERN.value().asItem());
     }
 
 

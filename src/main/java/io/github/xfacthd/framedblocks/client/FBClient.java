@@ -362,6 +362,8 @@ public final class FBClient
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_WALL_TORCH, FramedWallTorchGeometry::normal, WrapHelper.IGNORE_ALWAYS);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_SOUL_TORCH, FramedTorchGeometry::soul, WrapHelper.IGNORE_ALWAYS);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_SOUL_WALL_TORCH, FramedWallTorchGeometry::soul, WrapHelper.IGNORE_ALWAYS);
+        WrapHelper.wrap(FBContent.BLOCK_FRAMED_COPPER_TORCH, FramedTorchGeometry::copper, WrapHelper.IGNORE_ALWAYS);
+        WrapHelper.wrap(FBContent.BLOCK_FRAMED_COPPER_WALL_TORCH, FramedWallTorchGeometry::copper, WrapHelper.IGNORE_ALWAYS);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_REDSTONE_TORCH, FramedTorchGeometry::redstone, WrapHelper.IGNORE_ALWAYS);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_REDSTONE_WALL_TORCH, FramedWallTorchGeometry::redstone, WrapHelper.IGNORE_ALWAYS);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_BOARD, FramedBoardGeometry::new, WrapHelper.IGNORE_DEFAULT);
@@ -491,6 +493,7 @@ public final class FBClient
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_CHAIN, FramedChainGeometry::new, WrapHelper.IGNORE_WATERLOGGED);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_LANTERN, FramedLanternGeometry::normal, WrapHelper.IGNORE_WATERLOGGED);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_SOUL_LANTERN, FramedLanternGeometry::soul, WrapHelper.IGNORE_WATERLOGGED);
+        WrapHelper.wrap(FBContent.BLOCK_FRAMED_COPPER_LANTERN, FramedLanternGeometry::copper, WrapHelper.IGNORE_WATERLOGGED);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_HOPPER, FramedHopperGeometry::new, WrapHelper.IGNORE_ALWAYS);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_LAYERED_CUBE, FramedLayeredCubeGeometry::new, WrapHelper.IGNORE_DEFAULT);
         WrapHelper.wrap(FBContent.BLOCK_FRAMED_LIGHTNING_ROD, FramedLightningRodGeometry::new, WrapHelper.IGNORE_WATERLOGGED);

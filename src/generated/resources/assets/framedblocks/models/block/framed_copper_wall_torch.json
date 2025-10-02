@@ -1,0 +1,7 @@
+{
+  "parent": "framedblocks:block/framed_wall_torch",
+  "textures": {
+    "particle": "framedblocks:block/framed_copper_torch",
+    "top": "minecraft:block/copper_torch"
+  }
+}

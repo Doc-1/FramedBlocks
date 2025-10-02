@@ -231,10 +231,12 @@ public final class FBContent
     public static final Holder<Block> BLOCK_FRAMED_WALL_SIGN = registerBlock(FramedWallSignBlock::new, BlockType.FRAMED_WALL_SIGN);
     public static final Holder<Block> BLOCK_FRAMED_HANGING_SIGN = registerBlock(FramedCeilingHangingSignBlock::new, BlockType.FRAMED_HANGING_SIGN);
     public static final Holder<Block> BLOCK_FRAMED_WALL_HANGING_SIGN = registerBlock(FramedWallHangingSignBlock::new, BlockType.FRAMED_WALL_HANGING_SIGN);
-    public static final Holder<Block> BLOCK_FRAMED_TORCH = registerBlock(FramedTorchBlock::new, BlockType.FRAMED_TORCH);
-    public static final Holder<Block> BLOCK_FRAMED_WALL_TORCH = registerBlock(FramedWallTorchBlock::new, BlockType.FRAMED_WALL_TORCH);
-    public static final Holder<Block> BLOCK_FRAMED_SOUL_TORCH = registerBlock(FramedSoulTorchBlock::new, BlockType.FRAMED_SOUL_TORCH);
-    public static final Holder<Block> BLOCK_FRAMED_SOUL_WALL_TORCH = registerBlock(FramedSoulWallTorchBlock::new, BlockType.FRAMED_SOUL_WALL_TORCH);
+    public static final Holder<Block> BLOCK_FRAMED_TORCH = registerBlock(FramedTorchBlock::normal, BlockType.FRAMED_TORCH);
+    public static final Holder<Block> BLOCK_FRAMED_WALL_TORCH = registerBlock(FramedWallTorchBlock::normal, BlockType.FRAMED_WALL_TORCH);
+    public static final Holder<Block> BLOCK_FRAMED_SOUL_TORCH = registerBlock(FramedTorchBlock::soul, BlockType.FRAMED_SOUL_TORCH);
+    public static final Holder<Block> BLOCK_FRAMED_SOUL_WALL_TORCH = registerBlock(FramedWallTorchBlock::soul, BlockType.FRAMED_SOUL_WALL_TORCH);
+    public static final Holder<Block> BLOCK_FRAMED_COPPER_TORCH = registerBlock(FramedTorchBlock::copper, BlockType.FRAMED_COPPER_TORCH);
+    public static final Holder<Block> BLOCK_FRAMED_COPPER_WALL_TORCH = registerBlock(FramedWallTorchBlock::copper, BlockType.FRAMED_COPPER_WALL_TORCH);
     public static final Holder<Block> BLOCK_FRAMED_REDSTONE_TORCH = registerBlock(FramedRedstoneTorchBlock::new, BlockType.FRAMED_REDSTONE_TORCH);
     public static final Holder<Block> BLOCK_FRAMED_REDSTONE_WALL_TORCH = registerBlock(FramedRedstoneWallTorchBlock::new, BlockType.FRAMED_REDSTONE_WALL_TORCH);
     public static final Holder<Block> BLOCK_FRAMED_BOARD = registerBlock(FramedBoardBlock::new, BlockType.FRAMED_BOARD);
@@ -364,6 +366,7 @@ public final class FBContent
     public static final Holder<Block> BLOCK_FRAMED_CHAIN = registerBlock(FramedChainBlock::new, BlockType.FRAMED_CHAIN);
     public static final Holder<Block> BLOCK_FRAMED_LANTERN = registerBlock(FramedLanternBlock::new, BlockType.FRAMED_LANTERN);
     public static final Holder<Block> BLOCK_FRAMED_SOUL_LANTERN = registerBlock(FramedLanternBlock::new, BlockType.FRAMED_SOUL_LANTERN);
+    public static final Holder<Block> BLOCK_FRAMED_COPPER_LANTERN = registerBlock(FramedLanternBlock::new, BlockType.FRAMED_COPPER_LANTERN);
     public static final Holder<Block> BLOCK_FRAMED_HOPPER = registerBlock(FramedHopperBlock::new, BlockType.FRAMED_HOPPER);
     public static final Holder<Block> BLOCK_FRAMED_LAYERED_CUBE = registerBlock(FramedLayeredCubeBlock::new, BlockType.FRAMED_LAYERED_CUBE);
     public static final Holder<Block> BLOCK_FRAMED_LIGHTNING_ROD = registerBlock(FramedLightningRodBlock::new, BlockType.FRAMED_LIGHTNING_ROD);
@@ -882,7 +885,7 @@ public final class FBContent
         Holder<Block> result = BLOCKS.registerBlock(type.getName(), props ->
         {
             T block = blockFactory.apply(props);
-            Preconditions.checkArgument(block.getBlockType() == type);
+            Preconditions.checkArgument(block.getBlockType() == type, "Inconsistent block type, expected %s, got %s", type, block.getBlockType());
             return block;
         }, BlockBehaviour.Properties.of());
         BLOCKS_BY_TYPE.put(type, result);

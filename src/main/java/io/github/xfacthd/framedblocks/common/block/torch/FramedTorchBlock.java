@@ -8,6 +8,7 @@ import io.github.xfacthd.framedblocks.common.data.BlockType;
 import io.github.xfacthd.framedblocks.common.item.block.FramedStandingAndWallBlockItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.InteractionHand;
@@ -33,9 +34,11 @@ import java.util.List;
 
 public class FramedTorchBlock extends TorchBlock implements IFramedBlockInternal
 {
-    public FramedTorchBlock(Properties props)
+    private final BlockType type;
+
+    private FramedTorchBlock(BlockType type, SimpleParticleType particle, Properties props)
     {
-        this(ParticleTypes.FLAME, props
+        super(particle, props
                 .pushReaction(PushReaction.DESTROY)
                 .noCollision()
                 .strength(0.5F)
@@ -43,11 +46,7 @@ public class FramedTorchBlock extends TorchBlock implements IFramedBlockInternal
                 .lightLevel(state -> 14)
                 .noOcclusion()
         );
-    }
-
-    protected FramedTorchBlock(SimpleParticleType particle, Properties props)
-    {
-        super(particle, props);
+        this.type = type;
         BlockUtils.configureStandardProperties(this);
     }
 
@@ -55,7 +54,7 @@ public class FramedTorchBlock extends TorchBlock implements IFramedBlockInternal
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         super.createBlockStateDefinition(builder);
-        BlockUtils.addStandardProperties(this, builder);
+        BlockUtils.addRequiredProperties(builder);
     }
 
     @Override
@@ -100,18 +99,22 @@ public class FramedTorchBlock extends TorchBlock implements IFramedBlockInternal
     @Override
     public BlockType getBlockType()
     {
-        return BlockType.FRAMED_TORCH;
+        return type;
     }
 
     @Override
     public BlockItem createBlockItem(Item.Properties props)
     {
-        return new FramedStandingAndWallBlockItem(
-                FBContent.BLOCK_FRAMED_TORCH.value(),
-                FBContent.BLOCK_FRAMED_WALL_TORCH.value(),
-                Direction.DOWN,
-                props
-        );
+        record BlockPair(Holder<Block> standing, Holder<Block> wall) {}
+
+        BlockPair blocks = switch (type)
+        {
+            case FRAMED_TORCH -> new BlockPair(FBContent.BLOCK_FRAMED_TORCH, FBContent.BLOCK_FRAMED_WALL_TORCH);
+            case FRAMED_SOUL_TORCH -> new BlockPair(FBContent.BLOCK_FRAMED_SOUL_TORCH, FBContent.BLOCK_FRAMED_SOUL_WALL_TORCH);
+            case FRAMED_COPPER_TORCH -> new BlockPair(FBContent.BLOCK_FRAMED_COPPER_TORCH, FBContent.BLOCK_FRAMED_COPPER_WALL_TORCH);
+            default -> throw new IllegalArgumentException("Invalid BlockType for FramedTorchBlock: " + type);
+        };
+        return new FramedStandingAndWallBlockItem(blocks.standing.value(), blocks.wall.value(), Direction.DOWN, props);
     }
 
     @Override
@@ -137,5 +140,20 @@ public class FramedTorchBlock extends TorchBlock implements IFramedBlockInternal
     public float getJadeRenderScale(BlockState state)
     {
         return 2F;
+    }
+
+    public static FramedTorchBlock normal(Properties props)
+    {
+        return new FramedTorchBlock(BlockType.FRAMED_TORCH, ParticleTypes.FLAME, props);
+    }
+
+    public static FramedTorchBlock soul(Properties props)
+    {
+        return new FramedTorchBlock(BlockType.FRAMED_SOUL_TORCH, ParticleTypes.SOUL_FIRE_FLAME, props);
+    }
+
+    public static FramedTorchBlock copper(Properties props)
+    {
+        return new FramedTorchBlock(BlockType.FRAMED_COPPER_TORCH, ParticleTypes.COPPER_FIRE_FLAME, props);
     }
 }

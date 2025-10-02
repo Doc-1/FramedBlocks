@@ -127,6 +127,8 @@ public final class SideSkipPredicates extends BlockTypeMap<SideSkipPredicate>
         put(BlockType.FRAMED_WALL_TORCH, SideSkipPredicate.FALSE);
         put(BlockType.FRAMED_SOUL_TORCH, SideSkipPredicate.FALSE);
         put(BlockType.FRAMED_SOUL_WALL_TORCH, SideSkipPredicate.FALSE);
+        put(BlockType.FRAMED_COPPER_TORCH, SideSkipPredicate.FALSE);
+        put(BlockType.FRAMED_COPPER_WALL_TORCH, SideSkipPredicate.FALSE);
         put(BlockType.FRAMED_REDSTONE_TORCH, SideSkipPredicate.FALSE);
         put(BlockType.FRAMED_REDSTONE_WALL_TORCH, SideSkipPredicate.FALSE);
         put(BlockType.FRAMED_BOARD, new BoardSkipPredicate());
@@ -256,6 +258,7 @@ public final class SideSkipPredicates extends BlockTypeMap<SideSkipPredicate>
         put(BlockType.FRAMED_CHAIN, new ChainSkipPredicate());
         put(BlockType.FRAMED_LANTERN, SideSkipPredicate.FALSE);
         put(BlockType.FRAMED_SOUL_LANTERN, SideSkipPredicate.FALSE);
+        put(BlockType.FRAMED_COPPER_LANTERN, SideSkipPredicate.FALSE);
         put(BlockType.FRAMED_HOPPER, new HopperSkipPredicate());
         put(BlockType.FRAMED_LAYERED_CUBE, new LayeredCubeSkipPredicate());
         put(BlockType.FRAMED_LIGHTNING_ROD, SideSkipPredicate.FALSE);

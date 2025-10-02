@@ -12,6 +12,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -31,9 +32,11 @@ import java.util.List;
 
 public class FramedWallTorchBlock extends WallTorchBlock implements IFramedBlockInternal
 {
-    public FramedWallTorchBlock(Properties props)
+    private final BlockType type;
+
+    private FramedWallTorchBlock(BlockType type, SimpleParticleType particle, Properties props)
     {
-        this(ParticleTypes.FLAME, props
+        super(particle, props
                 .pushReaction(PushReaction.DESTROY)
                 .noCollision()
                 .strength(0.5F)
@@ -41,11 +44,7 @@ public class FramedWallTorchBlock extends WallTorchBlock implements IFramedBlock
                 .lightLevel(state -> 14)
                 .noOcclusion()
         );
-    }
-
-    protected FramedWallTorchBlock(SimpleParticleType particle, Properties props)
-    {
-        super(particle, props);
+        this.type = type;
         BlockUtils.configureStandardProperties(this);
     }
 
@@ -53,7 +52,7 @@ public class FramedWallTorchBlock extends WallTorchBlock implements IFramedBlock
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         super.createBlockStateDefinition(builder);
-        BlockUtils.addStandardProperties(this, builder);
+        BlockUtils.addRequiredProperties(builder);
     }
 
     @Override
@@ -62,6 +61,12 @@ public class FramedWallTorchBlock extends WallTorchBlock implements IFramedBlock
     )
     {
         return handleUse(state, level, pos, player, hand, hit);
+    }
+
+    @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack)
+    {
+        tryApplyCamoImmediately(level, pos, placer, stack);
     }
 
     @Override
@@ -99,7 +104,7 @@ public class FramedWallTorchBlock extends WallTorchBlock implements IFramedBlock
     @Override
     public BlockType getBlockType()
     {
-        return BlockType.FRAMED_WALL_TORCH;
+        return type;
     }
 
     @Override
@@ -125,5 +130,20 @@ public class FramedWallTorchBlock extends WallTorchBlock implements IFramedBlock
     public float getJadeRenderScale(BlockState state)
     {
         return ((IFramedBlock) FBContent.BLOCK_FRAMED_TORCH.value()).getJadeRenderScale(state);
+    }
+
+    public static FramedWallTorchBlock normal(Properties props)
+    {
+        return new FramedWallTorchBlock(BlockType.FRAMED_WALL_TORCH, ParticleTypes.FLAME, props);
+    }
+
+    public static FramedWallTorchBlock soul(Properties props)
+    {
+        return new FramedWallTorchBlock(BlockType.FRAMED_SOUL_WALL_TORCH, ParticleTypes.SOUL_FIRE_FLAME, props);
+    }
+
+    public static FramedWallTorchBlock copper(Properties props)
+    {
+        return new FramedWallTorchBlock(BlockType.FRAMED_COPPER_WALL_TORCH, ParticleTypes.COPPER_FIRE_FLAME, props);
     }
 }

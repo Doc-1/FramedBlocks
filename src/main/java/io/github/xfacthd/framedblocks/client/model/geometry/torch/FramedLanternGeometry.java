@@ -33,16 +33,16 @@ public class FramedLanternGeometry extends Geometry
     private final BlockState state;
     private final boolean hanging;
     private final ChainType chain;
-    private final boolean soul;
+    private final boolean closedHead;
     private final BlockStateModel baseModel;
     private final BlockState auxShaderState;
 
-    private FramedLanternGeometry(GeometryFactory.Context ctx, boolean soul, BlockState auxShaderState)
+    private FramedLanternGeometry(GeometryFactory.Context ctx, boolean closedHead, BlockState auxShaderState)
     {
         this.state = ctx.state();
         this.hanging = ctx.state().getValue(BlockStateProperties.HANGING);
         this.chain = ctx.state().getValue(PropertyHolder.CHAIN_TYPE);
-        this.soul = soul;
+        this.closedHead = closedHead;
         this.baseModel = ctx.baseModel();
         this.auxShaderState = auxShaderState;
     }
@@ -84,7 +84,7 @@ public class FramedLanternGeometry extends Geometry
                         .export(quadMap.get(null));
             }
 
-            QuadModifier.of(quad).apply(Modifiers.cutSide(6F/16F, soul ? 7F/16F : 8F/16F, 10F/16F, 9F/16F))
+            QuadModifier.of(quad).apply(Modifiers.cutSide(6F/16F, closedHead ? 7F/16F : 8F/16F, 10F/16F, 9F/16F))
                     .applyIf(Modifiers.offset(Direction.UP, 1F/16F), hanging)
                     .apply(Modifiers.setPosition(10F/16F))
                     .export(quadMap.get(null));
@@ -176,8 +176,6 @@ public class FramedLanternGeometry extends Geometry
         return true;
     }
 
-
-
     public static FramedLanternGeometry normal(GeometryFactory.Context ctx)
     {
         return new FramedLanternGeometry(ctx, false, Blocks.LANTERN.defaultBlockState());
@@ -186,5 +184,10 @@ public class FramedLanternGeometry extends Geometry
     public static FramedLanternGeometry soul(GeometryFactory.Context ctx)
     {
         return new FramedLanternGeometry(ctx, true, Blocks.SOUL_LANTERN.defaultBlockState());
+    }
+
+    public static FramedLanternGeometry copper(GeometryFactory.Context ctx)
+    {
+        return new FramedLanternGeometry(ctx, true, Blocks.COPPER_LANTERN.unaffected().defaultBlockState());
     }
 }

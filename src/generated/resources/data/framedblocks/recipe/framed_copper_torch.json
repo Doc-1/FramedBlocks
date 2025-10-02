@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "C": "#minecraft:coals",
+    "F": "framedblocks:framed_cube",
+    "N": "minecraft:copper_nugget"
+  },
+  "pattern": [
+    "N",
+    "C",
+    "F"
+  ],
+  "result": {
+    "count": 4,
+    "id": "framedblocks:framed_copper_torch"
+  }
+}

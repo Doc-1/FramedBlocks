@@ -34,6 +34,7 @@ public final class GhostRenderBehaviours
                 FBContent.BLOCK_FRAMED_HANGING_SIGN,
                 FBContent.BLOCK_FRAMED_TORCH,
                 FBContent.BLOCK_FRAMED_SOUL_TORCH,
+                FBContent.BLOCK_FRAMED_COPPER_TORCH,
                 FBContent.BLOCK_FRAMED_REDSTONE_TORCH,
                 FBContent.BLOCK_FRAMED_HALF_SLOPE,
                 FBContent.BLOCK_FRAMED_DOUBLE_HALF_SLOPE,

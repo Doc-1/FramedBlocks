@@ -163,6 +163,7 @@ public final class FramedLanguageProvider extends LanguageProvider
         add(FBContent.BLOCK_FRAMED_WALL_HANGING_SIGN.value(), "Framed Hanging Sign");
         add(FBContent.BLOCK_FRAMED_TORCH.value(), "Framed Torch"); //Wall torch name is handled through WallTorchBlock
         add(FBContent.BLOCK_FRAMED_SOUL_TORCH.value(), "Framed Soul Torch"); //See above
+        add(FBContent.BLOCK_FRAMED_COPPER_TORCH.value(), "Framed Copper Torch"); //See above
         add(FBContent.BLOCK_FRAMED_REDSTONE_TORCH.value(), "Framed Redstone Torch"); //See above
         add(FBContent.BLOCK_FRAMED_BOARD.value(), "Framed Board");
         add(FBContent.BLOCK_FRAMED_CORNER_STRIP.value(), "Framed Corner Strip");
@@ -291,6 +292,7 @@ public final class FramedLanguageProvider extends LanguageProvider
         add(FBContent.BLOCK_FRAMED_CHAIN.value(), "Framed Chain");
         add(FBContent.BLOCK_FRAMED_LANTERN.value(), "Framed Lantern");
         add(FBContent.BLOCK_FRAMED_SOUL_LANTERN.value(), "Framed Soul Lantern");
+        add(FBContent.BLOCK_FRAMED_COPPER_LANTERN.value(), "Framed Copper Lantern");
         add(FBContent.BLOCK_FRAMED_HOPPER.value(), "Framed Hopper");
         add(FBContent.BLOCK_FRAMED_LAYERED_CUBE.value(), "Framed Layered Cube");
         add(FBContent.BLOCK_FRAMED_LIGHTNING_ROD.value(), "Framed Lightning Rod");

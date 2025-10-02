@@ -389,7 +389,15 @@ public final class FramingSawRecipeProvider extends AbstractFramingSawRecipeProv
                 .material(CUBE_MATERIAL_VALUE / 4)
                 .additives(List.of(
                         additive(ItemTags.COALS),
-                        additive(Items.SOUL_SAND)
+                        additive(ItemTags.SOUL_FIRE_BASE_BLOCKS)
+                ))
+                .save(output);
+
+        sawRecipe(FBContent.BLOCK_FRAMED_COPPER_TORCH, 4)
+                .material(CUBE_MATERIAL_VALUE / 4)
+                .additives(List.of(
+                        additive(ItemTags.COALS),
+                        additive(Items.COPPER_NUGGET)
                 ))
                 .save(output);
 
@@ -874,6 +882,11 @@ public final class FramingSawRecipeProvider extends AbstractFramingSawRecipeProv
         sawRecipe(FBContent.BLOCK_FRAMED_SOUL_LANTERN)
                 .material(CUBE_MATERIAL_VALUE)
                 .additive(additive(Items.SOUL_TORCH))
+                .save(output);
+
+        sawRecipe(FBContent.BLOCK_FRAMED_COPPER_LANTERN)
+                .material(CUBE_MATERIAL_VALUE)
+                .additive(additive(Items.COPPER_TORCH))
                 .save(output);
 
         sawRecipe(FBContent.BLOCK_FRAMED_HOPPER)

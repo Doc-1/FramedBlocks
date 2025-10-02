@@ -7,12 +7,12 @@
     },
     {
       "count": 1,
-      "ingredient": "#minecraft:soul_fire_base_blocks"
+      "ingredient": "minecraft:copper_nugget"
     }
   ],
   "material": 1536,
   "result": {
     "count": 4,
-    "id": "framedblocks:framed_soul_torch"
+    "id": "framedblocks:framed_copper_torch"
   }
 }

@@ -1,0 +1,51 @@
+{
+  "neoforge:definition_type": "framedblocks:wrapper",
+  "multipart": [
+    {
+      "apply": {
+        "model": "framedblocks:block/framed_copper_lantern"
+      },
+      "when": {
+        "hanging": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "framedblocks:block/framed_copper_lantern_hanging"
+      },
+      "when": {
+        "hanging": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "framedblocks:block/framed_lantern_chain_standing"
+      },
+      "when": {
+        "AND": [
+          {
+            "chain": "metal"
+          },
+          {
+            "hanging": "false"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "framedblocks:block/framed_lantern_chain_hanging"
+      },
+      "when": {
+        "AND": [
+          {
+            "chain": "metal"
+          },
+          {
+            "hanging": "true"
+          }
+        ]
+      }
+    }
+  ]
+}

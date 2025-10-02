@@ -1,0 +1,20 @@
+{
+  "neoforge:definition_type": "framedblocks:wrapper",
+  "variants": {
+    "facing=east": {
+      "model": "framedblocks:block/framed_copper_wall_torch"
+    },
+    "facing=north": {
+      "model": "framedblocks:block/framed_copper_wall_torch",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "framedblocks:block/framed_copper_wall_torch",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "framedblocks:block/framed_copper_wall_torch",
+      "y": 180
+    }
+  }
+}
