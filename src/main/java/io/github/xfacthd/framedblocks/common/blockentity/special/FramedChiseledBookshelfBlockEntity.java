@@ -13,15 +13,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 public class FramedChiseledBookshelfBlockEntity extends FramedBlockEntity implements Clearable
 {
     public static final String INVENTORY_NBT_KEY = ContainerHelper.TAG_ITEMS;
     public static final String LAST_SLOT_NBT_KEY = "last_slot";
 
-    private final ItemStackHandler itemHandler = new ItemStackHandler(6);
+    private final ItemStacksResourceHandler itemHandler = new ItemStacksResourceHandler(6);
     private int lastInteractedSlot = -1;
 
     public FramedChiseledBookshelfBlockEntity(BlockPos pos, BlockState state)
@@ -31,15 +32,15 @@ public class FramedChiseledBookshelfBlockEntity extends FramedBlockEntity implem
 
     public void placeBook(ItemStack stack, int slot)
     {
-        itemHandler.setStackInSlot(slot, stack);
+        itemHandler.set(slot, ItemResource.of(stack), 1);
         updateState(slot);
         setChanged();
     }
 
     public ItemStack takeBook(int slot)
     {
-        ItemStack stack = itemHandler.getStackInSlot(slot);
-        itemHandler.setStackInSlot(slot, ItemStack.EMPTY);
+        ItemStack stack = itemHandler.getResource(slot).toStack();
+        itemHandler.set(slot, ItemResource.EMPTY, 0);
         updateState(slot);
         setChanged();
         return stack;
@@ -53,7 +54,7 @@ public class FramedChiseledBookshelfBlockEntity extends FramedBlockEntity implem
         for (int i = 0; i < ChiseledBookShelfBlockEntity.MAX_BOOKS_IN_STORAGE; i++)
         {
             BooleanProperty prop = ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.get(i);
-            state = state.setValue(prop, !itemHandler.getStackInSlot(i).isEmpty());
+            state = state.setValue(prop, !itemHandler.getResource(i).isEmpty());
         }
         level().setBlockAndUpdate(worldPosition, state);
     }
@@ -63,7 +64,7 @@ public class FramedChiseledBookshelfBlockEntity extends FramedBlockEntity implem
         updateState(lastInteractedSlot);
     }
 
-    public IItemHandler getItemHandler()
+    public ResourceHandler<ItemResource> getItemHandler()
     {
         return itemHandler;
     }
@@ -71,7 +72,7 @@ public class FramedChiseledBookshelfBlockEntity extends FramedBlockEntity implem
     @Override
     public void clearContent()
     {
-        Utils.clearItemHandler(itemHandler);
+        Utils.clearItemResourceHandler(itemHandler);
     }
 
     public int getAnalogOutputSignal()
@@ -85,7 +86,7 @@ public class FramedChiseledBookshelfBlockEntity extends FramedBlockEntity implem
         super.preRemoveSideEffects(pos, state);
         if (level != null)
         {
-            Utils.dropItemHandlerContents(level, pos, itemHandler);
+            Utils.dropItemResourceHandlerContents(level, pos, itemHandler);
             clearContent();
         }
     }

@@ -58,6 +58,7 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
 import net.neoforged.neoforge.model.data.ModelData;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -108,11 +109,11 @@ public class FramedBlockEntity extends BlockEntity
         CamoContainerFactory<?> camoFactory;
         if (camo.isEmpty() && (camoFactory = CamoContainerHelper.findCamoFactory(stack)) != null)
         {
-            return setCamo(player, stack, camoFactory, secondary);
+            return setCamo(player, ItemAccess.forPlayerInteraction(player, hand), camoFactory, secondary);
         }
         else if (!camo.isEmpty() && CamoContainerHelper.isValidRemovalTool(camo, stack))
         {
-            return clearCamo(player, stack, camo, secondary);
+            return clearCamo(player, ItemAccess.forPlayerInteraction(player, hand), camo, secondary);
         }
         else if (stack.is(Tags.Items.DUSTS_GLOWSTONE) && !glowing)
         {
@@ -165,9 +166,9 @@ public class FramedBlockEntity extends BlockEntity
         return stack.is(Utils.PHANTOM_PASTE) && getBlockType().allowMakingIntangible();
     }
 
-    private InteractionResult setCamo(Player player, ItemStack stack, CamoContainerFactory<?> factory, boolean secondary)
+    private InteractionResult setCamo(Player player, ItemAccess itemAccess, CamoContainerFactory<?> factory, boolean secondary)
     {
-        CamoContainer<?, ?> camo = factory.applyCamo(level(), worldPosition, player, stack);
+        CamoContainer<?, ?> camo = factory.applyCamo(level(), worldPosition, player, itemAccess);
         if (camo != null)
         {
             if (!level().isClientSide())
@@ -180,9 +181,9 @@ public class FramedBlockEntity extends BlockEntity
         return CONSUME_CAMO_FAILED;
     }
 
-    private InteractionResult clearCamo(Player player, ItemStack stack, CamoContainer<?, ?> camo, boolean secondary)
+    private InteractionResult clearCamo(Player player, ItemAccess itemAccess, CamoContainer<?, ?> camo, boolean secondary)
     {
-        if (CamoContainerHelper.removeCamo(camo, level(), worldPosition, player, stack))
+        if (CamoContainerHelper.removeCamo(camo, level(), worldPosition, player, itemAccess))
         {
             if (!level().isClientSide())
             {

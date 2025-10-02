@@ -12,6 +12,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -40,8 +41,8 @@ public final class CamoContainerFactories
         // Register builtin handling last to make sure the predicates actually act as broad fallbacks after addon ones
 
         TriggerRegistrar fluidRegistrar = new TriggerRegistrarImpl(FBContent.FACTORY_FLUID.value());
-        fluidRegistrar.registerApplicationPredicate(stack -> stack.getCapability(Capabilities.FluidHandler.ITEM) != null);
-        fluidRegistrar.registerRemovalPredicate(stack -> stack.getCapability(Capabilities.FluidHandler.ITEM) != null);
+        fluidRegistrar.registerApplicationPredicate(stack -> stack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(stack)) != null);
+        fluidRegistrar.registerRemovalPredicate(stack -> stack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(stack)) != null);
 
         TriggerRegistrar blockRegistrar = new TriggerRegistrarImpl(FBContent.FACTORY_BLOCK.value());
         blockRegistrar.registerApplicationPredicate(stack -> stack.getItem() instanceof BlockItem);

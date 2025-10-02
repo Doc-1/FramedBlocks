@@ -13,7 +13,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.common.util.Lazy;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import java.util.List;
 
@@ -48,13 +50,13 @@ final class FramingSawCraftingMachine implements ICraftingMachine
                 return false;
             }
 
-            IItemHandler inv = blockEntity.getItemHandler();
+            ResourceHandler<ItemResource> inv = blockEntity.getItemHandler();
             for (int i = 0; i < FramingSawMenu.SLOT_RESULT; i++)
             {
-                ItemStack stack = inv.getStackInSlot(i);
+                ItemResource resource = inv.getResource(i);
                 if (i >= inputs.length)
                 {
-                    if (!stack.isEmpty())
+                    if (!resource.isEmpty())
                     {
                         return false;
                     }
@@ -70,7 +72,7 @@ final class FramingSawCraftingMachine implements ICraftingMachine
                 {
                     return false;
                 }
-                if (!stack.isEmpty() && (!itemKey.matches(stack) || stack.getCount() + entry.getLongValue() > stack.getMaxStackSize()))
+                if (!resource.isEmpty() && (!itemKey.matches(resource.toStack()) || inv.getAmountAsInt(i) + entry.getLongValue() > resource.getMaxStackSize()))
                 {
                     return false;
                 }
@@ -84,9 +86,13 @@ final class FramingSawCraftingMachine implements ICraftingMachine
                     continue;
                 }
 
-                int count = Ints.saturatedCast(entry.getLongValue());
-                inv.insertItem(i, ((AEItemKey) entry.getKey()).toStack(count), false);
-                inputs[i].remove(entry.getKey(), count);
+                try (Transaction tx = Transaction.open(null))
+                {
+                    int count = Ints.saturatedCast(entry.getLongValue());
+                    ItemStack stack = ((AEItemKey) entry.getKey()).toStack(count);
+                    inv.insert(i, ItemResource.of(stack), count, tx);
+                    inputs[i].remove(entry.getKey(), count);
+                }
             }
 
             return true;

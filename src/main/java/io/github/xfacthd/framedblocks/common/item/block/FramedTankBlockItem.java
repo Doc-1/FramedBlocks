@@ -20,7 +20,7 @@ public class FramedTankBlockItem extends FramedBlockItem
 
     public FramedTankBlockItem(Block block, Properties props)
     {
-        super(block, props);
+        super(block, props.component(FBContent.DC_TYPE_TANK_CONTENTS, SimpleFluidContent.EMPTY));
     }
 
     @Override

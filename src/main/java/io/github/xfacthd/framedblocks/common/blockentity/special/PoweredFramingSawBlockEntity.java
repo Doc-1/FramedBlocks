@@ -2,9 +2,9 @@ package io.github.xfacthd.framedblocks.common.blockentity.special;
 
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.FBContent;
-import io.github.xfacthd.framedblocks.common.capability.energy.EntityAwareEnergyStorage;
-import io.github.xfacthd.framedblocks.common.capability.item.ExternalItemHandler;
-import io.github.xfacthd.framedblocks.common.capability.item.RecipeInputItemStackHandler;
+import io.github.xfacthd.framedblocks.common.capability.energy.EntityAwareEnergyHandler;
+import io.github.xfacthd.framedblocks.common.capability.item.ExternalItemResourceHandler;
+import io.github.xfacthd.framedblocks.common.capability.item.RecipeInputItemResourceHandler;
 import io.github.xfacthd.framedblocks.common.config.ServerConfig;
 import io.github.xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 import io.github.xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeAdditive;
@@ -27,8 +27,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.energy.IEnergyStorage;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -41,21 +43,21 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
     private static final boolean INSERT_ENERGY_DEBUG = true;
     private static final long ACTIVE_TIMEOUT = 40;
 
-    private final RecipeInputItemStackHandler itemHandler = new RecipeInputItemStackHandler(FramingSawMenu.SLOT_RESULT + 1)
+    private final RecipeInputItemResourceHandler itemHandler = new RecipeInputItemResourceHandler(FramingSawMenu.SLOT_RESULT + 1)
     {
         @Override
-        protected void onContentsChanged(int slot)
+        protected void onContentsChanged(int slot, ItemStack prevStack)
         {
             PoweredFramingSawBlockEntity.this.onContentsChanged(slot);
         }
 
         @Override
-        public boolean isItemValid(int slot, ItemStack stack)
+        public boolean isValid(int slot, ItemResource resource)
         {
-            return PoweredFramingSawBlockEntity.this.isValidItem(slot, stack);
+            return PoweredFramingSawBlockEntity.this.isValidItem(slot, resource);
         }
     };
-    private final IItemHandler externalItemHandler = new ExternalItemHandler(itemHandler)
+    private final ResourceHandler<ItemResource> externalItemHandler = new ExternalItemResourceHandler(itemHandler)
     {
         @Override
         protected boolean canExtract(int slot)
@@ -63,7 +65,7 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
             return slot == FramingSawMenu.SLOT_RESULT;
         }
     };
-    private final EntityAwareEnergyStorage energyStorage = new EntityAwareEnergyStorage(
+    private final EntityAwareEnergyHandler energyStorage = new EntityAwareEnergyHandler(
             ServerConfig.VIEW.getPoweredSawEnergyCapacity(),
             ServerConfig.VIEW.getPoweredSawMaxInput(),
             0,
@@ -101,7 +103,11 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
     {
         if (!Utils.PRODUCTION && INSERT_ENERGY_DEBUG)
         {
-            be.energyStorage.receiveEnergy(be.energyStorage.getMaxReceive(), false);
+            try (Transaction tx = Transaction.open(null))
+            {
+                be.energyStorage.insert(be.energyStorage.getMaxReceive(), tx);
+                tx.commit();
+            }
         }
 
         if ((be.active || level.getGameTime() - be.lastActive > ACTIVE_TIMEOUT) && be.canRun())
@@ -119,18 +125,23 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
             {
                 be.progress = 0;
 
-                ItemStack result = Objects.requireNonNull(be.selectedRecipe).value().getResult().copy();
-                result.setCount(be.outputCount);
+                ItemResource result = ItemResource.of(Objects.requireNonNull(be.selectedRecipe).value().getResult());
                 be.internalAccess = true;
-                be.inhibitUpdate = true;
-                for (int i = 0; i < be.selectedRecipe.value().getAdditives().size(); i++)
+                try (Transaction tx = Transaction.open(null))
                 {
-                    int slot = i + FramingSawMenu.SLOT_ADDITIVE_FIRST;
-                    be.itemHandler.extractItem(slot, Objects.requireNonNull(be.calculation).getAdditiveCount(i), false);
+                    be.inhibitUpdate = true;
+                    for (int i = 0; i < be.selectedRecipe.value().getAdditives().size(); i++)
+                    {
+                        int slot = i + FramingSawMenu.SLOT_ADDITIVE_FIRST;
+                        int additiveCount = Objects.requireNonNull(be.calculation).getAdditiveCount(i);
+                        be.itemHandler.extract(slot, be.itemHandler.getResource(slot), additiveCount, tx);
+                    }
+                    be.inhibitUpdate = false;
+                    int inputCount = Objects.requireNonNull(be.calculation).getInputCount();
+                    be.itemHandler.extract(FramingSawMenu.SLOT_INPUT, be.itemHandler.getResource(FramingSawMenu.SLOT_INPUT), inputCount, tx);
+                    be.itemHandler.insert(FramingSawMenu.SLOT_RESULT, result, be.outputCount, tx);
+                    tx.commit();
                 }
-                be.inhibitUpdate = false;
-                be.itemHandler.extractItem(FramingSawMenu.SLOT_INPUT, Objects.requireNonNull(be.calculation).getInputCount(), false);
-                be.itemHandler.insertItem(FramingSawMenu.SLOT_RESULT, result, false);
                 be.internalAccess = false;
             }
         }
@@ -156,19 +167,18 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
     private boolean canRun()
     {
         if (selectedRecipe == null || !recipeSatisfied) return false;
-        if (energyStorage.getEnergyStored() < energyConsumption) return false;
+        if (energyStorage.getAmountAsInt() < energyConsumption) return false;
 
-        ItemStack output = itemHandler.getStackInSlot(FramingSawMenu.SLOT_RESULT);
+        ItemResource output = itemHandler.getResource(FramingSawMenu.SLOT_RESULT);
         if (!output.isEmpty())
         {
-            if (!ItemStack.isSameItemSameComponents(output, selectedRecipe.value().getResult()))
+            ItemStack result = selectedRecipe.value().getResult();
+            if (!output.equals(ItemResource.of(result)))
             {
                 return false;
             }
-            if (output.getCount() + outputCount > output.getMaxStackSize())
-            {
-                return false;
-            }
+            int count = itemHandler.getAmountAsInt(FramingSawMenu.SLOT_RESULT);
+            return count + outputCount <= output.getMaxStackSize();
         }
         return true;
     }
@@ -208,11 +218,11 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
         }
     }
 
-    private boolean isValidItem(int slot, ItemStack stack)
+    private boolean isValidItem(int slot, ItemResource resource)
     {
         if (slot == FramingSawMenu.SLOT_INPUT)
         {
-            return cache.getMaterialValue(stack.getItem()) > 0;
+            return cache.getMaterialValue(resource.getItem()) > 0;
         }
         else if (slot < FramingSawMenu.SLOT_RESULT)
         {
@@ -222,7 +232,7 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
                 List<FramingSawRecipeAdditive> additives = selectedRecipe.value().getAdditives();
                 if (!additives.isEmpty() && idx < additives.size())
                 {
-                    return additives.get(idx).ingredient().test(stack);
+                    return additives.get(idx).ingredient().test(resource.toStack());
                 }
                 return false;
             }
@@ -264,24 +274,24 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
         return progress;
     }
 
-    public RecipeInputItemStackHandler getItemHandler()
+    public RecipeInputItemResourceHandler getItemHandler()
     {
         return itemHandler;
     }
 
-    public IItemHandler getExternalItemHandler()
+    public ResourceHandler<ItemResource> getExternalItemHandler()
     {
         return externalItemHandler;
     }
 
-    public IEnergyStorage getEnergyStorage()
+    public EnergyHandler getEnergyStorage()
     {
         return energyStorage;
     }
 
     public int getEnergy()
     {
-        return energyStorage.getEnergyStored();
+        return energyStorage.getAmountAsInt();
     }
 
     public int getEnergyCapacity()
@@ -298,7 +308,7 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
     {
         for (int i = 0; i < FramingSawMenu.SLOT_RESULT; i++)
         {
-            if (!itemHandler.getStackInSlot(i).isEmpty())
+            if (!itemHandler.getResource(i).isEmpty())
             {
                 return false;
             }
@@ -329,7 +339,7 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
         if (level != null)
         {
             inhibitUpdate = true;
-            Utils.dropItemHandlerContents(level, pos, itemHandler);
+            Utils.dropItemResourceHandlerContents(level, pos, itemHandler);
             inhibitUpdate = false;
         }
     }

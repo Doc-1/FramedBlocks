@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.client.render.block.state.FramedTankRenderState;
 import io.github.xfacthd.framedblocks.common.blockentity.special.FramedTankBlockEntity;
-import io.github.xfacthd.framedblocks.common.capability.fluid.TankFluidHandler;
+import io.github.xfacthd.framedblocks.common.capability.fluid.TankFluidResourceHandler;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -91,7 +91,7 @@ public class FramedTankRenderer implements BlockEntityRenderer<FramedTankBlockEn
             int tint
     )
     {
-        float height = Mth.clamp(fluidAmount / (float) TankFluidHandler.CAPACITY, OFFSET, 1F - OFFSET);
+        float height = Mth.clamp(fluidAmount / (float) TankFluidResourceHandler.CAPACITY, OFFSET, 1F - OFFSET);
         boolean sameTex = stillTex.equals(flowTex);
 
         RenderType bufferType = RenderTypeHelper.getEntityRenderType(chunkLayer);

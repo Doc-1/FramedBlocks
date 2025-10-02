@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 
 public final class ModelBenchmarkCube
 {
@@ -47,7 +48,7 @@ public final class ModelBenchmarkCube
         SectionPos chunk = SectionPos.of(player.position().add(horViewDir.getUnitVec3().multiply(16, 0, 16)));
         BlockState state = FBContent.BLOCK_FRAMED_SLAB.value().defaultBlockState();
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-        CamoContainer<?, ?> camo = FBContent.FACTORY_BLOCK.value().applyCamo(level, BlockPos.ZERO, player, new ItemStack(Blocks.STONE));
+        CamoContainer<?, ?> camo = FBContent.FACTORY_BLOCK.value().applyCamo(level, BlockPos.ZERO, player, ItemAccess.forStack(new ItemStack(Blocks.STONE)));
         if (camo == null)
         {
             ctx.getSource().sendFailure(MSG_CAMO_FAILED);

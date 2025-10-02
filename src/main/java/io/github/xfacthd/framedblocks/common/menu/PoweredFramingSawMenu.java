@@ -3,7 +3,7 @@ package io.github.xfacthd.framedblocks.common.menu;
 import com.google.common.base.Preconditions;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.blockentity.special.PoweredFramingSawBlockEntity;
-import io.github.xfacthd.framedblocks.common.capability.item.RecipeInputItemStackHandler;
+import io.github.xfacthd.framedblocks.common.capability.item.RecipeInputItemResourceHandler;
 import io.github.xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 import io.github.xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
 import io.github.xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeMatchResult;
@@ -20,8 +20,10 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.IndexModifier;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -30,7 +32,7 @@ import java.util.Objects;
 public class PoweredFramingSawMenu extends AbstractContainerMenu implements IFramingSawMenu
 {
     private final PoweredFramingSawBlockEntity blockEntity;
-    private final RecipeInputItemStackHandler itemHandler;
+    private final RecipeInputItemResourceHandler itemHandler;
     private final DataSlot progressSlot;
     private final DataSlot recipeIdxSlot;
     private final DataSlot recipeStatusSlot;
@@ -71,13 +73,14 @@ public class PoweredFramingSawMenu extends AbstractContainerMenu implements IFra
                 case FramingSawMenu.SLOT_RESULT -> 148;
                 default -> 38 + i * 18;
             };
+            IndexModifier<ItemResource> indexModifier = this.itemHandler::set;
             if (i >= FramingSawMenu.SLOT_ADDITIVE_FIRST && i < FramingSawMenu.SLOT_RESULT)
             {
-                addSlot(new AdditiveSlot(itemHandler, i, x, 46));
+                addSlot(new AdditiveSlot(itemHandler, indexModifier, i, x, 46));
             }
             else
             {
-                addSlot(new SlotItemHandler(itemHandler, i, x, 46));
+                addSlot(new ResourceHandlerSlot(itemHandler, indexModifier, i, x, 46));
             }
         }
         FramedUtils.addPlayerInvSlots(this::addSlot, inv, 8, 100);
@@ -90,11 +93,11 @@ public class PoweredFramingSawMenu extends AbstractContainerMenu implements IFra
         }
     }
 
-    private static RecipeInputItemStackHandler makeItemHandler(RecipeInputItemStackHandler handler, Level level)
+    private static RecipeInputItemResourceHandler makeItemHandler(RecipeInputItemResourceHandler handler, Level level)
     {
         if (level.isClientSide())
         {
-            handler = new RecipeInputItemStackHandler(handler.getSlots());
+            handler = new RecipeInputItemResourceHandler(handler.size());
         }
         return handler;
     }
@@ -265,15 +268,13 @@ public class PoweredFramingSawMenu extends AbstractContainerMenu implements IFra
         return blockEntity.isUsableByPlayer(player);
     }
 
-
-
-    private static final class AdditiveSlot extends SlotItemHandler
+    private static final class AdditiveSlot extends ResourceHandlerSlot
     {
         private boolean active = true;
 
-        public AdditiveSlot(IItemHandler handler, int idx, int x, int y)
+        public AdditiveSlot(ResourceHandler<ItemResource> handler, IndexModifier<ItemResource> indexModifier, int idx, int x, int y)
         {
-            super(handler, idx, x, y);
+            super(handler, indexModifier, idx, x, y);
         }
 
         @Override

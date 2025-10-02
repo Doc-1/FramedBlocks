@@ -25,6 +25,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -98,10 +99,10 @@ public final class CamoContainerHelper
      * @return true if the camo was successfully given to the player and can be removed
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static boolean removeCamo(CamoContainer<?, ?> camo, Level level, BlockPos pos, Player player, ItemStack stack)
+    public static boolean removeCamo(CamoContainer<?, ?> camo, Level level, BlockPos pos, Player player, ItemAccess itemAccess)
     {
         CamoContainerFactory factory = camo.getFactory();
-        return factory.removeCamo(level, pos, player, stack, camo);
+        return factory.removeCamo(level, pos, player, itemAccess, camo);
     }
 
     /**

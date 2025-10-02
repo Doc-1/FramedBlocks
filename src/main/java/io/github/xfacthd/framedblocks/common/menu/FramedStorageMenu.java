@@ -2,7 +2,7 @@ package io.github.xfacthd.framedblocks.common.menu;
 
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.blockentity.special.FramedStorageBlockEntity;
-import io.github.xfacthd.framedblocks.common.capability.item.IStorageBlockItemHandler;
+import io.github.xfacthd.framedblocks.common.capability.item.IStorageBlockItemResourceHandler;
 import io.github.xfacthd.framedblocks.common.util.FramedUtils;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -10,19 +10,21 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.IndexModifier;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 public class FramedStorageMenu extends AbstractContainerMenu
 {
-    private final IStorageBlockItemHandler itemHandler;
+    private final IStorageBlockItemResourceHandler itemHandler;
     private final int maxSlotChest;
 
-    public static FramedStorageMenu createSingle(int windowId, Inventory inv, IStorageBlockItemHandler itemHandler)
+    public static FramedStorageMenu createSingle(int windowId, Inventory inv, IStorageBlockItemResourceHandler itemHandler)
     {
         return new FramedStorageMenu(FBContent.MENU_TYPE_FRAMED_STORAGE.value(), windowId, inv, itemHandler);
     }
 
-    public static FramedStorageMenu createDouble(int windowId, Inventory inv, IStorageBlockItemHandler itemHandler)
+    public static FramedStorageMenu createDouble(int windowId, Inventory inv, IStorageBlockItemResourceHandler itemHandler)
     {
         return new FramedStorageMenu(FBContent.MENU_TYPE_FRAMED_DOUBLE_CHEST.value(), windowId, inv, itemHandler);
     }
@@ -37,19 +39,20 @@ public class FramedStorageMenu extends AbstractContainerMenu
         return createDouble(windowId, inv, FramedStorageBlockEntity.createItemHandler(null, true));
     }
 
-    private FramedStorageMenu(MenuType<?> type, int windowId, Inventory inv, IStorageBlockItemHandler itemHandler)
+    private FramedStorageMenu(MenuType<?> type, int windowId, Inventory inv, IStorageBlockItemResourceHandler itemHandler)
     {
         super(type, windowId);
         this.itemHandler = itemHandler;
-        this.maxSlotChest = itemHandler.getSlots();
+        this.maxSlotChest = itemHandler.size();
 
         int rows = getRowCount();
         int y = 18;
+        IndexModifier<ItemResource> indexModifier = itemHandler.getIndexModifier();
         for (int row = 0; row < rows; ++row)
         {
             for (int col = 0; col < 9; ++col)
             {
-                addSlot(new SlotItemHandler(itemHandler, col + row * 9, 8 + col * 18, y));
+                addSlot(new ResourceHandlerSlot(itemHandler, indexModifier, col + row * 9, 8 + col * 18, y));
             }
             y += 18;
         }
@@ -58,7 +61,7 @@ public class FramedStorageMenu extends AbstractContainerMenu
 
     public int getRowCount()
     {
-        return itemHandler.getSlots() / 9;
+        return itemHandler.size() / 9;
     }
 
     @Override

@@ -20,10 +20,11 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
 public final class FluidCamoContainerFactory extends CamoContainerFactory<FluidCamoContainer>
@@ -49,97 +50,89 @@ public final class FluidCamoContainerFactory extends CamoContainerFactory<FluidC
 
     @Override
     @Nullable
-    public FluidCamoContainer applyCamo(Level level, BlockPos pos, Player player, ItemStack stack)
+    public FluidCamoContainer applyCamo(Level level, BlockPos pos, Player player, ItemAccess itemAccess)
     {
-        IFluidHandlerItem handler = stack.getCapability(Capabilities.FluidHandler.ITEM);
-        if (handler == null || handler.getTanks() <= 0)
+        ResourceHandler<FluidResource> handler = itemAccess.getCapability(Capabilities.Fluid.ITEM);
+        if (handler == null || handler.size() <= 0)
         {
             return null;
         }
 
-        for (int tank = 0; tank < handler.getTanks(); tank++)
+        for (int tank = 0; tank < handler.size(); tank++)
         {
-            FluidStack fluid = handler.getFluidInTank(tank);
-            if (!isValidFluid(fluid.getFluid(), player) || !fluid.isComponentsPatchEmpty())
+            FluidResource resource = handler.getResource(tank);
+            if (!isValidFluid(resource.getFluid(), player) || !resource.isComponentsPatchEmpty())
             {
                 continue;
             }
 
             if (!player.isCreative() && ServerConfig.VIEW.shouldConsumeCamoItem())
             {
-                fluid = fluid.copyWithAmount(FluidType.BUCKET_VOLUME);
-                if (handler.drain(fluid, IFluidHandler.FluidAction.SIMULATE).getAmount() != fluid.getAmount())
+                try (Transaction tx = Transaction.open(null))
                 {
-                    continue;
-                }
-
-                if (!level.isClientSide())
-                {
-                    handler.drain(fluid, IFluidHandler.FluidAction.EXECUTE);
-                    ItemStack result = handler.getContainer();
-                    if (result != stack) // Container holds fluid by type (i.e. bucket) -> got a new stack
+                    if (handler.extract(tank, resource, FluidType.BUCKET_VOLUME, tx) != FluidType.BUCKET_VOLUME)
                     {
-                        stack.shrink(1);
-                        Utils.giveToPlayer(player, result, true);
+                        continue;
+                    }
+                    if (!level.isClientSide())
+                    {
+                        tx.commit();
                     }
                 }
             }
 
-            return new FluidCamoContainer(fluid.getFluid());
+            return new FluidCamoContainer(resource.getFluid());
         }
         return null;
     }
 
     @Override
-    public boolean removeCamo(Level level, BlockPos pos, Player player, ItemStack stack, FluidCamoContainer container)
+    public boolean removeCamo(Level level, BlockPos pos, Player player, ItemAccess itemAccess, FluidCamoContainer container)
     {
-        if (stack.isEmpty())
+        if (itemAccess.getResource().isEmpty())
         {
             return false;
         }
 
-        IFluidHandlerItem handler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        ResourceHandler<FluidResource> handler = itemAccess.getCapability(Capabilities.Fluid.ITEM);
         if (handler == null)
         {
             return false;
         }
 
-        FluidStack fluid = new FluidStack(container.getFluid(), FluidType.BUCKET_VOLUME);
+        FluidResource fluid = FluidResource.of(container.getFluid());
         if (!isValidForHandler(handler, fluid))
         {
             return false;
         }
         if (!player.isCreative() && ServerConfig.VIEW.shouldConsumeCamoItem())
         {
-            if (handler.fill(fluid, IFluidHandler.FluidAction.SIMULATE) != FluidType.BUCKET_VOLUME)
+            try (Transaction tx = Transaction.open(null))
             {
-                return false;
-            }
-            if (!level.isClientSide())
-            {
-                handler.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
-                ItemStack result = handler.getContainer();
-                if (result != stack) // Container holds fluid by type (i.e. bucket) -> got a new stack
+                if (handler.insert(fluid, FluidType.BUCKET_VOLUME, tx) != FluidType.BUCKET_VOLUME)
                 {
-                    stack.shrink(1);
-                    Utils.giveToPlayer(player, result, true);
+                    return false;
+                }
+                if (!level.isClientSide())
+                {
+                    tx.commit();
                 }
             }
         }
         return true;
     }
 
-    private static boolean isValidForHandler(IFluidHandlerItem handler, FluidStack fluid)
+    private static boolean isValidForHandler(ResourceHandler<FluidResource> handler, FluidResource fluid)
     {
-        for (int tank = 0; tank < handler.getTanks(); tank++)
+        for (int tank = 0; tank < handler.size(); tank++)
         {
-            if (!handler.isFluidValid(tank, fluid))
+            if (!handler.isValid(tank, fluid))
             {
                 continue;
             }
 
-            FluidStack inTank = handler.getFluidInTank(tank);
-            if (inTank.isEmpty() || FluidStack.isSameFluidSameComponents(inTank, fluid))
+            FluidResource inTank = handler.getResource(tank);
+            if (inTank.isEmpty() || inTank.equals(fluid))
             {
                 return true;
             }

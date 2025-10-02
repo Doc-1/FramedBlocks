@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,15 +42,15 @@ public abstract class CamoContainerFactory<T extends CamoContainer<?, T>>
     protected abstract T readFromNetwork(ValueInput valueInput);
 
     /**
-     * Construct a {@link CamoContainer} from the given {@link ItemStack} and consume the resources. Must take
-     * {@link ConfigView.Server#shouldConsumeCamoItem()} into account.
+     * Construct a {@link CamoContainer} from the stack accessible via the given {@link ItemAccess} and consume the
+     * resources. Must take {@link ConfigView.Server#shouldConsumeCamoItem()} into account.
      * <p>
      * Called on server and client side
      *
      * @return A new {@code CamoContainer} if successful, otherwise null
      */
     @Nullable
-    public abstract T applyCamo(Level level, BlockPos pos, Player player, ItemStack stack);
+    public abstract T applyCamo(Level level, BlockPos pos, Player player, ItemAccess itemAccess);
 
     /**
      * Remove the camo and refund the resources to the player. Must take
@@ -59,7 +60,7 @@ public abstract class CamoContainerFactory<T extends CamoContainer<?, T>>
      *
      * @return true if the camo was successfully given to the player and can be removed
      */
-    public abstract boolean removeCamo(Level level, BlockPos pos, Player player, ItemStack stack, T container);
+    public abstract boolean removeCamo(Level level, BlockPos pos, Player player, ItemAccess itemAccess, T container);
 
     /**
      * {@return whether this camo can be converted to an {@link ItemStack} without consuming another item}
@@ -128,6 +129,8 @@ public abstract class CamoContainerFactory<T extends CamoContainer<?, T>>
      * @param stack The {@link ItemStack} to apply the camo from
      * @return The camo container to apply to the resulting stack
      * @implNote This method must not mutate the given stack
+     *
+     * TODO: replace ItemStack with ItemAccess
      */
     public T applyCamoInCraftingRecipe(ItemStack stack)
     {

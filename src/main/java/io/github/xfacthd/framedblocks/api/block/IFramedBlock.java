@@ -132,6 +132,7 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
         if (placer instanceof Player player && player.getMainHandItem() == stack)
         {
             ItemStack offhandStack = player.getOffhandItem();
+            // TODO: consider expanding this to any supported camo applicator
             if (offhandStack.getItem() instanceof BlockItem item)
             {
                 if (item.getBlock() instanceof IFramedBlock)
@@ -139,6 +140,7 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
                     return;
                 }
             }
+            // TODO: add support for phantom paste, glow paste and reinforcements
             else if (!offhandStack.is(Tags.Items.DUSTS_GLOWSTONE))
             {
                 return;

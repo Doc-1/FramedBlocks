@@ -38,10 +38,10 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -460,23 +460,24 @@ public final class Utils
         }
     }
 
-    public static void dropItemHandlerContents(Level level, BlockPos pos, IItemHandler itemHandler)
+    public static void dropItemResourceHandlerContents(Level level, BlockPos pos, ItemStacksResourceHandler itemHandler)
     {
-        for (int i = 0; i < itemHandler.getSlots(); i++)
+        for (int i = 0; i < itemHandler.size(); i++)
         {
-            ItemStack stack = itemHandler.getStackInSlot(i);
-            if (!stack.isEmpty())
+            int count = itemHandler.getAmountAsInt(i);
+            if (count > 0)
             {
-                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), stack);
+                ItemResource resource = itemHandler.getResource(i);
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), resource.toStack(count));
             }
         }
     }
 
-    public static void clearItemHandler(IItemHandlerModifiable itemHandler)
+    public static void clearItemResourceHandler(ItemStacksResourceHandler itemHandler)
     {
-        for (int i = 0; i < itemHandler.getSlots(); i++)
+        for (int i = 0; i < itemHandler.size(); i++)
         {
-            itemHandler.setStackInSlot(i, ItemStack.EMPTY);
+            itemHandler.set(i, ItemResource.EMPTY, 0);
         }
     }
 

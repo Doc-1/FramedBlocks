@@ -3,25 +3,24 @@ package io.github.xfacthd.framedblocks.common.blockentity.special;
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.FBContent;
-import io.github.xfacthd.framedblocks.common.capability.item.IStorageBlockItemHandler;
-import io.github.xfacthd.framedblocks.common.capability.item.StorageBlockItemStackHandler;
+import io.github.xfacthd.framedblocks.common.capability.item.IStorageBlockItemResourceHandler;
+import io.github.xfacthd.framedblocks.common.capability.item.StorageBlockItemResourceHandler;
 import io.github.xfacthd.framedblocks.common.menu.FramedStorageMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.Clearable;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import org.jetbrains.annotations.Nullable;
 
 public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuProvider, Nameable, Clearable
@@ -30,7 +29,7 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
     public static final int SLOTS = 9 * 3;
     public static final String INVENTORY_NBT_KEY = "inventory";
 
-    private final StorageBlockItemStackHandler itemHandler = createItemHandler(this, false);
+    private final StorageBlockItemResourceHandler itemHandler = createItemHandler(this, false);
     @Nullable
     private Component customName = null;
 
@@ -61,7 +60,7 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
     @Override
     public void clearContent()
     {
-        Utils.clearItemHandler(itemHandler);
+        Utils.clearItemResourceHandler(itemHandler);
     }
 
     @Override
@@ -70,38 +69,17 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
         super.preRemoveSideEffects(pos, state);
         if (level != null)
         {
-            Utils.dropItemHandlerContents(level, pos, itemHandler);
+            Utils.dropItemResourceHandlerContents(level, pos, itemHandler);
             clearContent();
         }
     }
 
     public int getAnalogOutputSignal()
     {
-        return getAnalogOutputSignal(itemHandler);
+        return ResourceHandlerUtil.getRedstoneSignalFromResourceHandler(itemHandler);
     }
 
-    protected static int getAnalogOutputSignal(IStorageBlockItemHandler itemHandler)
-    {
-        int stacks = 0;
-        float fullness = 0;
-
-        for(int i = 0; i < itemHandler.getSlots(); ++i)
-        {
-            ItemStack stack = itemHandler.getStackInSlot(i);
-            if (!stack.isEmpty())
-            {
-                float sizeLimit = Math.min(itemHandler.getSlotLimit(i), stack.getMaxStackSize());
-                fullness += (float)stack.getCount() / sizeLimit;
-
-                stacks++;
-            }
-        }
-
-        fullness /= (float)itemHandler.getSlots();
-        return Mth.floor(fullness * 14F) + (stacks > 0 ? 1 : 0);
-    }
-
-    public IStorageBlockItemHandler getItemHandler()
+    public IStorageBlockItemResourceHandler getItemHandler()
     {
         return itemHandler;
     }
@@ -159,10 +137,8 @@ public class FramedStorageBlockEntity extends FramedBlockEntity implements MenuP
         return FramedStorageMenu.createSingle(windowId, inv, itemHandler);
     }
 
-
-
-    public static StorageBlockItemStackHandler createItemHandler(@Nullable FramedStorageBlockEntity be, boolean doubleChest)
+    public static StorageBlockItemResourceHandler createItemHandler(@Nullable FramedStorageBlockEntity be, boolean doubleChest)
     {
-        return new StorageBlockItemStackHandler(be, SLOTS * (doubleChest ? 2 : 1));
+        return new StorageBlockItemResourceHandler(be, SLOTS * (doubleChest ? 2 : 1));
     }
 }

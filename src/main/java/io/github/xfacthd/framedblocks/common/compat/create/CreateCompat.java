@@ -17,7 +17,7 @@ import io.github.xfacthd.framedblocks.api.util.registration.DeferredBlockEntity;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.blockentity.special.FramedHopperBlockEntity;
 import io.github.xfacthd.framedblocks.common.blockentity.special.FramedStorageBlockEntity;
-import io.github.xfacthd.framedblocks.common.capability.fluid.TankFluidHandler;
+import io.github.xfacthd.framedblocks.common.capability.fluid.TankFluidResourceHandler;
 import io.github.xfacthd.framedblocks.common.compat.create.schematic.nbt.FramedChiseledBookshelfSafeNbtWriter;
 import io.github.xfacthd.framedblocks.common.compat.create.schematic.nbt.FramedItemFrameSafeNbtWriter;
 import io.github.xfacthd.framedblocks.common.compat.create.schematic.requirements.FramedDoorBlockItemRequirement;
@@ -59,7 +59,7 @@ public final class CreateCompat
         private static final Map<Holder<BlockEntityType<?>>, SafeNbtWriterRegistry.SafeNbtWriter> SPECIAL_NBT_BLOCK_ENTITIES = Map.of(
                 FBContent.BE_TYPE_FRAMED_CHEST, new FramedBlockSafeNbtWriter(FramedStorageBlockEntity.INVENTORY_NBT_KEY),
                 FBContent.BE_TYPE_FRAMED_SECRET_STORAGE, new FramedBlockSafeNbtWriter(FramedStorageBlockEntity.INVENTORY_NBT_KEY),
-                FBContent.BE_TYPE_FRAMED_TANK, new FramedBlockSafeNbtWriter(TankFluidHandler.FLUID_NBT_KEY),
+                FBContent.BE_TYPE_FRAMED_TANK, new FramedBlockSafeNbtWriter(TankFluidResourceHandler.FLUID_NBT_KEY),
                 FBContent.BE_TYPE_FRAMED_ITEM_FRAME, new FramedItemFrameSafeNbtWriter(),
                 FBContent.BE_TYPE_FRAMED_CHISELED_BOOKSHELF, new FramedChiseledBookshelfSafeNbtWriter(),
                 FBContent.BE_TYPE_FRAMED_HOPPER, new FramedBlockSafeNbtWriter(ContainerHelper.TAG_ITEMS, FramedHopperBlockEntity.COOLDOWN_NBT_KEY)

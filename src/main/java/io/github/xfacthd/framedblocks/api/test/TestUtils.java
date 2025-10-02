@@ -38,6 +38,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.client.extensions.common.IClientBlockExtensions;
 import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.slf4j.Logger;
 
 import java.util.List;
@@ -76,7 +77,7 @@ public final class TestUtils
             }
 
             Player player = helper.makeMockPlayer(GameType.SURVIVAL);
-            camoContainer = camoFactory.applyCamo(helper.getLevel(), helper.absolutePos(pos), player, stack);
+            camoContainer = camoFactory.applyCamo(helper.getLevel(), helper.absolutePos(pos), player, ItemAccess.forStack(stack));
             if (camoContainer == null)
             {
                 helper.fail(Component.literal(String.format("No camo container produced for %s", camo)));

@@ -25,11 +25,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.items.ContainerOrHandler;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
-import net.neoforged.neoforge.items.VanillaHopperItemHandler;
-import net.neoforged.neoforge.items.wrapper.InvWrapper;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.item.ContainerOrHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import java.util.function.BooleanSupplier;
 
@@ -42,6 +44,19 @@ public class FramedHopperBlockEntity extends FramedBlockEntity implements Hopper
     private int cooldownTime = -1;
     private long tickedGameTime;
     private Direction facing;
+    private final SnapshotJournal<Integer> cooldownTimeJournal = new SnapshotJournal<>()
+    {
+        @Override
+        protected Integer createSnapshot() {
+            return cooldownTime;
+        }
+
+        @Override
+        @SuppressWarnings("NullableProblems")
+        protected void revertToSnapshot(Integer snapshot) {
+            cooldownTime = snapshot;
+        }
+    };
 
     public FramedHopperBlockEntity(BlockPos pos, BlockState state)
     {
@@ -58,6 +73,33 @@ public class FramedHopperBlockEntity extends FramedBlockEntity implements Hopper
             hopper.setCooldown(0);
             hopper.tryMoveItems(() -> HopperBlockEntity.suckInItems(level, hopper));
         }
+    }
+
+    @Override
+    public void onTransfer(int slot, int amountChange, TransactionContext transaction)
+    {
+        if (amountChange > 0 && !isOnCustomCooldown() && wasEmpty(slot, amountChange))
+        {
+            cooldownTimeJournal.updateSnapshots(transaction);
+            setCooldown(HopperBlockEntity.MOVE_ITEM_SPEED);
+        }
+    }
+
+    private boolean wasEmpty(int slot, int amountChange)
+    {
+        if (items.get(slot).getCount() != amountChange)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < items.size(); ++i)
+        {
+            if (i != slot && !items.get(i).isEmpty())
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void tryMoveItems(BooleanSupplier validator)
@@ -92,10 +134,21 @@ public class FramedHopperBlockEntity extends FramedBlockEntity implements Hopper
             return ejectItemsInto(container, side, HopperBlockEntity::addItem);
         }
 
-        IItemHandler itemHandler = containerOrHandler.itemHandler();
-        if (itemHandler != null && !isFull(itemHandler))
+        ResourceHandler<ItemResource> itemHandler = containerOrHandler.itemHandler();
+        if (itemHandler != null && !ResourceHandlerUtil.isFull(itemHandler))
         {
-            return ejectItemsInto(itemHandler, side, (src, dest, stack, destSide) -> ItemHandlerHelper.insertItem(dest, stack, false));
+            return ejectItemsInto(itemHandler, side, (src, dest, stack, destSide) ->
+            {
+                try (Transaction tx = Transaction.open(null))
+                {
+                    if (dest.insert(ItemResource.of(stack), 1, tx) == 1)
+                    {
+                        tx.commit();
+                        return ItemStack.EMPTY;
+                    }
+                    return stack;
+                }
+            });
         }
 
         return false;
@@ -123,19 +176,6 @@ public class FramedHopperBlockEntity extends FramedBlockEntity implements Hopper
             }
         }
         return false;
-    }
-
-    private static boolean isFull(IItemHandler itemHandler)
-    {
-        for (int slot = 0; slot < itemHandler.getSlots(); slot++)
-        {
-            ItemStack stack = itemHandler.getStackInSlot(slot);
-            if (stack.isEmpty() || stack.getCount() < itemHandler.getSlotLimit(slot))
-            {
-                return false;
-            }
-        }
-        return true;
     }
 
     public void setCooldown(int cooldownTime)
@@ -295,35 +335,6 @@ public class FramedHopperBlockEntity extends FramedBlockEntity implements Hopper
     public Component getDisplayName()
     {
         return TITLE;
-    }
-
-
-
-    public final class ItemHandler extends InvWrapper
-    {
-        public ItemHandler()
-        {
-            super(FramedHopperBlockEntity.this);
-        }
-
-        /** @see VanillaHopperItemHandler */
-        @Override
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
-        {
-            if (simulate)
-            {
-                return super.insertItem(slot, stack, true);
-            }
-
-            boolean wasEmpty = getInv().isEmpty();
-            int originalStackSize = stack.getCount();
-            stack = super.insertItem(slot, stack, false);
-            if (wasEmpty && originalStackSize > stack.getCount() && !isOnCustomCooldown())
-            {
-                setCooldown(HopperBlockEntity.MOVE_ITEM_SPEED);
-            }
-            return stack;
-        }
     }
 
     @FunctionalInterface

@@ -3,7 +3,6 @@ package io.github.xfacthd.framedblocks.api.camo.block;
 import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainerFactory;
 import io.github.xfacthd.framedblocks.api.util.ConfigView;
-import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -12,6 +11,9 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,29 +21,43 @@ public abstract class AbstractBlockCamoContainerFactory<T extends AbstractBlockC
 {
     @Override
     @Nullable
-    public final T applyCamo(Level level, BlockPos pos, Player player, ItemStack stack)
+    public final T applyCamo(Level level, BlockPos pos, Player player, ItemAccess itemAccess)
     {
-        BlockState state = getStateFromItemStack(level, pos, player, stack);
+        BlockState state = getStateFromItemStack(level, pos, player, itemAccess);
         if (state != null && !(state.getBlock() instanceof IFramedBlock) && isValidBlock(state, level, pos, player))
         {
-            T container = createContainer(state, level, pos, player, stack);
-            if (!level.isClientSide() && !player.isCreative() && ConfigView.Server.INSTANCE.shouldConsumeCamoItem())
+            try (Transaction tx = Transaction.open(null))
             {
-                stack.shrink(1);
-                player.getInventory().setChanged();
+                T container = createContainer(state, level, pos, player, itemAccess);
+                if (!level.isClientSide() && !player.isCreative() && ConfigView.Server.INSTANCE.shouldConsumeCamoItem())
+                {
+                    if (itemAccess.extract(itemAccess.getResource(), 1, tx) != 1)
+                    {
+                        return null;
+                    }
+                    tx.commit();
+                    player.getInventory().setChanged();
+                }
+                return container;
             }
-            return container;
         }
         return null;
     }
 
     @Override
-    public final boolean removeCamo(Level level, BlockPos pos, Player player, ItemStack stack, T container)
+    public final boolean removeCamo(Level level, BlockPos pos, Player player, ItemAccess itemAccess, T container)
     {
-        if (!level.isClientSide())
+        if (!level.isClientSide() && (player.isCreative() || ConfigView.Server.INSTANCE.shouldConsumeCamoItem()))
         {
-            ItemStack result = createItemStack(level, pos, player, stack, container);
-            Utils.giveToPlayer(player, result, ConfigView.Server.INSTANCE.shouldConsumeCamoItem());
+            ItemStack result = createItemStack(level, pos, player, itemAccess, container);
+            try (Transaction tx = Transaction.open(null))
+            {
+                if (itemAccess.insert(ItemResource.of(result), result.getCount(), tx) != result.getCount())
+                {
+                    return false;
+                }
+                tx.commit();
+            }
         }
         return true;
     }
@@ -54,12 +70,12 @@ public abstract class AbstractBlockCamoContainerFactory<T extends AbstractBlockC
     }
 
     /**
-     * {@return the {@linkplain BlockState camo state} resulting from the given {@link ItemStack} and context}
+     * {@return the {@linkplain BlockState camo state} resulting from the stack in the given {@link ItemAccess} and context}
      */
     @Nullable
-    protected BlockState getStateFromItemStack(Level level, BlockPos pos, Player player, ItemStack stack)
+    protected BlockState getStateFromItemStack(Level level, BlockPos pos, Player player, ItemAccess itemAccess)
     {
-        if (stack.getItem() instanceof BlockItem item)
+        if (itemAccess.getResource().getItem() instanceof BlockItem item)
         {
             return item.getBlock().defaultBlockState();
         }
@@ -69,7 +85,7 @@ public abstract class AbstractBlockCamoContainerFactory<T extends AbstractBlockC
     /**
      * {@return a new camo container from the given {@linkplain BlockState camo state} and context}
      */
-    protected abstract T createContainer(BlockState camoState, Level level, BlockPos pos, Player player, ItemStack stack);
+    protected abstract T createContainer(BlockState camoState, Level level, BlockPos pos, Player player, ItemAccess itemAccess);
 
     /**
      * {@return a copy of the given camo container with the given new {@linkplain BlockState camo state}}
@@ -79,7 +95,7 @@ public abstract class AbstractBlockCamoContainerFactory<T extends AbstractBlockC
     /**
      * {@return a new {@link ItemStack} to be given to the player when removing the camo with the given stack in hand}
      */
-    protected abstract ItemStack createItemStack(Level level, BlockPos pos, Player player, ItemStack stack, T container);
+    protected abstract ItemStack createItemStack(Level level, BlockPos pos, Player player, ItemAccess itemAccess, T container);
 
     /**
      * Validate that the given {@linkplain BlockState camo state} is a valid camo

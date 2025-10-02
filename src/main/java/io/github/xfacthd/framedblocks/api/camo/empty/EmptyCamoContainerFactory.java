@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 
 public final class EmptyCamoContainerFactory extends CamoContainerFactory<EmptyCamoContainer>
 {
@@ -28,13 +29,13 @@ public final class EmptyCamoContainerFactory extends CamoContainerFactory<EmptyC
     }
 
     @Override
-    public EmptyCamoContainer applyCamo(Level level, BlockPos pos, Player player, ItemStack stack)
+    public EmptyCamoContainer applyCamo(Level level, BlockPos pos, Player player, ItemAccess itemAccess)
     {
         throw new UnsupportedOperationException("Empty camo container cannot be created from an ItemStack");
     }
 
     @Override
-    public boolean removeCamo(Level level, BlockPos pos, Player player, ItemStack stack, EmptyCamoContainer container)
+    public boolean removeCamo(Level level, BlockPos pos, Player player, ItemAccess itemAccess, EmptyCamoContainer container)
     {
         throw new UnsupportedOperationException("Empty camo container cannot be removed");
     }

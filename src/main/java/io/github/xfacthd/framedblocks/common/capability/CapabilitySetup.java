@@ -1,60 +1,66 @@
 package io.github.xfacthd.framedblocks.common.capability;
 
 import io.github.xfacthd.framedblocks.common.FBContent;
-import io.github.xfacthd.framedblocks.common.capability.fluid.TankFluidHandler;
+import io.github.xfacthd.framedblocks.common.capability.fluid.TankFluidResourceHandler;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.ItemAccessFluidHandler;
+import net.neoforged.neoforge.transfer.item.VanillaContainerWrapper;
 
 public final class CapabilitySetup
 {
     public static void onRegisterCapabilities(RegisterCapabilitiesEvent event)
     {
         event.registerBlockEntity(
-                Capabilities.ItemHandler.BLOCK,
+                Capabilities.Item.BLOCK,
                 FBContent.BE_TYPE_FRAMED_SECRET_STORAGE.value(),
                 (be, side) -> be.getItemHandler()
         );
 
         event.registerBlockEntity(
-                Capabilities.ItemHandler.BLOCK,
+                Capabilities.Item.BLOCK,
                 FBContent.BE_TYPE_FRAMED_CHEST.value(),
                 (be, side) -> be.getChestItemHandler(true)
         );
 
         event.registerBlockEntity(
-                Capabilities.ItemHandler.BLOCK,
+                Capabilities.Item.BLOCK,
                 FBContent.BE_TYPE_POWERED_FRAMING_SAW.value(),
                 (be, side) -> side != Direction.UP ? be.getExternalItemHandler() : null
         );
         event.registerBlockEntity(
-                Capabilities.EnergyStorage.BLOCK,
+                Capabilities.Energy.BLOCK,
                 FBContent.BE_TYPE_POWERED_FRAMING_SAW.value(),
                 (be, side) -> side != Direction.UP ? be.getEnergyStorage() : null
         );
 
         event.registerBlockEntity(
-                Capabilities.ItemHandler.BLOCK,
+                Capabilities.Item.BLOCK,
                 FBContent.BE_TYPE_FRAMED_CHISELED_BOOKSHELF.value(),
                 (be, side) -> be.getItemHandler()
         );
 
         event.registerBlockEntity(
-                Capabilities.FluidHandler.BLOCK,
+                Capabilities.Fluid.BLOCK,
                 FBContent.BE_TYPE_FRAMED_TANK.value(),
                 (be, side) -> be.getFluidHandler()
         );
 
         event.registerBlockEntity(
-                Capabilities.ItemHandler.BLOCK,
+                Capabilities.Item.BLOCK,
                 FBContent.BE_TYPE_FRAMED_HOPPER.value(),
-                (be, side) -> be.new ItemHandler()
+                (be, side) -> VanillaContainerWrapper.of(be)
         );
 
         event.registerItem(
-                Capabilities.FluidHandler.ITEM,
-                (stack, $) -> new FluidHandlerItemStack(FBContent.DC_TYPE_TANK_CONTENTS, stack, TankFluidHandler.CAPACITY),
+                Capabilities.Fluid.ITEM,
+                (stack, $) -> new ItemAccessFluidHandler(
+                        ItemAccess.forStack(stack),
+                        FBContent.DC_TYPE_TANK_CONTENTS.value(),
+                        TankFluidResourceHandler.CAPACITY
+                ),
                 FBContent.BLOCK_FRAMED_TANK.value()
         );
     }

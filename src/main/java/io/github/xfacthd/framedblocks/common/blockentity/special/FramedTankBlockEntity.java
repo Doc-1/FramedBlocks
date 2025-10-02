@@ -3,7 +3,7 @@ package io.github.xfacthd.framedblocks.common.blockentity.special;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import io.github.xfacthd.framedblocks.common.FBContent;
-import io.github.xfacthd.framedblocks.common.capability.fluid.TankFluidHandler;
+import io.github.xfacthd.framedblocks.common.capability.fluid.TankFluidResourceHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
@@ -15,13 +15,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 
 public class FramedTankBlockEntity extends FramedBlockEntity
 {
-    private final TankFluidHandler fluidHandler = new TankFluidHandler(this);
+    private final TankFluidResourceHandler fluidHandler = new TankFluidResourceHandler(this);
 
     public FramedTankBlockEntity(BlockPos pos, BlockState state)
     {
@@ -30,7 +32,7 @@ public class FramedTankBlockEntity extends FramedBlockEntity
 
     public InteractionResult handleTankInteraction(Player player, InteractionHand hand)
     {
-        if (FluidUtil.interactWithFluidHandler(player, hand, fluidHandler))
+        if (FluidUtil.interactWithFluidHandler(player, hand, worldPosition, fluidHandler))
         {
             return InteractionResult.SUCCESS;
         }
@@ -39,10 +41,10 @@ public class FramedTankBlockEntity extends FramedBlockEntity
 
     public FluidStack getContents()
     {
-        return fluidHandler.getFluid();
+        return fluidHandler.getResource(0).toStack(fluidHandler.getAmountAsInt(0));
     }
 
-    public IFluidHandler getFluidHandler()
+    public ResourceHandler<FluidResource> getFluidHandler()
     {
         return fluidHandler;
     }
@@ -60,7 +62,7 @@ public class FramedTankBlockEntity extends FramedBlockEntity
 
     public int getAnalogSignal()
     {
-        return fluidHandler.getFluid().getAmount() * 15 / TankFluidHandler.CAPACITY;
+        return ResourceHandlerUtil.getRedstoneSignalFromResourceHandler(fluidHandler);
     }
 
     @Override
@@ -95,26 +97,27 @@ public class FramedTankBlockEntity extends FramedBlockEntity
     public void removeComponentsFromTag(ValueOutput valueOutput)
     {
         super.removeComponentsFromTag(valueOutput);
-        valueOutput.discard(TankFluidHandler.FLUID_NBT_KEY);
+        valueOutput.discard(TankFluidResourceHandler.FLUID_NBT_KEY);
     }
 
     @Override
     protected void applyMiscComponents(DataComponentGetter input)
     {
-        FluidStack contents = input.getOrDefault(FBContent.DC_TYPE_TANK_CONTENTS, SimpleFluidContent.EMPTY).copy();
-        if (!contents.isEmpty())
+        SimpleFluidContent content = input.getOrDefault(FBContent.DC_TYPE_TANK_CONTENTS, SimpleFluidContent.EMPTY);
+        if (!content.isEmpty())
         {
-            fluidHandler.setFluid(contents);
+            fluidHandler.setContent(content);
         }
     }
 
     @Override
     protected void collectMiscComponents(DataComponentMap.Builder builder)
     {
-        FluidStack contents = fluidHandler.getFluid();
+        FluidResource contents = fluidHandler.getResource(0);
         if (!contents.isEmpty())
         {
-            builder.set(FBContent.DC_TYPE_TANK_CONTENTS, SimpleFluidContent.copyOf(contents));
+            int amount = fluidHandler.getAmountAsInt(0);
+            builder.set(FBContent.DC_TYPE_TANK_CONTENTS, SimpleFluidContent.copyOf(contents.toStack(amount)));
         }
     }
 

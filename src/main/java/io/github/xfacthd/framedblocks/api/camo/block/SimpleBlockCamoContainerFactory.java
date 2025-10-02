@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 
 /**
  * Basic block camo container factory for simple camos based on only a {@link BlockState} which only need minimal
@@ -76,7 +77,7 @@ public abstract class SimpleBlockCamoContainerFactory extends AbstractBlockCamoC
     }
 
     @Override
-    protected final SimpleBlockCamoContainer createContainer(BlockState camoState, Level level, BlockPos pos, Player player, ItemStack stack)
+    protected final SimpleBlockCamoContainer createContainer(BlockState camoState, Level level, BlockPos pos, Player player, ItemAccess itemAccess)
     {
         return new SimpleBlockCamoContainer(camoState, this);
     }
@@ -88,7 +89,7 @@ public abstract class SimpleBlockCamoContainerFactory extends AbstractBlockCamoC
     }
 
     @Override
-    protected final ItemStack createItemStack(Level level, BlockPos pos, Player player, ItemStack stack, SimpleBlockCamoContainer container)
+    protected final ItemStack createItemStack(Level level, BlockPos pos, Player player, ItemAccess itemAccess, SimpleBlockCamoContainer container)
     {
         return dropCamo(container);
     }

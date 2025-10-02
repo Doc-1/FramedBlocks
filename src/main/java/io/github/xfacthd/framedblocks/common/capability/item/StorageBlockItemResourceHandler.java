@@ -6,24 +6,24 @@ import io.github.xfacthd.framedblocks.common.menu.FramedStorageMenu;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.IndexModifier;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-public final class StorageBlockItemStackHandler extends ItemStackHandler implements IStorageBlockItemHandler
+public final class StorageBlockItemResourceHandler extends ItemStacksResourceHandler implements IStorageBlockItemResourceHandler
 {
     @Nullable
     private final FramedStorageBlockEntity be;
 
-    public StorageBlockItemStackHandler(@Nullable FramedStorageBlockEntity be, int slots)
+    public StorageBlockItemResourceHandler(@Nullable FramedStorageBlockEntity be, int slots)
     {
         super(slots);
         this.be = be;
     }
 
     @Override
-    protected void onContentsChanged(int slot)
+    protected void onContentsChanged(int slot, ItemStack prevContents)
     {
         if (be != null)
         {
@@ -61,8 +61,9 @@ public final class StorageBlockItemStackHandler extends ItemStackHandler impleme
         }
     }
 
-    public List<ItemStack> getBackingList()
+    @Override
+    public IndexModifier<ItemResource> getIndexModifier()
     {
-        return stacks;
+        return this::set;
     }
 }

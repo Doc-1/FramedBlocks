@@ -8,8 +8,8 @@ import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.blockentity.special.FramedChestBlockEntity;
 import io.github.xfacthd.framedblocks.common.blockentity.special.FramedStorageBlockEntity;
-import io.github.xfacthd.framedblocks.common.capability.item.CompoundStorageBlockItemHandler;
-import io.github.xfacthd.framedblocks.common.capability.item.IStorageBlockItemHandler;
+import io.github.xfacthd.framedblocks.common.capability.item.CompoundStorageBlockItemResourceHandler;
+import io.github.xfacthd.framedblocks.common.capability.item.IStorageBlockItemResourceHandler;
 import io.github.xfacthd.framedblocks.common.data.BlockType;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.ChestState;
@@ -48,24 +48,24 @@ import java.util.OptionalLong;
 
 public class FramedChestBlock extends FramedStorageBlock
 {
-    public static final DoubleBlockCombiner.Combiner<FramedChestBlockEntity, Optional<IStorageBlockItemHandler>> CHEST_COMBINER = new DoubleBlockCombiner.Combiner<>()
+    public static final DoubleBlockCombiner.Combiner<FramedChestBlockEntity, Optional<IStorageBlockItemResourceHandler>> CHEST_COMBINER = new DoubleBlockCombiner.Combiner<>()
     {
         @Override
-        public Optional<IStorageBlockItemHandler> acceptDouble(FramedChestBlockEntity first, FramedChestBlockEntity second)
+        public Optional<IStorageBlockItemResourceHandler> acceptDouble(FramedChestBlockEntity first, FramedChestBlockEntity second)
         {
-            return Optional.of(new CompoundStorageBlockItemHandler(
+            return Optional.of(new CompoundStorageBlockItemResourceHandler(
                     first.getItemHandler(), second.getItemHandler()
             ));
         }
 
         @Override
-        public Optional<IStorageBlockItemHandler> acceptSingle(FramedChestBlockEntity single)
+        public Optional<IStorageBlockItemResourceHandler> acceptSingle(FramedChestBlockEntity single)
         {
             return Optional.of(single.getItemHandler());
         }
 
         @Override
-        public Optional<IStorageBlockItemHandler> acceptNone()
+        public Optional<IStorageBlockItemResourceHandler> acceptNone()
         {
             return Optional.empty();
         }

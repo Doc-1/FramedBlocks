@@ -4,7 +4,7 @@ import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.block.cube.FramedChestBlock;
-import io.github.xfacthd.framedblocks.common.capability.item.IStorageBlockItemHandler;
+import io.github.xfacthd.framedblocks.common.capability.item.IStorageBlockItemResourceHandler;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.ChestState;
 import net.minecraft.core.BlockPos;
@@ -21,6 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import org.jetbrains.annotations.Nullable;
 
 public class FramedChestBlockEntity extends FramedStorageBlockEntity
@@ -51,7 +52,7 @@ public class FramedChestBlockEntity extends FramedStorageBlockEntity
     @Override
     public void open(ServerPlayer player)
     {
-        IStorageBlockItemHandler handler = getChestItemHandler(false);
+        IStorageBlockItemResourceHandler handler = getChestItemHandler(false);
         if (handler != null)
         {
             handler.open();
@@ -122,7 +123,7 @@ public class FramedChestBlockEntity extends FramedStorageBlockEntity
     }
 
     @Nullable
-    public IStorageBlockItemHandler getChestItemHandler(boolean override)
+    public IStorageBlockItemResourceHandler getChestItemHandler(boolean override)
     {
         return FramedChestBlock.combine(this, override).apply(FramedChestBlock.CHEST_COMBINER).orElse(null);
     }
@@ -130,8 +131,8 @@ public class FramedChestBlockEntity extends FramedStorageBlockEntity
     @Override
     public int getAnalogOutputSignal()
     {
-        IStorageBlockItemHandler itemHandler = getChestItemHandler(false);
-        return itemHandler != null ? getAnalogOutputSignal(itemHandler) : 0;
+        IStorageBlockItemResourceHandler itemHandler = getChestItemHandler(false);
+        return itemHandler != null ? ResourceHandlerUtil.getRedstoneSignalFromResourceHandler(itemHandler) : 0;
     }
 
     @Override
@@ -144,7 +145,7 @@ public class FramedChestBlockEntity extends FramedStorageBlockEntity
     @Nullable
     public AbstractContainerMenu createMenu(int windowId, Inventory inv, Player player)
     {
-        IStorageBlockItemHandler handler = getChestItemHandler(false);
+        IStorageBlockItemResourceHandler handler = getChestItemHandler(false);
         return handler == null ? null : handler.createMenu(windowId, inv);
     }
 
