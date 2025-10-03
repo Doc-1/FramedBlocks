@@ -208,8 +208,10 @@ repositories {
 // This configuration should be used instead of 'runtimeOnly' to declare
 // a dependency that will be present for runtime testing but that is
 // "optional", meaning it will not be pulled by dependents of this mod.
+// The dependency is so local that the used classpath must be from the
+// sourceset specified in the run config and not a parent thereof
 configurations {
-    runtimeClasspath.extendsFrom localRuntime
+    testRuntimeClasspath.extendsFrom localRuntime
 }
 
 dependencies {
