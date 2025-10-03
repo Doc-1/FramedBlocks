@@ -89,6 +89,13 @@ license="LGPL v3"
     side="BOTH"
 
 [[dependencies.framedblocks]]
+    modId="jade"
+    type="optional"
+    versionRange="[${jade_version},)"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.framedblocks]]
     modId="searchables"
     type="optional"
     versionRange="[${searchables_version},)"

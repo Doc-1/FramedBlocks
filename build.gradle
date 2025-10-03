@@ -107,120 +107,150 @@ neoForge {
 }
 
 repositories {
-    maven {
-        name = 'CurseMaven'
-        url = 'https://www.cursemaven.com'
-        content {
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'CurseMaven'
+                url = 'https://www.cursemaven.com'
+            }
+        }
+        filter {
             includeGroup('curse.maven')
         }
     }
-    maven {
-        name = "tterrag's maven"
-        url = 'https://maven.tterrag.com/'
-        content {
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'tterrag\'s maven'
+                url = 'https://maven.tterrag.com/'
+            }
+        }
+        filter {
             includeGroup('team.chisel.ctm')
         }
     }
-    maven {
-        name = 'Create maven'
-        url = 'https://maven.createmod.net/'
-        content {
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Create maven'
+                url = 'https://maven.createmod.net/'
+            }
+        }
+        filter {
             includeGroup('com.simibubi.create')
             includeGroup('net.createmod.ponder')
             includeGroup('dev.engine-room.flywheel')
         }
     }
-    maven {
-        name = 'DevOS maven'
-        url = 'https://mvn.devos.one/snapshots'
-        content {
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'DevOS maven'
+                url = 'https://mvn.devos.one/snapshots'
+            }
+        }
+        filter {
             includeGroup('com.tterrag.registrate')
         }
     }
-    maven {
-        name = "Jared's maven"
-        url = 'https://maven.blamejared.com/'
-        content {
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Jared\'s maven'
+                url = 'https://maven.blamejared.com/'
+            }
+        }
+        filter {
             includeGroup('org.embeddedt')
             includeGroup('mezz.jei')
             includeGroup('com.blamejared.searchables')
         }
     }
-    maven {
-        name = 'TerraformersMC maven'
-        url = "https://maven.terraformersmc.com/"
-        content {
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'TerraformersMC maven'
+                url = 'https://maven.terraformersmc.com/'
+            }
+        }
+        filter {
             includeGroup('dev.emi')
         }
     }
-    maven {
-        name = 'ResourcefulBees maven'
-        url = 'https://maven.resourcefulbees.com/repository/maven-public/'
-        content {
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'ResourcefulBees maven'
+                url = 'https://maven.resourcefulbees.com/repository/maven-public/'
+            }
+        }
+        filter {
             includeGroup('com.teamresourceful')
             includeGroup('com.teamresourceful.resourcefullib')
             includeGroup('earth.terrarium.athena')
             includeGroup('earth.terrarium.chipped')
         }
     }
-    maven {
-        name = 'Modmaven'
-        url = 'https://modmaven.dev/'
-        content {
-            includeGroup('appeng')
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Fuzs Mod Resources'
+                url = 'https://raw.githubusercontent.com/Fuzss/modresources/main/maven/'
+            }
         }
-    }
-    maven {
-        name = 'Shadows Maven'
-        url = 'https://maven.shadowsoffire.dev/releases'
-        content {
-            includeGroup('snownee.jade')
-        }
-    }
-    maven {
-        name = "Fuzs Mod Resources"
-        url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
-        content {
-            includeGroupByRegex('fuzs.*')
+        filter {
+            includeGroup('fuzs.diagonalblocks')
         }
     }
 }
 
+// Sets up a dependency configuration called 'localRuntime'.
+// This configuration should be used instead of 'runtimeOnly' to declare
+// a dependency that will be present for runtime testing but that is
+// "optional", meaning it will not be pulled by dependents of this mod.
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+
 dependencies {
     // Only needed when DiagonalBlocks is switched to implementation
-    //runtimeOnly("curse.maven:puzzleslib-495476:${puzzles_lib_coord}")
-    compileOnly("fuzs.diagonalblocks:diagonalblocks-neoforge:${diag_blocks_version}")
+    //localRuntime("curse.maven:puzzleslib-495476:${puzzles_lib_coord}")
+    compileOnly("fuzs.diagonalblocks:diagonalblocks-neoforge:${diag_blocks_version}") { transitive = false }
 
     //compileOnly("curse.maven:buildinggadgets-298187:${buildinggadgets_coord}")
+    //localRuntime("curse.maven:buildinggadgets-298187:${buildinggadgets_coord}")
 
     compileOnly("mezz.jei:jei-${jei_mc_version}-common-api:${jei_version}")
     compileOnly("mezz.jei:jei-${jei_mc_version}-neoforge-api:${jei_version}")
-    runtimeOnly("mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}")
+    localRuntime("mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}")
 
     compileOnly("dev.emi:emi-neoforge:${emi_version}+${emi_mc_version}:api")
-    //runtimeOnly("dev.emi:emi-neoforge:${emi_version}+${emi_mc_version}")
+    //localRuntime("dev.emi:emi-neoforge:${emi_version}+${emi_mc_version}")
 
     compileOnly("com.simibubi.create:create-${create_mc_version}:${create_version}-${create_build_number}") { transitive = false }
     compileOnly("net.createmod.ponder:Ponder-NeoForge-${create_mc_version}:${ponder_version}")
     // Only needed when Create and Ponder are switched to implementation
-    //runtimeOnly("dev.engine-room.flywheel:flywheel-neoforge-${create_mc_version}:${flywheel_version}")
-    //runtimeOnly("com.tterrag.registrate:Registrate:${registrate_version}")
+    //localRuntime("dev.engine-room.flywheel:flywheel-neoforge-${create_mc_version}:${flywheel_version}")
+    //localRuntime("com.tterrag.registrate:Registrate:${registrate_version}")
 
-    //runtimeOnly("curse.maven:moonlight-499980:${moonlight_coord}")
+    //localRuntime("curse.maven:moonlight-499980:${moonlight_coord}")
     compileOnly("curse.maven:amendments-896746:${amendments_coord}")
+    //localRuntime("curse.maven:amendments-896746:${amendments_coord}")
 
-    compileOnly("appeng:appliedenergistics2:${ae2_version}:api")
-    //runtimeOnly("appeng:appliedenergistics2:${ae2_version}")
+    compileOnly("org.appliedenergistics:appliedenergistics2:${ae2_version}:api")
+    //localRuntime("org.appliedenergistics:appliedenergistics2:${ae2_version}")
 
-    //compileOnly("snownee.jade:Jade-NeoForge:${jade_mc_version}-${jade_version}")
-    compileOnly("curse.maven:jade-324717:6713216")
+    compileOnly("curse.maven:jade-324717:${jade_coord}")
+    //localRuntime("curse.maven:jade-324717:${jade_coord}")
 
     compileOnly("curse.maven:atlasviewer-633577:${atlasviewer_coord}")
-    runtimeOnly("curse.maven:atlasviewer-633577:${atlasviewer_coord}")
+    localRuntime("curse.maven:atlasviewer-633577:${atlasviewer_coord}")
 
     compileOnly("com.blamejared.searchables:Searchables-neoforge-${searchables_mc_version}:${searchables_version}")
+    //localRuntime("com.blamejared.searchables:Searchables-neoforge-${searchables_mc_version}:${searchables_version}")
 
     compileOnly("curse.maven:additionalplacements-674852:${additionalplacements_coord}")
+    //localRuntime("curse.maven:additionalplacements-674852:${additionalplacements_coord}")
 }
 
 tasks.withType(ProcessResources).configureEach {
@@ -238,6 +268,7 @@ tasks.withType(ProcessResources).configureEach {
             amendments_version: amendments_version,
             create_version: create_version,
             ae2_version: ae2_version,
+            jade_version: jade_version,
             searchables_version: searchables_version,
             additionalplacements_version: additionalplacements_version
     ]
