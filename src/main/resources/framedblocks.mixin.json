@@ -16,7 +16,6 @@
         "client.AccessorBlockModelShaper",
         "client.AccessorModelManager",
         "client.AccessorMultiPlayerGameMode",
-        "client.AccessorSpriteContents",
         "client.MixinLevelRenderer",
         "client.MixinWeightedVariants"
     ],

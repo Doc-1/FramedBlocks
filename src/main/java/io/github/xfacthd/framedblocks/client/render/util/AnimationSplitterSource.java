@@ -22,6 +22,7 @@ import net.minecraft.util.ExtraCodecs;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public record AnimationSplitterSource(ResourceLocation resource, List<Frame> frames) implements SpriteSource
 {
@@ -33,13 +34,19 @@ public record AnimationSplitterSource(ResourceLocation resource, List<Frame> fra
     @Override
     public void run(ResourceManager mgr, Output out)
     {
+        run(mgr, out, Set.of());
+    }
+
+    @Override
+    public void run(ResourceManager mgr, Output out, Set<MetadataSectionType<?>> additionalMetadata)
+    {
         ResourceLocation texPath = TEXTURE_ID_CONVERTER.idToFile(resource);
         Optional<Resource> optResource = mgr.getResource(texPath);
         if (optResource.isPresent())
         {
             Resource res = optResource.get();
             LazyLoadedImage image = new LazyLoadedImage(texPath, res, frames.size());
-            frames.forEach(frame -> out.add(frame.outLoc, new FrameInstance(res, texPath, image, frame)));
+            frames.forEach(frame -> out.add(frame.outLoc, new FrameInstance(res, texPath, image, frame, additionalMetadata)));
         }
         else
         {
@@ -63,7 +70,13 @@ public record AnimationSplitterSource(ResourceLocation resource, List<Frame> fra
         ).apply(inst, Frame::new));
     }
 
-    public record FrameInstance(Resource resource, ResourceLocation texPath, LazyLoadedImage lazyImage, Frame frame) implements SpriteSupplier
+    public record FrameInstance(
+            Resource resource,
+            ResourceLocation texPath,
+            LazyLoadedImage lazyImage,
+            Frame frame,
+            Set<MetadataSectionType<?>> additionalMetadata
+    ) implements SpriteSupplier
     {
         @Override
         public SpriteContents apply(SpriteResourceLoader loader)
@@ -93,8 +106,7 @@ public record AnimationSplitterSource(ResourceLocation resource, List<Frame> fra
 
                 NativeImage imageOut = new NativeImage(NativeImage.Format.RGBA, frameW, frameH, false);
                 image.copyRect(imageOut, srcX, srcY, 0, 0, frameW, frameH, false, false);
-                SpriteContents contents = loader.loadSprite(texPath, resource);
-                List<MetadataSectionType.WithValue<?>> metaSections = contents != null ? contents.framedblocks$getAdditionalMetadata() : List.of();
+                List<MetadataSectionType.WithValue<?>> metaSections = srcMeta.getTypedSections(additionalMetadata);
                 return new SpriteContents(frame.outLoc, new FrameSize(frameW, frameH), imageOut, Optional.empty(), metaSections);
             }
             catch (Exception e)

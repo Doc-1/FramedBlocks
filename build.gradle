@@ -216,6 +216,7 @@ dependencies {
     compileOnly("curse.maven:jade-324717:6713216")
 
     compileOnly("curse.maven:atlasviewer-633577:${atlasviewer_coord}")
+    runtimeOnly("curse.maven:atlasviewer-633577:${atlasviewer_coord}")
 
     compileOnly("com.blamejared.searchables:Searchables-neoforge-${searchables_mc_version}:${searchables_version}")
 
