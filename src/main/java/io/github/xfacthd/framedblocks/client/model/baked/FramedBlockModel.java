@@ -29,6 +29,7 @@ import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.config.ClientConfig;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
@@ -259,7 +260,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
             DefaultAO defaultAO
     )
     {
-        ArrayList<ExtendedBlockModelPart> parts = new ArrayList<>();
+        ObjectList<ExtendedBlockModelPart> parts = new ObjectArrayList<>();
         int cullMask = DEFAULT_DATA.computeFaceMask(stateCache, true);
         PartConsumer partConsumer = makePartConsumer(parts, cullMask, defaultAO, camoEmissive, forceEmissive, secondPart);
         boolean xformAll = geometry.transformAllQuads();
@@ -293,7 +294,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         geometry.generateOverlayParts(overlayGenerator, random, data, cacheKey);
         overlayGenerator.flush();
 
-        return new ObjectArrayList<>(parts);
+        return parts;
     }
 
     private static boolean needCtContext(boolean mayHaveUncachedQuads, ConTexMode minMode)

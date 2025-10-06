@@ -7,6 +7,8 @@ import io.github.xfacthd.framedblocks.api.model.geometry.OverlayPartGenerator;
 import io.github.xfacthd.framedblocks.api.model.util.ModelUtils;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.client.model.QuadMapImpl;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
@@ -16,18 +18,17 @@ import net.minecraft.util.TriState;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
 public final class OverlayModelPartGenerator implements OverlayPartGenerator
 {
-    private final ArrayList<ExtendedBlockModelPart> staticParts;
+    private final ObjectList<ExtendedBlockModelPart> staticParts;
     private final TriState ambientOcclusion;
-    private final List<ExtendedBlockModelPart> generatedParts = new ArrayList<>();
+    private final ObjectList<ExtendedBlockModelPart> generatedParts = new ObjectArrayList<>();
     private boolean flushed = false;
 
-    public OverlayModelPartGenerator(ArrayList<ExtendedBlockModelPart> staticParts, TriState ambientOcclusion)
+    public OverlayModelPartGenerator(ObjectList<ExtendedBlockModelPart> staticParts, TriState ambientOcclusion)
     {
         this.staticParts = staticParts;
         this.ambientOcclusion = ambientOcclusion;
@@ -61,6 +62,6 @@ public final class OverlayModelPartGenerator implements OverlayPartGenerator
     public void flush()
     {
         flushed = true;
-        Utils.copyAll(generatedParts, staticParts);
+        staticParts.addAll(generatedParts);
     }
 }
