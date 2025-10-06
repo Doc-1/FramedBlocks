@@ -5,6 +5,7 @@ import com.mojang.math.Axis;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.model.standalone.StandaloneWrapperKey;
 import io.github.xfacthd.framedblocks.api.render.RenderUtils;
+import io.github.xfacthd.framedblocks.api.util.SingleBlockFakeLevel;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.client.model.special.FramedChestLidModel;
 import io.github.xfacthd.framedblocks.client.render.block.state.FramedChestRenderState;
@@ -99,9 +100,9 @@ public final class FramedChestRenderer implements BlockEntityRenderer<FramedChes
         BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPos, crumblingOverlay);
 
         Level level = Objects.requireNonNull(blockEntity.getLevel());
-        renderState.level = level;
-        renderState.pos = blockEntity.getBlockPos();
+        BlockPos pos = renderState.pos = blockEntity.getBlockPos();
         BlockState state = renderState.state = blockEntity.getBlockState();
+        renderState.level = new SingleBlockFakeLevel(level, pos, pos, state, null, level.getModelData(pos));
 
         Direction dir = state.getValue(FramedProperties.FACING_HOR);
         ChestType type = state.getValue(BlockStateProperties.CHEST_TYPE);
