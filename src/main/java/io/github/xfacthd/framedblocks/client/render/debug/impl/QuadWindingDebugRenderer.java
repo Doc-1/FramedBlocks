@@ -3,10 +3,11 @@ package io.github.xfacthd.framedblocks.client.render.debug.impl;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
+import io.github.xfacthd.framedblocks.api.model.ModelPartCollectionFakeLevel;
 import io.github.xfacthd.framedblocks.api.model.quad.QuadData;
 import io.github.xfacthd.framedblocks.api.render.debug.BlockDebugRenderer;
-import io.github.xfacthd.framedblocks.api.util.SingleBlockFakeLevel;
 import io.github.xfacthd.framedblocks.api.util.Triangle;
+import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.config.DevToolsConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -16,9 +17,11 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.state.LevelRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -35,9 +38,10 @@ public class QuadWindingDebugRenderer implements BlockDebugRenderer<FramedBlockE
     private static final Direction[] DIRECTIONS = Arrays.copyOf(Direction.values(), 7);
     private static final int[] VERT_INDEX_COLORS = { 0xFFFFFFFF, 0xFFFF0000, 0xFF00FF00, 0xFF0000FF };
     private static final RandomSource RANDOM = RandomSource.create();
+    private static final ContextKey<QuadWindingRenderState> DATA_KEY = new ContextKey<>(Utils.rl("quad_winding_debug_renderer"));
 
     @Override
-    public void render(FramedBlockEntity be, BlockHitResult blockHit, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay)
+    public void extract(FramedBlockEntity be, BlockHitResult blockHit, float partialTick, LevelRenderState renderState)
     {
         BlockPos pos = be.getBlockPos();
         BlockState state = be.getBlockState();
@@ -49,10 +53,23 @@ public class QuadWindingDebugRenderer implements BlockDebugRenderer<FramedBlockE
         boolean sneak = player.isShiftKeyDown();
 
         ModelData modelData = Objects.requireNonNull(be.getLevel()).getModelData(pos);
-        BlockAndTintGetter level = new SingleBlockFakeLevel(Objects.requireNonNull(be.getLevel()), pos, pos, state, be, modelData);
+        BlockAndTintGetter level = new ModelPartCollectionFakeLevel(state, modelData);
+
+        renderState.setRenderData(DATA_KEY, new QuadWindingRenderState(level, state, pos, model, eyePos, viewVector, sneak));
+    }
+
+    @Override
+    public void render(LevelRenderState renderState, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay)
+    {
+        QuadWindingRenderState renderData = renderState.getRenderData(DATA_KEY);
+        if (renderData == null) return;
+
+        Vec3 eyePos = renderData.eyePos;
+        Vec3 viewVector = renderData.viewVector;
+        boolean sneak = renderData.sneak;
         Vector3f vertPos = new Vector3f();
         Vector3f vertNorm = new Vector3f();
-        for (BlockModelPart part : model.collectParts(level, pos, state, RANDOM))
+        for (BlockModelPart part : renderData.model.collectParts(renderData.level, renderData.pos, renderData.state, RANDOM))
         {
             for (Direction side : DIRECTIONS)
             {
@@ -121,4 +138,14 @@ public class QuadWindingDebugRenderer implements BlockDebugRenderer<FramedBlockE
     {
         return DevToolsConfig.VIEW.isQuadWindingDebugRendererEnabled();
     }
+
+    private record QuadWindingRenderState(
+            BlockAndTintGetter level,
+            BlockState state,
+            BlockPos pos,
+            BlockStateModel model,
+            Vec3 eyePos,
+            Vec3 viewVector,
+            boolean sneak
+    ) { }
 }

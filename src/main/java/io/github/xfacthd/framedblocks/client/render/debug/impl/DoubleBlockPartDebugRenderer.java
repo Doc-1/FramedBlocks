@@ -6,11 +6,12 @@ import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import io.github.xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import io.github.xfacthd.framedblocks.api.camo.block.SimpleBlockCamoContainer;
+import io.github.xfacthd.framedblocks.api.model.ModelPartCollectionFakeLevel;
 import io.github.xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import io.github.xfacthd.framedblocks.api.model.data.FramedBlockData;
 import io.github.xfacthd.framedblocks.api.render.debug.BlockDebugRenderer;
 import io.github.xfacthd.framedblocks.api.util.ClientUtils;
-import io.github.xfacthd.framedblocks.api.util.SingleBlockFakeLevel;
+import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.config.DevToolsConfig;
 import net.minecraft.client.Minecraft;
@@ -20,9 +21,10 @@ import net.minecraft.client.renderer.OutlineBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.state.LevelRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.ARGB;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Blocks;
@@ -38,19 +40,14 @@ public class DoubleBlockPartDebugRenderer implements BlockDebugRenderer<FramedDo
     private static final FramedBlockData MODEL_DATA = new FramedBlockData(new SimpleBlockCamoContainer(
             Blocks.STONE.defaultBlockState(), FBContent.FACTORY_BLOCK.get()
     ), false);
+    private static final ContextKey<BlockPartRenderState> DATA_KEY = new ContextKey<>(Utils.rl("double_block_part_debug_renderer"));
+    private static final int COLOR_PRIMARY = 0xFFFF0000;
+    private static final int COLOR_SECONDARY = 0xFF00FF00;
 
     private DoubleBlockPartDebugRenderer() { }
 
     @Override
-    public void render(
-            FramedDoubleBlockEntity be,
-            BlockHitResult blockHit,
-            float partialTick,
-            PoseStack poseStack,
-            MultiBufferSource buffer,
-            int light,
-            int overlay
-    )
+    public void extract(FramedDoubleBlockEntity be, BlockHitResult blockHit, float partialTick, LevelRenderState renderState)
     {
         BlockState state = be.getBlockState();
         if (!(state.getBlock() instanceof IFramedBlock)) return;
@@ -61,28 +58,34 @@ public class DoubleBlockPartDebugRenderer implements BlockDebugRenderer<FramedDo
         BlockState partState = secondary ? parts.stateTwo() : parts.stateOne();
         BlockStateModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(partState);
 
-        OutlineBufferSource outlineBuffer = Minecraft.getInstance().renderBuffers().outlineBufferSource();
-        outlineBuffer.setColor(ARGB.color(
-                0xFF,
-                secondary ? 0x00 : 0xFF,
-                secondary ? 0xFF : 0x00,
-                0x00
-        ));
-
         ModelData modelData = be.getModelData().derive().with(AbstractFramedBlockData.PROPERTY, MODEL_DATA).build();
-        BlockAndTintGetter level = new SingleBlockFakeLevel(Objects.requireNonNull(be.getLevel()), be.getBlockPos(), partState, be, modelData);
+        BlockAndTintGetter level = new ModelPartCollectionFakeLevel(partState, modelData);
+        int color = secondary ? COLOR_SECONDARY : COLOR_PRIMARY;
+
+        renderState.haveGlowingEntities = true;
+        renderState.setRenderData(DATA_KEY, new BlockPartRenderState(level, partState, model, color));
+    }
+
+    @Override
+    public void render(LevelRenderState renderState, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay)
+    {
+        BlockPartRenderState data = renderState.getRenderData(DATA_KEY);
+        if (data == null) return;
+
+        OutlineBufferSource outlineBuffer = Minecraft.getInstance().renderBuffers().outlineBufferSource();
+        outlineBuffer.setColor(data.color);
 
         VertexConsumer consumer = outlineBuffer.getBuffer(RenderType.outline(ClientUtils.BLOCK_ATLAS));
         ModelBlockRenderer.renderModel(
                 poseStack.last(),
                 type -> consumer,
-                model,
+                data.model,
                 1F, 1F, 1F,
                 LightTexture.FULL_BRIGHT,
                 OverlayTexture.NO_OVERLAY,
-                level,
+                data.level,
                 BlockPos.ZERO,
-                partState
+                data.partState
         );
 
         outlineBuffer.endOutlineBatch();
@@ -93,4 +96,11 @@ public class DoubleBlockPartDebugRenderer implements BlockDebugRenderer<FramedDo
     {
         return DevToolsConfig.VIEW.isDoubleBlockPartHitDebugRendererEnabled();
     }
+
+    private record BlockPartRenderState(
+            BlockAndTintGetter level,
+            BlockState partState,
+            BlockStateModel model,
+            int color
+    ) { }
 }

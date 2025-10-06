@@ -10,19 +10,23 @@ import io.github.xfacthd.framedblocks.api.block.doubleblock.CamoGetter;
 import io.github.xfacthd.framedblocks.api.render.Quaternions;
 import io.github.xfacthd.framedblocks.api.render.debug.BlockDebugRenderer;
 import io.github.xfacthd.framedblocks.api.util.ClientUtils;
+import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.config.DevToolsConfig;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.state.LevelRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class ConnectionPredicateDebugRenderer implements BlockDebugRenderer<FramedBlockEntity>
 {
     public static final ConnectionPredicateDebugRenderer INSTANCE = new ConnectionPredicateDebugRenderer();
+    private static final ContextKey<ConnectionPredicateRenderState> DATA_KEY = new ContextKey<>(Utils.rl("con_pred_debug_renderer"));
 
     private static float dummyU0 = 0F;
     private static float dummyU1 = 1F;
@@ -32,20 +36,23 @@ public class ConnectionPredicateDebugRenderer implements BlockDebugRenderer<Fram
     private ConnectionPredicateDebugRenderer() { }
 
     @Override
-    public void render(
-            FramedBlockEntity be,
-            BlockHitResult blockHit,
-            float partialTick,
-            PoseStack poseStack,
-            MultiBufferSource buffer,
-            int light,
-            int overlay
-    )
+    public void extract(FramedBlockEntity be, BlockHitResult blockHit, float partialTick, LevelRenderState renderState)
     {
-        poseStack.translate(.5, .5, .5);
-
         Direction face = blockHit.getDirection();
         StateCache cache = be.getBlockState().framedblocks$getCache();
+        renderState.setRenderData(DATA_KEY, new ConnectionPredicateRenderState(face, cache));
+    }
+
+    @Override
+    public void render(LevelRenderState renderState, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay)
+    {
+        ConnectionPredicateRenderState data = renderState.getRenderData(DATA_KEY);
+        if (data == null) return;
+
+        poseStack.translate(.5, .5, .5);
+
+        Direction face = data.face;
+        StateCache cache = data.cache;
         switch (face)
         {
             case UP ->
@@ -165,4 +172,6 @@ public class ConnectionPredicateDebugRenderer implements BlockDebugRenderer<Fram
     {
         return DevToolsConfig.VIEW.isConnectionDebugRendererEnabled();
     }
+
+    private record ConnectionPredicateRenderState(Direction face, StateCache cache) { }
 }
