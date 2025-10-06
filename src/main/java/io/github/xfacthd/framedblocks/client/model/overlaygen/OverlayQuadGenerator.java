@@ -27,9 +27,14 @@ public final class OverlayQuadGenerator
     public static final ResourceLocation LISTENER_ID = Utils.rl("overlay_quad_gen");
     private static final Map<OverlayCacheKey, BakedQuad> OVERLAY_CACHE = new ConcurrentHashMap<>();
 
-    public static List<BakedQuad> generate(List<BakedQuad> srcQuads, Function<Direction, TextureAtlasSprite> spriteGetter, Predicate<Direction> filter)
+    public static void generate(
+            List<BakedQuad> srcQuads,
+            ArrayList<BakedQuad> outQuads,
+            Function<Direction, TextureAtlasSprite> spriteGetter,
+            Predicate<Direction> filter
+    )
     {
-        List<BakedQuad> outQuads = new ArrayList<>(srcQuads.size());
+        outQuads.ensureCapacity(outQuads.size() + srcQuads.size());
         Set<OverlayCacheKey> uniqueKeys = new HashSet<>(srcQuads.size());
         for (BakedQuad quad : srcQuads)
         {
@@ -42,7 +47,6 @@ public final class OverlayQuadGenerator
                 outQuads.add(OVERLAY_CACHE.computeIfAbsent(key, OverlayQuadGenerator::generateOverlayQuad));
             }
         }
-        return outQuads;
     }
 
     private static BakedQuad generateOverlayQuad(OverlayCacheKey key)
@@ -106,8 +110,6 @@ public final class OverlayQuadGenerator
     {
         OVERLAY_CACHE.clear();
     }
-
-
 
     private OverlayQuadGenerator() { }
 }
