@@ -130,7 +130,7 @@ public final class CamoContainerHelper
      */
     public static boolean isValidRemovalTool(CamoContainer<?, ?> container, ItemStack stack)
     {
-        return !container.isEmpty() && InternalAPI.INSTANCE.isValidRemovalTool(container, stack);
+        return !container.isEmpty() && !stack.isEmpty() && InternalAPI.INSTANCE.isValidRemovalTool(container, stack);
     }
 
     /**
