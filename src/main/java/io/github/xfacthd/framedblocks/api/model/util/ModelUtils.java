@@ -30,6 +30,8 @@ import net.neoforged.neoforge.client.model.IQuadTransformer;
 import net.neoforged.neoforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -192,11 +194,12 @@ public final class ModelUtils
      * licensed under LGPL v3
      */
     @SuppressWarnings("ForLoopReplaceableByForEach")
-    public static void getFilteredNullQuads(List<BakedQuad> quadsOut, BlockModelPart modelPart, Direction side)
+    public static List<BakedQuad> getFilteredNullQuads(BlockModelPart modelPart, Direction side)
     {
         List<BakedQuad> nullQuads = modelPart.getQuads(null);
-        if (nullQuads.isEmpty()) return;
+        if (nullQuads.isEmpty()) return Collections.emptyList();
 
+        List<BakedQuad> quadsOut = null;
         for (int i = 0; i < nullQuads.size(); i++)
         {
             BakedQuad quad = nullQuads.get(i);
@@ -238,9 +241,14 @@ public final class ModelUtils
 
             if (aligned)
             {
+                if (quadsOut == null)
+                {
+                    quadsOut = new ArrayList<>();
+                }
                 quadsOut.add(quad);
             }
         }
+        return quadsOut != null ? quadsOut : Collections.emptyList();
     }
 
     @SuppressWarnings({ "Convert2Lambda", "Anonymous2MethodRef" })

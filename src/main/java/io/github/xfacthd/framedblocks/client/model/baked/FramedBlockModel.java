@@ -157,10 +157,13 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
                 cachedParts = buildPartCache(key, srcParts, level, pos, random, seed, extraData, reinforce, camoEmissive, forceEmissive, secondPart, defaultAO);
                 partCache.put(key, cachedParts);
             }
-            int cachedFaceMask = fbData.computeFaceMask(stateCache, true);
-            for (int i = 0; i < cachedParts.size(); i++)
+            if (!cachedParts.isEmpty())
             {
-                partsOut.add(new CullableBlockModelPart(cachedParts.get(i), cachedFaceMask));
+                int cachedFaceMask = fbData.computeFaceMask(stateCache, true);
+                for (int i = 0; i < cachedParts.size(); i++)
+                {
+                    partsOut.add(new CullableBlockModelPart(cachedParts.get(i), cachedFaceMask));
+                }
             }
         }
         random.setSeed(seed);
@@ -189,6 +192,7 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
             boolean hasListModifier = modifier != null;
             boolean hasPostModifiers = (camoPart && camoEmissive) || forceEmissive || invertTintIndex;
             boolean hasAnyModifiers = hasListModifier || hasPostModifiers;
+            boolean hasAnyQuads = false;
             for (Direction side : DIRECTIONS_WITH_NULL)
             {
                 boolean nullSide = side == null;
@@ -196,31 +200,44 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
                 if (!nullSide && cullNonNull && isSideHidden(cullMask, side)) continue;
 
                 List<BakedQuad> srcQuads = part.getQuads(side);
-                if (!hasAnyModifiers && !srcQuads.isEmpty())
+                if (!nullSide && srcQuads.isEmpty() && reclaimFromNull)
                 {
-                    quadMap.set(side, srcQuads);
+                    srcQuads = ModelUtils.getFilteredNullQuads(part, side);
+                }
+                if (srcQuads.isEmpty())
+                {
                     continue;
                 }
-
-                ArrayList<BakedQuad> quads = hasListModifier ? new ArrayList<>(srcQuads.size()) : quadMap.get(side);
-                Utils.copyAll(srcQuads, quads);
-                if (!nullSide && quads.isEmpty() && reclaimFromNull)
+                if (!hasAnyModifiers)
                 {
-                    ModelUtils.getFilteredNullQuads(quads, part, side);
+                    quadMap.set(side, srcQuads);
+                    hasAnyQuads = true;
+                    continue;
                 }
                 if (hasListModifier)
                 {
+                    ArrayList<BakedQuad> quads = new ArrayList<>(srcQuads);
                     modifier.modify(quadMap, quads, side);
                     // Copy to final destination at the end in case the modifier wants to iterate or clear the list
                     Utils.copyAll(quads, quadMap.get(side));
+                    hasAnyQuads |= !quadMap.isEmpty();
                 }
+                else
+                {
+                    Utils.copyAll(srcQuads, quadMap.get(side));
+                    hasAnyQuads = true;
+                }
+            }
+            if (!hasAnyQuads)
+            {
+                return;
             }
             if (hasPostModifiers)
             {
                 for (Direction side : DIRECTIONS_WITH_NULL)
                 {
-                    ArrayList<BakedQuad> quads = quadMap.get(side);
-                    if (quads.isEmpty()) continue;
+                    ArrayList<BakedQuad> quads = quadMap.tryGet(side);
+                    if (quads == null || quads.isEmpty()) continue;
 
                     if (forceEmissive)
                     {
@@ -267,13 +284,11 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
 
         QuadListModifier modifier = (quadMap, quads, side) ->
         {
-            ArrayList<BakedQuad> srcQuads = Utils.copyAll(quads, new ArrayList<>(quads.size()));
-            quads.clear();
-
-            for (BakedQuad quad : srcQuads)
+            for (BakedQuad quad : quads)
             {
                 geometry.transformQuad(quadMap, quad, data);
             }
+            quads.clear();
         };
 
         BlockState camoState = cacheKey.camo().getAsBlockState();
@@ -289,10 +304,13 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
         random.setSeed(seed);
         geometry.collectAdditionalPartsCached(partConsumer, level, pos, random, data, cacheKey);
 
-        OverlayModelPartGenerator overlayGenerator = new OverlayModelPartGenerator(parts, defaultAO.apply(TriState.DEFAULT));
-        random.setSeed(seed);
-        geometry.generateOverlayParts(overlayGenerator, random, data, cacheKey);
-        overlayGenerator.flush();
+        if (!parts.isEmpty())
+        {
+            OverlayModelPartGenerator overlayGenerator = new OverlayModelPartGenerator(parts, defaultAO.apply(TriState.DEFAULT));
+            random.setSeed(seed);
+            geometry.generateOverlayParts(overlayGenerator, random, data, cacheKey);
+            overlayGenerator.flush();
+        }
 
         return parts;
     }

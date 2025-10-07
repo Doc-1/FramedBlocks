@@ -15,7 +15,7 @@ public final class QuadMapImpl extends QuadMap
     private static final int SIDE_COUNT = Direction.values().length + 1;
 
     @SuppressWarnings("unchecked")
-    private final List<BakedQuad>[] quads = new List[SIDE_COUNT];
+    private final @Nullable List<BakedQuad>[] quads = new List[SIDE_COUNT];
 
     @Override
     public ArrayList<BakedQuad> get(@Nullable Direction side)
@@ -29,6 +29,13 @@ public final class QuadMapImpl extends QuadMap
         return list;
     }
 
+    @Nullable
+    public ArrayList<BakedQuad> tryGet(@Nullable Direction side)
+    {
+        int idx = Utils.maskNullDirection(side);
+        return (ArrayList<BakedQuad>) quads[idx];
+    }
+
     /**
      * Forcefully insert an existing list into this map. Must only be used if the list for the provided side
      * is known to never be retrieved via {@link #get(Direction)} after this operation!
@@ -36,6 +43,18 @@ public final class QuadMapImpl extends QuadMap
     public void set(@Nullable Direction side, List<BakedQuad> list)
     {
         quads[Utils.maskNullDirection(side)] = list;
+    }
+
+    public boolean isEmpty()
+    {
+        for (List<BakedQuad> list : quads)
+        {
+            if (list != null && !list.isEmpty())
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     public List<BakedQuad>[] build()

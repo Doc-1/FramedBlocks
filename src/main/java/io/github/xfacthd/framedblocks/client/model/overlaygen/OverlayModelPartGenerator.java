@@ -8,6 +8,7 @@ import io.github.xfacthd.framedblocks.api.model.util.ModelUtils;
 import io.github.xfacthd.framedblocks.client.model.QuadMapImpl;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -16,6 +17,7 @@ import net.minecraft.util.TriState;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.function.Predicate;
 
 public final class OverlayModelPartGenerator implements OverlayPartGenerator
@@ -44,14 +46,20 @@ public final class OverlayModelPartGenerator implements OverlayPartGenerator
         Preconditions.checkState(!flushed, "OverlayPartGenerator was already flushed");
 
         QuadMap quadMap = new QuadMapImpl();
+        boolean hasQuads = false;
         for (BlockModelPart part : staticParts)
         {
             for (Direction side : cullfaces)
             {
-                OverlayQuadGenerator.generate(part.getQuads(side), quadMap.get(side), spriteGetter, normalFilter);
+                ArrayList<BakedQuad> outQuads = quadMap.get(side);
+                OverlayQuadGenerator.generate(part.getQuads(side), outQuads, spriteGetter, normalFilter);
+                hasQuads |= !outQuads.isEmpty();
             }
         }
-        generatedParts.add(ModelUtils.makeModelPart(quadMap, ambientOcclusion, primarySprite, chunkLayer, shaderState));
+        if (hasQuads)
+        {
+            generatedParts.add(ModelUtils.makeModelPart(quadMap, ambientOcclusion, primarySprite, chunkLayer, shaderState));
+        }
     }
 
     public void flush()
