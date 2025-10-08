@@ -129,7 +129,7 @@ public class FramedHopperBlock extends HopperBlock implements IFramedBlockIntern
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier)
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean b)
     {
         if (level.getBlockEntity(pos) instanceof FramedHopperBlockEntity hopper)
         {
