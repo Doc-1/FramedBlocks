@@ -9,6 +9,7 @@ import io.github.xfacthd.framedblocks.common.compat.jei.camo.CamoCraftingHelper;
 import io.github.xfacthd.framedblocks.common.compat.jei.camo.CamoCraftingRecipeExtension;
 import io.github.xfacthd.framedblocks.common.compat.jei.camo.CamoRecipeManagerPlugin;
 import io.github.xfacthd.framedblocks.common.compat.jei.camo.JeiCamoApplicationRecipe;
+import io.github.xfacthd.framedblocks.common.config.ClientConfig;
 import io.github.xfacthd.framedblocks.common.crafting.camo.CamoApplicationRecipe;
 import io.github.xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 import io.github.xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
@@ -41,7 +42,18 @@ public final class FramedJeiPlugin implements IModPlugin
             Utils.rl("framing_saw"), FramingSawRecipe.class
     );
     @Nullable
+    private static Boolean enableCamoCraftingDisplay;
+    @Nullable
     private static CamoCraftingHelper camoCraftingHelperInstance;
+
+    private static boolean isCamoCraftingDisplayEnabled()
+    {
+        if (enableCamoCraftingDisplay == null)
+        {
+            enableCamoCraftingDisplay = ClientConfig.VIEW.showCamoCraftingInJei();
+        }
+        return enableCamoCraftingDisplay;
+    }
 
     private static CamoCraftingHelper getCamoCraftingHelper()
     {
@@ -61,13 +73,16 @@ public final class FramedJeiPlugin implements IModPlugin
     @Override
     public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration)
     {
-        CamoCraftingHelper camoCraftingHelper = getCamoCraftingHelper();
-        camoCraftingHelper.scanForItems(registration.getJeiHelpers().getIngredientManager());
+        if (isCamoCraftingDisplayEnabled())
+        {
+            CamoCraftingHelper camoCraftingHelper = getCamoCraftingHelper();
+            camoCraftingHelper.scanForItems(registration.getJeiHelpers().getIngredientManager());
 
-        registration.getCraftingCategory().addExtension(
-                JeiCamoApplicationRecipe.class,
-                new CamoCraftingRecipeExtension(camoCraftingHelper)
-        );
+            registration.getCraftingCategory().addExtension(
+                    JeiCamoApplicationRecipe.class,
+                    new CamoCraftingRecipeExtension(camoCraftingHelper)
+            );
+        }
     }
 
     @Override
@@ -134,15 +149,19 @@ public final class FramedJeiPlugin implements IModPlugin
     @Override
     public void registerAdvanced(IAdvancedRegistration registration)
     {
-        registration.addSimpleRecipeManagerPlugin(
-                RecipeTypes.CRAFTING,
-                new CamoRecipeManagerPlugin(getCamoCraftingHelper())
-        );
+        if (isCamoCraftingDisplayEnabled())
+        {
+            registration.addSimpleRecipeManagerPlugin(
+                    RecipeTypes.CRAFTING,
+                    new CamoRecipeManagerPlugin(getCamoCraftingHelper())
+            );
+        }
     }
 
     @Override
     public void onRuntimeUnavailable()
     {
+        enableCamoCraftingDisplay = null;
         camoCraftingHelperInstance = null;
     }
 
@@ -154,6 +173,8 @@ public final class FramedJeiPlugin implements IModPlugin
 
     static void onRecipesReceived(RecipesReceivedEvent event)
     {
+        if (!isCamoCraftingDisplayEnabled()) return;
+
         Optional<CamoApplicationRecipe> camoRecipe = event.getRecipeMap()
                 .byType(RecipeType.CRAFTING)
                 .stream()

@@ -276,6 +276,8 @@
   "config.framedblocks.client.showAllRecipePermutationsInEmi.tooltip": "If true, all possible recipes of the Framing Saw will be added to EMI, else only the permutations using the Framed Cube will be added.\nThis setting only has an effect when EMI is installed.",
   "config.framedblocks.client.showButtonPlateTypeOverlay": "Show button and pressure plate type overlay",
   "config.framedblocks.client.showButtonPlateTypeOverlay.tooltip": "If enabled, non-wooden buttons and pressure plates will show a material overlay when a camo is applied.\nRequires resource reload to take effect.",
+  "config.framedblocks.client.showCamoCraftingInJei": "Show camo application recipes in JEI",
+  "config.framedblocks.client.showCamoCraftingInJei.tooltip": "If true, camo application recipes will be shown in JEI",
   "config.framedblocks.client.showGhostBlocks": "Show ghost blocks",
   "config.framedblocks.client.showGhostBlocks.tooltip": "Whether ghost blocks are shown when you are holding a framed block",
   "config.framedblocks.client.showSpecialCubeTypeOverlay": "Show special cube type overlay",
