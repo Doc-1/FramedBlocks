@@ -46,6 +46,7 @@ import io.github.xfacthd.framedblocks.client.model.item.DynamicItemTintProviders
 import io.github.xfacthd.framedblocks.client.model.item.FramedBlockItemModel;
 import io.github.xfacthd.framedblocks.client.model.item.TankItemModel;
 import io.github.xfacthd.framedblocks.client.model.item.modelprovider.FenceBlockItemModelProvider;
+import io.github.xfacthd.framedblocks.client.model.item.property.BlueprintProperty;
 import io.github.xfacthd.framedblocks.client.model.item.tintprovider.FramedTargetItemTintProvider;
 import io.github.xfacthd.framedblocks.client.model.loader.fallback.FallbackLoader;
 import io.github.xfacthd.framedblocks.client.model.overlaygen.OverlayQuadGenerator;
@@ -64,7 +65,6 @@ import io.github.xfacthd.framedblocks.client.render.debug.FramedBlockDebugRender
 import io.github.xfacthd.framedblocks.client.render.debug.impl.ConnectionPredicateDebugRenderer;
 import io.github.xfacthd.framedblocks.client.render.debug.impl.DoubleBlockPartDebugRenderer;
 import io.github.xfacthd.framedblocks.client.render.debug.impl.QuadWindingDebugRenderer;
-import io.github.xfacthd.framedblocks.client.render.item.BlueprintProperty;
 import io.github.xfacthd.framedblocks.client.render.item.TankItemRenderer;
 import io.github.xfacthd.framedblocks.client.render.particle.FluidSpriteParticle;
 import io.github.xfacthd.framedblocks.client.render.special.BlockOutlineRenderer;

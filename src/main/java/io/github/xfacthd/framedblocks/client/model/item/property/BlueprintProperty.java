@@ -1,4 +1,4 @@
-package io.github.xfacthd.framedblocks.client.render.item;
+package io.github.xfacthd.framedblocks.client.model.item.property;
 
 import com.mojang.serialization.MapCodec;
 import io.github.xfacthd.framedblocks.api.blueprint.BlueprintData;
