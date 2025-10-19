@@ -1,6 +1,6 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.cube;
 
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.CornerTubeOrientation;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 public final class CornerTubeShapes
 {
-    public static ShapeProvider generate(List<BlockState> states)
+    public static ShapeContainer generate(List<BlockState> states)
     {
         VoxelShape[] thinShapes = makeShapes(2);
         VoxelShape[] thickShapes = makeShapes(3);
@@ -32,7 +32,7 @@ public final class CornerTubeShapes
             map.put(state, shape);
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
     private static VoxelShape[] makeShapes(int thickness)

@@ -2,13 +2,13 @@ package io.github.xfacthd.framedblocks.common.data.shapes.slopepanelcorner;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.block.slopepanel.SlopePanelShape;
 import io.github.xfacthd.framedblocks.common.block.slopeslab.SlopeSlabShape;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.HorizontalRotation;
-import io.github.xfacthd.framedblocks.common.data.shapes.SplitShapeGenerator;
 import io.github.xfacthd.framedblocks.common.data.shapes.slopepanel.SlopePanelShapes;
 import io.github.xfacthd.framedblocks.common.data.shapes.slopeslab.SlopeSlabShapes;
 import net.minecraft.core.Direction;
@@ -28,21 +28,21 @@ public final class CornerSlopePanelWallShapes
     public static final ShapeCache<HorizontalRotation> SHAPES_SMALL_INNER = makeCache(ExtendedCornerSlopePanelWallShapes.INNER_SHAPES, BooleanOp.AND);
     public static final ShapeCache<HorizontalRotation> OCCLUSION_SHAPES_SMALL_INNER = makeCache(ExtendedCornerSlopePanelWallShapes.INNER_OCCLUSION_SHAPES, BooleanOp.AND);
 
-    public static final class SmallOuter implements SplitShapeGenerator
+    public static final class SmallOuter implements ShapeGenerator
     {
         @Override
-        public ShapeProvider generate(List<BlockState> states)
+        public ShapeContainer generatePrimary(List<BlockState> states)
         {
             return generate(states, SlopeSlabShapes.SHAPES, SlopePanelShapes.SHAPES);
         }
 
         @Override
-        public ShapeProvider generateOcclusionShapes(List<BlockState> states)
+        public ShapeContainer generateOcclusion(List<BlockState> states)
         {
             return generate(states, SlopeSlabShapes.OCCLUSION_SHAPES, SlopePanelShapes.OCCLUSION_SHAPES);
         }
 
-        private static ShapeProvider generate(List<BlockState> states, ShapeCache<SlopeSlabShape> slabCache, ShapeCache<SlopePanelShape> panelCache)
+        private static ShapeContainer generate(List<BlockState> states, ShapeCache<SlopeSlabShape> slabCache, ShapeCache<SlopePanelShape> panelCache)
         {
             Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -82,25 +82,25 @@ public final class CornerSlopePanelWallShapes
                 map.put(state, shapes[idx]);
             }
 
-            return ShapeProvider.of(map);
+            return ShapeContainer.of(map);
         }
     }
 
-    public static final class LargeOuter implements SplitShapeGenerator
+    public static final class LargeOuter implements ShapeGenerator
     {
         @Override
-        public ShapeProvider generate(List<BlockState> states)
+        public ShapeContainer generatePrimary(List<BlockState> states)
         {
             return generate(states, SHAPES_LARGE);
         }
 
         @Override
-        public ShapeProvider generateOcclusionShapes(List<BlockState> states)
+        public ShapeContainer generateOcclusion(List<BlockState> states)
         {
             return generate(states, OCCLUSION_SHAPES_LARGE);
         }
 
-        private static ShapeProvider generate(List<BlockState> states, ShapeCache<HorizontalRotation> cache)
+        private static ShapeContainer generate(List<BlockState> states, ShapeCache<HorizontalRotation> cache)
         {
             Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -119,25 +119,25 @@ public final class CornerSlopePanelWallShapes
                 map.put(state, shapes[idx]);
             }
 
-            return ShapeProvider.of(map);
+            return ShapeContainer.of(map);
         }
     }
 
-    public static final class SmallInner implements SplitShapeGenerator
+    public static final class SmallInner implements ShapeGenerator
     {
         @Override
-        public ShapeProvider generate(List<BlockState> states)
+        public ShapeContainer generatePrimary(List<BlockState> states)
         {
             return generate(states, SHAPES_SMALL_INNER);
         }
 
         @Override
-        public ShapeProvider generateOcclusionShapes(List<BlockState> states)
+        public ShapeContainer generateOcclusion(List<BlockState> states)
         {
             return generate(states, OCCLUSION_SHAPES_SMALL_INNER);
         }
 
-        private static ShapeProvider generate(List<BlockState> states, ShapeCache<HorizontalRotation> cache)
+        private static ShapeContainer generate(List<BlockState> states, ShapeCache<HorizontalRotation> cache)
         {
             Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -156,25 +156,25 @@ public final class CornerSlopePanelWallShapes
                 map.put(state, shapes[idx]);
             }
 
-            return ShapeProvider.of(map);
+            return ShapeContainer.of(map);
         }
     }
 
-    public static final class LargeInner implements SplitShapeGenerator
+    public static final class LargeInner implements ShapeGenerator
     {
         @Override
-        public ShapeProvider generate(List<BlockState> states)
+        public ShapeContainer generatePrimary(List<BlockState> states)
         {
             return generate(states, SlopeSlabShapes.SHAPES, SlopePanelShapes.SHAPES);
         }
 
         @Override
-        public ShapeProvider generateOcclusionShapes(List<BlockState> states)
+        public ShapeContainer generateOcclusion(List<BlockState> states)
         {
             return generate(states, SlopeSlabShapes.OCCLUSION_SHAPES, SlopePanelShapes.OCCLUSION_SHAPES);
         }
 
-        private static ShapeProvider generate(List<BlockState> states, ShapeCache<SlopeSlabShape> slabCache, ShapeCache<SlopePanelShape> panelCache)
+        private static ShapeContainer generate(List<BlockState> states, ShapeCache<SlopeSlabShape> slabCache, ShapeCache<SlopePanelShape> panelCache)
         {
             Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -214,7 +214,7 @@ public final class CornerSlopePanelWallShapes
                 map.put(state, shapes[idx]);
             }
 
-            return ShapeProvider.of(map);
+            return ShapeContainer.of(map);
         }
     }
 

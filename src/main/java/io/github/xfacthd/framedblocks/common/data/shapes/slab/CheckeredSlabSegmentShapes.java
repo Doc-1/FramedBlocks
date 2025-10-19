@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.slab;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import net.minecraft.core.Direction;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 public final class CheckeredSlabSegmentShapes
 {
-    public static ShapeProvider generate(List<BlockState> states)
+    public static ShapeContainer generate(List<BlockState> states)
     {
         VoxelShape shapeBotFirst = ShapeUtils.or(
                 Block.box(0, 0, 0,  8,  8,  8),
@@ -35,7 +35,7 @@ public final class CheckeredSlabSegmentShapes
             boolean second = state.getValue(PropertyHolder.SECOND);
             map.put(state, second ? (top ? shapeTopSecond : shapeBotSecond) : (top ? shapeTopFirst : shapeBotFirst));
         }
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
 

@@ -3,10 +3,7 @@ package io.github.xfacthd.framedblocks.common.block.pillar;
 import io.github.xfacthd.framedblocks.api.block.BlockUtils;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
-import io.github.xfacthd.framedblocks.api.shapes.ReloadableShapeProvider;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeLookup;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.block.IFramedBlockInternal;
 import io.github.xfacthd.framedblocks.common.data.BlockType;
@@ -36,26 +33,18 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 
 public class FramedWallBlock extends WallBlock implements IFramedBlockInternal
 {
-    private static final Map<Direction, EnumProperty<WallSide>> PROPERTY_BY_DIRECTION = Map.of(
-            Direction.NORTH, NORTH,
-            Direction.EAST, EAST,
-            Direction.SOUTH, SOUTH,
-            Direction.WEST, WEST
-    );
-    private final ShapeProvider shapes = makeShapeProvider(states -> generateShapes(states, 14F, 16F));
-    private final ShapeProvider collisionShapes = makeShapeProvider(states -> generateShapes(states, 24F, 24F));
+    private final ShapeLookup shapes;
 
     public FramedWallBlock(Properties props)
     {
         super(IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_WALL));
         BlockUtils.configureStandardProperties(this);
+        this.shapes = ShapeLookup.of(BlockType.FRAMED_WALL.getShapeGenerator(), this);
     }
 
     @Override
@@ -126,13 +115,14 @@ public class FramedWallBlock extends WallBlock implements IFramedBlockInternal
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx)
     {
-        return shapes.get(state);
+        return shapes.getShape(state);
     }
 
     @Override
     protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx)
     {
-        return collisionShapes.get(state);
+        // Misuse separate occlusion shape handling for collision shapes
+        return shapes.getOcclusionShape(state);
     }
 
     @Override
@@ -182,87 +172,5 @@ public class FramedWallBlock extends WallBlock implements IFramedBlockInternal
     {
         // Effectively NO-OP to conserve memory, the shape building is taken over below
         return state -> Shapes.empty();
-    }
-
-    private ShapeProvider makeShapeProvider(ShapeGenerator generator)
-    {
-        return ReloadableShapeProvider.of(generator, stateDefinition.getPossibleStates());
-    }
-
-    private static ShapeProvider generateShapes(List<BlockState> states, float lowHeight, float tallHeight)
-    {
-        boolean sameHeight = lowHeight == tallHeight;
-
-        VoxelShape centerLowShape = box(5F, 0F, 5F, 11F, lowHeight, 11F);
-        VoxelShape centerTallShape = sameHeight ? centerLowShape : box(5F, 0F, 5F, 11F, tallHeight, 11F);
-        VoxelShape postShape = box(4F, 0F, 4F, 12F, tallHeight, 12F);
-        VoxelShape wallLowShape = box(5F, 0F, 0F, 11F, lowHeight, 5F);
-        VoxelShape wallTallShape = sameHeight ? wallLowShape : box(5F, 0F, 0F, 11F, tallHeight, 5F);
-
-        VoxelShape[] wallLowShapes = ShapeUtils.makeHorizontalRotations(wallLowShape, Direction.NORTH);
-        VoxelShape[] wallTallShapes = sameHeight ? wallLowShapes : ShapeUtils.makeHorizontalRotations(wallTallShape, Direction.NORTH);
-
-        VoxelShape[] shapes = new VoxelShape[512];
-        for (WallSide north : NORTH.getPossibleValues())
-        {
-            for (WallSide east : EAST.getPossibleValues())
-            {
-                for (WallSide south : SOUTH.getPossibleValues())
-                {
-                    for (WallSide west : WEST.getPossibleValues())
-                    {
-                        int noUpKey = makeShapeKey(false, north, east, south, west);
-                        int upKey = makeShapeKey(true, north, east, south, west);
-
-                        boolean anyTall = north == WallSide.TALL || east == WallSide.TALL || south == WallSide.TALL || west == WallSide.TALL;
-                        shapes[noUpKey] = ShapeUtils.or(
-                                anyTall ? centerTallShape : centerLowShape,
-                                getWallShape(north, Direction.NORTH, wallLowShapes, wallTallShapes),
-                                getWallShape(east, Direction.EAST, wallLowShapes, wallTallShapes),
-                                getWallShape(south, Direction.SOUTH, wallLowShapes, wallTallShapes),
-                                getWallShape(west, Direction.WEST, wallLowShapes, wallTallShapes)
-                        );
-
-                        shapes[upKey] = ShapeUtils.or(
-                                postShape,
-                                getWallShape(north, Direction.NORTH, wallLowShapes, wallTallShapes),
-                                getWallShape(east, Direction.EAST, wallLowShapes, wallTallShapes),
-                                getWallShape(south, Direction.SOUTH, wallLowShapes, wallTallShapes),
-                                getWallShape(west, Direction.WEST, wallLowShapes, wallTallShapes)
-                        );
-                    }
-                }
-            }
-        }
-        shapes[0] = Shapes.block();
-
-        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
-        for (BlockState state : states)
-        {
-            int key = makeShapeKey(
-                    state.getValue(UP),
-                    state.getValue(NORTH),
-                    state.getValue(EAST),
-                    state.getValue(SOUTH),
-                    state.getValue(WEST)
-            );
-            map.put(state, shapes[key]);
-        }
-        return ShapeProvider.of(map);
-    }
-
-    private static VoxelShape getWallShape(WallSide side, Direction dir, VoxelShape[] lowShapes, VoxelShape[] tallShapes)
-    {
-        return switch (side)
-        {
-            case NONE -> Shapes.empty();
-            case LOW -> lowShapes[dir.get2DDataValue()];
-            case TALL -> tallShapes[dir.get2DDataValue()];
-        };
-    }
-
-    private static int makeShapeKey(boolean up, WallSide north, WallSide east, WallSide south, WallSide west)
-    {
-        return ((up ? 1 : 0) << 8) | (north.ordinal() << 6) | (east.ordinal() << 4) | (south.ordinal() << 2) | west.ordinal();
     }
 }

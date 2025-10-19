@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.interactive;
 
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import net.minecraft.core.Direction;
@@ -28,7 +28,7 @@ public final class ItemFrameShapes
         ShapeUtils.makeHorizontalRotationsWithFlag(northShape, northMapShape, Direction.NORTH, map, ShapeKey::new);
     });
 
-    public static ShapeProvider generate(List<BlockState> states)
+    public static ShapeContainer generate(List<BlockState> states)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -39,7 +39,7 @@ public final class ItemFrameShapes
             map.put(state, SHAPES.get(new ShapeKey(dir, mapFrame)));
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
 

@@ -2,11 +2,11 @@ package io.github.xfacthd.framedblocks.common.data.shapes.slopepanel;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.HorizontalRotation;
-import io.github.xfacthd.framedblocks.common.data.shapes.SplitShapeGenerator;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,7 +18,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class FlatExtendedSlopePanelCornerShapes implements SplitShapeGenerator
+public final class FlatExtendedSlopePanelCornerShapes implements ShapeGenerator
 {
     private static final ShapeCache<ShapeKey> FINAL_SHAPES = makeCache(ExtendedSlopePanelShapes.SHAPES, BooleanOp.AND);
     private static final ShapeCache<ShapeKey> FINAL_OCCLUSION_SHAPES = makeCache(ExtendedSlopePanelShapes.OCCLUSION_SHAPES, BooleanOp.AND);
@@ -37,18 +37,18 @@ public final class FlatExtendedSlopePanelCornerShapes implements SplitShapeGener
     }
 
     @Override
-    public ShapeProvider generate(List<BlockState> states)
+    public ShapeContainer generatePrimary(List<BlockState> states)
     {
         return generate(states, shapes);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
+    public ShapeContainer generateOcclusion(List<BlockState> states)
     {
         return generate(states, occlusionShapes);
     }
 
-    private static ShapeProvider generate(List<BlockState> states, ShapeCache<ShapeKey> cache)
+    private static ShapeContainer generate(List<BlockState> states, ShapeCache<ShapeKey> cache)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -59,7 +59,7 @@ public final class FlatExtendedSlopePanelCornerShapes implements SplitShapeGener
             map.put(state, cache.get(new ShapeKey(dir, rot)));
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
     private static ShapeCache<ShapeKey> makeCache(ShapeCache<HorizontalRotation> cache, BooleanOp joinOp)

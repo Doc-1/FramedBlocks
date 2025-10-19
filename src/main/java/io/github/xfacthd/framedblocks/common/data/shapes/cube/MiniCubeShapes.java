@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.cube;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 public final class MiniCubeShapes
 {
-    public static ShapeProvider generate(List<BlockState> states)
+    public static ShapeContainer generate(List<BlockState> states)
     {
         VoxelShape bottomShape = Block.box(4, 0, 4, 12, 8, 12);
         VoxelShape topShape = Block.box(4, 8, 4, 12, 16, 12);
@@ -23,7 +23,7 @@ public final class MiniCubeShapes
             boolean top = state.getValue(FramedProperties.TOP);
             map.put(state, top ? topShape : bottomShape);
         }
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
 

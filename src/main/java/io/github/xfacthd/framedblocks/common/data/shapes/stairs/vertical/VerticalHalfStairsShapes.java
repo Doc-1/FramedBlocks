@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.stairs.vertical;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 public final class VerticalHalfStairsShapes
 {
-    public static ShapeProvider generate(List<BlockState> states)
+    public static ShapeContainer generate(List<BlockState> states)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -37,7 +37,7 @@ public final class VerticalHalfStairsShapes
             map.put(state, shapes[dir.get2DDataValue() + (top ? 4 : 0)]);
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
 

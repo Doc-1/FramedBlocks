@@ -2,11 +2,11 @@ package io.github.xfacthd.framedblocks.common.data.shapes.slopepanelcorner;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.block.slopepanel.SlopePanelShape;
 import io.github.xfacthd.framedblocks.common.data.CornerSlopePanelShape;
-import io.github.xfacthd.framedblocks.common.data.shapes.SplitShapeGenerator;
 import io.github.xfacthd.framedblocks.common.data.shapes.slopepanel.SlopePanelShapes;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
@@ -17,7 +17,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class CornerSlopePanelShapes implements SplitShapeGenerator
+public final class CornerSlopePanelShapes implements ShapeGenerator
 {
     public static final CornerSlopePanelShapes SMALL_OUTER = new CornerSlopePanelShapes(CornerSlopePanelShape.SMALL_BOTTOM, CornerSlopePanelShape.SMALL_TOP, Direction.NORTH);
     public static final CornerSlopePanelShapes LARGE_OUTER = new CornerSlopePanelShapes(CornerSlopePanelShape.LARGE_BOTTOM, CornerSlopePanelShape.LARGE_TOP, Direction.NORTH);
@@ -38,18 +38,18 @@ public final class CornerSlopePanelShapes implements SplitShapeGenerator
     }
 
     @Override
-    public ShapeProvider generate(List<BlockState> states)
+    public ShapeContainer generatePrimary(List<BlockState> states)
     {
         return generate(states, SHAPES);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
+    public ShapeContainer generateOcclusion(List<BlockState> states)
     {
         return generate(states, OCCLUSION_SHAPES);
     }
 
-    private ShapeProvider generate(List<BlockState> states, ShapeCache<CornerSlopePanelShape> cache)
+    private ShapeContainer generate(List<BlockState> states, ShapeCache<CornerSlopePanelShape> cache)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -62,7 +62,7 @@ public final class CornerSlopePanelShapes implements SplitShapeGenerator
             map.put(state, shapes[dir.get2DDataValue() + (top ? 4 : 0)]);
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
     private static ShapeCache<CornerSlopePanelShape> makeCache(ShapeCache<SlopePanelShape> cache)

@@ -2,7 +2,7 @@ package io.github.xfacthd.framedblocks.common.data.shapes.slopepanelcorner;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.CommonShapes;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 public final class DoubleCornerSlopePanelShapes
 {
-    public static ShapeProvider generate(List<BlockState> states)
+    public static ShapeContainer generate(List<BlockState> states)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -23,7 +23,7 @@ public final class DoubleCornerSlopePanelShapes
             map.put(state, CommonShapes.STRAIGHT_VERTICAL_STAIRS.get(dir.getOpposite()));
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
 

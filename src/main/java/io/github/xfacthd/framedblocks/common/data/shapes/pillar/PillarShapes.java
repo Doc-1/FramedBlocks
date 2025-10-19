@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.pillar;
 
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -26,7 +26,7 @@ public final class PillarShapes implements ShapeGenerator
     }
 
     @Override
-    public ShapeProvider generate(List<BlockState> states)
+    public ShapeContainer generatePrimary(List<BlockState> states)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -44,6 +44,6 @@ public final class PillarShapes implements ShapeGenerator
             });
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 }

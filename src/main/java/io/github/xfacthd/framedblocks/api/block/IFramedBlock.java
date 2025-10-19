@@ -13,7 +13,7 @@ import io.github.xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import io.github.xfacthd.framedblocks.api.internal.InternalAPI;
 import io.github.xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import io.github.xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeLookup;
 import io.github.xfacthd.framedblocks.api.util.ConfigView;
 import io.github.xfacthd.framedblocks.api.util.SoundUtils;
 import io.github.xfacthd.framedblocks.api.util.Utils;
@@ -420,17 +420,17 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
     /**
      * {@return the shape to use for occlusion checks}
      * @param state This block's state
-     * @param occlusionShapes The {@link ShapeProvider} to get the shape from if this block uses separate main and occlusion shapes
+     * @param occlusionShapes The {@link ShapeLookup} to get the shape from if this block uses separate main and occlusion shapes
      */
-    default VoxelShape getCamoOcclusionShape(BlockState state, @Nullable ShapeProvider occlusionShapes)
+    default VoxelShape getCamoOcclusionShape(BlockState state, @Nullable ShapeLookup occlusionShapes)
     {
         if (getBlockType().canOccludeWithSolidCamo() && !state.getValue(FramedProperties.SOLID))
         {
             return Shapes.empty();
         }
-        if (occlusionShapes != null)
+        if (occlusionShapes != null && occlusionShapes.hasSeparateOcclusionShapes())
         {
-            return occlusionShapes.get(state);
+            return occlusionShapes.getOcclusionShape(state);
         }
         return state.getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
     }

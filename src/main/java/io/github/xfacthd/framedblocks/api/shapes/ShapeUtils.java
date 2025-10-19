@@ -4,6 +4,7 @@ import com.mojang.math.OctahedralGroup;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.shapes.ArrayVoxelShape;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -51,6 +52,7 @@ public final class ShapeUtils
             dir -> DIR_ROT_Z_2D_DATA[dir.ordinal()],
             OctahedralGroup.ROT_90_Z_NEG, OctahedralGroup.ROT_180_FACE_XY, OctahedralGroup.ROT_90_Z_POS
     );
+    private static final VoxelShape BEACON_BEAM_SHAPE = Block.box(5, 0, 5, 11, 16, 11);
 
     public static VoxelShape orUnoptimized(VoxelShape first, VoxelShape second)
     {
@@ -242,6 +244,15 @@ public final class ShapeUtils
         }
     }
 
+    public static boolean occludesBeaconBeam(VoxelShape shape)
+    {
+        VoxelShape intersection = andUnoptimized(shape, BEACON_BEAM_SHAPE);
+        return intersection.min(Direction.Axis.X) <= BEACON_BEAM_SHAPE.min(Direction.Axis.X) &&
+               intersection.min(Direction.Axis.Z) <= BEACON_BEAM_SHAPE.min(Direction.Axis.Z) &&
+               intersection.max(Direction.Axis.X) >= BEACON_BEAM_SHAPE.max(Direction.Axis.X) &&
+               intersection.max(Direction.Axis.Z) >= BEACON_BEAM_SHAPE.max(Direction.Axis.Z);
+    }
+
     public interface ArbIndexGenerator<V>
     {
         int makeKey(Direction dir, V staticParam);
@@ -281,8 +292,6 @@ public final class ShapeUtils
         }
         return arr;
     }
-
-
 
     private ShapeUtils() { }
 }

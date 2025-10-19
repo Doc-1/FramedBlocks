@@ -2,7 +2,7 @@ package io.github.xfacthd.framedblocks.common.data.shapes.pillar;
 
 import io.github.xfacthd.framedblocks.api.shapes.CommonShapes;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
@@ -18,7 +18,7 @@ public final class PillarSocketShapes
 {
     private static final ShapeCache<Direction> SHAPES = ShapeCache.createEnum(Direction.class, PillarSocketShapes::createShapes);
 
-    public static ShapeProvider generate(List<BlockState> states)
+    public static ShapeContainer generate(List<BlockState> states)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
         for (BlockState state : states)
@@ -26,7 +26,7 @@ public final class PillarSocketShapes
             Direction dir = state.getValue(BlockStateProperties.FACING);
             map.put(state, SHAPES.get(dir));
         }
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
     private static void createShapes(Map<Direction, VoxelShape> map)

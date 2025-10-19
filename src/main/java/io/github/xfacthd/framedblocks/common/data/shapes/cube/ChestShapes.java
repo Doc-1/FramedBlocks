@@ -1,6 +1,6 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.cube;
 
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import io.github.xfacthd.framedblocks.common.block.cube.FramedChestBlock;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 public final class ChestShapes
 {
-    public static ShapeProvider generate(List<BlockState> states)
+    public static ShapeContainer generate(List<BlockState> states)
     {
         VoxelShape shapeSingle = Block.box(1D, 0D, 1D, 15D, 14D, 15D);
         VoxelShape[] conShapes = new VoxelShape[] {
@@ -41,7 +41,7 @@ public final class ChestShapes
             }
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
 

@@ -2,10 +2,10 @@ package io.github.xfacthd.framedblocks.common.data.shapes.slopeslab;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.block.slopeslab.SlopeSlabShape;
-import io.github.xfacthd.framedblocks.common.data.shapes.SplitShapeGenerator;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,7 +17,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class FlatElevatedSlopeSlabCornerShapes implements SplitShapeGenerator
+public final class FlatElevatedSlopeSlabCornerShapes implements ShapeGenerator
 {
     private static final ShapeCache<ShapeKey> FINAL_SHAPES = makeCache(SlopeSlabShapes.SHAPES, BooleanOp.AND);
     private static final ShapeCache<ShapeKey> FINAL_OCCLUSION_SHAPES = makeCache(SlopeSlabShapes.OCCLUSION_SHAPES, BooleanOp.AND);
@@ -36,18 +36,18 @@ public final class FlatElevatedSlopeSlabCornerShapes implements SplitShapeGenera
     }
 
     @Override
-    public ShapeProvider generate(List<BlockState> states)
+    public ShapeContainer generatePrimary(List<BlockState> states)
     {
         return generate(states, shapes);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
+    public ShapeContainer generateOcclusion(List<BlockState> states)
     {
         return generate(states, occlusionShapes);
     }
 
-    private static ShapeProvider generate(List<BlockState> states, ShapeCache<ShapeKey> cache)
+    private static ShapeContainer generate(List<BlockState> states, ShapeCache<ShapeKey> cache)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -58,7 +58,7 @@ public final class FlatElevatedSlopeSlabCornerShapes implements SplitShapeGenera
             map.put(state, cache.get(new ShapeKey(dir, top)));
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
     private static ShapeCache<ShapeKey> makeCache(ShapeCache<SlopeSlabShape> cache, BooleanOp joinOp)

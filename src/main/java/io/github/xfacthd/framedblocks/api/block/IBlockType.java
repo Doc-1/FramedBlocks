@@ -6,18 +6,12 @@ import io.github.xfacthd.framedblocks.api.predicate.contex.ConTexMode;
 import io.github.xfacthd.framedblocks.api.predicate.contex.ConnectionPredicate;
 import io.github.xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
 import io.github.xfacthd.framedblocks.api.predicate.fullface.FullFacePredicate;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import org.jetbrains.annotations.ApiStatus;
-
-import java.util.List;
 
 public interface IBlockType
 {
@@ -33,21 +27,7 @@ public interface IBlockType
     @ApiStatus.OverrideOnly
     ConnectionPredicate getConnectionPredicate();
 
-    /**
-     * {return a {@link ShapeProvider} used to provide the main shapes of the block, to be returned from
-     * {@link Block#getShape(BlockState, BlockGetter, BlockPos, CollisionContext)}}
-     */
-    ShapeProvider generateShapes(List<BlockState> states);
-
-    /**
-     * {@return the {@link ShapeProvider} used to provide the occlusion shapes of the block, to be returned from
-     * {@link Block#getOcclusionShape(BlockState, BlockGetter, BlockPos)}, or the given provider if the main shapes
-     * should be used as the occlusion shapes}
-     */
-    default ShapeProvider generateOcclusionShapes(List<BlockState> states, ShapeProvider shapes)
-    {
-        return shapes;
-    }
+    ShapeGenerator getShapeGenerator();
 
     boolean hasSpecialTile();
 

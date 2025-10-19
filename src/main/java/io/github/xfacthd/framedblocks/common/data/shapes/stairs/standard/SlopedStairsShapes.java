@@ -3,9 +3,9 @@ package io.github.xfacthd.framedblocks.common.data.shapes.stairs.standard;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.CommonShapes;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
-import io.github.xfacthd.framedblocks.common.data.shapes.SplitShapeGenerator;
 import io.github.xfacthd.framedblocks.common.data.shapes.slope.VerticalHalfSlopeShapes;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,7 +15,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class SlopedStairsShapes implements SplitShapeGenerator
+public final class SlopedStairsShapes implements ShapeGenerator
 {
     public static final SlopedStairsShapes INSTANCE = new SlopedStairsShapes();
     private static final ShapeCache<CommonShapes.DirBoolKey> SHAPES = makeCache(VerticalHalfSlopeShapes.SHAPES);
@@ -24,18 +24,18 @@ public final class SlopedStairsShapes implements SplitShapeGenerator
     private SlopedStairsShapes() { }
 
     @Override
-    public ShapeProvider generate(List<BlockState> states)
+    public ShapeContainer generatePrimary(List<BlockState> states)
     {
         return generateShapes(states, SHAPES);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
+    public ShapeContainer generateOcclusion(List<BlockState> states)
     {
         return generateShapes(states, OCCLUSION_SHAPES);
     }
 
-    private static ShapeProvider generateShapes(List<BlockState> states, ShapeCache<CommonShapes.DirBoolKey> shapeCache)
+    private static ShapeContainer generateShapes(List<BlockState> states, ShapeCache<CommonShapes.DirBoolKey> shapeCache)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -46,7 +46,7 @@ public final class SlopedStairsShapes implements SplitShapeGenerator
             map.put(state, shapeCache.get(new CommonShapes.DirBoolKey(dir, top)));
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
     private static ShapeCache<CommonShapes.DirBoolKey> makeCache(ShapeCache<Boolean> shapeCache)

@@ -2,11 +2,11 @@ package io.github.xfacthd.framedblocks.common.data.shapes.slopepanelcorner;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.HorizontalRotation;
-import io.github.xfacthd.framedblocks.common.data.shapes.SplitShapeGenerator;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,21 +16,21 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class InverseDoubleCornerSlopePanelWallShapes implements SplitShapeGenerator
+public final class InverseDoubleCornerSlopePanelWallShapes implements ShapeGenerator
 {
     @Override
-    public ShapeProvider generate(List<BlockState> states)
+    public ShapeContainer generatePrimary(List<BlockState> states)
     {
         return generate(states, CornerSlopePanelWallShapes.SHAPES_LARGE, CornerSlopePanelWallShapes.SHAPES_SMALL_INNER);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
+    public ShapeContainer generateOcclusion(List<BlockState> states)
     {
         return generate(states, CornerSlopePanelWallShapes.OCCLUSION_SHAPES_LARGE, CornerSlopePanelWallShapes.OCCLUSION_SHAPES_SMALL_INNER);
     }
 
-    private static ShapeProvider generate(List<BlockState> states, ShapeCache<HorizontalRotation> cache, ShapeCache<HorizontalRotation> innerCache)
+    private static ShapeContainer generate(List<BlockState> states, ShapeCache<HorizontalRotation> cache, ShapeCache<HorizontalRotation> innerCache)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -53,6 +53,6 @@ public final class InverseDoubleCornerSlopePanelWallShapes implements SplitShape
             map.put(state, shapes[idx]);
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 }

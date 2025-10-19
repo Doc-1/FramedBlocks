@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.pillar;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.property.StairsType;
 import io.github.xfacthd.framedblocks.common.data.shapes.stairs.vertical.VerticalStairsShapes;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 public final class ThreewayCornerPillarShapes
 {
-    public static ShapeProvider generate(List<BlockState> states)
+    public static ShapeContainer generate(List<BlockState> states)
     {
         VoxelShape[] shapes = ShapeUtils.makeHorizontalRotationsWithFlag(
                 VerticalStairsShapes.SHAPES.get(new VerticalStairsShapes.ShapeKey(Direction.NORTH, StairsType.TOP_BOTH)),
@@ -32,7 +32,7 @@ public final class ThreewayCornerPillarShapes
             map.put(state, shapes[dir.get2DDataValue() + (top ? 4 : 0)]);
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
 

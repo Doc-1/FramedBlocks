@@ -5,7 +5,7 @@ import io.github.xfacthd.framedblocks.api.camo.CamoContainer;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainerFactory;
 import io.github.xfacthd.framedblocks.api.camo.block.rotator.BlockCamoRotator;
 import io.github.xfacthd.framedblocks.api.datagen.recipes.builders.FramingSawRecipeBuilder;
-import io.github.xfacthd.framedblocks.api.shapes.ReloadableShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ReloadableShapeLookup;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.minecraft.core.BlockPos;
@@ -29,8 +29,6 @@ public interface InternalAPI
 {
     InternalAPI INSTANCE = Utils.loadService(InternalAPI.class);
 
-
-
     @Nullable
     CamoContainerFactory<?> findCamoFactory(ItemStack stack);
 
@@ -50,7 +48,7 @@ public interface InternalAPI
 
     void registerShapeCache(ShapeCache<?> cache);
 
-    void registerReloadableShapeProvider(ReloadableShapeProvider provider);
+    void registerReloadableShapeLookup(ReloadableShapeLookup lookup);
 
     BlockCamoRotator getCamoRotator(Block block);
 

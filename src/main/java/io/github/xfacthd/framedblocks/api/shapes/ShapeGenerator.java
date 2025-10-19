@@ -2,17 +2,23 @@ package io.github.xfacthd.framedblocks.api.shapes;
 
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public interface ShapeGenerator
 {
-    ShapeGenerator EMPTY = states -> NoShapeProvider.INSTANCE;
+    ShapeGenerator EMPTY = states -> EmptyShapeContainer.INSTANCE;
 
-    ShapeProvider generate(List<BlockState> states);
+    ShapeContainer generatePrimary(List<BlockState> states);
 
-    static ShapeGenerator singleShape(VoxelShape shape)
+    default ShapeContainer generateOcclusion(List<BlockState> states)
     {
-        return states -> new SingleShapeProvider(states, shape);
+        return ShapeContainer.EMPTY;
+    }
+
+    static ShapeGenerator singleShape(VoxelShape shape, @Nullable VoxelShape occlusionShape)
+    {
+        return new SingleShapeGenerator(shape, occlusionShape);
     }
 }

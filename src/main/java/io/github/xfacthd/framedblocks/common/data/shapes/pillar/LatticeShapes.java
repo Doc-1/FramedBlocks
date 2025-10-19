@@ -1,8 +1,8 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.pillar;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,7 +27,7 @@ public final class LatticeShapes implements ShapeGenerator
     }
 
     @Override
-    public ShapeProvider generate(List<BlockState> states)
+    public ShapeContainer generatePrimary(List<BlockState> states)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -66,6 +66,6 @@ public final class LatticeShapes implements ShapeGenerator
             map.put(state, shapes[x | y | z]);
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 }

@@ -1,6 +1,6 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.pillar;
 
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import io.github.xfacthd.framedblocks.common.block.pillar.FramedChainBlock;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 public final class ChainShapes
 {
-    public static ShapeProvider generate(List<BlockState> states)
+    public static ShapeContainer generate(List<BlockState> states)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -29,7 +29,7 @@ public final class ChainShapes
             map.put(state, shapes[axis.ordinal()]);
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
 

@@ -2,11 +2,11 @@ package io.github.xfacthd.framedblocks.common.data.shapes.slopepanel;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.HorizontalRotation;
-import io.github.xfacthd.framedblocks.common.data.shapes.SplitShapeGenerator;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,21 +16,21 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class FlatInverseDoubleSlopePanelCornerShapes implements SplitShapeGenerator
+public final class FlatInverseDoubleSlopePanelCornerShapes implements ShapeGenerator
 {
     @Override
-    public ShapeProvider generate(List<BlockState> states)
+    public ShapeContainer generatePrimary(List<BlockState> states)
     {
         return generate(states, FlatSlopePanelCornerShapes.SHAPES, FlatSlopePanelCornerShapes.INNER_SHAPES);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
+    public ShapeContainer generateOcclusion(List<BlockState> states)
     {
         return generate(states, FlatSlopePanelCornerShapes.OCCLUSION_SHAPES, FlatSlopePanelCornerShapes.INNER_OCCLUSION_SHAPES);
     }
 
-    private static ShapeProvider generate(
+    private static ShapeContainer generate(
             List<BlockState> states,
             ShapeCache<FlatSlopePanelCornerShapes.ShapeKey> cache,
             ShapeCache<FlatSlopePanelCornerShapes.ShapeKey> innerCache
@@ -58,6 +58,6 @@ public final class FlatInverseDoubleSlopePanelCornerShapes implements SplitShape
             map.put(state, shapes[idx]);
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 }

@@ -71,7 +71,7 @@ public final class CommonShapes
                 map.put(state, SLAB.get(state.getValue(topProp)));
             }
 
-            return ShapeProvider.of(map);
+            return ShapeContainer.of(map);
         };
     }
 
@@ -87,7 +87,7 @@ public final class CommonShapes
                 map.put(state, PANEL.get(dir));
             }
 
-            return ShapeProvider.of(map);
+            return ShapeContainer.of(map);
         };
     }
 
@@ -107,7 +107,7 @@ public final class CommonShapes
                 map.put(state, PANEL.get(dir));
             }
 
-            return ShapeProvider.of(map);
+            return ShapeContainer.of(map);
         };
     }
 

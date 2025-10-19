@@ -7,13 +7,10 @@ import io.github.xfacthd.framedblocks.api.predicate.contex.ConnectionPredicate;
 import io.github.xfacthd.framedblocks.api.predicate.cull.SideSkipPredicate;
 import io.github.xfacthd.framedblocks.api.predicate.fullface.FullFacePredicate;
 import io.github.xfacthd.framedblocks.api.shapes.CommonShapes;
-import io.github.xfacthd.framedblocks.api.shapes.ReloadableShapeProvider;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
 import io.github.xfacthd.framedblocks.common.data.conpreds.ConnectionPredicates;
 import io.github.xfacthd.framedblocks.common.data.facepreds.FullFacePredicates;
 import io.github.xfacthd.framedblocks.common.data.shapes.MoreCommonShapes;
-import io.github.xfacthd.framedblocks.common.data.shapes.SplitShapeGenerator;
 import io.github.xfacthd.framedblocks.common.data.shapes.cube.*;
 import io.github.xfacthd.framedblocks.common.data.shapes.door.*;
 import io.github.xfacthd.framedblocks.common.data.shapes.interactive.*;
@@ -31,13 +28,11 @@ import io.github.xfacthd.framedblocks.common.data.shapes.stairs.standard.*;
 import io.github.xfacthd.framedblocks.common.data.shapes.stairs.vertical.*;
 import io.github.xfacthd.framedblocks.common.data.skippreds.SideSkipPredicates;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -112,7 +107,7 @@ public enum BlockType implements IBlockType
     FRAMED_VERTICAL_SLICED_SLOPED_STAIRS_SLOPE      ( true,  true,  true,  true,  true,  true,  true, false, ConTexMode.FULL_FACE, VerticalSlopedStairsShapes.INSTANCE),
     FRAMED_THREEWAY_CORNER_PILLAR                   (false, false, false,  true,  true,  true, false, false, ConTexMode.FULL_EDGE, ThreewayCornerPillarShapes::generate),
     FRAMED_DOUBLE_THREEWAY_CORNER_PILLAR            ( true, false, false, false,  true,  true,  true, false, ConTexMode.FULL_EDGE, Shapes.block()),
-    FRAMED_WALL                                     (false, false, false,  true,  true, false, false,  true, ConTexMode.DETAILED),
+    FRAMED_WALL                                     (false, false, false,  true,  true, false, false,  true, ConTexMode.DETAILED, new WallShapes()),
     FRAMED_FENCE                                    (false, false, false,  true,  true, false, false,  true, ConTexMode.DETAILED),
     FRAMED_FENCE_GATE                               (false, false, false, false,  true, false, false, false, ConTexMode.DETAILED),
     FRAMED_DOOR                                     ( true, false,  true, false,  true, false, false, false, ConTexMode.FULL_FACE),
@@ -129,7 +124,7 @@ public enum BlockType implements IBlockType
     FRAMED_WATERLOGGABLE_GOLD_PRESSURE_PLATE        (false, false, false,  true, false, false, false, false, null),
     FRAMED_IRON_PRESSURE_PLATE                      (false, false, false, false,  true, false, false, false, null),
     FRAMED_WATERLOGGABLE_IRON_PRESSURE_PLATE        (false, false, false,  true, false, false, false, false, null),
-    FRAMED_LADDER                                   (false, false, false,  true,  true, false, false, false, ConTexMode.DETAILED),
+    FRAMED_LADDER                                   (false, false, false,  true,  true, false, false, false, ConTexMode.DETAILED, new LadderShapes()),
     FRAMED_BUTTON                                   (false, false, false, false,  true, false, false, false, null),
     FRAMED_STONE_BUTTON                             (false, false, false, false,  true, false, false, false, null),
     FRAMED_LARGE_BUTTON                             (false, false, false, false,  true, false, false, false, null),
@@ -293,7 +288,6 @@ public enum BlockType implements IBlockType
     private final boolean supportsCT;
     private final ConTexMode minCTMode;
     private final ShapeGenerator shapeGen;
-    private final boolean separateOcclusionShapes;
 
     BlockType(boolean canOcclude, boolean specialHitbox, boolean specialTile, boolean waterloggable, boolean blockItem, boolean allowIntangible, boolean doubleBlock, boolean lockable, @Nullable ConTexMode minCTMode)
     {
@@ -302,7 +296,7 @@ public enum BlockType implements IBlockType
 
     BlockType(boolean canOcclude, boolean specialHitbox, boolean specialTile, boolean waterloggable, boolean blockItem, boolean allowIntangible, boolean doubleBlock, boolean lockable, @Nullable ConTexMode minCTMode, VoxelShape shape)
     {
-        this(canOcclude, specialHitbox, specialTile, waterloggable, blockItem, allowIntangible, doubleBlock, lockable, minCTMode, ShapeGenerator.singleShape(shape));
+        this(canOcclude, specialHitbox, specialTile, waterloggable, blockItem, allowIntangible, doubleBlock, lockable, minCTMode, ShapeGenerator.singleShape(shape, null));
         Preconditions.checkArgument(!waterloggable || !Shapes.joinUnoptimized(shape, Shapes.block(), BooleanOp.NOT_SAME).isEmpty(), "Blocks with full cube shape can't be waterloggable");
     }
 
@@ -319,7 +313,6 @@ public enum BlockType implements IBlockType
         this.supportsCT = minCTMode != null;
         this.minCTMode = Objects.requireNonNullElse(minCTMode, ConTexMode.NONE);
         this.shapeGen = shapeGen;
-        this.separateOcclusionShapes = shapeGen instanceof SplitShapeGenerator;
     }
 
     @Override
@@ -353,20 +346,9 @@ public enum BlockType implements IBlockType
     }
 
     @Override
-    public ShapeProvider generateShapes(List<BlockState> states)
+    public ShapeGenerator getShapeGenerator()
     {
-        return ReloadableShapeProvider.of(shapeGen, states);
-    }
-
-    @Override
-    public ShapeProvider generateOcclusionShapes(List<BlockState> states, ShapeProvider shapes)
-    {
-        if (separateOcclusionShapes)
-        {
-            SplitShapeGenerator splitShapeGen = (SplitShapeGenerator) shapeGen;
-            return ReloadableShapeProvider.of(splitShapeGen::generateOcclusionShapes, states);
-        }
-        return shapes;
+        return shapeGen;
     }
 
     @Override

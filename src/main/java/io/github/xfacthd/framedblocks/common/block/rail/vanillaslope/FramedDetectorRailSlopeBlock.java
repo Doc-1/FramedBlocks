@@ -6,7 +6,7 @@ import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
 import io.github.xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeLookup;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.block.IFramedBlockInternal;
@@ -54,16 +54,14 @@ import java.util.Objects;
 public class FramedDetectorRailSlopeBlock<BE extends FramedBlockEntity> extends DetectorRailBlock implements IFramedBlockInternal, ISlopeBlock.IRailSlopeBlock
 {
     private final BlockType type;
-    private final ShapeProvider shapes;
-    private final ShapeProvider occlusionShapes;
+    private final ShapeLookup shapes;
     private final BlockEntityType.BlockEntitySupplier<BE> beFactory;
 
     protected FramedDetectorRailSlopeBlock(BlockType type, Properties props, BlockEntityType.BlockEntitySupplier<BE> beFactory)
     {
         super(IFramedBlock.applyDefaultProperties(props, type));
         this.type = type;
-        this.shapes = type.generateShapes(getStateDefinition().getPossibleStates());
-        this.occlusionShapes = type.generateOcclusionShapes(getStateDefinition().getPossibleStates(), shapes);
+        this.shapes = ShapeLookup.of(type.getShapeGenerator(), this);
         this.beFactory = beFactory;
         BlockUtils.configureStandardProperties(this);
         registerDefaultState(defaultBlockState()
@@ -166,7 +164,7 @@ public class FramedDetectorRailSlopeBlock<BE extends FramedBlockEntity> extends 
     @Override
     protected VoxelShape getOcclusionShape(BlockState state)
     {
-        return getCamoOcclusionShape(state, occlusionShapes);
+        return getCamoOcclusionShape(state, shapes);
     }
 
     @Override
@@ -196,7 +194,7 @@ public class FramedDetectorRailSlopeBlock<BE extends FramedBlockEntity> extends 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx)
     {
-        return shapes.get(state);
+        return shapes.getOcclusionShape(state);
     }
 
     @Override //The default implementation defers to the AbstractBlock#getShape() overload without ISelectionContext argument

@@ -1,10 +1,10 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.slope;
 
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.PillarConnection;
-import io.github.xfacthd.framedblocks.common.data.shapes.SplitShapeGenerator;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public final class PyramidShapes implements SplitShapeGenerator
+public final class PyramidShapes implements ShapeGenerator
 {
     public static final PyramidShapes FULL = new PyramidShapes(
             () -> ShapeUtils.orUnoptimized(
@@ -123,18 +123,18 @@ public final class PyramidShapes implements SplitShapeGenerator
     }
 
     @Override
-    public ShapeProvider generate(List<BlockState> states)
+    public ShapeContainer generatePrimary(List<BlockState> states)
     {
         return generate(states, northShape, null, null);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
+    public ShapeContainer generateOcclusion(List<BlockState> states)
     {
         return generate(states, northOcclusionShape, northOcclusionShapePost, northOcclusionShapePillar);
     }
 
-    private static ShapeProvider generate(
+    private static ShapeContainer generate(
             List<BlockState> states,
             Supplier<VoxelShape> northShape,
             @Nullable Supplier<VoxelShape> northShapePost,
@@ -180,6 +180,6 @@ public final class PyramidShapes implements SplitShapeGenerator
             map.put(state, shape);
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 }

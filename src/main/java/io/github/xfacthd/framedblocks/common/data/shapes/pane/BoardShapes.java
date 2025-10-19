@@ -1,6 +1,6 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.pane;
 
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import net.minecraft.core.Direction;
@@ -17,7 +17,7 @@ public final class BoardShapes
 {
     private static final Direction[] DIRECTIONS = Direction.values();
 
-    public static ShapeProvider generate(List<BlockState> states)
+    public static ShapeContainer generate(List<BlockState> states)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -51,7 +51,7 @@ public final class BoardShapes
             map.put(state, allShapes[mask - 1]);
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
 

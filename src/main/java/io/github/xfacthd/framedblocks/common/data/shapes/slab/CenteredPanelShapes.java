@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.slab;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 public final class CenteredPanelShapes
 {
-    public static ShapeProvider generate(List<BlockState> states)
+    public static ShapeContainer generate(List<BlockState> states)
     {
         VoxelShape shapeNorth = Block.box(0, 0, 4, 16, 16, 12);
         VoxelShape shapeEast = Block.box(4, 0, 0, 12, 16, 16);
@@ -24,7 +24,7 @@ public final class CenteredPanelShapes
             Direction dir = state.getValue(FramedProperties.FACING_NE);
             map.put(state, dir == Direction.NORTH ? shapeNorth : shapeEast);
         }
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
 

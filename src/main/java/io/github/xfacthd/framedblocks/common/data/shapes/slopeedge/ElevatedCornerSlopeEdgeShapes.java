@@ -3,11 +3,11 @@ package io.github.xfacthd.framedblocks.common.data.shapes.slopeedge;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.CommonShapes;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.CornerType;
-import io.github.xfacthd.framedblocks.common.data.shapes.SplitShapeGenerator;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -16,7 +16,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class ElevatedCornerSlopeEdgeShapes implements SplitShapeGenerator
+public final class ElevatedCornerSlopeEdgeShapes implements ShapeGenerator
 {
     private static final ShapeCache<CornerType> BASE_SHAPES = makeCache();
     private static final ShapeCache<CornerType> INNER_BASE_SHAPES = makeInnerCache();
@@ -35,18 +35,18 @@ public final class ElevatedCornerSlopeEdgeShapes implements SplitShapeGenerator
     }
 
     @Override
-    public ShapeProvider generate(List<BlockState> states)
+    public ShapeContainer generatePrimary(List<BlockState> states)
     {
         return generate(states, edgeShapes, baseShapes);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
+    public ShapeContainer generateOcclusion(List<BlockState> states)
     {
         return generate(states, edgeOcclusionShapes, baseShapes);
     }
 
-    private static ShapeProvider generate(List<BlockState> states, ShapeCache<CornerSlopeEdgeShapes.ShapeKey> edgeShapes, ShapeCache<CornerType> baseShapes)
+    private static ShapeContainer generate(List<BlockState> states, ShapeCache<CornerSlopeEdgeShapes.ShapeKey> edgeShapes, ShapeCache<CornerType> baseShapes)
     {
         VoxelShape[] shapes = new VoxelShape[4 * 6];
         for (CornerType type : CornerType.values())
@@ -63,7 +63,7 @@ public final class ElevatedCornerSlopeEdgeShapes implements SplitShapeGenerator
             CornerType type = state.getValue(PropertyHolder.CORNER_TYPE);
             map.put(state, shapes[makeIndex(dir, type)]);
         }
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
     private static int makeIndex(Direction dir, CornerType type)

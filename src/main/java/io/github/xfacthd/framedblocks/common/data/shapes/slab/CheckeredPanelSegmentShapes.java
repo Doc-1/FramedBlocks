@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.slab;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 public final class CheckeredPanelSegmentShapes
 {
-    public static ShapeProvider generate(List<BlockState> states)
+    public static ShapeContainer generate(List<BlockState> states)
     {
         VoxelShape shapeFirst = ShapeUtils.orUnoptimized(
                 Block.box(0, 0, 0,  8,  8,  8),
@@ -44,7 +44,7 @@ public final class CheckeredPanelSegmentShapes
             int idx = dir.get2DDataValue() + (second ? 4 : 0);
             map.put(state, shapes[idx]);
         }
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
 

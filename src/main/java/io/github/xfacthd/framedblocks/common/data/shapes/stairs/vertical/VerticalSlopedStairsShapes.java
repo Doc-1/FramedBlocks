@@ -3,11 +3,11 @@ package io.github.xfacthd.framedblocks.common.data.shapes.stairs.vertical;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.CommonShapes;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.HorizontalRotation;
-import io.github.xfacthd.framedblocks.common.data.shapes.SplitShapeGenerator;
 import io.github.xfacthd.framedblocks.common.data.shapes.slope.HalfSlopeShapes;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,7 +17,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class VerticalSlopedStairsShapes implements SplitShapeGenerator
+public final class VerticalSlopedStairsShapes implements ShapeGenerator
 {
     public static final VerticalSlopedStairsShapes INSTANCE = new VerticalSlopedStairsShapes();
     private static final ShapeCache<ShapeKey> SHAPES = makeCache(HalfSlopeShapes.SHAPES);
@@ -26,18 +26,18 @@ public final class VerticalSlopedStairsShapes implements SplitShapeGenerator
     private VerticalSlopedStairsShapes() { }
 
     @Override
-    public ShapeProvider generate(List<BlockState> states)
+    public ShapeContainer generatePrimary(List<BlockState> states)
     {
         return generateShapes(states, SHAPES);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
+    public ShapeContainer generateOcclusion(List<BlockState> states)
     {
         return generateShapes(states, OCCLUSION_SHAPES);
     }
 
-    private static ShapeProvider generateShapes(List<BlockState> states, ShapeCache<ShapeKey> shapeCache)
+    private static ShapeContainer generateShapes(List<BlockState> states, ShapeCache<ShapeKey> shapeCache)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -48,7 +48,7 @@ public final class VerticalSlopedStairsShapes implements SplitShapeGenerator
             map.put(state, shapeCache.get(new ShapeKey(dir, rot)));
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
     private static ShapeCache<ShapeKey> makeCache(ShapeCache<HalfSlopeShapes.ShapeKey> shapeCache)

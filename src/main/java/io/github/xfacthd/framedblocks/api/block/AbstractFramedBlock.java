@@ -1,11 +1,7 @@
 package io.github.xfacthd.framedblocks.api.block;
 
-import com.google.common.base.Preconditions;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeLookup;
 import io.github.xfacthd.framedblocks.api.util.Utils;
-import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
-import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -40,20 +36,14 @@ import java.util.List;
 
 public abstract class AbstractFramedBlock extends Block implements IFramedBlock, SimpleWaterloggedBlock
 {
-    private static final VoxelShape BEACON_BEAM_SHAPE = box(5, 0, 5, 11, 16, 11);
     private final IBlockType blockType;
-    private final ShapeProvider shapes;
-    private final ShapeProvider occlusionShapes;
-    @Nullable
-    private final Reference2BooleanMap<BlockState> beaconBeamOcclusion;
+    private final ShapeLookup shapes;
 
     public AbstractFramedBlock(IBlockType blockType, Properties props)
     {
         super(props);
         this.blockType = blockType;
-        this.shapes = blockType.generateShapes(getStateDefinition().getPossibleStates());
-        this.occlusionShapes = blockType.generateOcclusionShapes(getStateDefinition().getPossibleStates(), shapes);
-        this.beaconBeamOcclusion = computeBeaconBeamOcclusion(shapes);
+        this.shapes = ShapeLookup.of(blockType.getShapeGenerator(), this);
 
         BlockUtils.configureStandardProperties(this);
     }
@@ -112,7 +102,7 @@ public abstract class AbstractFramedBlock extends Block implements IFramedBlock,
         {
             return Shapes.empty();
         }
-        return shapes.get(state);
+        return shapes.getShape(state);
     }
 
     @Override
@@ -124,7 +114,7 @@ public abstract class AbstractFramedBlock extends Block implements IFramedBlock,
     @Override
     protected VoxelShape getOcclusionShape(BlockState state)
     {
-        return getCamoOcclusionShape(state, occlusionShapes);
+        return getCamoOcclusionShape(state, shapes);
     }
 
     @Override
@@ -190,12 +180,7 @@ public abstract class AbstractFramedBlock extends Block implements IFramedBlock,
     @Override
     public boolean doesBlockOccludeBeaconBeam(BlockState state, LevelReader level, BlockPos pos)
     {
-        Preconditions.checkNotNull(
-                beaconBeamOcclusion,
-                "Block '%s' handles shapes itself but doesn't override AbstractFramedBlock#doesBlockMaskBeaconBeam()",
-                this
-        );
-        return beaconBeamOcclusion.getBoolean(state);
+        return shapes.occludesBeaconBeam(state);
     }
 
     @Override
@@ -213,33 +198,5 @@ public abstract class AbstractFramedBlock extends Block implements IFramedBlock,
     protected final boolean isWaterLoggable()
     {
         return blockType.supportsWaterLogging();
-    }
-
-
-
-    @Nullable
-    private static Reference2BooleanMap<BlockState> computeBeaconBeamOcclusion(ShapeProvider shapes)
-    {
-        if (shapes.isEmpty())
-        {
-            return null;
-        }
-
-        Reference2BooleanMap<BlockState> beamColorMasking = new Reference2BooleanOpenHashMap<>();
-
-        shapes.forEach((state, shape) ->
-        {
-            VoxelShape intersection = ShapeUtils.andUnoptimized(shape, BEACON_BEAM_SHAPE);
-
-            beamColorMasking.put(
-                    state,
-                    intersection.min(Direction.Axis.X) <= BEACON_BEAM_SHAPE.min(Direction.Axis.X) &&
-                    intersection.min(Direction.Axis.Z) <= BEACON_BEAM_SHAPE.min(Direction.Axis.Z) &&
-                    intersection.max(Direction.Axis.X) >= BEACON_BEAM_SHAPE.max(Direction.Axis.X) &&
-                    intersection.max(Direction.Axis.Z) >= BEACON_BEAM_SHAPE.max(Direction.Axis.Z)
-            );
-        });
-
-        return beamColorMasking;
     }
 }

@@ -7,7 +7,7 @@ import io.github.xfacthd.framedblocks.api.camo.CamoContainerFactory;
 import io.github.xfacthd.framedblocks.api.camo.block.rotator.BlockCamoRotator;
 import io.github.xfacthd.framedblocks.api.datagen.recipes.builders.FramingSawRecipeBuilder;
 import io.github.xfacthd.framedblocks.api.internal.InternalAPI;
-import io.github.xfacthd.framedblocks.api.shapes.ReloadableShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ReloadableShapeLookup;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
@@ -76,10 +76,10 @@ public final class InternalApiImpl implements InternalAPI
     }
 
     @Override
-    public void registerReloadableShapeProvider(ReloadableShapeProvider provider)
+    public void registerReloadableShapeLookup(ReloadableShapeLookup lookup)
     {
         Preconditions.checkState(!Utils.PRODUCTION, "Reloading shapes is not supported in production");
-        ShapeReloader.addProvider(provider);
+        ShapeReloader.addLookup(lookup);
     }
 
     @Override

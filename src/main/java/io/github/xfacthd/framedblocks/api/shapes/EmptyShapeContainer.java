@@ -1,20 +1,21 @@
 package io.github.xfacthd.framedblocks.api.shapes;
 
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.function.BiConsumer;
 
-final class NoShapeProvider implements ShapeProvider
+final class EmptyShapeContainer implements ShapeContainer
 {
-    static final NoShapeProvider INSTANCE = new NoShapeProvider();
+    static final EmptyShapeContainer INSTANCE = new EmptyShapeContainer();
 
-    private NoShapeProvider() { }
+    private EmptyShapeContainer() { }
 
     @Override
     public VoxelShape get(BlockState state)
     {
-        throw new UnsupportedOperationException();
+        return Shapes.empty();
     }
 
     @Override
@@ -24,8 +25,5 @@ final class NoShapeProvider implements ShapeProvider
     }
 
     @Override
-    public void forEach(BiConsumer<BlockState, VoxelShape> consumer)
-    {
-        throw new UnsupportedOperationException();
-    }
+    public void forEach(BiConsumer<BlockState, VoxelShape> consumer) { }
 }

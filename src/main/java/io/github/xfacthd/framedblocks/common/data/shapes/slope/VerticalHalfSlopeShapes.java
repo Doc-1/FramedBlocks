@@ -3,10 +3,10 @@ package io.github.xfacthd.framedblocks.common.data.shapes.slope;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.CommonShapes;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.property.SlopeType;
-import io.github.xfacthd.framedblocks.common.data.shapes.SplitShapeGenerator;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -15,7 +15,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class VerticalHalfSlopeShapes implements SplitShapeGenerator
+public final class VerticalHalfSlopeShapes implements ShapeGenerator
 {
     public static final ShapeCache<Boolean> SHAPES = ShapeCache.createIdentity(map ->
     {
@@ -41,18 +41,18 @@ public final class VerticalHalfSlopeShapes implements SplitShapeGenerator
     });
 
     @Override
-    public ShapeProvider generate(List<BlockState> states)
+    public ShapeContainer generatePrimary(List<BlockState> states)
     {
         return generateShapes(states, SHAPES);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
+    public ShapeContainer generateOcclusion(List<BlockState> states)
     {
         return generateShapes(states, OCCLUSION_SHAPES);
     }
 
-    private static ShapeProvider generateShapes(List<BlockState> states, ShapeCache<Boolean> shapeCache)
+    private static ShapeContainer generateShapes(List<BlockState> states, ShapeCache<Boolean> shapeCache)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -67,6 +67,6 @@ public final class VerticalHalfSlopeShapes implements SplitShapeGenerator
             map.put(state, shapes[dir.get2DDataValue() + (top ? 4 : 0)]);
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 }

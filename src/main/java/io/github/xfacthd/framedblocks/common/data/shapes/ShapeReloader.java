@@ -2,7 +2,7 @@ package io.github.xfacthd.framedblocks.common.data.shapes;
 
 import com.google.common.base.Stopwatch;
 import com.mojang.logging.LogUtils;
-import io.github.xfacthd.framedblocks.api.shapes.ReloadableShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ReloadableShapeLookup;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +21,7 @@ public final class ShapeReloader implements ResourceManagerReloadListener
     public static final ResourceLocation LISTENER_ID = Utils.rl("voxel_shapes");
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final List<ShapeCache<?>> CACHES = new ArrayList<>();
-    private static final List<ReloadableShapeProvider> PROVIDERS = new ArrayList<>();
+    private static final List<ReloadableShapeLookup> LOOKUPS = new ArrayList<>();
 
     private ShapeReloader() { }
 
@@ -30,31 +30,31 @@ public final class ShapeReloader implements ResourceManagerReloadListener
         CACHES.add(cache);
     }
 
-    public static synchronized void addProvider(ReloadableShapeProvider provider)
+    public static synchronized void addLookup(ReloadableShapeLookup provider)
     {
-        PROVIDERS.add(provider);
+        LOOKUPS.add(provider);
     }
 
     @Override
     public void onResourceManagerReload(ResourceManager resourceManager)
     {
-        LOGGER.info("Reloading {} caches and {} reloadable shape providers...", CACHES.size(), PROVIDERS.size());
+        LOGGER.info("Reloading {} caches and {} reloadable shape lookups...", CACHES.size(), LOOKUPS.size());
         Stopwatch watch = Stopwatch.createStarted();
         try
         {
             CACHES.forEach(ShapeCache::reload);
-            PROVIDERS.forEach(ReloadableShapeProvider::reload);
+            LOOKUPS.forEach(ReloadableShapeLookup::reload);
         }
         catch (Throwable t)
         {
             LogUtils.getLogger().error("Encountered an error while reloading shapes", t);
         }
         watch.stop();
-        LOGGER.info("{} caches and {} reloadable shape providers reloaded, took {}", CACHES.size(), PROVIDERS.size(), watch);
+        LOGGER.info("{} caches and {} reloadable shape lookups reloaded, took {}", CACHES.size(), LOOKUPS.size(), watch);
 
         watch = Stopwatch.createStarted();
-        List<BlockState> states = PROVIDERS.stream()
-                .map(ReloadableShapeProvider::getStates)
+        List<BlockState> states = LOOKUPS.stream()
+                .map(ReloadableShapeLookup::getStates)
                 .flatMap(List::stream)
                 .distinct()
                 .toList();

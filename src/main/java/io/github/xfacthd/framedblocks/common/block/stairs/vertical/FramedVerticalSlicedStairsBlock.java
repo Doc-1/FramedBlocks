@@ -6,8 +6,6 @@ import io.github.xfacthd.framedblocks.api.block.doubleblock.CamoGetter;
 import io.github.xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
 import io.github.xfacthd.framedblocks.api.block.doubleblock.DoubleBlockTopInteractionMode;
 import io.github.xfacthd.framedblocks.api.block.doubleblock.SolidityCheck;
-import io.github.xfacthd.framedblocks.api.shapes.CommonShapes;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.block.IFramedDoubleBlockInternal;
@@ -20,12 +18,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
 
 public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock implements IFramedDoubleBlockInternal
 {
@@ -366,19 +359,5 @@ public class FramedVerticalSlicedStairsBlock extends FramedVerticalStairsBlock i
     public BlockState getJadeRenderState(BlockState state)
     {
         return defaultBlockState().setValue(FramedProperties.FACING_HOR, Direction.WEST);
-    }
-
-    public static ShapeProvider generateShapes(List<BlockState> states)
-    {
-        Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
-
-        for (BlockState state : states)
-        {
-            Direction dir = state.getValue(FramedProperties.FACING_HOR);
-            boolean right = state.getValue(PropertyHolder.RIGHT);
-            map.put(state, CommonShapes.STRAIGHT_VERTICAL_STAIRS.get(right ? dir.getClockWise() : dir));
-        }
-
-        return ShapeProvider.of(map);
     }
 }

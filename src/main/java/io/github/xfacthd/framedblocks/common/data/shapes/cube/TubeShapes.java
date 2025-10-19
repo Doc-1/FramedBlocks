@@ -1,6 +1,6 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.cube;
 
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import net.minecraft.core.Direction;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 public final class TubeShapes
 {
-    public static ShapeProvider generate(List<BlockState> states)
+    public static ShapeContainer generate(List<BlockState> states)
     {
         VoxelShape shapeThinY = ShapeUtils.or(
                 Block.box( 0, 0,  0, 16, 16,  2),
@@ -49,7 +49,7 @@ public final class TubeShapes
             map.put(state, shape);
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
 

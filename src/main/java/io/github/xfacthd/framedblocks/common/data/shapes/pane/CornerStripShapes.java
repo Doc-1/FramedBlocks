@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.pane;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.SlopeType;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 public final class CornerStripShapes
 {
-    public static ShapeProvider generate(List<BlockState> states)
+    public static ShapeContainer generate(List<BlockState> states)
     {
         VoxelShape[] shapes = ShapeUtils.makeHorizontalRotationsWithFlag(
                 Block.box(0,  0, 0, 16,  1, 1),
@@ -43,7 +43,7 @@ public final class CornerStripShapes
                 map.put(state, shapes[dir.get2DDataValue() + offset]);
             }
         }
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
 

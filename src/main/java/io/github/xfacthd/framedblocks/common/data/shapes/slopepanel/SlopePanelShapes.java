@@ -2,12 +2,12 @@ package io.github.xfacthd.framedblocks.common.data.shapes.slopepanel;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.block.slopepanel.SlopePanelShape;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.HorizontalRotation;
-import io.github.xfacthd.framedblocks.common.data.shapes.SplitShapeGenerator;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public final class SlopePanelShapes implements SplitShapeGenerator
+public final class SlopePanelShapes implements ShapeGenerator
 {
     public static final ShapeCache<SlopePanelShape> SHAPES = makeCache(() -> ShapeUtils.orUnoptimized(
             Block.box(0, 0, 0, 16, 16, 4),
@@ -32,18 +32,18 @@ public final class SlopePanelShapes implements SplitShapeGenerator
     ));
 
     @Override
-    public ShapeProvider generate(List<BlockState> states)
+    public ShapeContainer generatePrimary(List<BlockState> states)
     {
         return generate(states, SHAPES);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
+    public ShapeContainer generateOcclusion(List<BlockState> states)
     {
         return generate(states, OCCLUSION_SHAPES);
     }
 
-    private static ShapeProvider generate(List<BlockState> states, ShapeCache<SlopePanelShape> cache)
+    private static ShapeContainer generate(List<BlockState> states, ShapeCache<SlopePanelShape> cache)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -66,7 +66,7 @@ public final class SlopePanelShapes implements SplitShapeGenerator
             map.put(state, shapes[idx]);
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
     private static ShapeCache<SlopePanelShape> makeCache(Supplier<VoxelShape> upShapeFactory)

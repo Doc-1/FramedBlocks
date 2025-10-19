@@ -2,16 +2,17 @@ package io.github.xfacthd.framedblocks.api.shapes;
 
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-final class SingleShapeProvider implements ShapeProvider
+final class SingleShapeContainer implements ShapeContainer
 {
     private final List<BlockState> states;
     private final VoxelShape shape;
 
-    SingleShapeProvider(List<BlockState> states, VoxelShape shape)
+    SingleShapeContainer(List<BlockState> states, VoxelShape shape)
     {
         this.states = states;
         this.shape = shape;
@@ -33,5 +34,24 @@ final class SingleShapeProvider implements ShapeProvider
     public void forEach(BiConsumer<BlockState, VoxelShape> consumer)
     {
         states.forEach(state -> consumer.accept(state, shape));
+    }
+
+    VoxelShape getShape()
+    {
+        return shape;
+    }
+
+    @Nullable
+    static SingleShapeContainer unwrap(ShapeContainer provider)
+    {
+        if (provider.isEmpty())
+        {
+            return null;
+        }
+        if (provider instanceof SingleShapeContainer singleShape)
+        {
+            return singleShape;
+        }
+        throw new IllegalArgumentException("Expected SingleShapeProvider, got " + provider);
     }
 }

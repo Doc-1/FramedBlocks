@@ -1,6 +1,6 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.cube;
 
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
@@ -17,7 +17,7 @@ public final class LayeredCubeShapes
     private static final int LAYER_COUNT = 8;
     private static final int DIR_COUNT = Direction.values().length;
 
-    public static ShapeProvider generate(List<BlockState> states)
+    public static ShapeContainer generate(List<BlockState> states)
     {
         VoxelShape[] shapes = new VoxelShape[LAYER_COUNT * DIR_COUNT];
         for (int i = 1; i <= LAYER_COUNT; i++)
@@ -40,7 +40,7 @@ public final class LayeredCubeShapes
             map.put(state, shapes[index(dir, layers)]);
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
     private static int index(Direction dir, int layers)

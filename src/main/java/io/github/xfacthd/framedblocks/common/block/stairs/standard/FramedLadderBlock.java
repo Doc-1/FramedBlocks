@@ -3,8 +3,7 @@ package io.github.xfacthd.framedblocks.common.block.stairs.standard;
 import io.github.xfacthd.framedblocks.api.block.BlockUtils;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.block.PlacementStateBuilder;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeLookup;
 import io.github.xfacthd.framedblocks.common.block.FramedBlock;
 import io.github.xfacthd.framedblocks.common.data.BlockType;
 import net.minecraft.core.BlockPos;
@@ -26,19 +25,12 @@ import org.jetbrains.annotations.Nullable;
 
 public class FramedLadderBlock extends FramedBlock
 {
-    private static final VoxelShape SHAPE_NORTH = box( 0, 0,  0, 16, 16,  2);
-    private static final VoxelShape COLLISION_SHAPE_NORTH = box( 0, 0,  0, 16, 16,  3);
-
-    private static final ShapeCache<Direction> SHAPES = ShapeCache.createEnum(Direction.class, map ->
-            ShapeUtils.makeHorizontalRotations(SHAPE_NORTH, Direction.NORTH, map)
-    );
-    private static final ShapeCache<Direction> COLLISION_SHAPES = ShapeCache.createEnum(Direction.class, map ->
-            ShapeUtils.makeHorizontalRotations(COLLISION_SHAPE_NORTH, Direction.NORTH, map)
-    );
+    private final ShapeLookup shapes;
 
     public FramedLadderBlock(Properties props)
     {
         super(BlockType.FRAMED_LADDER, props);
+        this.shapes = ShapeLookup.of(BlockType.FRAMED_LADDER.getShapeGenerator(), this);
     }
 
     @Override
@@ -61,13 +53,14 @@ public class FramedLadderBlock extends FramedBlock
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
     {
-        return SHAPES.get(state.getValue(FramedProperties.FACING_HOR));
+        return shapes.getShape(state);
     }
 
     @Override
     protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
     {
-        return COLLISION_SHAPES.get(state.getValue(FramedProperties.FACING_HOR));
+        // Misuse separate occlusion shape handling for collision shapes
+        return shapes.getOcclusionShape(state);
     }
 
     @Override

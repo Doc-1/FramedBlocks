@@ -1,13 +1,13 @@
 package io.github.xfacthd.framedblocks.common.data.shapes.prism;
 
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.CompoundDirection;
 import io.github.xfacthd.framedblocks.common.data.property.SlopeType;
-import io.github.xfacthd.framedblocks.common.data.shapes.SplitShapeGenerator;
 import io.github.xfacthd.framedblocks.common.data.shapes.slope.SlopeShapes;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,25 +17,25 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class SlopedPrismShapes implements SplitShapeGenerator
+public final class SlopedPrismShapes implements ShapeGenerator
 {
     public static final SlopedPrismShapes OUTER = new SlopedPrismShapes();
 
     private SlopedPrismShapes() { }
 
     @Override
-    public ShapeProvider generate(List<BlockState> states)
+    public ShapeContainer generatePrimary(List<BlockState> states)
     {
         return generate(states, SlopeShapes.SHAPES);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
+    public ShapeContainer generateOcclusion(List<BlockState> states)
     {
         return generate(states, SlopeShapes.OCCLUSION_SHAPES);
     }
 
-    private static ShapeProvider generate(List<BlockState> states, ShapeCache<SlopeType> slopeShapes)
+    private static ShapeContainer generate(List<BlockState> states, ShapeCache<SlopeType> slopeShapes)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -100,6 +100,6 @@ public final class SlopedPrismShapes implements SplitShapeGenerator
             map.put(state, shapes[cmpDir.ordinal()]);
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 }

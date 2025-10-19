@@ -2,12 +2,12 @@ package io.github.xfacthd.framedblocks.common.data.shapes.slopeedge;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.SlopeType;
 import io.github.xfacthd.framedblocks.common.data.property.StairsType;
-import io.github.xfacthd.framedblocks.common.data.shapes.SplitShapeGenerator;
 import io.github.xfacthd.framedblocks.common.data.shapes.stairs.vertical.VerticalStairsShapes;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
@@ -18,23 +18,23 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class ElevatedSlopeEdgeShapes implements SplitShapeGenerator
+public final class ElevatedSlopeEdgeShapes implements ShapeGenerator
 {
     public static final ElevatedSlopeEdgeShapes INSTANCE = new ElevatedSlopeEdgeShapes();
 
     @Override
-    public ShapeProvider generate(List<BlockState> states)
+    public ShapeContainer generatePrimary(List<BlockState> states)
     {
         return generate(states, SlopeEdgeShapes.SHAPES);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
+    public ShapeContainer generateOcclusion(List<BlockState> states)
     {
         return generate(states, SlopeEdgeShapes.OCCLUSION_SHAPES);
     }
 
-    private static ShapeProvider generate(List<BlockState> states, ShapeCache<SlopeEdgeShapes.ShapeKey> cache)
+    private static ShapeContainer generate(List<BlockState> states, ShapeCache<SlopeEdgeShapes.ShapeKey> cache)
     {
         VoxelShape shapeBottom = ShapeUtils.orUnoptimized(
                 ShapeUtils.orUnoptimized(Block.box(0, 0, 0, 16, 8, 16), Block.box(0, 8, 0, 16, 16, 8)),
@@ -65,6 +65,6 @@ public final class ElevatedSlopeEdgeShapes implements SplitShapeGenerator
             map.put(state, shapes[idx]);
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 }

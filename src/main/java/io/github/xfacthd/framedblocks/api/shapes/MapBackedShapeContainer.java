@@ -2,16 +2,17 @@ package io.github.xfacthd.framedblocks.api.shapes;
 
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-final class MapBackedShapeProvider implements ShapeProvider
+final class MapBackedShapeContainer implements ShapeContainer
 {
     private final Map<BlockState, VoxelShape> shapes;
 
-    MapBackedShapeProvider(Map<BlockState, VoxelShape> shapes)
+    MapBackedShapeContainer(Map<BlockState, VoxelShape> shapes)
     {
         if (!(shapes instanceof IdentityHashMap<BlockState, VoxelShape>))
         {
@@ -36,5 +37,24 @@ final class MapBackedShapeProvider implements ShapeProvider
     public void forEach(BiConsumer<BlockState, VoxelShape> consumer)
     {
         shapes.forEach(consumer);
+    }
+
+    Map<BlockState, VoxelShape> getShapes()
+    {
+        return shapes;
+    }
+
+    @Nullable
+    static MapBackedShapeContainer unwrap(@Nullable ShapeContainer provider)
+    {
+        if (provider == null || provider.isEmpty())
+        {
+            return null;
+        }
+        if (provider instanceof MapBackedShapeContainer mapBacked)
+        {
+            return mapBacked;
+        }
+        throw new IllegalArgumentException("Expected MapBackedShapeProvider, got " + provider);
     }
 }

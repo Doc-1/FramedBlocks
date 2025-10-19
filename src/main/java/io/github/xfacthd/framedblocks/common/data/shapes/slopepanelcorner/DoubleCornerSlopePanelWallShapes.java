@@ -2,7 +2,7 @@ package io.github.xfacthd.framedblocks.common.data.shapes.slopepanelcorner;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.CommonShapes;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.HorizontalRotation;
@@ -18,7 +18,7 @@ import java.util.Map;
 
 public final class DoubleCornerSlopePanelWallShapes
 {
-    public static ShapeProvider generateSmall(List<BlockState> states)
+    public static ShapeContainer generateSmall(List<BlockState> states)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -36,10 +36,10 @@ public final class DoubleCornerSlopePanelWallShapes
             map.put(state, CommonShapes.SLAB_EDGE.get(key));
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
-    public static ShapeProvider generateLarge(List<BlockState> states)
+    public static ShapeContainer generateLarge(List<BlockState> states)
     {
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
 
@@ -58,7 +58,7 @@ public final class DoubleCornerSlopePanelWallShapes
             map.put(state, shapes[idx]);
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
 

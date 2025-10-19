@@ -2,11 +2,11 @@ package io.github.xfacthd.framedblocks.common.data.shapes.slopeedge;
 
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
-import io.github.xfacthd.framedblocks.api.shapes.ShapeProvider;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeContainer;
+import io.github.xfacthd.framedblocks.api.shapes.ShapeGenerator;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeUtils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.SlopeType;
-import io.github.xfacthd.framedblocks.common.data.shapes.SplitShapeGenerator;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -17,7 +17,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class ThreewayCornerSlopeEdgeShapes implements SplitShapeGenerator
+public final class ThreewayCornerSlopeEdgeShapes implements ShapeGenerator
 {
     public static final ShapeCache<ShapeKey> OUTER_SHAPES = makeCache(SlopeEdgeShapes.SHAPES, false);
     public static final ShapeCache<ShapeKey> OUTER_OCCLUSION_SHAPES = makeCache(SlopeEdgeShapes.OCCLUSION_SHAPES, false);
@@ -35,18 +35,18 @@ public final class ThreewayCornerSlopeEdgeShapes implements SplitShapeGenerator
     }
 
     @Override
-    public ShapeProvider generate(List<BlockState> states)
+    public ShapeContainer generatePrimary(List<BlockState> states)
     {
         return generate(states, inner ? INNER_SHAPES : OUTER_SHAPES);
     }
 
     @Override
-    public ShapeProvider generateOcclusionShapes(List<BlockState> states)
+    public ShapeContainer generateOcclusion(List<BlockState> states)
     {
         return generate(states, inner ? INNER_OCCLUSION_SHAPES : OUTER_OCCLUSION_SHAPES);
     }
 
-    private static ShapeProvider generate(List<BlockState> states, ShapeCache<ShapeKey> cache)
+    private static ShapeContainer generate(List<BlockState> states, ShapeCache<ShapeKey> cache)
     {
         VoxelShape[] shapes = new VoxelShape[4 * 2 * 2];
 
@@ -77,7 +77,7 @@ public final class ThreewayCornerSlopeEdgeShapes implements SplitShapeGenerator
             map.put(state, shapes[makeShapeIndex(dir, top, altType)]);
         }
 
-        return ShapeProvider.of(map);
+        return ShapeContainer.of(map);
     }
 
     private static int makeShapeIndex(Direction dir, boolean top, boolean altType)
