@@ -122,7 +122,7 @@ public final class CamoContainerHelper
     @Nullable
     public static CamoContainerFactory<?> findCamoFactory(ItemStack stack)
     {
-        return InternalAPI.INSTANCE.findCamoFactory(stack);
+        return stack.isEmpty() ? null : InternalAPI.INSTANCE.findCamoFactory(stack);
     }
 
     /**
