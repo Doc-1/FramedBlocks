@@ -32,6 +32,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -67,7 +68,8 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
     public static final Component TOOLTIP_HAVE_ITEM_NONE = Utils.translate("tooltip", "framing_saw.have_item_none").withStyle(ChatFormatting.GOLD);
     public static final String TOOLTIP_PRESS_TO_SHOW = Utils.translationKey("tooltip", "framing_saw.press_to_show");
     public static final String TOOLTIP_USE_INTERMEDIATE = Utils.translationKey("tooltip", "framing_saw.use_intermediate");
-    public static final Component MSG_HINT_SEARCH = Utils.translate("msg", "framing_saw.search");
+    public static final Component MSG_HINT_SEARCH = Utils.translate("msg", "framing_saw.search")
+            .withStyle(style -> style.withShadowColor(ARGB.scaleRGB(0xFFFFFFFF, .25F)));
     private static final ResourceLocation BACKGROUND = Utils.rl("textures/gui/framing_saw.png");
     public static final ResourceLocation WARNING_ICON = Utils.rl("neoforge", "textures/gui/experimental_warning.png");
     private static final int IMAGE_WIDTH = 256;
