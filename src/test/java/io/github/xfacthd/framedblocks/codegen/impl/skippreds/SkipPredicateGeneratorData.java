@@ -310,6 +310,8 @@ final class SkipPredicateGeneratorData
             entry("FRAMED_WALL_TORCH", IGNORED_PKG),
             entry("FRAMED_SOUL_TORCH", IGNORED_PKG),
             entry("FRAMED_SOUL_WALL_TORCH", IGNORED_PKG),
+            entry("FRAMED_COPPER_TORCH", IGNORED_PKG),
+            entry("FRAMED_COPPER_WALL_TORCH", IGNORED_PKG),
             entry("FRAMED_REDSTONE_TORCH", IGNORED_PKG),
             entry("FRAMED_REDSTONE_WALL_TORCH", IGNORED_PKG),
             entry("FRAMED_BOARD", "pane"),
@@ -716,6 +718,7 @@ final class SkipPredicateGeneratorData
             entry("FRAMED_CHAIN", "pillar"),
             entry("FRAMED_LANTERN", IGNORED_PKG),
             entry("FRAMED_SOUL_LANTERN", IGNORED_PKG),
+            entry("FRAMED_COPPER_LANTERN", IGNORED_PKG),
             entry("FRAMED_HOPPER", "misc")
                     .dirs(
                             new TestDir("boolean", "HopperSide", null, TestDirIds.HOPPER_SIDE),
