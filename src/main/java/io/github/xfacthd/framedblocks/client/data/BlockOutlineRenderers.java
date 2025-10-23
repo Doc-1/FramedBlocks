@@ -30,6 +30,8 @@ public final class BlockOutlineRenderers
         event.register(BlockType.FRAMED_STACKED_INNER_CORNER_SLOPE_EDGE, ElevatedInnerCornerSlopeEdgeOutlineRenderer.INSTANCE);
         event.register(BlockType.FRAMED_THREEWAY_CORNER_SLOPE_EDGE, new ThreewayCornerSlopeEdgeOutlineRenderer());
         event.register(BlockType.FRAMED_INNER_THREEWAY_CORNER_SLOPE_EDGE, new InnerThreewayCornerSlopeEdgeOutlineRenderer());
+        event.register(BlockType.FRAMED_SLOPE_EDGE_SLAB, new SlopeEdgeSlabOutlineRenderer());
+        event.register(BlockType.FRAMED_SLOPE_EDGE_PANEL, new SlopeEdgePanelOutlineRenderer());
         event.register(BlockType.FRAMED_SLOPED_STAIRS, SlopedStairsOutlineRenderer.INSTANCE);
         event.register(BlockType.FRAMED_SLICED_SLOPED_STAIRS_SLAB, SlopedStairsOutlineRenderer.INSTANCE);
         event.register(BlockType.FRAMED_SLICED_SLOPED_STAIRS_SLOPE, SlopedStairsOutlineRenderer.INSTANCE);

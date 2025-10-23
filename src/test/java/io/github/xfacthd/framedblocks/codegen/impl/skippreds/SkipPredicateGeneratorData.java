@@ -161,6 +161,26 @@ final class SkipPredicateGeneratorData
                             new TestDir("QuarterTriangleDir", "Tri", null, TestDirIds.SLOPE_EDGE_TRI_XZ, TestDirIds.SLOPE_EDGE_TRI_Y),
                             new TestDir("TriangleDir", "Stair", null, TestDirIds.STAIR_XZ, TestDirIds.STAIR_Y)
                     ),
+            entry("FRAMED_SLOPE_EDGE_SLAB", "slopeedge")
+                    .props(
+                            Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
+                            Property.internal("boolean", "topHalf", "TOP_HALF", PropType.PRIMITIVE),
+                            Property.api("boolean", "top", "TOP", PropType.PRIMITIVE)
+                    )
+                    .dirs(
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_HOR, TestDirIds.HALF_Y),
+                            new TestDir("QuarterTriangleDir", "Tri", null, TestDirIds.SLOPE_EDGE_SLAB_TRI)
+                    ),
+            entry("FRAMED_SLOPE_EDGE_PANEL", "slopeedge")
+                    .props(
+                            Property.api("Direction", "dir", "FACING_HOR", PropType.PRIMITIVE),
+                            Property.internal("HorizontalRotation", "rot", "ROTATION", PropType.CUSTOM),
+                            Property.internal("boolean", "front", "FRONT", PropType.PRIMITIVE)
+                    )
+                    .dirs(
+                            new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_VERT, TestDirIds.HALF_Y),
+                            new TestDir("QuarterTriangleDir", "Tri", null, TestDirIds.SLOPE_EDGE_PANEL_TRI_HOR, TestDirIds.SLOPE_EDGE_PANEL_TRI_VERT)
+                    ),
             entry("FRAMED_SLAB", "slab")
                     .props(Property.api("boolean", "top", "TOP", PropType.PRIMITIVE))
                     .dirs(new TestDir("HalfDir", "Half", null, TestDirIds.HALF_XZ_HOR)),

@@ -20,6 +20,12 @@ final class TestDirIds
     static final String ELEV_SLOPE_EDGE_TRI_XZ = "elev_slope_edge_tri_xz";
     /** Top/bottom face of an Elevated Slope Edge angled horizontally */
     static final String ELEV_SLOPE_EDGE_TRI_Y = "elev_slope_edge_tri_y";
+    /** Left/right face of a Slope Edge Slab */
+    static final String SLOPE_EDGE_SLAB_TRI = "slope_edge_slab_tri";
+    /** Left/right face of a Slope Edge Panel angled up or down */
+    static final String SLOPE_EDGE_PANEL_TRI_HOR = "slope_edge_panel_tri_hor";
+    /** Top/bottom face of a Slope Edge Panel angled horizontally */
+    static final String SLOPE_EDGE_PANEL_TRI_VERT = "slope_edge_panel_tri_vert";
     /** Left/right face of a Slab Edge */
     static final String CORNER_XZ = "corner_xz";
     /** Top/bottom face of a Corner Pillar */

@@ -140,6 +140,14 @@ public final class FramingSawRecipeProvider extends AbstractFramingSawRecipeProv
                 .material(CUBE_MATERIAL_VALUE / 16 * 4)
                 .save(output);
 
+        sawRecipe(FBContent.BLOCK_FRAMED_SLOPE_EDGE_SLAB)
+                .material(CUBE_MATERIAL_VALUE / 8 * 3)
+                .save(output);
+
+        sawRecipe(FBContent.BLOCK_FRAMED_SLOPE_EDGE_PANEL)
+                .material(CUBE_MATERIAL_VALUE / 8 * 3)
+                .save(output);
+
         sawRecipe(FBContent.BLOCK_FRAMED_SLAB)
                 .material(CUBE_MATERIAL_VALUE / 2)
                 .save(output);
