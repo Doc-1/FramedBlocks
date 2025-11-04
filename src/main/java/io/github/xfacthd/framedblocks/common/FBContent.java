@@ -889,7 +889,7 @@ public final class FBContent
             T block = blockFactory.apply(props);
             Preconditions.checkArgument(block.getBlockType() == type, "Inconsistent block type, expected %s, got %s", type, block.getBlockType());
             return block;
-        }, BlockBehaviour.Properties.of());
+        });
         BLOCKS_BY_TYPE.put(type, result);
 
         if (type.hasBlockItem())
@@ -905,7 +905,7 @@ public final class FBContent
     @SuppressWarnings("SameParameterValue")
     private static Holder<Block> registerBlock(String name, Function<BlockBehaviour.Properties, ? extends Block> blockFactory)
     {
-        Holder<Block> result = BLOCKS.registerBlock(name, blockFactory, BlockBehaviour.Properties.of());
+        Holder<Block> result = BLOCKS.registerBlock(name, blockFactory);
         ITEMS.registerSimpleBlockItem(result);
         return result;
     }
