@@ -1,8 +1,10 @@
 package io.github.xfacthd.framedblocks.client.screen.overlay;
 
 import io.github.xfacthd.framedblocks.api.screen.overlay.BlockInteractOverlay;
+import io.github.xfacthd.framedblocks.api.screen.overlay.OverlayDisplayMode;
 import io.github.xfacthd.framedblocks.api.screen.overlay.RegisterBlockInteractOverlaysEvent;
 import io.github.xfacthd.framedblocks.api.util.Utils;
+import io.github.xfacthd.framedblocks.common.config.ClientConfig;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -30,10 +32,11 @@ public final class BlockInteractOverlayLayer implements GuiLayer
         Player player = Objects.requireNonNull(Minecraft.getInstance().player);
         if (player.isSpectator() || Minecraft.getInstance().options.hideGui) return;
 
+        OverlayDisplayMode cfgMode = ClientConfig.VIEW.getMaxOverlayMode();
         String renderedOverlay = null;
         for (BlockInteractOverlayWrapper overlay : OVERLAYS)
         {
-            if (overlay.render(graphics, player))
+            if (overlay.render(graphics, player, cfgMode))
             {
                 if (Utils.PRODUCTION) break;
 

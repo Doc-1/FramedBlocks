@@ -4,7 +4,8 @@ public enum OverlayDisplayMode
 {
     HIDDEN,
     ICON,
-    DETAILED;
+    DETAILED_TOGGLE,
+    DETAILED_ALWAYS;
 
     public OverlayDisplayMode constrain(OverlayDisplayMode other)
     {

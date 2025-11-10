@@ -2,7 +2,6 @@ package io.github.xfacthd.framedblocks.client.screen.overlay;
 
 import io.github.xfacthd.framedblocks.api.screen.overlay.BlockInteractOverlay;
 import io.github.xfacthd.framedblocks.api.screen.overlay.OverlayDisplayMode;
-import io.github.xfacthd.framedblocks.common.config.ClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
@@ -38,9 +37,8 @@ final class BlockInteractOverlayWrapper
         this.overlay = overlay;
     }
 
-    boolean render(GuiGraphics graphics, Player player)
+    boolean render(GuiGraphics graphics, Player player, OverlayDisplayMode cfgMode)
     {
-        OverlayDisplayMode cfgMode = ClientConfig.VIEW.getMaxOverlayMode();
         OverlayDisplayMode mode = cfgMode.constrain(overlay.getDisplayMode());
         if (mode == OverlayDisplayMode.HIDDEN)
         {
@@ -71,13 +69,23 @@ final class BlockInteractOverlayWrapper
         tex.draw(graphics, texX, texY);
         overlay.renderAfterIcon(graphics, tex, texX, texY, target);
 
-        if (mode == OverlayDisplayMode.DETAILED)
+        if (isDetailedVisible(mode, player))
         {
             List<Component> lines = overlay.getLines(target, state);
             renderDetailed(graphics, tex, lines, centerX, screenHeight, target);
         }
 
         return true;
+    }
+
+    private static boolean isDetailedVisible(OverlayDisplayMode mode, Player player)
+    {
+        return switch (mode)
+        {
+            case HIDDEN, ICON -> false;
+            case DETAILED_TOGGLE -> player.isShiftKeyDown();
+            case DETAILED_ALWAYS -> true;
+        };
     }
 
     private void renderDetailed(

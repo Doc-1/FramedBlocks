@@ -104,18 +104,18 @@ public final class ClientConfig
     private static boolean renderCamoInJade = false;
     private static boolean showCamoCraftingInJei = false;
 
-    private static OverlayDisplayMode maxOverlayMode = OverlayDisplayMode.DETAILED;
-    private static OverlayDisplayMode stateLockMode = OverlayDisplayMode.DETAILED;
-    private static OverlayDisplayMode toggleWaterlogMode = OverlayDisplayMode.DETAILED;
-    private static OverlayDisplayMode toggleYSlopeMode = OverlayDisplayMode.DETAILED;
-    private static OverlayDisplayMode reinforcementMode = OverlayDisplayMode.DETAILED;
-    private static OverlayDisplayMode prismOffsetMode = OverlayDisplayMode.DETAILED;
-    private static OverlayDisplayMode splitLineMode = OverlayDisplayMode.DETAILED;
-    private static OverlayDisplayMode oneWayWindowMode = OverlayDisplayMode.DETAILED;
-    private static OverlayDisplayMode frameBackgroundMode = OverlayDisplayMode.DETAILED;
-    private static OverlayDisplayMode camoRotationMode = OverlayDisplayMode.DETAILED;
-    private static OverlayDisplayMode trapdoorTextureRotationMode = OverlayDisplayMode.DETAILED;
-    private static OverlayDisplayMode copycatStyleMode = OverlayDisplayMode.DETAILED;
+    private static OverlayDisplayMode maxOverlayMode = OverlayDisplayMode.DETAILED_ALWAYS;
+    private static OverlayDisplayMode stateLockMode = OverlayDisplayMode.DETAILED_ALWAYS;
+    private static OverlayDisplayMode toggleWaterlogMode = OverlayDisplayMode.DETAILED_ALWAYS;
+    private static OverlayDisplayMode toggleYSlopeMode = OverlayDisplayMode.DETAILED_ALWAYS;
+    private static OverlayDisplayMode reinforcementMode = OverlayDisplayMode.DETAILED_ALWAYS;
+    private static OverlayDisplayMode prismOffsetMode = OverlayDisplayMode.DETAILED_ALWAYS;
+    private static OverlayDisplayMode splitLineMode = OverlayDisplayMode.DETAILED_ALWAYS;
+    private static OverlayDisplayMode oneWayWindowMode = OverlayDisplayMode.DETAILED_ALWAYS;
+    private static OverlayDisplayMode frameBackgroundMode = OverlayDisplayMode.DETAILED_ALWAYS;
+    private static OverlayDisplayMode camoRotationMode = OverlayDisplayMode.DETAILED_ALWAYS;
+    private static OverlayDisplayMode trapdoorTextureRotationMode = OverlayDisplayMode.DETAILED_ALWAYS;
+    private static OverlayDisplayMode copycatStyleMode = OverlayDisplayMode.DETAILED_ALWAYS;
 
     public static void init(IEventBus modBus, ModContainer modContainer)
     {
@@ -243,51 +243,51 @@ public final class ClientConfig
                         "- If set to DETAILED, the overlays will show detailed info."
                 )
                 .translation(translate(KEY_MAX_OVERLAY_MODE))
-                .defineEnum(KEY_MAX_OVERLAY_MODE, OverlayDisplayMode.DETAILED);
+                .defineEnum(KEY_MAX_OVERLAY_MODE, OverlayDisplayMode.DETAILED_ALWAYS);
         STATE_LOCK_MODE_VALUE = builder
                 .comment(formatOverlayComments("State Lock"))
                 .translation(translate(KEY_STATE_LOCK_MODE))
-                .defineEnum(KEY_STATE_LOCK_MODE, OverlayDisplayMode.DETAILED);
+                .defineEnum(KEY_STATE_LOCK_MODE, OverlayDisplayMode.DETAILED_ALWAYS);
         TOGGLE_WATERLOG_MODE_VALUE = builder
                 .comment(formatOverlayComments("Toggle Waterloggable"))
                 .translation(translate(KEY_TOGGLE_WATERLOG_MODE))
-                .defineEnum(KEY_TOGGLE_WATERLOG_MODE, OverlayDisplayMode.DETAILED);
+                .defineEnum(KEY_TOGGLE_WATERLOG_MODE, OverlayDisplayMode.DETAILED_ALWAYS);
         TOGGLE_Y_SLOPE_MODE_VALUE = builder
                 .comment(formatOverlayComments("Toggle Slope Face"))
                 .translation(translate(KEY_TOGGLE_Y_SLOPE_MODE))
-                .defineEnum(KEY_TOGGLE_Y_SLOPE_MODE, OverlayDisplayMode.DETAILED);
+                .defineEnum(KEY_TOGGLE_Y_SLOPE_MODE, OverlayDisplayMode.DETAILED_ALWAYS);
         REINFORCEMENT_MODE_VALUE = builder
                 .comment(formatOverlayComments("Reinforcement"))
                 .translation(translate(KEY_REINFORCEMENT_MODE))
-                .defineEnum(KEY_REINFORCEMENT_MODE, OverlayDisplayMode.DETAILED);
+                .defineEnum(KEY_REINFORCEMENT_MODE, OverlayDisplayMode.DETAILED_ALWAYS);
         PRISM_OFFSET_MODE_VALUE = builder
                 .comment(formatOverlayComments("Prism Offset"))
                 .translation(translate(KEY_PRISM_OFFSET_MODE))
-                .defineEnum(KEY_PRISM_OFFSET_MODE, OverlayDisplayMode.DETAILED);
+                .defineEnum(KEY_PRISM_OFFSET_MODE, OverlayDisplayMode.DETAILED_ALWAYS);
         SPLIT_LINE_MODE_VALUE = builder
                 .comment(formatOverlayComments("Collapsible Block Split Line"))
                 .translation(translate(KEY_SPLIT_LINES_MODE))
-                .defineEnum(KEY_SPLIT_LINES_MODE, OverlayDisplayMode.DETAILED);
+                .defineEnum(KEY_SPLIT_LINES_MODE, OverlayDisplayMode.DETAILED_ALWAYS);
         ONE_WAY_WINDOW_MODE_VALUE = builder
                 .comment(formatOverlayComments("One-Way Window"))
                 .translation(translate(KEY_ONE_WAY_WINDOW_MODE))
-                .defineEnum(KEY_ONE_WAY_WINDOW_MODE, OverlayDisplayMode.DETAILED);
+                .defineEnum(KEY_ONE_WAY_WINDOW_MODE, OverlayDisplayMode.DETAILED_ALWAYS);
         FRAME_BACKGROUND_MODE_VALUE = builder
                 .comment(formatOverlayComments("Item Frame Background"))
                 .translation(translate(KEY_FRAME_BACKGROUND_MODE))
-                .defineEnum(KEY_FRAME_BACKGROUND_MODE, OverlayDisplayMode.DETAILED);
+                .defineEnum(KEY_FRAME_BACKGROUND_MODE, OverlayDisplayMode.DETAILED_ALWAYS);
         CAMO_ROTATION_MODE_VALUE = builder
                 .comment(formatOverlayComments("Camo Rotation"))
                 .translation(translate(KEY_CAMO_ROTATION_MODE))
-                .defineEnum(KEY_CAMO_ROTATION_MODE, OverlayDisplayMode.DETAILED);
+                .defineEnum(KEY_CAMO_ROTATION_MODE, OverlayDisplayMode.DETAILED_ALWAYS);
         TRAPDOOR_TEXTURE_ROTATION_MODE_VALUE = builder
                 .comment(formatOverlayComments("Trapdoor Texture Rotation"))
                 .translation(translate(KEY_TRAPDOOR_TEXTURE_ROTATION_MODE))
-                .defineEnum(KEY_TRAPDOOR_TEXTURE_ROTATION_MODE, OverlayDisplayMode.DETAILED);
+                .defineEnum(KEY_TRAPDOOR_TEXTURE_ROTATION_MODE, OverlayDisplayMode.DETAILED_ALWAYS);
         COPYCAT_STYLE_MODE_VALUE = builder
                 .comment(formatOverlayComments("Copycat Style"))
                 .translation(translate(KEY_COPYCAT_STYLE_MODE))
-                .defineEnum(KEY_COPYCAT_STYLE_MODE, OverlayDisplayMode.DETAILED);
+                .defineEnum(KEY_COPYCAT_STYLE_MODE, OverlayDisplayMode.DETAILED_ALWAYS);
         builder.pop();
 
         SPEC = builder.build();
