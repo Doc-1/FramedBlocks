@@ -1,0 +1,36 @@
+# Adding a new block
+
+- Create an `IBlockType` for the block (usually an entry in an enum implementing the interface)
+  - Create a `FullFacePredicate` indicating on which sides the full face is occupied and should use the uncached path in the model
+  - Create a `SideSkipPredicate` indicating whether the given face of a given state should be culled in the presence of the given neighbor state
+  - Create a `ConnectionPredicate` indicating which edges of a given face can participate in connected textures handling
+  - Create a `ShapeGenerator` providing the `VoxelShape`s to be used by the block:
+    - If the block handles the shapes itself (i.e. when extending a vanilla block), return `ShapeGenerator.EMPTY`
+    - If the block only has a single shape, return `ShapeGenerator.singleShape()`
+    - If the block has multiple shapes, implement a custom `ShapeGenerator`
+      - Override `ShapeGenerator#generatePrimary()` to provide generic shapes
+      - Override `ShapeGenerator#generateOcclusion()` if the block needs dedicated occlusion shapes (used by sloped blocks for more detailed shapes at the ends of the slope)
+      - Build a `Map<BlockState, VoxelShape>` and wrap it in `ShapeContainer.of()` in either of the above methods
+      - Avoid rebuilding identical `VoxelShape`s as much as possible, use cheaper operations from `ShapeUtils`, only optimize any given shape once, use `ShapeCache`s for intermediate results when a given set of shapes or entire generator is used by multiple blocks
+- Create a `Block`:
+  - For single-camo blocks, extend `AbstractFramedBlock` or implement `IFramedBlock`
+  - For double-camo blocks, extend `AbstractFramedDoubleBlock` or implement `IFramedDoubleBlock`
+  - When `IFramedBlock` or `IFramedDoubleBlock` are implemented manually, certain vanilla methods need to be manually delegated to the interface methods as done in the two abstract block classes
+  - If the block handles `VoxelShape`s itself, override `IFramedBlocks#doesBlockOccludeBeaconBeam()` to return an appropriate value
+- Create a `BlockEntity` or use an existing one:
+  - For single-camo blocks, use `FramedBlockEntity` or extend it to implement additional functionality
+  - For double-camo blocks, use `FramedDoubleBlockEntity` or extend it to implement additional functionality or part hit detection that cannot be handled by the default shape-based implementation
+- Create a model wrapper which handles the geometry of the block
+  - For single-camo blocks, extend `Geometry` and implement `Geometry#transformQuad()` to transform the provided quads as necessary (see `QuadModifier` and `Modifiers`)
+  - For double-camo blocks, register a double block wrapper
+  - Register the wrapper via `WrapHelper` in `RegisterModelWrappersEvent`
+  - Create the blockstate file via `AbstractFramedBlockModelProvider#simpleFramedBlock()`, `AbstractFramedBlockModelProvider#simpleFramedBlockWithItem()`, `AbstractFramedBlockModelProvider#framedVariant()` or `AbstractFramedBlockModelProvider#framedMultiPart()`
+  - Create the "client item" file via `AbstractFramedBlockModelProvider#simpleFramedBlockWithItem()` or `AbstractFramedBlockModelProvider#framedBlockItemModel()`
+- If the block has sloped edges, register an `OutlineRenderer` in `RegisterOutlineRenderersEvent`
+- If the block needs custom handling in the placement preview, register a `GhostRenderBehaviour` in `RegisterGhostRenderBehavioursEvent`
+  - All double blocks must have `DoubleBlockGhostRenderBehaviour` or a subclass thereof registered as their ghost render behaviour
+- If the block needs custom handling when copied by a Framed Blueprint, register a `BlueprintCopyBehaviour` in `RegisterBlueprintCopyBehavioursEvent`
+- To participate in dev-only debug renderers, the debug renderers must be attached to the `BlockEntityType`s in `AttachDebugRenderersEvent`
+- For visually correct and safe particle handling, all blocks must have a custom `IClientBlockExtensions` attached in `RegisterClientExtensionsEvent`
+  - Single-camo blocks should use `FramedClientBlockExtensions` or a subclass thereof
+  - Double-camo blocks should use `FramedClientDoubleBlockExtensions`
