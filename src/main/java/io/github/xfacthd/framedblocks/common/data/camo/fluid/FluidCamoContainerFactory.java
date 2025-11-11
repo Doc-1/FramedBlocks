@@ -2,6 +2,7 @@ package io.github.xfacthd.framedblocks.common.data.camo.fluid;
 
 import com.mojang.serialization.MapCodec;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainerFactory;
+import io.github.xfacthd.framedblocks.api.camo.CamoCraftingHandler;
 import io.github.xfacthd.framedblocks.api.camo.TriggerRegistrar;
 import io.github.xfacthd.framedblocks.api.util.CamoMessageVerbosity;
 import io.github.xfacthd.framedblocks.api.util.Utils;
@@ -52,6 +53,12 @@ public final class FluidCamoContainerFactory extends CamoContainerFactory<FluidC
     @Nullable
     public FluidCamoContainer applyCamo(Level level, BlockPos pos, Player player, ItemAccess itemAccess)
     {
+        return applyCamo(itemAccess, player, !player.isCreative(), !player.level().isClientSide());
+    }
+
+    @Nullable
+    static FluidCamoContainer applyCamo(ItemAccess itemAccess, @Nullable Player player, boolean consume, boolean commit)
+    {
         ResourceHandler<FluidResource> handler = itemAccess.getCapability(Capabilities.Fluid.ITEM);
         if (handler == null || handler.size() <= 0)
         {
@@ -66,7 +73,7 @@ public final class FluidCamoContainerFactory extends CamoContainerFactory<FluidC
                 continue;
             }
 
-            if (!player.isCreative() && ServerConfig.VIEW.shouldConsumeCamoItem())
+            if (consume && ServerConfig.VIEW.shouldConsumeCamoItem())
             {
                 try (Transaction tx = Transaction.open(null))
                 {
@@ -74,7 +81,7 @@ public final class FluidCamoContainerFactory extends CamoContainerFactory<FluidC
                     {
                         continue;
                     }
-                    if (!level.isClientSide())
+                    if (commit)
                     {
                         tx.commit();
                     }
@@ -170,6 +177,12 @@ public final class FluidCamoContainerFactory extends CamoContainerFactory<FluidC
             return false;
         }
         return true;
+    }
+
+    @Override
+    public CamoCraftingHandler<FluidCamoContainer> getCraftingHandler()
+    {
+        return FluidCamoCraftingHandler.INSTANCE;
     }
 
     @Override

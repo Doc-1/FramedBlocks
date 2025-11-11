@@ -346,6 +346,7 @@ public final class FramedLanguageProvider extends LanguageProvider
         add(Utils.TOOL_WRENCH, "Wrenches");
         add(Utils.DISABLE_INTANGIBLE, "Disable Intangibility");
         add(Utils.GROUP_FULL_CUBE, "Full Framed Blocks");
+        add(Utils.CRAFTING_BLOCKED_FLUID_CONTAINERS, "Camo-crafting-blocked Fluid Containers");
     }
 
     private void addStatusMessageTranslations()

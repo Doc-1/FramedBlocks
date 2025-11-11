@@ -419,6 +419,7 @@
   "msg.framedblocks.split_line.switch": "Hit with a Framed Wrench to switch the orientation of the split-line",
   "tag.block.framedblocks.group.full": "Full Framed Blocks",
   "tag.item.c.tools.wrench": "Wrenches",
+  "tag.item.framedblocks.crafting_blocked_fluid_containers": "Camo-crafting-blocked Fluid Containers",
   "tag.item.framedblocks.disable_intangible": "Disable Intangibility",
   "title.framedblocks.framed_chest": "Framed Chest",
   "title.framedblocks.framed_hopper": "Framed Item Hopper",

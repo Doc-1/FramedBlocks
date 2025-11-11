@@ -77,6 +77,8 @@ public final class Utils
     public static final TagKey<Item> DISABLE_INTANGIBLE = itemTag("disable_intangible");
     /** Group tag containing all full-cube blocks excluding ones that can deviate from that via player interaction */
     public static final TagKey<Block> GROUP_FULL_CUBE = blockTag("group/full");
+    /** Items tagged with this cannot be used as fluid containers in fluid camo application via crafting */
+    public static final TagKey<Item> CRAFTING_BLOCKED_FLUID_CONTAINERS = Utils.itemTag("crafting_blocked_fluid_containers");
 
     /**
      * Provided by tools for rotating blocks

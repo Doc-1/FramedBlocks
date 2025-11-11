@@ -48,5 +48,7 @@ public final class FramedItemTagProvider extends ItemTagsProvider
 
         getOrCreateRawBuilder(Utils.COMPLEX_WRENCH)
                 .addOptionalElement(Utils.rl("mekanism", "configurator"));
+
+        tag(Utils.CRAFTING_BLOCKED_FLUID_CONTAINERS);
     }
 }
