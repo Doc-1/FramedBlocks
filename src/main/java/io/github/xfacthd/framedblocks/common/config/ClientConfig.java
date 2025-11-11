@@ -53,7 +53,8 @@ public final class ClientConfig
     private static final String COMMENT_OVERLAY_MAIN = "Controls the visibility of the %s overlay";
     private static final String COMMENT_OVERLAY_HIDDEN = "- If set to HIDDEN, the %s overlay will be completely hidden.";
     private static final String COMMENT_OVERLAY_ICON = "- If set to ICON, the %s overlay will only show an icon.";
-    private static final String COMMENT_OVERLAY_DETAILED = "- If set to DETAILED, the %s overlay will show detailed info.";
+    private static final String COMMENT_OVERLAY_DETAILED_TOGGLE = "- If set to DETAILED_TOGGLE, the %s overlay will show detailed info while crouching.";
+    private static final String COMMENT_OVERLAY_DETAILED_ALWAYS = "- If set to DETAILED_ALWAYS, the %s overlay will always show detailed info.";
 
     public static final ModConfigSpec.BooleanValue SHOW_GHOST_BLOCKS_VALUE;
     public static final ModConfigSpec.BooleanValue ALT_GHOST_RENDERER_VALUE;
@@ -304,7 +305,8 @@ public final class ClientConfig
                 COMMENT_OVERLAY_MAIN.formatted(overlay),
                 COMMENT_OVERLAY_HIDDEN.formatted(overlay),
                 COMMENT_OVERLAY_ICON.formatted(overlay),
-                COMMENT_OVERLAY_DETAILED.formatted(overlay)
+                COMMENT_OVERLAY_DETAILED_TOGGLE.formatted(overlay),
+                COMMENT_OVERLAY_DETAILED_ALWAYS.formatted(overlay)
         };
     }
 
