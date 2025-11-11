@@ -17,7 +17,7 @@ public final class BlockCamoCraftingHandler implements CamoCraftingHandler<Simpl
     }
 
     @Override
-    public boolean canApply(ItemStack stack)
+    public boolean canApply(ItemStack stack, boolean consume)
     {
         if (stack.getItem() instanceof BlockItem item)
         {
@@ -28,7 +28,7 @@ public final class BlockCamoCraftingHandler implements CamoCraftingHandler<Simpl
     }
 
     @Override
-    public SimpleBlockCamoContainer apply(ItemStack stack)
+    public SimpleBlockCamoContainer apply(ItemStack stack, boolean consume)
     {
         if (stack.getItem() instanceof BlockItem item)
         {
