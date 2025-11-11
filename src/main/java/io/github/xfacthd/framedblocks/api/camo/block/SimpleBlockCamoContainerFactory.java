@@ -1,7 +1,6 @@
 package io.github.xfacthd.framedblocks.api.camo.block;
 
 import com.mojang.serialization.MapCodec;
-import io.github.xfacthd.framedblocks.api.util.ConfigView;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
@@ -10,15 +9,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Basic block camo container factory for simple camos based on only a {@link BlockState} which only need minimal
@@ -34,6 +32,7 @@ public abstract class SimpleBlockCamoContainerFactory extends AbstractBlockCamoC
             .xmap(state -> new SimpleBlockCamoContainer(state, this), SimpleBlockCamoContainer::getState).fieldOf("state");
     private final StreamCodec<ByteBuf, SimpleBlockCamoContainer> streamCodec = ByteBufCodecs.idMapper(Block.BLOCK_STATE_REGISTRY)
             .map(state -> new SimpleBlockCamoContainer(state, this), SimpleBlockCamoContainer::getState);
+    private final BlockCamoCraftingHandler craftingHandler = new BlockCamoCraftingHandler(this);
 
     @Override
     public ItemStack dropCamo(SimpleBlockCamoContainer container)
@@ -41,39 +40,11 @@ public abstract class SimpleBlockCamoContainerFactory extends AbstractBlockCamoC
         return new ItemStack(container.getState().getBlock());
     }
 
+    @Nullable
     @Override
-    public boolean canApplyInCraftingRecipe(ItemStack stack)
+    public BlockCamoCraftingHandler getCraftingHandler()
     {
-        if (stack.getItem() instanceof BlockItem item)
-        {
-            BlockState state = item.getBlock().defaultBlockState();
-            return isValidBlock(state, EmptyBlockGetter.INSTANCE, BlockPos.ZERO, null);
-        }
-        return false;
-    }
-
-    @Override
-    public SimpleBlockCamoContainer applyCamoInCraftingRecipe(ItemStack stack)
-    {
-        if (stack.getItem() instanceof BlockItem item)
-        {
-            BlockState state = item.getBlock().defaultBlockState();
-            if (isValidBlock(state, EmptyBlockGetter.INSTANCE, BlockPos.ZERO, null))
-            {
-                return new SimpleBlockCamoContainer(item.getBlock().defaultBlockState(), this);
-            }
-        }
-        throw new IllegalStateException("applyCamoInCraftingRecipe() called without canApplyInCraftingRecipe() check");
-    }
-
-    @Override
-    public ItemStack getCraftingRemainder(ItemStack stack)
-    {
-        if (!ConfigView.Server.INSTANCE.shouldConsumeCamoItem())
-        {
-            return stack.copyWithCount(1);
-        }
-        return ItemStack.EMPTY;
+        return craftingHandler;
     }
 
     @Override

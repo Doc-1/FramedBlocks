@@ -4,6 +4,7 @@ import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainer;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainerFactory;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainerHelper;
+import io.github.xfacthd.framedblocks.api.camo.CamoCraftingHandler;
 import io.github.xfacthd.framedblocks.api.camo.CamoList;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import net.minecraft.world.item.BlockItem;
@@ -19,7 +20,12 @@ public final class CamoItemStackHelper
     public static CamoContainerFactory<?> getCamoContainerFactory(ItemStack itemStack)
     {
         CamoContainerFactory<?> factory = CamoContainerHelper.findCamoFactory(itemStack);
-        if (factory == null || !factory.canApplyInCraftingRecipe(itemStack))
+        if (factory == null)
+        {
+            return null;
+        }
+        CamoCraftingHandler<?> craftingHandler = factory.getCraftingHandler();
+        if (craftingHandler == null || !craftingHandler.canApply(itemStack))
         {
             return null;
         }

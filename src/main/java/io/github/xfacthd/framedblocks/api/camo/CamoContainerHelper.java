@@ -125,6 +125,13 @@ public final class CamoContainerHelper
         return stack.isEmpty() ? null : InternalAPI.INSTANCE.findCamoFactory(stack);
     }
 
+    @Nullable
+    public static CamoCraftingHandler<?> findCraftingHandler(ItemStack stack)
+    {
+        CamoContainerFactory<?> factory = findCamoFactory(stack);
+        return factory != null ? factory.getCraftingHandler() : null;
+    }
+
     /**
      * {@return whether the given {@link ItemStack} can be used to remove the {@link CamoContainer} from a framed block}
      */

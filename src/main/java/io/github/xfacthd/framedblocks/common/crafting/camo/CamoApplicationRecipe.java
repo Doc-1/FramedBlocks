@@ -4,10 +4,11 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainer;
-import io.github.xfacthd.framedblocks.api.camo.CamoContainerFactory;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainerHelper;
+import io.github.xfacthd.framedblocks.api.camo.CamoCraftingHandler;
 import io.github.xfacthd.framedblocks.api.camo.CamoList;
 import io.github.xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
+import io.github.xfacthd.framedblocks.api.util.ConfigView;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -63,8 +64,8 @@ public final class CamoApplicationRecipe extends CustomRecipe
         boolean camoOne = false;
         if (!camoOneStack.isEmpty())
         {
-            CamoContainerFactory<?> factoryOne = CamoContainerHelper.findCamoFactory(camoOneStack);
-            if (factoryOne == null || !factoryOne.canApplyInCraftingRecipe(camoOneStack))
+            CamoCraftingHandler<?> handlerOne = CamoContainerHelper.findCraftingHandler(camoOneStack);
+            if (handlerOne == null || !handlerOne.canApply(camoOneStack))
             {
                 return false;
             }
@@ -75,8 +76,8 @@ public final class CamoApplicationRecipe extends CustomRecipe
         boolean camoTwo = false;
         if (!camoTwoStack.isEmpty())
         {
-            CamoContainerFactory<?> factoryTwo = CamoContainerHelper.findCamoFactory(camoTwoStack);
-            if (factoryTwo == null || !factoryTwo.canApplyInCraftingRecipe(camoTwoStack))
+            CamoCraftingHandler<?> handlerTwo = CamoContainerHelper.findCraftingHandler(camoTwoStack);
+            if (handlerTwo == null || !handlerTwo.canApply(camoTwoStack))
             {
                 return false;
             }
@@ -103,12 +104,12 @@ public final class CamoApplicationRecipe extends CustomRecipe
         ItemStack camoOneStack = input.getItem(0, 1);
         if (!camoOneStack.isEmpty())
         {
-            CamoContainerFactory<?> factoryOne = CamoContainerHelper.findCamoFactory(camoOneStack);
-            if (factoryOne == null || !factoryOne.canApplyInCraftingRecipe(camoOneStack))
+            CamoCraftingHandler<?> handlerOne = CamoContainerHelper.findCraftingHandler(camoOneStack);
+            if (handlerOne == null || !handlerOne.canApply(camoOneStack))
             {
                 return ItemStack.EMPTY;
             }
-            camos.add(factoryOne.applyCamoInCraftingRecipe(camoOneStack));
+            camos.add(handlerOne.apply(camoOneStack));
         }
         else if (block.getBlockType().consumesTwoCamosInCamoApplicationRecipe())
         {
@@ -118,12 +119,12 @@ public final class CamoApplicationRecipe extends CustomRecipe
         ItemStack camoTwoStack = input.getItem(1, 1);
         if (!camoTwoStack.isEmpty())
         {
-            CamoContainerFactory<?> factoryTwo = CamoContainerHelper.findCamoFactory(camoTwoStack);
-            if (factoryTwo == null || !factoryTwo.canApplyInCraftingRecipe(camoTwoStack))
+            CamoCraftingHandler<?> handlerTwo = CamoContainerHelper.findCraftingHandler(camoTwoStack);
+            if (handlerTwo == null || !handlerTwo.canApply(camoTwoStack))
             {
                 return ItemStack.EMPTY;
             }
-            camos.add(factoryTwo.applyCamoInCraftingRecipe(camoTwoStack));
+            camos.add(handlerTwo.apply(camoTwoStack));
         }
 
         ItemStack result = blockStack.copyWithCount(1);
@@ -140,18 +141,20 @@ public final class CamoApplicationRecipe extends CustomRecipe
             remaining.set(1, input.getItem(1, 0).copy());
         }
 
+        boolean consume = ConfigView.Server.INSTANCE.shouldConsumeCamoItem();
+
         ItemStack camoOneStack = input.getItem(0, 1);
         if (!camoOneStack.isEmpty())
         {
-            CamoContainerFactory<?> factoryOne = CamoContainerHelper.findCamoFactory(camoOneStack);
-            remaining.set(2, Objects.requireNonNull(factoryOne).getCraftingRemainder(camoOneStack));
+            CamoCraftingHandler<?> handlerOne = CamoContainerHelper.findCraftingHandler(camoOneStack);
+            remaining.set(2, Objects.requireNonNull(handlerOne).getRemainder(camoOneStack, consume));
         }
 
         ItemStack camoTwoStack = input.getItem(1, 1);
         if (!camoTwoStack.isEmpty())
         {
-            CamoContainerFactory<?> factoryTwo = CamoContainerHelper.findCamoFactory(camoTwoStack);
-            remaining.set(3, Objects.requireNonNull(factoryTwo).getCraftingRemainder(camoTwoStack));
+            CamoCraftingHandler<?> handlerTwo = CamoContainerHelper.findCraftingHandler(camoTwoStack);
+            remaining.set(3, Objects.requireNonNull(handlerTwo).getRemainder(camoTwoStack, consume));
         }
 
         return remaining;
