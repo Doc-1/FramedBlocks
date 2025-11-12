@@ -54,11 +54,9 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.extensions.IBlockExtension;
 import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
 import org.jetbrains.annotations.ApiStatus;
@@ -129,28 +127,9 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
             return;
         }
 
-        if (placer instanceof Player player && player.getMainHandItem() == stack)
+        if (placer instanceof Player player && player.getMainHandItem() == stack && level.getBlockEntity(pos) instanceof FramedBlockEntity be)
         {
-            ItemStack offhandStack = player.getOffhandItem();
-            // TODO: consider expanding this to any supported camo applicator
-            if (offhandStack.getItem() instanceof BlockItem item)
-            {
-                if (item.getBlock() instanceof IFramedBlock)
-                {
-                    return;
-                }
-            }
-            // TODO: add support for phantom paste, glow paste and reinforcements
-            else if (!offhandStack.is(Tags.Items.DUSTS_GLOWSTONE))
-            {
-                return;
-            }
-
-            if (level.getBlockEntity(pos) instanceof FramedBlockEntity be && be.canAutoApplyCamoOnPlacement())
-            {
-                Vec3 hitVec = new Vec3(pos.getX(), pos.getY(), pos.getZ());
-                be.handleInteraction(player, InteractionHand.OFF_HAND, new BlockHitResult(hitVec, Direction.UP, pos, false));
-            }
+            be.tryApplyCamoImmediately(player);
         }
     }
 

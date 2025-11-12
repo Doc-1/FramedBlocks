@@ -115,33 +115,21 @@ public class FramedBlockEntity extends BlockEntity
         {
             return clearCamo(player, ItemAccess.forPlayerInteraction(player, hand), camo, secondary);
         }
-        else if (stack.is(Tags.Items.DUSTS_GLOWSTONE) && !glowing)
-        {
-            return applyGlowstone(player, stack);
-        }
         else if (!camo.isEmpty() && !player.isShiftKeyDown() && Utils.isConfigurationTool(stack))
         {
             return rotateCamo(camo, secondary);
         }
-        else if (!intangible && canMakeIntangible(stack))
+
+        InteractionResult applyResult = tryApplyModifier(player, stack);
+        if (applyResult != InteractionResult.PASS)
         {
-            return applyIntangibility(player, stack);
+            return applyResult;
         }
-        else if (intangible && player.isShiftKeyDown() && Utils.isConfigurationTool(stack))
+
+        InteractionResult removeResult = tryRemoveModifier(player, stack, hand);
+        if (removeResult != InteractionResult.PASS)
         {
-            return removeIntangibility(player);
-        }
-        else if (!reinforced && stack.is(Utils.FRAMED_REINFORCEMENT.value()))
-        {
-            return applyReinforcement(player, stack);
-        }
-        else if (reinforced && stack.isCorrectToolForDrops(Blocks.OBSIDIAN.defaultBlockState()))
-        {
-            return removeReinforcement(player, stack, hand);
-        }
-        else if (!emissive && stack.is(Utils.GLOW_PASTE))
-        {
-            return applyEmissivity(player, stack);
+            return removeResult;
         }
 
         CamoContainer<?, ?> newCamo = CamoContainerHelper.handleCamoInteraction(level(), worldPosition, player, camo, stack, hand);
@@ -155,6 +143,60 @@ public class FramedBlockEntity extends BlockEntity
         }
 
         return InteractionResult.TRY_WITH_EMPTY_HAND;
+    }
+
+    @ApiStatus.Internal
+    public final void tryApplyCamoImmediately(Player player)
+    {
+        ItemStack stack = player.getItemInHand(InteractionHand.OFF_HAND);
+        if (stack.isEmpty()) return;
+
+        CamoContainerFactory<?> factory = CamoContainerHelper.findCamoFactory(stack);
+        if (factory != null)
+        {
+            if (canAutoApplyCamoOnPlacement())
+            {
+                setCamo(player, ItemAccess.forPlayerInteraction(player, InteractionHand.OFF_HAND), factory, false);
+            }
+        }
+        else
+        {
+            tryApplyModifier(player, stack);
+        }
+    }
+
+    private InteractionResult tryApplyModifier(Player player, ItemStack stack)
+    {
+        if (stack.is(Tags.Items.DUSTS_GLOWSTONE) && !glowing)
+        {
+            return applyGlowstone(player, stack);
+        }
+        if (!intangible && canMakeIntangible(stack))
+        {
+            return applyIntangibility(player, stack);
+        }
+        if (!reinforced && stack.is(Utils.FRAMED_REINFORCEMENT.value()))
+        {
+            return applyReinforcement(player, stack);
+        }
+        if (!emissive && stack.is(Utils.GLOW_PASTE))
+        {
+            return applyEmissivity(player, stack);
+        }
+        return InteractionResult.PASS;
+    }
+
+    private InteractionResult tryRemoveModifier(Player player, ItemStack stack, InteractionHand hand)
+    {
+        if (intangible && player.isShiftKeyDown() && Utils.isConfigurationTool(stack))
+        {
+            return removeIntangibility(player);
+        }
+        if (reinforced && stack.isCorrectToolForDrops(Blocks.OBSIDIAN.defaultBlockState()))
+        {
+            return removeReinforcement(player, stack, hand);
+        }
+        return InteractionResult.PASS;
     }
 
     private boolean canMakeIntangible(ItemStack stack)
