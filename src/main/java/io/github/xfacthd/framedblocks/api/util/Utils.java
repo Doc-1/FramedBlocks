@@ -40,8 +40,10 @@ import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -480,6 +482,22 @@ public final class Utils
         for (int i = 0; i < itemHandler.size(); i++)
         {
             itemHandler.set(i, ItemResource.EMPTY, 0);
+        }
+    }
+
+    public static boolean extractOneFromItemAccess(ItemAccess access, boolean commit)
+    {
+        try (Transaction tx = Transaction.openRoot())
+        {
+            if (access.extract(access.getResource(), 1, tx) == 1)
+            {
+                if (commit)
+                {
+                    tx.commit();
+                }
+                return true;
+            }
+            return false;
         }
     }
 

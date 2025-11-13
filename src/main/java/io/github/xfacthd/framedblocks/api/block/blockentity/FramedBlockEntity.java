@@ -13,6 +13,7 @@ import io.github.xfacthd.framedblocks.api.camo.CamoContainer;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainerFactory;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainerHelper;
 import io.github.xfacthd.framedblocks.api.camo.CamoList;
+import io.github.xfacthd.framedblocks.api.camo.applicator.CamoApplicator;
 import io.github.xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import io.github.xfacthd.framedblocks.api.component.FrameConfig;
 import io.github.xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
@@ -55,10 +56,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
 import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -106,21 +107,35 @@ public class FramedBlockEntity extends BlockEntity
         boolean secondary = hitSecondary(hit, player);
         CamoContainer<?, ?> camo = getCamo(secondary);
 
-        CamoContainerFactory<?> camoFactory;
-        if (camo.isEmpty() && (camoFactory = CamoContainerHelper.findCamoFactory(stack)) != null)
+        if (camo.isEmpty())
         {
-            return setCamo(player, ItemAccess.forPlayerInteraction(player, hand), camoFactory, secondary);
+            CamoApplicator applicator;
+            if ((applicator = stack.getCapability(CamoApplicator.CAPABILITY)) != null)
+            {
+                boolean success = applicator.apply(this, player, hand, makeApplicatorCamoHandler(player, secondary), this::tryApplyModifierFromApplicator);
+                // Return fail to fully consume the interaction, preventing any UIs from opening to ensure ability to quickly apply camos to lots of blocks
+                return success ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+            }
+
+            CamoContainerFactory<?> camoFactory;
+            if ((camoFactory = CamoContainerHelper.findCamoFactory(stack)) != null)
+            {
+                return setCamo(player, ItemAccess.forPlayerInteraction(player, hand), camoFactory, secondary);
+            }
         }
-        else if (!camo.isEmpty() && CamoContainerHelper.isValidRemovalTool(camo, stack))
+        else
         {
-            return clearCamo(player, ItemAccess.forPlayerInteraction(player, hand), camo, secondary);
-        }
-        else if (!camo.isEmpty() && !player.isShiftKeyDown() && Utils.isConfigurationTool(stack))
-        {
-            return rotateCamo(camo, secondary);
+            if (CamoContainerHelper.isValidRemovalTool(camo, stack))
+            {
+                return clearCamo(player, ItemAccess.forPlayerInteraction(player, hand), camo, secondary);
+            }
+            if (!player.isShiftKeyDown() && Utils.isConfigurationTool(stack))
+            {
+                return rotateCamo(camo, secondary);
+            }
         }
 
-        InteractionResult applyResult = tryApplyModifier(player, stack);
+        InteractionResult applyResult = tryApplyModifier(ItemAccess.forPlayerInteraction(player, hand));
         if (applyResult != InteractionResult.PASS)
         {
             return applyResult;
@@ -151,6 +166,13 @@ public class FramedBlockEntity extends BlockEntity
         ItemStack stack = player.getItemInHand(InteractionHand.OFF_HAND);
         if (stack.isEmpty()) return;
 
+        CamoApplicator applicator = stack.getCapability(CamoApplicator.CAPABILITY);
+        if (applicator != null)
+        {
+            applicator.apply(this, player, InteractionHand.OFF_HAND, makeApplicatorCamoHandler(player, false), this::tryApplyModifierFromApplicator);
+            return;
+        }
+
         CamoContainerFactory<?> factory = CamoContainerHelper.findCamoFactory(stack);
         if (factory != null)
         {
@@ -161,27 +183,38 @@ public class FramedBlockEntity extends BlockEntity
         }
         else
         {
-            tryApplyModifier(player, stack);
+            tryApplyModifier(ItemAccess.forPlayerInteraction(player, InteractionHand.OFF_HAND));
         }
     }
 
-    private InteractionResult tryApplyModifier(Player player, ItemStack stack)
+    private CamoApplicator.CamoHandler makeApplicatorCamoHandler(Player player, boolean secondary)
     {
-        if (stack.is(Tags.Items.DUSTS_GLOWSTONE) && !glowing)
+        return (factory, itemAccess) -> setCamo(player, itemAccess, factory, secondary) == InteractionResult.SUCCESS;
+    }
+
+    private boolean tryApplyModifierFromApplicator(ItemAccess itemAccess)
+    {
+        return tryApplyModifier(itemAccess) == InteractionResult.SUCCESS;
+    }
+
+    private InteractionResult tryApplyModifier(ItemAccess itemAccess)
+    {
+        ItemResource resource = itemAccess.getResource();
+        if (FrameModifiers.isGlowstone(resource) && !glowing)
         {
-            return applyGlowstone(player, stack);
+            return applyGlowstone(itemAccess);
         }
-        if (!intangible && canMakeIntangible(stack))
+        if (!intangible && canMakeIntangible(resource))
         {
-            return applyIntangibility(player, stack);
+            return applyIntangibility(itemAccess);
         }
-        if (!reinforced && stack.is(Utils.FRAMED_REINFORCEMENT.value()))
+        if (!reinforced && FrameModifiers.isReinforcement(resource))
         {
-            return applyReinforcement(player, stack);
+            return applyReinforcement(itemAccess);
         }
-        if (!emissive && stack.is(Utils.GLOW_PASTE))
+        if (!emissive && FrameModifiers.isGlowPaste(resource))
         {
-            return applyEmissivity(player, stack);
+            return applyEmissivity(itemAccess);
         }
         return InteractionResult.PASS;
     }
@@ -199,13 +232,13 @@ public class FramedBlockEntity extends BlockEntity
         return InteractionResult.PASS;
     }
 
-    private boolean canMakeIntangible(ItemStack stack)
+    private boolean canMakeIntangible(ItemResource resource)
     {
         if (!ConfigView.Server.INSTANCE.enableIntangibility())
         {
             return false;
         }
-        return stack.is(Utils.PHANTOM_PASTE) && getBlockType().allowMakingIntangible();
+        return FrameModifiers.isPhantomPaste(resource) && getBlockType().allowMakingIntangible();
     }
 
     private InteractionResult setCamo(Player player, ItemAccess itemAccess, CamoContainerFactory<?> factory, boolean secondary)
@@ -219,7 +252,7 @@ public class FramedBlockEntity extends BlockEntity
             }
             return InteractionResult.SUCCESS;
         }
-        // Abuse a specific InteractionResult instance to communicate failed camo removal to the caller
+        // Abuse a specific InteractionResult instance to communicate failed camo application to the caller
         return CONSUME_CAMO_FAILED;
     }
 
@@ -235,20 +268,6 @@ public class FramedBlockEntity extends BlockEntity
         }
         // Abuse a specific InteractionResult instance to communicate failed camo removal to the caller
         return CONSUME_CAMO_FAILED;
-    }
-
-    private InteractionResult applyGlowstone(Player player, ItemStack stack)
-    {
-        if (!level().isClientSide())
-        {
-            if (!player.isCreative())
-            {
-                stack.shrink(1);
-            }
-
-            setGlowing(true);
-        }
-        return InteractionResult.SUCCESS;
     }
 
     private InteractionResult rotateCamo(CamoContainer<?, ?> camo, boolean secondary)
@@ -268,15 +287,27 @@ public class FramedBlockEntity extends BlockEntity
         return InteractionResult.FAIL;
     }
 
-    private InteractionResult applyIntangibility(Player player, ItemStack stack)
+    private InteractionResult applyGlowstone(ItemAccess itemAccess)
     {
+        if (!Utils.extractOneFromItemAccess(itemAccess, !level().isClientSide()))
+        {
+            return InteractionResult.FAIL;
+        }
         if (!level().isClientSide())
         {
-            if (!player.isCreative())
-            {
-                stack.shrink(1);
-            }
+            setGlowing(true);
+        }
+        return InteractionResult.SUCCESS;
+    }
 
+    private InteractionResult applyIntangibility(ItemAccess itemAccess)
+    {
+        if (!Utils.extractOneFromItemAccess(itemAccess, !level().isClientSide()))
+        {
+            return InteractionResult.FAIL;
+        }
+        if (!level().isClientSide())
+        {
             setIntangible(true);
         }
         return InteractionResult.SUCCESS;
@@ -293,15 +324,14 @@ public class FramedBlockEntity extends BlockEntity
         return InteractionResult.SUCCESS;
     }
 
-    private InteractionResult applyReinforcement(Player player, ItemStack stack)
+    private InteractionResult applyReinforcement(ItemAccess itemAccess)
     {
+        if (!Utils.extractOneFromItemAccess(itemAccess, !level().isClientSide()))
+        {
+            return InteractionResult.FAIL;
+        }
         if (!level().isClientSide())
         {
-            if (!player.isCreative())
-            {
-                stack.shrink(1);
-            }
-
             setReinforced(true);
         }
         return InteractionResult.SUCCESS;
@@ -323,15 +353,14 @@ public class FramedBlockEntity extends BlockEntity
         return InteractionResult.SUCCESS;
     }
 
-    private InteractionResult applyEmissivity(Player player, ItemStack stack)
+    private InteractionResult applyEmissivity(ItemAccess itemAccess)
     {
+        if (!Utils.extractOneFromItemAccess(itemAccess, !level().isClientSide()))
+        {
+            return InteractionResult.FAIL;
+        }
         if (!level().isClientSide())
         {
-            if (!player.isCreative())
-            {
-                stack.shrink(1);
-            }
-
             setEmissive(true);
         }
         return InteractionResult.SUCCESS;
@@ -669,6 +698,10 @@ public class FramedBlockEntity extends BlockEntity
                 return true;
             }
             if (mainItem.is(Utils.DISABLE_INTANGIBLE) || Utils.isWrenchRotationTool(mainItem) || Utils.isConfigurationTool(mainItem))
+            {
+                return false;
+            }
+            if (mainItem.getCapability(CamoApplicator.CAPABILITY) != null)
             {
                 return false;
             }
