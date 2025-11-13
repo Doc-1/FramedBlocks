@@ -5,9 +5,10 @@ import io.github.xfacthd.framedblocks.common.capability.fluid.TankFluidResourceH
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.ItemAccessFluidHandler;
 import net.neoforged.neoforge.transfer.item.VanillaContainerWrapper;
+
+import java.util.Objects;
 
 public final class CapabilitySetup
 {
@@ -56,8 +57,8 @@ public final class CapabilitySetup
 
         event.registerItem(
                 Capabilities.Fluid.ITEM,
-                (stack, $) -> new ItemAccessFluidHandler(
-                        ItemAccess.forStack(stack),
+                (stack, itemAccess) -> new ItemAccessFluidHandler(
+                        Objects.requireNonNull(itemAccess),
                         FBContent.DC_TYPE_TANK_CONTENTS.value(),
                         TankFluidResourceHandler.CAPACITY
                 ),
