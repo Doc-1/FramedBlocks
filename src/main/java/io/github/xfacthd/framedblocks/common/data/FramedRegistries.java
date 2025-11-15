@@ -1,6 +1,5 @@
 package io.github.xfacthd.framedblocks.common.data;
 
-import io.github.xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainerFactory;
 import io.github.xfacthd.framedblocks.api.util.FramedConstants;
 import net.minecraft.core.Registry;
@@ -16,10 +15,6 @@ public final class FramedRegistries
             FramedConstants.CAMO_CONTAINER_FACTORY_REGISTRY_KEY,
             builder -> builder.sync(true)
     );
-    public static final Registry<AuxBlueprintData.Type<?>> AUX_BLUEPRINT_DATA_TYPES = create(
-            FramedConstants.AUX_BLUEPRINT_DATA_TYPE_REGISTRY_KEY,
-            builder -> builder.sync(true)
-    );
 
     private static <T> Registry<T> create(ResourceKey<Registry<T>> key, Consumer<RegistryBuilder<T>> consumer)
     {
@@ -31,10 +26,7 @@ public final class FramedRegistries
     public static void onRegisterNewRegistries(NewRegistryEvent event)
     {
         event.register(CAMO_CONTAINER_FACTORIES);
-        event.register(AUX_BLUEPRINT_DATA_TYPES);
     }
-
-
 
     private FramedRegistries() { }
 }

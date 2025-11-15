@@ -56,7 +56,6 @@ import io.github.xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeDispla
 import io.github.xfacthd.framedblocks.common.data.BlockType;
 import io.github.xfacthd.framedblocks.common.data.FramedRegistries;
 import io.github.xfacthd.framedblocks.common.data.FramedToolType;
-import io.github.xfacthd.framedblocks.common.data.blueprint.auxdata.DoorAuxBlueprintData;
 import io.github.xfacthd.framedblocks.common.data.camo.block.BlockCamoContainerFactory;
 import io.github.xfacthd.framedblocks.common.data.camo.fluid.FluidCamoContainerFactory;
 import io.github.xfacthd.framedblocks.common.data.component.*;
@@ -128,7 +127,6 @@ public final class FBContent
     private static final DeferredLootFunctionRegister LOOT_FUNCTIONS = DeferredLootFunctionRegister.create(FramedConstants.MOD_ID);
     private static final DeferredRegister<LootNumberProviderType> LOOT_NUMBER_PROVIDERS = register(Registries.LOOT_NUMBER_PROVIDER_TYPE);
     private static final DeferredRegister<CamoContainerFactory<?>> CAMO_CONTAINER_FACTORIES = register(FramedConstants.CAMO_CONTAINER_FACTORY_REGISTRY_KEY);
-    private static final DeferredAuxDataTypeRegister AUX_BLUEPRINT_DATA_TYPES = DeferredAuxDataTypeRegister.create(FramedConstants.MOD_ID);
 
     private static final Map<BlockType, Holder<Block>> BLOCKS_BY_TYPE = new EnumMap<>(BlockType.class);
     private static final Map<FramedToolType, Holder<Item>> TOOLS_BY_TYPE = new EnumMap<>(FramedToolType.class);
@@ -756,29 +754,6 @@ public final class FBContent
     );
     // endregion
 
-    // region AuxBlueprintData.Types
-    public static final DeferredAuxDataType<DoorAuxBlueprintData> AUX_TYPE_DOOR_DATA = AUX_BLUEPRINT_DATA_TYPES.registerAuxDataType(
-            "door", DoorAuxBlueprintData.CODEC, DoorAuxBlueprintData.STREAM_CODEC
-    );
-    public static final DeferredAuxDataType<CollapsibleBlockData> AUX_TYPE_COLLAPSIBLE_BLOCK_DATA = AUX_BLUEPRINT_DATA_TYPES.registerAuxDataType(
-            "collapsible_block", CollapsibleBlockData.MAP_CODEC, CollapsibleBlockData.STREAM_CODEC
-    );
-    public static final DeferredAuxDataType<CollapsibleCopycatBlockData> AUX_TYPE_COLLAPSIBLE_COPYCAT_BLOCK_DATA = AUX_BLUEPRINT_DATA_TYPES.registerAuxDataType(
-            "collapsible_copycat_block", CollapsibleCopycatBlockData.MAP_CODEC, CollapsibleCopycatBlockData.STREAM_CODEC
-    );
-    public static final DeferredAuxDataType<PottedFlower> AUX_TYPE_POTTED_FLOWER = AUX_BLUEPRINT_DATA_TYPES.registerAuxDataType(
-            "potted_flower", PottedFlower.MAP_CODEC, PottedFlower.STREAM_CODEC
-    );
-    public static final DeferredAuxDataType<TargetColor> AUX_TYPE_TARGET_COLOR = AUX_BLUEPRINT_DATA_TYPES.registerAuxDataType(
-            "target_color", TargetColor.MAP_CODEC, TargetColor.STREAM_CODEC
-    );
-    public static final DeferredAuxDataType<AdjustableDoubleBlockData> AUX_TYPE_ADJ_DOUBLE_BLOCK_DATA = AUX_BLUEPRINT_DATA_TYPES.registerAuxDataType(
-            "adjustable_double_block", AdjustableDoubleBlockData.MAP_CODEC, AdjustableDoubleBlockData.STREAM_CODEC
-    );
-    // endregion
-
-
-
     public static void init(IEventBus modBus)
     {
         modBus.addListener(FramedRegistries::onRegisterNewRegistries);
@@ -799,7 +774,6 @@ public final class FBContent
         LOOT_FUNCTIONS.register(modBus);
         LOOT_NUMBER_PROVIDERS.register(modBus);
         CAMO_CONTAINER_FACTORIES.register(modBus);
-        AUX_BLUEPRINT_DATA_TYPES.register(modBus);
 
         DOUBLE_BLOCK_ENTITIES.add((DeferredBlockEntity<? extends FramedDoubleBlockEntity>) BE_TYPE_FRAMED_DOUBLE_BLOCK);
     }
@@ -1006,8 +980,6 @@ public final class FBContent
     {
         Item create(FramedToolType type, Item.Properties properties);
     }
-
-
 
     private FBContent() { }
 }

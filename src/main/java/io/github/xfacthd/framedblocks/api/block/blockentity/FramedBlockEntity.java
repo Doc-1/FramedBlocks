@@ -7,7 +7,6 @@ import io.github.xfacthd.framedblocks.api.block.IBlockType;
 import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
 import io.github.xfacthd.framedblocks.api.block.cache.StateCache;
 import io.github.xfacthd.framedblocks.api.block.render.CullingHelper;
-import io.github.xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
 import io.github.xfacthd.framedblocks.api.blueprint.BlueprintData;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainer;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainerFactory;
@@ -25,6 +24,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -1093,7 +1093,7 @@ public class FramedBlockEntity extends BlockEntity
 
     public final BlueprintData writeToBlueprint()
     {
-        return new BlueprintData(
+        return appendCustomBlueprintData(new BlueprintData(
                 getBlockState().getBlock(),
                 collectCamosForBlueprint(),
                 glowing,
@@ -1101,8 +1101,8 @@ public class FramedBlockEntity extends BlockEntity
                 reinforced,
                 emissive,
                 BlockItemStateProperties.EMPTY,
-                collectAuxBlueprintData()
-        );
+                Optional.empty()
+        ));
     }
 
     protected CamoList collectCamosForBlueprint()
@@ -1110,9 +1110,9 @@ public class FramedBlockEntity extends BlockEntity
         return CamoList.of(camoContainer);
     }
 
-    protected Optional<AuxBlueprintData<?>> collectAuxBlueprintData()
+    protected BlueprintData appendCustomBlueprintData(BlueprintData blueprintData)
     {
-        return Optional.empty();
+        return blueprintData;
     }
 
     public final void applyBlueprintData(BlueprintData blueprintData)
@@ -1121,7 +1121,8 @@ public class FramedBlockEntity extends BlockEntity
         setGlowing(blueprintData.glowing());
         setIntangible(blueprintData.intangible());
         setReinforced(blueprintData.reinforced());
-        blueprintData.auxData().ifPresent(this::applyAuxDataFromBlueprint);
+        setEmissive(blueprintData.emissive());
+        blueprintData.customData().ifPresent(this::applyCustomDataFromBlueprint);
     }
 
     protected void applyCamosFromBlueprint(BlueprintData blueprintData)
@@ -1129,7 +1130,7 @@ public class FramedBlockEntity extends BlockEntity
         setCamo(blueprintData.camos().getCamo(0), false);
     }
 
-    protected void applyAuxDataFromBlueprint(AuxBlueprintData<?> auxData) { }
+    protected void applyCustomDataFromBlueprint(TypedDataComponent<?> auxData) { }
 
     /*
      * DataComponent handling

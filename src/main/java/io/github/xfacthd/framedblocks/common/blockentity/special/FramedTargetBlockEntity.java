@@ -1,12 +1,13 @@
 package io.github.xfacthd.framedblocks.common.blockentity.special;
 
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
-import io.github.xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
+import io.github.xfacthd.framedblocks.api.blueprint.BlueprintData;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.data.component.TargetColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -96,15 +97,15 @@ public class FramedTargetBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    protected Optional<AuxBlueprintData<?>> collectAuxBlueprintData()
+    protected BlueprintData appendCustomBlueprintData(BlueprintData blueprintData)
     {
-        return Optional.of(new TargetColor(overlayColor));
+        return blueprintData.withCustomData(FBContent.DC_TYPE_TARGET_COLOR, new TargetColor(overlayColor));
     }
 
     @Override
-    protected void applyAuxDataFromBlueprint(AuxBlueprintData<?> auxData)
+    protected void applyCustomDataFromBlueprint(TypedDataComponent<?> auxData)
     {
-        if (auxData instanceof TargetColor(DyeColor color))
+        if (auxData.value() instanceof TargetColor(DyeColor color))
         {
             overlayColor = color;
         }

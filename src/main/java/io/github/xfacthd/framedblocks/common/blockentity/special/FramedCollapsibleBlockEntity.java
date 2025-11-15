@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.common.blockentity.special;
 
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
-import io.github.xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
+import io.github.xfacthd.framedblocks.api.blueprint.BlueprintData;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.blockentity.PackedCollapsibleBlockOffsets;
@@ -13,6 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
@@ -24,8 +25,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements ICollapsibleBlockEntity
 {
@@ -289,15 +288,15 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
     }
 
     @Override
-    protected Optional<AuxBlueprintData<?>> collectAuxBlueprintData()
+    protected BlueprintData appendCustomBlueprintData(BlueprintData blueprintData)
     {
-        return Optional.of(new CollapsibleBlockData(collapsedFace, packedOffsets));
+        return blueprintData.withCustomData(FBContent.DC_TYPE_COLLAPSIBLE_BLOCK_DATA, new CollapsibleBlockData(collapsedFace, packedOffsets));
     }
 
     @Override
-    protected void applyAuxDataFromBlueprint(AuxBlueprintData<?> auxData)
+    protected void applyCustomDataFromBlueprint(TypedDataComponent<?> auxData)
     {
-        if (auxData instanceof CollapsibleBlockData(NullableDirection face, int offsets))
+        if (auxData.value() instanceof CollapsibleBlockData(NullableDirection face, int offsets))
         {
             collapsedFace = face.toNullableDirection();
             packedOffsets = offsets;

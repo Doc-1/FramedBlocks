@@ -1,12 +1,11 @@
 package io.github.xfacthd.framedblocks.common.data.blueprint;
 
-import io.github.xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
 import io.github.xfacthd.framedblocks.api.blueprint.BlueprintCopyBehaviour;
 import io.github.xfacthd.framedblocks.api.blueprint.BlueprintData;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.item.ItemStack;
 
-public class DummyDataHandlingCopyBehaviour<T extends AuxBlueprintData<T>> implements BlueprintCopyBehaviour
+public class DummyDataHandlingCopyBehaviour<T> implements BlueprintCopyBehaviour
 {
     private final DataComponentType<T> componentType;
     private final T auxDefaultValue;
@@ -20,7 +19,7 @@ public class DummyDataHandlingCopyBehaviour<T extends AuxBlueprintData<T>> imple
     @Override
     public final void attachDataToDummyRenderStack(ItemStack stack, BlueprintData data)
     {
-        T toCopy = data.getAuxDataOrDefault(auxDefaultValue);
+        T toCopy = data.getCustomDataOrDefault(componentType, auxDefaultValue);
         stack.set(componentType, toCopy);
     }
 }

@@ -13,7 +13,7 @@ public final class FlowerPotCopyBehaviour implements BlueprintCopyBehaviour
     @Override
     public List<ItemStack> getAdditionalConsumedMaterials(BlueprintData data)
     {
-        PottedFlower flower = data.getAuxDataOrDefault(PottedFlower.EMPTY);
+        PottedFlower flower = data.getCustomDataOrDefault(FBContent.DC_TYPE_POTTED_FLOWER, PottedFlower.EMPTY);
         if (!flower.isEmpty())
         {
             return List.of(new ItemStack(flower.flower()));
@@ -24,7 +24,7 @@ public final class FlowerPotCopyBehaviour implements BlueprintCopyBehaviour
     @Override
     public void attachDataToDummyRenderStack(ItemStack stack, BlueprintData data)
     {
-        PottedFlower flower = data.getAuxDataOrDefault(PottedFlower.EMPTY);
+        PottedFlower flower = data.getCustomDataOrDefault(FBContent.DC_TYPE_POTTED_FLOWER, PottedFlower.EMPTY);
         stack.set(FBContent.DC_TYPE_POTTED_FLOWER, flower);
     }
 }

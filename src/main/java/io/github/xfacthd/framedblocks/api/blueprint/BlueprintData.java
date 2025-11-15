@@ -1,6 +1,7 @@
 package io.github.xfacthd.framedblocks.api.blueprint;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
 import io.github.xfacthd.framedblocks.api.camo.CamoList;
@@ -8,6 +9,8 @@ import io.github.xfacthd.framedblocks.api.camo.CamoPrinter;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -24,6 +27,7 @@ import net.minecraft.world.level.block.Blocks;
 
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public record BlueprintData(
         Block block,
@@ -33,9 +37,11 @@ public record BlueprintData(
         boolean reinforced,
         boolean emissive,
         BlockItemStateProperties blockState,
-        Optional<AuxBlueprintData<?>> auxData
+        Optional<TypedDataComponent<?>> customData
 ) implements TooltipProvider
 {
+    private static final Codec<TypedDataComponent<?>> CUSTOM_DATA_CODEC = DataComponentType.PERSISTENT_CODEC
+            .dispatch(TypedDataComponent::type, BlueprintData::makeCustomDataValueCodec);
     public static final Codec<BlueprintData> CODEC = RecordCodecBuilder.create(inst -> inst.group(
             BuiltInRegistries.BLOCK.byNameCodec().fieldOf("block").forGetter(BlueprintData::block),
             CamoList.CODEC.fieldOf("camos").forGetter(BlueprintData::camos),
@@ -44,7 +50,7 @@ public record BlueprintData(
             Codec.BOOL.fieldOf("reinforced").forGetter(BlueprintData::reinforced),
             Codec.BOOL.fieldOf("emissive").forGetter(BlueprintData::emissive),
             BlockItemStateProperties.CODEC.optionalFieldOf("blockstate", BlockItemStateProperties.EMPTY).forGetter(BlueprintData::blockState),
-            AuxBlueprintData.CODEC.optionalFieldOf("aux_data").forGetter(BlueprintData::auxData)
+            CUSTOM_DATA_CODEC.optionalFieldOf("custom_data").forGetter(BlueprintData::customData)
     ).apply(inst, BlueprintData::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, BlueprintData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.registry(Registries.BLOCK),
@@ -61,8 +67,8 @@ public record BlueprintData(
             BlueprintData::emissive,
             BlockItemStateProperties.STREAM_CODEC,
             BlueprintData::blockState,
-            ByteBufCodecs.optional(AuxBlueprintData.STREAM_CODEC),
-            BlueprintData::auxData,
+            ByteBufCodecs.optional(TypedDataComponent.STREAM_CODEC),
+            BlueprintData::customData,
             BlueprintData::new
     );
     public static final BlueprintData EMPTY = new BlueprintData(Blocks.AIR, CamoList.EMPTY, false, false, false, false, BlockItemStateProperties.EMPTY, Optional.empty());
@@ -77,12 +83,17 @@ public record BlueprintData(
     public static final MutableComponent TRUE = Utils.translate("desc", "blueprint_true").withStyle(ChatFormatting.GREEN);
     public static final MutableComponent CANT_COPY = Utils.translate("desc", "blueprint_cant_copy").withStyle(ChatFormatting.RED);
 
-    @SuppressWarnings("unchecked")
-    public <T extends AuxBlueprintData<T>> T getAuxDataOrDefault(T _default)
+    public <T> T getCustomDataOrDefault(Supplier<DataComponentType<T>> type, T _default)
     {
-        if (auxData.isPresent() && _default.type() == auxData.get().type())
+        return getCustomDataOrDefault(type.get(), _default);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getCustomDataOrDefault(DataComponentType<T> type, T _default)
+    {
+        if (customData.isPresent() && customData.get().type() == type)
         {
-            return (T) auxData.get();
+            return (T) customData.get().value();
         }
         return _default;
     }
@@ -94,12 +105,17 @@ public record BlueprintData(
 
     public BlueprintData withBlockState(BlockItemStateProperties newBlockState)
     {
-        return new BlueprintData(block, camos, glowing, intangible, reinforced, emissive, newBlockState, auxData);
+        return new BlueprintData(block, camos, glowing, intangible, reinforced, emissive, newBlockState, customData);
     }
 
-    public BlueprintData withAuxData(AuxBlueprintData<?> newAuxData)
+    public <T> BlueprintData withCustomData(Supplier<DataComponentType<T>> type, T data)
     {
-        return new BlueprintData(block, camos, glowing, intangible, reinforced, emissive, blockState, Optional.of(newAuxData));
+        return withCustomData(type.get(), data);
+    }
+
+    public <T> BlueprintData withCustomData(DataComponentType<T> type, T data)
+    {
+        return new BlueprintData(block, camos, glowing, intangible, reinforced, emissive, blockState, Optional.of(new TypedDataComponent<>(type, data)));
     }
 
     @Override
@@ -121,9 +137,18 @@ public record BlueprintData(
         appender.accept(Component.translatable(IS_REINFORCED, reinforced ? TRUE : FALSE).withStyle(ChatFormatting.GOLD));
         appender.accept(Component.translatable(IS_EMISSIVE, emissive ? TRUE : FALSE).withStyle(ChatFormatting.GOLD));
 
-        if (auxData.isPresent())
+        // Prevent printing a wrapped BlueprintData (i.e. from the door)
+        if (customData.isPresent() && customData.get().value() instanceof TooltipProvider tooltipProvider && !(tooltipProvider instanceof BlueprintData))
         {
-            auxData.get().addToTooltip(context, appender, tooltipFlag, componentGetter);
+            tooltipProvider.addToTooltip(context, appender, tooltipFlag, componentGetter);
         }
+    }
+
+    private static <T> MapCodec<TypedDataComponent<T>> makeCustomDataValueCodec(DataComponentType<T> type)
+    {
+        return type.codecOrThrow().fieldOf("value").xmap(
+                val -> TypedDataComponent.createUnchecked(type, val),
+                TypedDataComponent::value
+        );
     }
 }

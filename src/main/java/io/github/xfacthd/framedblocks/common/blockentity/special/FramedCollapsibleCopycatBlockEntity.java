@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.common.blockentity.special;
 
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
-import io.github.xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
+import io.github.xfacthd.framedblocks.api.blueprint.BlueprintData;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.blockentity.PackedCollapsibleBlockOffsets;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,8 +19,6 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.model.data.ModelData;
-
-import java.util.Optional;
 
 public class FramedCollapsibleCopycatBlockEntity extends FramedBlockEntity implements ICollapsibleCopycatBlockEntity
 {
@@ -174,15 +173,15 @@ public class FramedCollapsibleCopycatBlockEntity extends FramedBlockEntity imple
     }
 
     @Override
-    protected Optional<AuxBlueprintData<?>> collectAuxBlueprintData()
+    protected BlueprintData appendCustomBlueprintData(BlueprintData blueprintData)
     {
-        return Optional.of(new CollapsibleCopycatBlockData(packedOffsets));
+        return blueprintData.withCustomData(FBContent.DC_TYPE_COLLAPSIBLE_COPYCAT_BLOCK_DATA, new CollapsibleCopycatBlockData(packedOffsets));
     }
 
     @Override
-    protected void applyAuxDataFromBlueprint(AuxBlueprintData<?> auxData)
+    protected void applyCustomDataFromBlueprint(TypedDataComponent<?> auxData)
     {
-        if (auxData instanceof CollapsibleCopycatBlockData(int offsets))
+        if (auxData.value() instanceof CollapsibleCopycatBlockData(int offsets))
         {
             packedOffsets = offsets;
         }

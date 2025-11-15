@@ -4,9 +4,9 @@ import io.github.xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import io.github.xfacthd.framedblocks.api.blueprint.BlueprintCopyBehaviour;
 import io.github.xfacthd.framedblocks.api.blueprint.BlueprintData;
 import io.github.xfacthd.framedblocks.api.camo.CamoList;
+import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.block.door.FramedDoorBlock;
 import io.github.xfacthd.framedblocks.common.blockentity.special.FramedDoorBlockEntity;
-import io.github.xfacthd.framedblocks.common.data.blueprint.auxdata.DoorAuxBlueprintData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -32,7 +32,7 @@ public final class DoorCopyBehaviour implements BlueprintCopyBehaviour
 
         BlueprintData mainData = top ? dataTwo : dataOne;
         BlueprintData secData = top ? dataOne : dataTwo;
-        return mainData.withAuxData(new DoorAuxBlueprintData(secData));
+        return mainData.withCustomData(FBContent.DC_TYPE_BLUEPRINT_DATA, secData);
     }
 
     @Override
@@ -107,6 +107,6 @@ public final class DoorCopyBehaviour implements BlueprintCopyBehaviour
 
     public static BlueprintData getSecondData(BlueprintData blueprintData)
     {
-        return blueprintData.getAuxDataOrDefault(DoorAuxBlueprintData.EMPTY).data();
+        return blueprintData.getCustomDataOrDefault(FBContent.DC_TYPE_BLUEPRINT_DATA, BlueprintData.EMPTY);
     }
 }

@@ -3,7 +3,7 @@ package io.github.xfacthd.framedblocks.common.blockentity.doubled.slab;
 import io.github.xfacthd.framedblocks.api.block.IFramedDoubleBlock;
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import io.github.xfacthd.framedblocks.api.block.doubleblock.DoubleBlockParts;
-import io.github.xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
+import io.github.xfacthd.framedblocks.api.blueprint.BlueprintData;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.block.slab.FramedAdjustableDoubleBlock;
@@ -15,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -25,8 +26,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.model.data.ModelData;
-
-import java.util.Optional;
 
 public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity implements ICollapsibleBlockEntity, ICollapsibleCopycatBlockEntity
 {
@@ -189,15 +188,15 @@ public class FramedAdjustableDoubleBlockEntity extends FramedDoubleBlockEntity i
     }
 
     @Override
-    protected Optional<AuxBlueprintData<?>> collectAuxBlueprintData()
+    protected BlueprintData appendCustomBlueprintData(BlueprintData blueprintData)
     {
-        return Optional.of(new AdjustableDoubleBlockData(firstHeight));
+        return blueprintData.withCustomData(FBContent.DC_TYPE_ADJ_DOUBLE_BLOCK_DATA, new AdjustableDoubleBlockData(firstHeight));
     }
 
     @Override
-    protected void applyAuxDataFromBlueprint(AuxBlueprintData<?> auxData)
+    protected void applyCustomDataFromBlueprint(TypedDataComponent<?> auxData)
     {
-        if (auxData instanceof AdjustableDoubleBlockData(int height))
+        if (auxData.value() instanceof AdjustableDoubleBlockData(int height))
         {
             firstHeight = height;
         }

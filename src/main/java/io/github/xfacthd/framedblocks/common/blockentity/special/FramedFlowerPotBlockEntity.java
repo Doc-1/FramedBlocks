@@ -1,12 +1,13 @@
 package io.github.xfacthd.framedblocks.common.blockentity.special;
 
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
-import io.github.xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
+import io.github.xfacthd.framedblocks.api.blueprint.BlueprintData;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.data.component.PottedFlower;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +20,6 @@ import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.model.data.ModelProperty;
 
 import java.util.List;
-import java.util.Optional;
 
 public class FramedFlowerPotBlockEntity extends FramedBlockEntity
 {
@@ -110,15 +110,15 @@ public class FramedFlowerPotBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    protected Optional<AuxBlueprintData<?>> collectAuxBlueprintData()
+    protected BlueprintData appendCustomBlueprintData(BlueprintData blueprintData)
     {
-        return Optional.of(new PottedFlower(flowerBlock));
+        return blueprintData.withCustomData(FBContent.DC_TYPE_POTTED_FLOWER, new PottedFlower(flowerBlock));
     }
 
     @Override
-    protected void applyAuxDataFromBlueprint(AuxBlueprintData<?> auxData)
+    protected void applyCustomDataFromBlueprint(TypedDataComponent<?> auxData)
     {
-        if (auxData instanceof PottedFlower flower && !flower.isEmpty())
+        if (auxData.value() instanceof PottedFlower flower && !flower.isEmpty())
         {
             flowerBlock = flower.flower();
         }
