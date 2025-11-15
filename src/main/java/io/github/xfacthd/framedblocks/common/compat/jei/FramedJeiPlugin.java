@@ -130,7 +130,7 @@ public final class FramedJeiPlugin implements IModPlugin
         );
         registration.addGuiContainerHandler(
                 FramingSawWithEncoderScreen.class,
-                new FramingSawWithEncoderGuiContainerHandler(ingredientManager)
+                new FramingSawWithEncoderGuiContainerHandler()
         );
         registration.addGuiContainerHandler(
                 FramingSawScreen.class,

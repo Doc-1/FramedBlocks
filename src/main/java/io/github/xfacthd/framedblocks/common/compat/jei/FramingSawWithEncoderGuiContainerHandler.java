@@ -1,18 +1,12 @@
 package io.github.xfacthd.framedblocks.common.compat.jei;
 
 import io.github.xfacthd.framedblocks.client.screen.FramingSawWithEncoderScreen;
-import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.client.renderer.Rect2i;
 
 import java.util.List;
 
 public final class FramingSawWithEncoderGuiContainerHandler extends FramingSawGuiContainerHandler<FramingSawWithEncoderScreen>
 {
-    public FramingSawWithEncoderGuiContainerHandler(IIngredientManager ingredientManager)
-    {
-        super();
-    }
-
     @Override
     public List<Rect2i> getGuiExtraAreas(FramingSawWithEncoderScreen screen)
     {
