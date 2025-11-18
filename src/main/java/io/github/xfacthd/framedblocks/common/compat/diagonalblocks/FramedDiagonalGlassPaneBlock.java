@@ -1,8 +1,8 @@
 package io.github.xfacthd.framedblocks.common.compat.diagonalblocks;
 
 import fuzs.diagonalblocks.api.v2.EightWayDirection;
+import fuzs.diagonalblocks.api.v2.impl.DiagonalGlassPaneBlock;
 import fuzs.diagonalblocks.api.v2.impl.StarCollisionBlock;
-import fuzs.diagonalblocks.neoforge.api.v2.impl.NeoForgeDiagonalGlassPaneBlock;
 import io.github.xfacthd.framedblocks.api.block.BlockUtils;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.common.FBContent;
@@ -23,6 +23,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CrossCollisionBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -36,11 +37,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public final class FramedDiagonalGlassPaneBlock extends NeoForgeDiagonalGlassPaneBlock implements IFramedBlockInternal
+public final class FramedDiagonalGlassPaneBlock extends DiagonalGlassPaneBlock implements IFramedBlockInternal
 {
-    public FramedDiagonalGlassPaneBlock(Block block)
+    public FramedDiagonalGlassPaneBlock(BlockBehaviour.Properties props)
     {
-        super(block);
+        super(props);
         BlockUtils.configureStandardProperties(this);
     }
 
@@ -66,7 +67,7 @@ public final class FramedDiagonalGlassPaneBlock extends NeoForgeDiagonalGlassPan
     }
 
     @Override
-    protected BlockState updateShape(
+    public BlockState updateShape(
             BlockState state,
             LevelReader level,
             ScheduledTickAccess tickAccess,
@@ -87,6 +88,12 @@ public final class FramedDiagonalGlassPaneBlock extends NeoForgeDiagonalGlassPan
             updateCulling(level, pos);
         }
         return newState;
+    }
+
+    @Override
+    protected boolean shouldChangedStateKeepBlockEntity(BlockState state)
+    {
+        return DiagonalBlocksCompat.isFramedPane(state);
     }
 
     /*@Override // TODO: Missing side context

@@ -5,6 +5,7 @@ import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.block.IFramedBlockInternal;
+import io.github.xfacthd.framedblocks.common.compat.diagonalblocks.DiagonalBlocksCompat;
 import io.github.xfacthd.framedblocks.common.data.BlockType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -87,6 +88,12 @@ public class FramedPaneBlock extends IronBarsBlock implements IFramedBlockIntern
             updateCulling(level, pos);
         }
         return newState;
+    }
+
+    @Override
+    protected boolean shouldChangedStateKeepBlockEntity(BlockState state)
+    {
+        return DiagonalBlocksCompat.isFramedPane(state);
     }
 
     /*@Override // TODO: Missing side context

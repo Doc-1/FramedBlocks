@@ -87,6 +87,12 @@ public class FramedFenceBlock extends FenceBlock implements IFramedBlockInternal
     }
 
     @Override
+    protected boolean shouldChangedStateKeepBlockEntity(BlockState state)
+    {
+        return DiagonalBlocksCompat.isFramedFence(state);
+    }
+
+    @Override
     public boolean connectsTo(BlockState adjState, boolean sideSolid, Direction adjSide)
     {
         if (!Utils.isY(adjSide) && DiagonalBlocksCompat.isFramedFence(adjState) && adjState.getValue(FramedProperties.STATE_LOCKED))

@@ -60,19 +60,17 @@ public final class DiagonalBlocksCompat
         return (loaded && GuardedAccess.isFramedPane(state)) || state.getBlock() instanceof FramedPaneBlock;
     }
 
-
-
     private static final class GuardedAccess
     {
         public static void init(IEventBus modBus)
         {
             DiagonalBlockTypes.FENCE.registerBlockFactory(
                     Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_FENCE).location(),
-                    FramedDiagonalFenceBlock::new
+                    block -> FramedDiagonalFenceBlock::new
             );
             DiagonalBlockTypes.WINDOW.registerBlockFactory(
                     Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_PANE).location(),
-                    FramedDiagonalGlassPaneBlock::new
+                    block -> FramedDiagonalGlassPaneBlock::new
             );
             DiagonalBlockTypes.WINDOW.disableBlockFactory(Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_BARS).location());
             DiagonalBlockTypes.WALL.disableBlockFactory(Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_WALL).location());
@@ -106,8 +104,6 @@ public final class DiagonalBlocksCompat
             ResourceLocation destName = type.id(srcName.getNamespace() + "/" + srcName.getPath());
             return BuiltInRegistries.BLOCK.get(ResourceKey.create(Registries.BLOCK, destName));
         }
-
-
 
         private GuardedAccess() { }
     }
@@ -151,8 +147,6 @@ public final class DiagonalBlocksCompat
             );
         }
     }
-
-
 
     private DiagonalBlocksCompat() { }
 }

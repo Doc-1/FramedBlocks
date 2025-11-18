@@ -212,9 +212,10 @@ configurations {
 }
 
 dependencies {
-    // Only needed when DiagonalBlocks is switched to implementation
-    //localRuntime("curse.maven:puzzleslib-495476:${puzzles_lib_coord}")
     compileOnly("fuzs.diagonalblocks:diagonalblocks-neoforge:${diag_blocks_version}") { transitive = false }
+    //localRuntime("curse.maven:puzzleslib-495476:${puzzles_lib_coord}")
+    //localRuntime("curse.maven:diagonalfences-458048:${diagonal_fences_coord}")
+    //localRuntime("curse.maven:diagonalwindows-891328:${diagonal_windows_coord}")
 
     //compileOnly("curse.maven:buildinggadgets-298187:${buildinggadgets_coord}")
     //localRuntime("curse.maven:buildinggadgets-298187:${buildinggadgets_coord}")

@@ -1,8 +1,8 @@
 package io.github.xfacthd.framedblocks.common.compat.diagonalblocks;
 
 import fuzs.diagonalblocks.api.v2.EightWayDirection;
+import fuzs.diagonalblocks.api.v2.impl.DiagonalFenceBlock;
 import fuzs.diagonalblocks.api.v2.impl.StarCollisionBlock;
-import fuzs.diagonalblocks.neoforge.api.v2.impl.NeoForgeDiagonalFenceBlock;
 import io.github.xfacthd.framedblocks.api.block.BlockUtils;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.util.Utils;
@@ -23,6 +23,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CrossCollisionBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -33,11 +34,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public final class FramedDiagonalFenceBlock extends NeoForgeDiagonalFenceBlock implements IFramedBlockInternal
+public final class FramedDiagonalFenceBlock extends DiagonalFenceBlock implements IFramedBlockInternal
 {
-    public FramedDiagonalFenceBlock(Block block)
+    public FramedDiagonalFenceBlock(BlockBehaviour.Properties props)
     {
-        super(block);
+        super(props);
         BlockUtils.configureStandardProperties(this);
     }
 
@@ -64,7 +65,7 @@ public final class FramedDiagonalFenceBlock extends NeoForgeDiagonalFenceBlock i
     }
 
     @Override
-    protected BlockState updateShape(
+    public BlockState updateShape(
             BlockState state,
             LevelReader level,
             ScheduledTickAccess tickAccess,
@@ -85,6 +86,12 @@ public final class FramedDiagonalFenceBlock extends NeoForgeDiagonalFenceBlock i
             updateCulling(level, pos);
         }
         return newState;
+    }
+
+    @Override
+    protected boolean shouldChangedStateKeepBlockEntity(BlockState state)
+    {
+        return DiagonalBlocksCompat.isFramedFence(state);
     }
 
     @Override
