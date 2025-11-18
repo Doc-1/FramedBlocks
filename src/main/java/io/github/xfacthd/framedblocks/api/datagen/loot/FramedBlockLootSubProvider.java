@@ -1,5 +1,6 @@
 package io.github.xfacthd.framedblocks.api.datagen.loot;
 
+import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
 import io.github.xfacthd.framedblocks.api.datagen.loot.objects.NonTrivialCamoLootCondition;
 import io.github.xfacthd.framedblocks.api.datagen.loot.objects.SplitCamoLootFunction;
 import io.github.xfacthd.framedblocks.api.util.Utils;
@@ -12,6 +13,7 @@ import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.DynamicLoot;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
 import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
@@ -57,7 +59,7 @@ public abstract class FramedBlockLootSubProvider extends BlockLootSubProvider
                         builder.apply(SplitCamoLootFunction.split(index).when(NonTrivialCamoLootCondition.BUILDER))
                 ));
             }
-            return table;
+            return table.withPool(createDynamicDropPool(block));
         });
     }
 
@@ -80,7 +82,10 @@ public abstract class FramedBlockLootSubProvider extends BlockLootSubProvider
 
     protected final void dropWithCamo(Block block, Block drop, Consumer<LootPoolSingletonContainer.Builder<?>> itemModifier)
     {
-        add(block, funcBlock -> LootTable.lootTable().withPool(createDropWithCamoPool(funcBlock, drop, itemModifier)));
+        add(block, funcBlock -> LootTable.lootTable()
+                .withPool(createDropWithCamoPool(funcBlock, drop, itemModifier))
+                .withPool(createDynamicDropPool(block))
+        );
     }
 
     protected final LootPool.Builder createDropWithCamoPool(Block block)
@@ -99,6 +104,14 @@ public abstract class FramedBlockLootSubProvider extends BlockLootSubProvider
         return applyExplosionCondition(block, LootPool.lootPool()
                 .setRolls(ConstantValue.exactly(1))
                 .add(applyExplosionDecay(block, tableItem))
+        );
+    }
+
+    protected final LootPool.Builder createDynamicDropPool(Block block)
+    {
+        return applyExplosionCondition(block, LootPool.lootPool()
+                .setRolls(ConstantValue.exactly(1.0F))
+                .add(applyExplosionDecay(block, DynamicLoot.dynamicEntry(IFramedBlock.DYNAMIC_DROPS)))
         );
     }
 }

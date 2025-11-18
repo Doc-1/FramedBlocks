@@ -39,7 +39,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class FramedDoubleBlockEntity extends FramedBlockEntity
 {
@@ -132,7 +132,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    void addCamoDrops(List<ItemStack> drops)
+    void addCamoDrops(Consumer<ItemStack> drops)
     {
         super.addCamoDrops(drops);
         dropCamo(drops, camoContainer);

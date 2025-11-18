@@ -114,7 +114,7 @@ public class FramedChainBlock extends ChainBlock implements IFramedBlockInternal
     @Override
     protected List<ItemStack> getDrops(BlockState state, LootParams.Builder builder)
     {
-        return getCamoDrops(super.getDrops(state, builder), builder);
+        return super.getDrops(state, getCamoDrops(builder));
     }
 
     @Override

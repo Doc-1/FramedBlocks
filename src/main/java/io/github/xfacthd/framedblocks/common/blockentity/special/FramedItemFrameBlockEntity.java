@@ -30,8 +30,8 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class FramedItemFrameBlockEntity extends FramedBlockEntity implements ItemOwner
 {
@@ -208,12 +208,12 @@ public class FramedItemFrameBlockEntity extends FramedBlockEntity implements Ite
     }
 
     @Override
-    public void addAdditionalDrops(List<ItemStack> drops, boolean dropCamo)
+    public void addAdditionalDrops(Consumer<ItemStack> drops, boolean dropCamo)
     {
         super.addAdditionalDrops(drops, dropCamo);
         if (!heldItem.isEmpty())
         {
-            drops.add(getCloneItem());
+            drops.accept(getCloneItem());
         }
     }
 

@@ -32,6 +32,26 @@
         }
       ],
       "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:dynamic",
+          "functions": [
+            {
+              "function": "minecraft:explosion_decay"
+            }
+          ],
+          "name": "framedblocks:dynamic_drops"
+        }
+      ],
+      "rolls": 1.0
     }
   ],
   "random_sequence": "framedblocks:blocks/framed_threeway_corner_pillar"

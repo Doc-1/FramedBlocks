@@ -64,9 +64,9 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @SuppressWarnings("deprecation")
 public class FramedBlockEntity extends BlockEntity
@@ -803,7 +803,7 @@ public class FramedBlockEntity extends BlockEntity
      * @param drops The list of items being dropped
      * @param dropCamo Whether the camo item should be dropped
      */
-    public void addAdditionalDrops(List<ItemStack> drops, boolean dropCamo)
+    public void addAdditionalDrops(Consumer<ItemStack> drops, boolean dropCamo)
     {
         if (dropCamo && canTriviallyDropAllCamos())
         {
@@ -811,27 +811,27 @@ public class FramedBlockEntity extends BlockEntity
         }
         if (intangible)
         {
-            drops.add(new ItemStack(Utils.PHANTOM_PASTE.value()));
+            drops.accept(new ItemStack(Utils.PHANTOM_PASTE.value()));
         }
         if (reinforced)
         {
-            drops.add(new ItemStack(Utils.FRAMED_REINFORCEMENT.value()));
+            drops.accept(new ItemStack(Utils.FRAMED_REINFORCEMENT.value()));
         }
     }
 
-    void addCamoDrops(List<ItemStack> drops)
+    void addCamoDrops(Consumer<ItemStack> drops)
     {
         dropCamo(drops, camoContainer);
     }
 
-    static void dropCamo(List<ItemStack> drops, CamoContainer<?, ?> camo)
+    static void dropCamo(Consumer<ItemStack> drops, CamoContainer<?, ?> camo)
     {
         if (!camo.isEmpty())
         {
             ItemStack stack = CamoContainerHelper.dropCamo(camo);
             if (!stack.isEmpty())
             {
-                drops.add(stack);
+                drops.accept(stack);
             }
         }
     }

@@ -79,6 +79,7 @@ public final class FramedLootTableProvider extends LootTableProvider
                                                     LootItem.lootTableItem(FBContent.BLOCK_FRAMED_BOARD.value())
                                             ).apply(SetItemCountFunction.setCount(BoardAdditionalItemCountNumberProvider.INSTANCE)))
                             ))
+                            .withPool(createDynamicDropPool(FBContent.BLOCK_FRAMED_BOARD.value()))
             );
 
             dropSelfWithCamo(FBContent.BLOCK_FRAMED_TANK.value(), builder -> builder.apply(
@@ -99,6 +100,7 @@ public final class FramedLootTableProvider extends LootTableProvider
                                                     LootItem.lootTableItem(FBContent.BLOCK_FRAMED_LAYERED_CUBE.value())
                                             ).apply(SetItemCountFunction.setCount(LayeredCubeAdditionalItemCountNumberProvider.INSTANCE)))
                             ))
+                            .withPool(createDynamicDropPool(FBContent.BLOCK_FRAMED_LAYERED_CUBE.value()))
             );
 
             add(FBContent.BLOCK_FRAMED_UPPER_PYRAMID_SLAB.value(), noDrop());

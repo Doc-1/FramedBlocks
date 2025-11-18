@@ -19,7 +19,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.model.data.ModelProperty;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class FramedFlowerPotBlockEntity extends FramedBlockEntity
 {
@@ -54,12 +54,12 @@ public class FramedFlowerPotBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    public void addAdditionalDrops(List<ItemStack> drops, boolean dropCamo)
+    public void addAdditionalDrops(Consumer<ItemStack> drops, boolean dropCamo)
     {
         super.addAdditionalDrops(drops, dropCamo);
         if (flowerBlock != Blocks.AIR)
         {
-            drops.add(new ItemStack(flowerBlock));
+            drops.accept(new ItemStack(flowerBlock));
         }
     }
 
