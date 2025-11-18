@@ -414,7 +414,7 @@ public class FramedBlockEntity extends BlockEntity
         }
     }
 
-    protected void setCamoInternal(CamoContainer<?, ?> camo, boolean secondary)
+    void setCamoInternal(CamoContainer<?, ?> camo, boolean secondary)
     {
         this.camoContainer = camo;
     }
@@ -466,7 +466,7 @@ public class FramedBlockEntity extends BlockEntity
         return getCamo(hitSecondary(hit, lookVec, eyePos));
     }
 
-    protected CamoContainer<?, ?> getCamo(boolean secondary)
+    CamoContainer<?, ?> getCamo(boolean secondary)
     {
         return camoContainer;
     }
@@ -655,7 +655,7 @@ public class FramedBlockEntity extends BlockEntity
         return Math.max(baseLight, camoContainer.getContent().getLightEmission());
     }
 
-    public void setIntangible(boolean intangible)
+    public final void setIntangible(boolean intangible)
     {
         if (this.intangible != intangible)
         {
@@ -678,12 +678,12 @@ public class FramedBlockEntity extends BlockEntity
      *
      * @return whether this block is marked as intangible
      */
-    public boolean isMarkedIntangible()
+    public final boolean isMarkedIntangible()
     {
         return intangible;
     }
 
-    public boolean isIntangible(@Nullable CollisionContext ctx)
+    public final boolean isIntangible(@Nullable CollisionContext ctx)
     {
         if (!ConfigView.Server.INSTANCE.enableIntangibility() || !intangible)
         {
@@ -719,7 +719,7 @@ public class FramedBlockEntity extends BlockEntity
         return CamoContainerHelper.isValidRemovalTool(camoContainer, stack);
     }
 
-    public void setReinforced(boolean reinforced)
+    public final void setReinforced(boolean reinforced)
     {
         if (this.reinforced != reinforced)
         {
@@ -730,12 +730,12 @@ public class FramedBlockEntity extends BlockEntity
         }
     }
 
-    public boolean isReinforced()
+    public final boolean isReinforced()
     {
         return reinforced;
     }
 
-    public void setEmissive(boolean emissive)
+    public final void setEmissive(boolean emissive)
     {
         if (this.emissive != emissive)
         {
@@ -746,7 +746,7 @@ public class FramedBlockEntity extends BlockEntity
         }
     }
 
-    public boolean isEmissive()
+    public final boolean isEmissive()
     {
         return emissive;
     }
@@ -819,12 +819,12 @@ public class FramedBlockEntity extends BlockEntity
         }
     }
 
-    protected void addCamoDrops(List<ItemStack> drops)
+    void addCamoDrops(List<ItemStack> drops)
     {
         dropCamo(drops, camoContainer);
     }
 
-    protected static void dropCamo(List<ItemStack> drops, CamoContainer<?, ?> camo)
+    static void dropCamo(List<ItemStack> drops, CamoContainer<?, ?> camo)
     {
         if (!camo.isEmpty())
         {
@@ -1020,7 +1020,7 @@ public class FramedBlockEntity extends BlockEntity
         requestModelDataUpdate();
     }
 
-    protected boolean readCamoFromUpdateTag(ValueInput valueInput)
+    boolean readCamoFromUpdateTag(ValueInput valueInput)
     {
         CamoContainer<?, ?> newCamo = CamoContainerHelper.readFromNetwork(valueInput.child(CAMO_NBT_KEY));
         if (!newCamo.equals(camoContainer))
@@ -1077,8 +1077,7 @@ public class FramedBlockEntity extends BlockEntity
      * @param includeCullInfo Whether culling data should be included
      * @param state           The {@link BlockState} with which the model data is used for rendering (usually {@link #getBlockState()})
      */
-    @ApiStatus.NonExtendable
-    protected AbstractFramedBlockData computeBlockData(boolean includeCullInfo, BlockState state)
+    AbstractFramedBlockData computeBlockData(boolean includeCullInfo, BlockState state)
     {
         boolean[] cullData = includeCullInfo ? culledFaces : FramedBlockData.NO_CULLED_FACES;
         TriState viewBlocking = Utils.toTriState(state.isSuffocating(level(), worldPosition));
@@ -1105,7 +1104,7 @@ public class FramedBlockEntity extends BlockEntity
         ));
     }
 
-    protected CamoList collectCamosForBlueprint()
+    CamoList collectCamosForBlueprint()
     {
         return CamoList.of(camoContainer);
     }
@@ -1125,7 +1124,7 @@ public class FramedBlockEntity extends BlockEntity
         blueprintData.customData().ifPresent(this::applyCustomDataFromBlueprint);
     }
 
-    protected void applyCamosFromBlueprint(BlueprintData blueprintData)
+    void applyCamosFromBlueprint(BlueprintData blueprintData)
     {
         setCamo(blueprintData.camos().getCamo(0), false);
     }
@@ -1217,7 +1216,7 @@ public class FramedBlockEntity extends BlockEntity
         }
     }
 
-    protected final CamoContainer<?, ?> loadAndValidateCamo(ValueInput valueInput, String key)
+    final CamoContainer<?, ?> loadAndValidateCamo(ValueInput valueInput, String key)
     {
         CamoContainer<?, ?> camo = valueInput.read(key, CamoContainerHelper.CODEC).orElse(EmptyCamoContainer.EMPTY);
         if (!CamoContainerHelper.validateCamo(camo))

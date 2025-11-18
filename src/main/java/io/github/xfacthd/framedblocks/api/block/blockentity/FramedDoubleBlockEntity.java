@@ -57,7 +57,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    public void setCamoInternal(CamoContainer<?, ?> camo, boolean secondary)
+    void setCamoInternal(CamoContainer<?, ?> camo, boolean secondary)
     {
         if (secondary)
         {
@@ -85,7 +85,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    protected CamoContainer<?, ?> getCamo(boolean secondary)
+    CamoContainer<?, ?> getCamo(boolean secondary)
     {
         return secondary ? camoContainer : getCamo();
     }
@@ -102,37 +102,37 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    protected boolean isValidRemovalToolForAnyCamo(ItemStack stack)
+    protected final boolean isValidRemovalToolForAnyCamo(ItemStack stack)
     {
         return super.isValidRemovalToolForAnyCamo(stack) || CamoContainerHelper.isValidRemovalTool(camoContainer, stack);
     }
 
     @Override
-    public IFramedDoubleBlock getBlock()
+    public final IFramedDoubleBlock getBlock()
     {
         return (IFramedDoubleBlock) super.getBlock();
     }
 
     @Override
-    public DoubleBlockStateCache getStateCache()
+    public final DoubleBlockStateCache getStateCache()
     {
         return (DoubleBlockStateCache) super.getStateCache();
     }
 
     @Override
-    public boolean canAutoApplyCamoOnPlacement()
+    public final boolean canAutoApplyCamoOnPlacement()
     {
         return false;
     }
 
     @Override
-    public boolean canTriviallyDropAllCamos()
+    public final boolean canTriviallyDropAllCamos()
     {
         return super.canTriviallyDropAllCamos() && camoContainer.canTriviallyConvertToItemStack();
     }
 
     @Override
-    protected void addCamoDrops(List<ItemStack> drops)
+    void addCamoDrops(List<ItemStack> drops)
     {
         super.addCamoDrops(drops);
         dropCamo(drops, camoContainer);
@@ -383,7 +383,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity
     }
 
     @Override
-    protected boolean readCamoFromUpdateTag(ValueInput valueInput)
+    boolean readCamoFromUpdateTag(ValueInput valueInput)
     {
         boolean changed = super.readCamoFromUpdateTag(valueInput);
         CamoContainer<?, ?> newCamo = CamoContainerHelper.readFromNetwork(valueInput.child(CAMO_TWO_NBT_KEY));
@@ -400,7 +400,7 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity
      */
 
     @Override
-    protected final AbstractFramedBlockData computeBlockData(boolean includeCullInfo, BlockState state)
+    final AbstractFramedBlockData computeBlockData(boolean includeCullInfo, BlockState state)
     {
         FramedBlockData modelDataOne = (FramedBlockData) super.computeBlockData(includeCullInfo, state);
         boolean[] cullData = includeCullInfo ? culledFaces : FramedBlockData.NO_CULLED_FACES;
@@ -414,13 +414,13 @@ public class FramedDoubleBlockEntity extends FramedBlockEntity
      */
 
     @Override
-    protected CamoList collectCamosForBlueprint()
+    CamoList collectCamosForBlueprint()
     {
         return CamoList.of(getCamo(), camoContainer);
     }
 
     @Override
-    protected void applyCamosFromBlueprint(BlueprintData blueprintData)
+    void applyCamosFromBlueprint(BlueprintData blueprintData)
     {
         super.applyCamosFromBlueprint(blueprintData);
         setCamo(blueprintData.camos().getCamo(1), true);
