@@ -3,7 +3,9 @@ package io.github.xfacthd.framedblocks.common.block.cube;
 import io.github.xfacthd.framedblocks.api.block.BlockUtils;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.block.PlacementStateBuilder;
+import io.github.xfacthd.framedblocks.api.camo.CamoList;
 import io.github.xfacthd.framedblocks.api.util.Utils;
+import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.block.FramedBlock;
 import io.github.xfacthd.framedblocks.common.data.BlockType;
 import io.github.xfacthd.framedblocks.common.item.block.FramedSpecialBlockItem;
@@ -63,6 +65,10 @@ public class FramedLayeredCubeBlock extends FramedBlock
     {
         int layers = state.getValue(BlockStateProperties.LAYERS);
         if (layers >= 8 || !useContext.getItemInHand().is(this.asItem()))
+        {
+            return false;
+        }
+        if (!useContext.getItemInHand().getOrDefault(FBContent.DC_TYPE_CAMO_LIST, CamoList.EMPTY).isEmpty())
         {
             return false;
         }
