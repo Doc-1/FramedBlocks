@@ -28,7 +28,7 @@ public final class LayeredCubeShapes
 
             shapes[index(Direction.UP, i)] = layerShapeUp;
             shapes[index(Direction.DOWN, i)] = layerShapeDown;
-            ShapeUtils.makeHorizontalRotations(layerShapeNorth, Direction.NORTH, shapes, index(Direction.NORTH, i));
+            ShapeUtils.makeHorizontalRotations(layerShapeNorth, Direction.NORTH, shapes, i, LayeredCubeShapes::index);
         }
 
         Map<BlockState, VoxelShape> map = new IdentityHashMap<>(states.size());
