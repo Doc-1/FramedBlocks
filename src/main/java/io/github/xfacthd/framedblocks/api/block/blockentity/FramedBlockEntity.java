@@ -200,7 +200,7 @@ public class FramedBlockEntity extends BlockEntity
     private InteractionResult tryApplyModifier(ItemAccess itemAccess)
     {
         ItemResource resource = itemAccess.getResource();
-        if (FrameModifiers.isGlowstone(resource) && !glowing)
+        if (!glowing && FrameModifier.GLOWING.matches(resource))
         {
             return applyGlowstone(itemAccess);
         }
@@ -208,11 +208,11 @@ public class FramedBlockEntity extends BlockEntity
         {
             return applyIntangibility(itemAccess);
         }
-        if (!reinforced && FrameModifiers.isReinforcement(resource))
+        if (!reinforced && FrameModifier.REINFORCED.matches(resource))
         {
             return applyReinforcement(itemAccess);
         }
-        if (!emissive && FrameModifiers.isGlowPaste(resource))
+        if (!emissive && FrameModifier.EMISSIVE.matches(resource))
         {
             return applyEmissivity(itemAccess);
         }
@@ -238,7 +238,7 @@ public class FramedBlockEntity extends BlockEntity
         {
             return false;
         }
-        return FrameModifiers.isPhantomPaste(resource) && getBlockType().allowMakingIntangible();
+        return FrameModifier.INTANGIBLE.matches(resource) && getBlockType().allowMakingIntangible();
     }
 
     private InteractionResult setCamo(Player player, ItemAccess itemAccess, CamoContainerFactory<?> factory, boolean secondary)
@@ -279,8 +279,6 @@ public class FramedBlockEntity extends BlockEntity
                 CamoContainer<?, ?> newCamo = camo.rotateCamo();
                 Objects.requireNonNull(newCamo, "CamoContainer#rotateCamo() must not return null if CamoContainer#canRotateCamo() returns true");
                 setCamo(newCamo, secondary);
-                setChangedWithoutSignalUpdate();
-                level().sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
             }
             return InteractionResult.SUCCESS;
         }
@@ -319,7 +317,7 @@ public class FramedBlockEntity extends BlockEntity
         {
             setIntangible(false);
 
-            Utils.giveToPlayer(player, new ItemStack(Utils.PHANTOM_PASTE), true);
+            Utils.giveToPlayer(player, FrameModifier.INTANGIBLE.getDefaultStack(), true);
         }
         return InteractionResult.SUCCESS;
     }
@@ -348,7 +346,7 @@ public class FramedBlockEntity extends BlockEntity
                 stack.hurtAndBreak(1, player, hand.asEquipmentSlot());
             }
 
-            Utils.giveToPlayer(player, new ItemStack(Utils.FRAMED_REINFORCEMENT.value()), true);
+            Utils.giveToPlayer(player, FrameModifier.REINFORCED.getDefaultStack(), true);
         }
         return InteractionResult.SUCCESS;
     }

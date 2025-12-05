@@ -1,6 +1,7 @@
 package io.github.xfacthd.framedblocks.common.item;
 
 import com.google.common.base.Preconditions;
+import io.github.xfacthd.framedblocks.api.block.blockentity.FrameModifier;
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import io.github.xfacthd.framedblocks.api.blueprint.BlueprintCopyBehaviour;
 import io.github.xfacthd.framedblocks.api.blueprint.BlueprintData;
@@ -24,7 +25,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.BlockItemStateProperties;
 import net.minecraft.world.item.component.TooltipDisplay;
@@ -48,6 +48,7 @@ public class FramedBlueprintItem extends FramedToolItem
 {
     public static final Component CANT_PLACE_FLUID_CAMO = Utils.translate("desc", "blueprint_cant_place_fluid_camo").withStyle(ChatFormatting.RED);
     private static final String MATERIAL_LIST_PREFIX = "\n  - ";
+    private static final FrameModifier[] MODIFIERS = FrameModifier.values();
 
     private static final Map<Block, BlueprintCopyBehaviour> COPY_BEHAVIOURS = new IdentityHashMap<>();
     private static final BlueprintCopyBehaviour NO_OP_BEHAVIOUR = new BlueprintCopyBehaviour(){};
@@ -295,26 +296,9 @@ public class FramedBlueprintItem extends FramedToolItem
         }
 
         BlueprintCopyBehaviour behaviour = getBehaviour(data.block());
-
-        int glowstone = behaviour.getGlowstoneCount(data);
-        if (glowstone > 0)
+        for (FrameModifier modifier : MODIFIERS)
         {
-            materials.add(new ItemStack(Items.GLOWSTONE_DUST, glowstone));
-        }
-        int intangible = behaviour.getIntangibleCount(data);
-        if (intangible > 0)
-        {
-            materials.add(new ItemStack(Utils.PHANTOM_PASTE, intangible));
-        }
-        int reinforcement = behaviour.getReinforcementCount(data);
-        if (reinforcement > 0)
-        {
-            materials.add(new ItemStack(FBContent.ITEM_FRAMED_REINFORCEMENT.value(), reinforcement));
-        }
-        int emissive = behaviour.getEmissiveCount(data);
-        if (emissive > 0)
-        {
-            materials.add(new ItemStack(FBContent.ITEM_GLOW_PASTE, emissive));
+            modifier.collectForBlueprint(behaviour, data, materials);
         }
         materials.addAll(behaviour.getAdditionalConsumedMaterials(data));
         return materials;
@@ -375,8 +359,6 @@ public class FramedBlueprintItem extends FramedToolItem
     {
         stack.getOrDefault(FBContent.DC_TYPE_BLUEPRINT_DATA, BlueprintData.EMPTY).addToTooltip(ctx, appender, flag, stack);
     }
-
-
 
     public static void init()
     {

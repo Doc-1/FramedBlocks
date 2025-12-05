@@ -1,6 +1,7 @@
 package io.github.xfacthd.framedblocks.api.block;
 
 import com.google.common.base.Preconditions;
+import io.github.xfacthd.framedblocks.api.block.blockentity.FrameModifier;
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainer;
 import io.github.xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
@@ -31,6 +32,7 @@ public final class BlockUtils
             FramedProperties.GLOWING,
             FramedProperties.PROPAGATES_SKYLIGHT
     );
+    private static final FrameModifier[] MODIFIERS = FrameModifier.values();
 
     /**
      * Adds the {@link Property}s which are required to be present on all blocks implementing {@link IFramedBlock}
@@ -270,18 +272,15 @@ public final class BlockUtils
     )
     {
         CamoContainer<?, ?> camo = EmptyCamoContainer.EMPTY;
-        boolean glowing = false;
-        boolean intangible = false;
-        boolean reinforced = false;
-        boolean emissive = false;
+        boolean[] modifiers = new boolean[MODIFIERS.length];
 
         if (level.getBlockEntity(pos) instanceof FramedBlockEntity be)
         {
             camo = be.getCamo();
-            glowing = be.isGlowing();
-            intangible = be.isIntangible(null);
-            reinforced = be.isReinforced();
-            emissive = be.isEmissive();
+            for (FrameModifier modifier : MODIFIERS)
+            {
+                modifiers[modifier.ordinal()] = modifier.isActive(be);
+            }
         }
 
         action.run();
@@ -295,14 +294,12 @@ public final class BlockUtils
         if (level.getBlockEntity(pos) instanceof FramedBlockEntity be)
         {
             be.setCamo(camo, writeToCamoTwo);
-            be.setGlowing(glowing);
-            be.setIntangible(intangible);
-            be.setReinforced(reinforced);
-            be.setEmissive(emissive);
+            for (FrameModifier modifier : MODIFIERS)
+            {
+                modifier.setActive(be, modifiers[modifier.ordinal()]);
+            }
         }
     }
-
-
 
     private BlockUtils() { }
 }

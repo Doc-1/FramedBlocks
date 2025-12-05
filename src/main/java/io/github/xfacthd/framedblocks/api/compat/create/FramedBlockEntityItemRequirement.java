@@ -2,13 +2,12 @@ package io.github.xfacthd.framedblocks.api.compat.create;
 
 import com.simibubi.create.api.schematic.requirement.SchematicRequirementRegistries;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
+import io.github.xfacthd.framedblocks.api.block.blockentity.FrameModifier;
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainer;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainerHelper;
-import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,6 +18,7 @@ import java.util.List;
 public class FramedBlockEntityItemRequirement implements SchematicRequirementRegistries.BlockEntityRequirement
 {
     public static final FramedBlockEntityItemRequirement INSTANCE = new FramedBlockEntityItemRequirement();
+    private static final FrameModifier[] MODIFIERS = FrameModifier.values();
 
     protected FramedBlockEntityItemRequirement() { }
 
@@ -43,21 +43,12 @@ public class FramedBlockEntityItemRequirement implements SchematicRequirementReg
                 }
             }
 
-            if (fbe.isGlowing())
+            for (FrameModifier modifier : MODIFIERS)
             {
-                requirements.add(consume(Items.GLOWSTONE_DUST));
-            }
-            if (fbe.isMarkedIntangible())
-            {
-                requirements.add(consume(Utils.PHANTOM_PASTE.value()));
-            }
-            if (fbe.isReinforced())
-            {
-                requirements.add(consume(Utils.FRAMED_REINFORCEMENT.value()));
-            }
-            if (fbe.isEmissive())
-            {
-                requirements.add(consume(Utils.GLOW_PASTE.value()));
+                if (modifier.isActive(fbe))
+                {
+                    requirements.add(consume(modifier.getDefaultStack()));
+                }
             }
 
             collectAdditionalRequirements(fbe, requirements);
@@ -68,8 +59,6 @@ public class FramedBlockEntityItemRequirement implements SchematicRequirementReg
     }
 
     protected void collectAdditionalRequirements(FramedBlockEntity blockEntity, List<ItemRequirement.StackRequirement> requirements) { }
-
-
 
     protected static ItemRequirement.StackRequirement consume(ItemLike item)
     {
