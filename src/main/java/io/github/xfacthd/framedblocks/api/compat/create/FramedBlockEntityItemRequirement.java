@@ -55,6 +55,10 @@ public class FramedBlockEntityItemRequirement implements SchematicRequirementReg
             {
                 requirements.add(consume(Utils.FRAMED_REINFORCEMENT.value()));
             }
+            if (fbe.isEmissive())
+            {
+                requirements.add(consume(Utils.GLOW_PASTE.value()));
+            }
 
             collectAdditionalRequirements(fbe, requirements);
 
