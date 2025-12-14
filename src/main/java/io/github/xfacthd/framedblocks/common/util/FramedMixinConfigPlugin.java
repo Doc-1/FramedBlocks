@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.common.util;
 
 import net.neoforged.fml.loading.FMLEnvironment;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;

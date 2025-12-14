@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Consumer;

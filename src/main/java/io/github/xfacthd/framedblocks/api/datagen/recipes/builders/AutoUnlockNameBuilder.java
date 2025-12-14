@@ -5,7 +5,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
@@ -17,7 +17,7 @@ public interface AutoUnlockNameBuilder<T extends RecipeBuilder> extends RecipeBu
     @SuppressWarnings("unchecked")
     default T unlockedBy(Holder<? extends ItemLike> triggerItem)
     {
-        String name = buildCriterionName(Utils.getKeyOrThrow(triggerItem).location());
+        String name = buildCriterionName(Utils.getKeyOrThrow(triggerItem).identifier());
         return (T) unlockedBy(name, provider().has(triggerItem.value()));
     }
 
@@ -33,7 +33,7 @@ public interface AutoUnlockNameBuilder<T extends RecipeBuilder> extends RecipeBu
         return (T) unlockedBy(name, provider().has(triggerTag));
     }
 
-    private static String buildCriterionName(ResourceLocation triggerName)
+    private static String buildCriterionName(Identifier triggerName)
     {
         StringBuilder name = new StringBuilder("has");
         for (String part : triggerName.getPath().split("_"))

@@ -42,12 +42,12 @@ import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.TriState;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Optional;
@@ -104,7 +104,7 @@ public final class InternalClientApiImpl implements InternalClientAPI
     }
 
     @Override
-    public ItemModel.Unbaked createFramedBlockItemModel(Block block, BlockItemModelProvider modelProvider, DynamicItemTintProvider tintProvider, ResourceLocation baseModel)
+    public ItemModel.Unbaked createFramedBlockItemModel(Block block, BlockItemModelProvider modelProvider, DynamicItemTintProvider tintProvider, Identifier baseModel)
     {
         return new FramedBlockItemModel.Unbaked(block, modelProvider, tintProvider, baseModel);
     }

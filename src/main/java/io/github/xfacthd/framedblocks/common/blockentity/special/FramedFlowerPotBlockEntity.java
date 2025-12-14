@@ -9,7 +9,7 @@ import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -39,7 +39,7 @@ public class FramedFlowerPotBlockEntity extends FramedBlockEntity
             this.flowerBlock = flowerBlock;
 
             setChangedWithoutSignalUpdate();
-            level().sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+            level().sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
         }
     }
 
@@ -79,7 +79,7 @@ public class FramedFlowerPotBlockEntity extends FramedBlockEntity
     @Override
     protected boolean readFromDataPacket(ValueInput valueInput)
     {
-        Block flower = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(valueInput.getStringOr("flower", "")));
+        Block flower = BuiltInRegistries.BLOCK.getValue(Identifier.parse(valueInput.getStringOr("flower", "")));
 
         boolean update = flower != flowerBlock;
         if (update)
@@ -102,7 +102,7 @@ public class FramedFlowerPotBlockEntity extends FramedBlockEntity
     {
         super.handleUpdateTag(valueInput);
 
-        Block flower = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(valueInput.getStringOr("flower", "")));
+        Block flower = BuiltInRegistries.BLOCK.getValue(Identifier.parse(valueInput.getStringOr("flower", "")));
         if (flower != flowerBlock)
         {
             flowerBlock = flower;
@@ -161,6 +161,6 @@ public class FramedFlowerPotBlockEntity extends FramedBlockEntity
     public void loadAdditional(ValueInput valueInput)
     {
         super.loadAdditional(valueInput);
-        flowerBlock = BuiltInRegistries.BLOCK.getValue(ResourceLocation.tryParse(valueInput.getStringOr("flower", "")));
+        flowerBlock = BuiltInRegistries.BLOCK.getValue(Identifier.tryParse(valueInput.getStringOr("flower", "")));
     }
 }

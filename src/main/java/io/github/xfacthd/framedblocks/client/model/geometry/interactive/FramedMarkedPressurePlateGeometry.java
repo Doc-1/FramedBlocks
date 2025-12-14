@@ -9,7 +9,7 @@ import io.github.xfacthd.framedblocks.common.config.ClientConfig;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PressurePlateBlock;
@@ -19,10 +19,10 @@ import net.neoforged.neoforge.model.data.ModelData;
 
 public class FramedMarkedPressurePlateGeometry extends FramedPressurePlateGeometry
 {
-    private static final ResourceLocation STONE_FRAME_LOCATION = Utils.rl("block/stone_plate_frame");
-    private static final ResourceLocation OBSIDIAN_FRAME_LOCATION = Utils.rl("block/obsidian_plate_frame");
-    private static final ResourceLocation GOLD_FRAME_LOCATION = Utils.rl("block/gold_plate_frame");
-    private static final ResourceLocation IRON_FRAME_LOCATION = Utils.rl("block/iron_plate_frame");
+    private static final Identifier STONE_FRAME_LOCATION = Utils.id("block/stone_plate_frame");
+    private static final Identifier OBSIDIAN_FRAME_LOCATION = Utils.id("block/obsidian_plate_frame");
+    private static final Identifier GOLD_FRAME_LOCATION = Utils.id("block/gold_plate_frame");
+    private static final Identifier IRON_FRAME_LOCATION = Utils.id("block/iron_plate_frame");
     private static final Direction[] OVERLAY_CULL_FACES = new Direction[] { Direction.DOWN, null };
 
     private final BlockState state;

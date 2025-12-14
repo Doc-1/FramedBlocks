@@ -14,8 +14,9 @@ import io.github.xfacthd.framedblocks.common.config.DevToolsConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShapeRenderer;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.Mth;
@@ -25,7 +26,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -57,7 +58,7 @@ public final class BlockOutlineRenderer
         if (DevToolsConfig.VIEW.isOcclusionShapeDebugRenderingEnabled())
         {
             VoxelShape shape = state.getOcclusionShape();
-            Vec3 offset = Vec3.atLowerCornerOf(result.getBlockPos()).subtract(event.getCamera().getPosition());
+            Vec3 offset = Vec3.atLowerCornerOf(result.getBlockPos()).subtract(event.getCamera().position());
 
             event.addCustomRenderer((renderState, buffer, poseStack, translucentPass, levelRenderState) ->
             {
@@ -66,12 +67,12 @@ public final class BlockOutlineRenderer
                     boolean highContrast = renderState.highContrast();
                     if (highContrast)
                     {
-                        VertexConsumer builder = buffer.getBuffer(RenderType.secondaryBlockOutline());
-                        ShapeRenderer.renderShape(poseStack, builder, shape, offset.x, offset.y, offset.z, 0xFF000000);
+                        VertexConsumer builder = buffer.getBuffer(RenderTypes.secondaryBlockOutline());
+                        ShapeRenderer.renderShape(poseStack, builder, shape, offset.x, offset.y, offset.z, 0xFF000000, 7F);
                     }
-                    VertexConsumer builder = buffer.getBuffer(RenderType.lines());
+                    VertexConsumer builder = buffer.getBuffer(RenderTypes.lines());
                     int lineColor = highContrast ? CommonColors.HIGH_CONTRAST_DIAMOND : DEFAULT_LINE_COLOR;
-                    ShapeRenderer.renderShape(poseStack, builder, shape, offset.x, offset.y, offset.z, lineColor);
+                    ShapeRenderer.renderShape(poseStack, builder, shape, offset.x, offset.y, offset.z, lineColor, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
                 }
                 return true;
             });
@@ -94,7 +95,7 @@ public final class BlockOutlineRenderer
             Object data = renderer.extractOutlineData(state, level, result.getBlockPos());
             if (data == null) return;
 
-            Vec3 offset = Vec3.atLowerCornerOf(result.getBlockPos()).subtract(event.getCamera().getPosition());
+            Vec3 offset = Vec3.atLowerCornerOf(result.getBlockPos()).subtract(event.getCamera().position());
             event.addCustomRenderer((renderState, buffer, poseStack, translucentPass, levelRenderState) ->
             {
                 if (translucentPass == renderState.isTranslucent())
@@ -120,6 +121,7 @@ public final class BlockOutlineRenderer
     @SuppressWarnings("unchecked")
     private static OutlineRenderer<Object> getRenderer(IBlockType type)
     {
+        //noinspection NullableProblems IDEA's jspecify nullness checker sucks
         return (OutlineRenderer<Object>) OUTLINE_RENDERERS.get(type);
     }
 
@@ -129,7 +131,7 @@ public final class BlockOutlineRenderer
         {
             return new HighContrastLineDrawer(pose, buffer);
         }
-        return new DefaultLineDrawer(pose, buffer);
+        return new DefaultLineDrawer(pose, buffer.getBuffer(RenderTypes.lines()), DEFAULT_LINE_COLOR);
     }
 
     public static void init()
@@ -153,15 +155,17 @@ public final class BlockOutlineRenderer
     private static abstract class AbstractLineDrawer implements SimpleOutlineRenderer.LineDrawer
     {
         final PoseStack.Pose pose;
+        final float lineWidth;
 
         AbstractLineDrawer(PoseStack.Pose pose)
         {
             this.pose = pose;
+            this.lineWidth = Minecraft.getInstance().getWindow().getAppropriateLineWidth();
         }
 
         abstract void finish();
 
-        void drawLine(VertexConsumer builder, float x1, float y1, float z1, float x2, float y2, float z2, int color)
+        void drawLine(VertexConsumer builder, float x1, float y1, float z1, float x2, float y2, float z2, int color, float lineWidth)
         {
             float nX = x2 - x1;
             float nY = y2 - y1;
@@ -172,25 +176,27 @@ public final class BlockOutlineRenderer
             nY = nY / nLen;
             nZ = nZ / nLen;
 
-            builder.addVertex(pose, x1, y1, z1).setColor(color).setNormal(pose, nX, nY, nZ);
-            builder.addVertex(pose, x2, y2, z2).setColor(color).setNormal(pose, nX, nY, nZ);
+            builder.addVertex(pose, x1, y1, z1).setColor(color).setNormal(pose, nX, nY, nZ).setLineWidth(lineWidth);
+            builder.addVertex(pose, x2, y2, z2).setColor(color).setNormal(pose, nX, nY, nZ).setLineWidth(lineWidth);
         }
     }
 
-    private static final class DefaultLineDrawer extends AbstractLineDrawer
+    static final class DefaultLineDrawer extends AbstractLineDrawer
     {
         private final VertexConsumer builder;
+        private final int lineColor;
 
-        DefaultLineDrawer(PoseStack.Pose pose, MultiBufferSource buffer)
+        DefaultLineDrawer(PoseStack.Pose pose, VertexConsumer builder, int lineColor)
         {
             super(pose);
-            this.builder = buffer.getBuffer(RenderType.lines());
+            this.builder = builder;
+            this.lineColor = lineColor;
         }
 
         @Override
         public void drawLine(float x1, float y1, float z1, float x2, float y2, float z2)
         {
-            drawLine(builder, x1, y1, z1, x2, y2, z2, DEFAULT_LINE_COLOR);
+            drawLine(builder, x1, y1, z1, x2, y2, z2, lineColor, lineWidth);
         }
 
         @Override
@@ -236,16 +242,16 @@ public final class BlockOutlineRenderer
         @Override
         void finish()
         {
-            drawBufferedLines(RenderType.secondaryBlockOutline(), CommonColors.BLACK);
-            drawBufferedLines(RenderType.lines(), CommonColors.HIGH_CONTRAST_DIAMOND);
+            drawBufferedLines(RenderTypes.secondaryBlockOutline(), CommonColors.BLACK, 7F);
+            drawBufferedLines(RenderTypes.lines(), CommonColors.HIGH_CONTRAST_DIAMOND, lineWidth);
         }
 
-        private void drawBufferedLines(RenderType renderType, int color)
+        private void drawBufferedLines(RenderType renderType, int color, float lineWidth)
         {
             VertexConsumer builder = buffer.getBuffer(renderType);
             for (int i = 0; i < pointer; i += LINE_SIZE)
             {
-                drawLine(builder, lines[i], lines[i + 1], lines[i + 2], lines[i + 3], lines[i + 4], lines[i + 5], color);
+                drawLine(builder, lines[i], lines[i + 1], lines[i + 2], lines[i + 3], lines[i + 4], lines[i + 5], color, lineWidth);
             }
         }
     }

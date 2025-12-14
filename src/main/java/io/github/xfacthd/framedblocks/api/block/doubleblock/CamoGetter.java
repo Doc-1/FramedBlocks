@@ -6,7 +6,7 @@ import io.github.xfacthd.framedblocks.api.camo.empty.EmptyCamoContainer;
 import io.github.xfacthd.framedblocks.api.model.data.AbstractFramedBlockData;
 import io.github.xfacthd.framedblocks.api.model.data.FramedBlockData;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
 

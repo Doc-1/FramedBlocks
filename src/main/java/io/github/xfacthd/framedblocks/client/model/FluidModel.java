@@ -14,22 +14,24 @@ import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BlockModelRotation;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelDebugName;
+import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.resources.model.QuadCollection;
 import net.minecraft.client.resources.model.ResolvedModel;
 import net.minecraft.client.resources.model.SpriteGetter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 
 import java.util.Map;
 
 public final class FluidModel
 {
-    public static final ResourceLocation BARE_MODEL = Utils.rl("fluid/bare");
-    public static final ResourceLocation BARE_MODEL_SINGLE = Utils.rl("fluid/bare_single");
+    public static final Identifier BARE_MODEL = Utils.id("fluid/bare");
+    public static final Identifier BARE_MODEL_SINGLE = Utils.id("fluid/bare_single");
+    private static final ModelBaker.PartCache PART_CACHE = new ModelBakery.PartCacheImpl();
     private static final SpriteGetter TEXTURE_GETTER = new SpriteGetter()
     {
         @Override
@@ -45,39 +47,27 @@ public final class FluidModel
             return ClientUtils.getBlockSprite(MissingTextureAtlasSprite.getLocation());
         }
     };
-    private static final IClientFluidTypeExtensions DUMMY_FLUID_TYPE_EXTENSIONS = new IClientFluidTypeExtensions()
-    {
-        @Override
-        public ResourceLocation getStillTexture()
-        {
-            return MissingTextureAtlasSprite.getLocation();
-        }
-
-        @Override
-        public ResourceLocation getFlowingTexture()
-        {
-            return MissingTextureAtlasSprite.getLocation();
-        }
-    };
 
     public static BlockStateModel create(Fluid fluid)
     {
-        ModelBakery modelBakery = Minecraft.getInstance().getModelManager().getModelBakery();
+        ModelManager modelManager = Minecraft.getInstance().getModelManager();
+        ModelBakery modelBakery = modelManager.getModelBakery();
 
         // Use dummy extensions for empty fluid to prevent crashes due to null textures
-        IClientFluidTypeExtensions props = getFluidTypeExtensions(fluid);
-        ResourceLocation stillTexture = Preconditions.checkNotNull(
+        IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
+        Identifier stillTexture = Preconditions.checkNotNull(
                 props.getStillTexture(),
                 "Fluid %s returned null from IClientFluidTypeExtensions#getStillTexture()",
                 fluid
         );
-        ResourceLocation flowingTexture = Preconditions.checkNotNull(
+        Identifier flowingTexture = Preconditions.checkNotNull(
                 props.getFlowingTexture(),
                 "Fluid %s returned null from IClientFluidTypeExtensions#getFlowingTexture()",
                 fluid
         );
 
-        ModelBakery.ModelBakerImpl baker = modelBakery.new ModelBakerImpl(TEXTURE_GETTER);
+        ModelBakery.MissingModels missingModels = modelManager.framedblocks$getMissingModels();
+        ModelBakery.ModelBakerImpl baker = modelBakery.new ModelBakerImpl(TEXTURE_GETTER, PART_CACHE, missingModels);
 
         boolean singleTexture = flowingTexture.equals(stillTexture);
         ResolvedModel bareModel = baker.getModel(singleTexture ? BARE_MODEL_SINGLE : BARE_MODEL);
@@ -91,7 +81,7 @@ public final class FluidModel
         QuadCollection fluidQuads = bareModel.getTopGeometry().bake(
                 textures,
                 baker,
-                BlockModelRotation.X0_Y0,
+                BlockModelRotation.IDENTITY,
                 bareModel,
                 bareModel.getTopAdditionalProperties()
         );
@@ -100,17 +90,6 @@ public final class FluidModel
 
         return new SingleVariant(new SimpleModelWrapper(fluidQuads, false, ClientUtils.getBlockSprite(stillTexture), chunkLayer));
     }
-
-    private static IClientFluidTypeExtensions getFluidTypeExtensions(Fluid fluid)
-    {
-        if (fluid == Fluids.EMPTY)
-        {
-            return DUMMY_FLUID_TYPE_EXTENSIONS;
-        }
-        return IClientFluidTypeExtensions.of(fluid);
-    }
-
-
 
     private FluidModel() { }
 }

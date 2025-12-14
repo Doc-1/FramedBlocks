@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.client.event.ModelEvent;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.Collection;
@@ -191,7 +191,7 @@ public final class ModelWrappingManager
 
     private static void debugStateMerger(Holder<Block> block, StateMerger stateMerger)
     {
-        String blockId = Utils.getKeyOrThrow(block).location().toString();
+        String blockId = Utils.getKeyOrThrow(block).identifier().toString();
         debugStateMerger(block, blockId, stateMerger);
     }
 

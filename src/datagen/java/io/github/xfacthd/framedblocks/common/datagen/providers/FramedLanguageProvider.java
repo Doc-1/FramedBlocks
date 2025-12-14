@@ -532,7 +532,6 @@ public final class FramedLanguageProvider extends LanguageProvider
         addConfigValue(ClientConfig.GHOST_RENDER_OPACITY_VALUE, "Placement preview opacity");
         addConfigValue(ClientConfig.FANCY_HITBOXES_VALUE, "Fancy hitboxes");
         addConfigValue(ClientConfig.DETAILED_CULLING_VALUE, "Detailed culling");
-        addConfigValue(ClientConfig.USE_DISCRETE_UV_STEPS_VALUE, "Use discrete UV steps");
         addConfigValue(ClientConfig.CON_TEX_MODE_VALUE, "Connected textures mode");
         addConfigValue(ClientConfig.CAMO_MESSAGE_VERBOSITY_VALUE, "Disallowed camo message verbosity");
         addConfigValue(ClientConfig.FORCE_AO_ON_GLOWING_BLOCKS_VALUE, "Force ambient occlusion on glowing framed blocks");

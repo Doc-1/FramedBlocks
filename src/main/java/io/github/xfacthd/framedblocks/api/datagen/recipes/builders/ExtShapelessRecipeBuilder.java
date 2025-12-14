@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ExtShapelessRecipeBuilder extends ShapelessRecipeBuilder implements AutoUnlockNameBuilder<ExtShapelessRecipeBuilder>
 {

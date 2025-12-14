@@ -8,12 +8,12 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -28,7 +28,7 @@ public record FramingSawRecipeAdditive(Ingredient ingredient, int count, @Nullab
             FramingSawRecipeAdditive::ingredient,
             ByteBufCodecs.VAR_INT,
             FramingSawRecipeAdditive::count,
-            ByteBufCodecs.optional(ResourceLocation.STREAM_CODEC).map(
+            ByteBufCodecs.optional(Identifier.STREAM_CODEC).map(
                     opt -> opt.map(ItemTags::create).orElse(null),
                     key -> Optional.ofNullable(key).map(TagKey::location)
             ),

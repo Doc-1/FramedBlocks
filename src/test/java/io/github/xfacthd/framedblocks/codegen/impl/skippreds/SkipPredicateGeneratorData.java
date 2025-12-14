@@ -1,6 +1,6 @@
 package io.github.xfacthd.framedblocks.codegen.impl.skippreds;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;

@@ -7,9 +7,9 @@ import io.github.xfacthd.framedblocks.api.model.quad.Modifiers;
 import io.github.xfacthd.framedblocks.api.model.quad.QuadModifier;
 import io.github.xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
-import net.minecraft.Util;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Util;
 import net.neoforged.neoforge.model.data.ModelData;
 
 public class FramedBoardGeometry extends Geometry

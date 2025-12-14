@@ -5,7 +5,7 @@ import com.mojang.logging.LogUtils;
 import io.github.xfacthd.framedblocks.api.shapes.ReloadableShapeLookup;
 import io.github.xfacthd.framedblocks.api.shapes.ShapeCache;
 import io.github.xfacthd.framedblocks.api.util.Utils;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -18,7 +18,7 @@ import java.util.List;
 public final class ShapeReloader implements ResourceManagerReloadListener
 {
     public static final ShapeReloader INSTANCE = new ShapeReloader();
-    public static final ResourceLocation LISTENER_ID = Utils.rl("voxel_shapes");
+    public static final Identifier LISTENER_ID = Utils.id("voxel_shapes");
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final List<ShapeCache<?>> CACHES = new ArrayList<>();
     private static final List<ReloadableShapeLookup> LOOKUPS = new ArrayList<>();

@@ -11,12 +11,12 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -45,7 +45,7 @@ public final class FluidSpriteParticle extends SingleQuadParticle
 
     private static TextureAtlasSprite resolveSprite(Fluid fluid)
     {
-        ResourceLocation stillTex = Objects.requireNonNullElse(
+        Identifier stillTex = Objects.requireNonNullElse(
                 IClientFluidTypeExtensions.of(fluid).getStillTexture(),
                 MissingTextureAtlasSprite.getLocation()
         );

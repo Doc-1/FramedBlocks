@@ -18,7 +18,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class AppliedEnergisticsCompat
 {
@@ -97,7 +97,7 @@ public final class AppliedEnergisticsCompat
                 "framing_saw_pattern", builder -> builder.persistent(EncodedFramingSawPattern.CODEC).networkSynchronized(EncodedFramingSawPattern.STREAM_CODEC)
         );
 
-        static final Holder<Item> ITEM_BLANK_PATTERN = DeferredItem.createItem(Utils.rl(MOD_ID, "blank_pattern"));
+        static final Holder<Item> ITEM_BLANK_PATTERN = DeferredItem.createItem(Utils.id(MOD_ID, "blank_pattern"));
 
         public static void init(IEventBus modBus)
         {

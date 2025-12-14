@@ -6,7 +6,6 @@ import io.github.xfacthd.framedblocks.common.block.sign.AbstractFramedSignBlock;
 import io.github.xfacthd.framedblocks.common.blockentity.special.FramedSignBlockEntity;
 import io.github.xfacthd.framedblocks.common.data.BlockType;
 import io.github.xfacthd.framedblocks.common.net.payload.serverbound.ServerboundSignUpdatePayload;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
@@ -19,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.SignText;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -49,7 +49,7 @@ public class FramedSignScreen extends Screen
         this.sign = sign;
         this.front = front;
         this.text = sign.getText(front);
-        boolean filtered = Minecraft.getInstance().isTextFilteringEnabled();
+        boolean filtered = minecraft.isTextFilteringEnabled();
         this.lines = IntStream.range(0, 4)
                 .mapToObj(idx -> text.getMessage(idx, filtered))
                 .map(Component::getString)
@@ -72,13 +72,12 @@ public class FramedSignScreen extends Screen
     @Override
     protected void init()
     {
-        addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, btn -> Minecraft.getInstance().setScreen(null))
+        addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, btn -> minecraft.setScreen(null))
                 .pos(width / 2 - 100, height / 4 + 144)
                 .size(200, 20)
                 .build()
         );
 
-        //noinspection ConstantConditions
         inputUtil = new TextFieldHelper(
                 () -> lines[currLine],
                 this::setLine,
@@ -105,9 +104,9 @@ public class FramedSignScreen extends Screen
     {
         blinkCounter++;
 
-        if (minecraft != null && minecraft.player != null && (sign.isRemoved() || sign.isTooFarAwayToEdit(minecraft.player)))
+        if (minecraft.player != null && (sign.isRemoved() || sign.isTooFarAwayToEdit(minecraft.player)))
         {
-            Minecraft.getInstance().setScreen(null);
+            minecraft.setScreen(null);
         }
     }
 
@@ -172,7 +171,7 @@ public class FramedSignScreen extends Screen
         ));
     }
 
-    private void drawLines(GuiGraphics graphics, String[] lines)
+    private void drawLines(GuiGraphics graphics, @Nullable String[] lines)
     {
         int color = text.hasGlowingText() ? text.getColor().getTextColor() : SignRenderer.getDarkColor(text);
         int lineHeight = signConfig.lineHeight;
@@ -197,7 +196,7 @@ public class FramedSignScreen extends Screen
         }
     }
 
-    private void drawCursor(GuiGraphics graphics, String[] lines)
+    private void drawCursor(GuiGraphics graphics, @Nullable String[] lines)
     {
         int color = text.hasGlowingText() ? text.getColor().getTextColor() : SignRenderer.getDarkColor(text);
         boolean blink = blinkCounter / 6 % 2 == 0;
@@ -235,7 +234,7 @@ public class FramedSignScreen extends Screen
                     int xStart = baseX + Math.min(x1, x2);
                     int xEnd = baseX + Math.max(x1, x2);
 
-                    graphics.textHighlight(xStart, y, xEnd, y + lineHeight);
+                    graphics.textHighlight(xStart, y, xEnd, y + lineHeight, true);
                 }
             }
         }

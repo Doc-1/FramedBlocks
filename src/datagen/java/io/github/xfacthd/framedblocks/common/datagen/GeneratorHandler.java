@@ -11,7 +11,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @Mod(value = FramedConstants.MOD_ID, dist = Dist.CLIENT)
 @SuppressWarnings("UtilityClassWithPublicConstructor")

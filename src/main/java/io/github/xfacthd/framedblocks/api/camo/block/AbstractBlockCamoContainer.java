@@ -3,7 +3,7 @@ package io.github.xfacthd.framedblocks.api.camo.block;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainer;
 import io.github.xfacthd.framedblocks.api.camo.block.rotator.BlockCamoRotator;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class AbstractBlockCamoContainer<T extends AbstractBlockCamoContainer<T>> extends CamoContainer<BlockCamoContent, T>
 {

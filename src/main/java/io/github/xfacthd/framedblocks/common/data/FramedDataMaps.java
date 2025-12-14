@@ -14,12 +14,12 @@ import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 public final class FramedDataMaps
 {
     public static final DataMapType<Block, BlockCamoRotatorPrototype> BLOCK_CAMO_ROTATORS = DataMapType.builder(
-            Utils.rl("block_camo_rotators"),
+            Utils.id("block_camo_rotators"),
             Registries.BLOCK,
             BlockCamoRotatorPrototype.CODEC
     ).synced(BlockCamoRotatorPrototype.CODEC, true).build();
     public static final DataMapType<SoundEvent, SoundEventGroup> SOUND_EVENT_GROUPS = DataMapType.builder(
-            Utils.rl("sound_event_groups"),
+            Utils.id("sound_event_groups"),
             Registries.SOUND_EVENT,
             SoundEventGroup.CODEC
     ).synced(SoundEventGroup.CODEC, true).build();

@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -150,8 +150,7 @@ final class BlockInteractOverlayWrapper
         return name;
     }
 
-    @Nullable
-    private static BlockInteractOverlay.Target getTargettedBlock(Player player)
+    private static BlockInteractOverlay.@Nullable Target getTargettedBlock(Player player)
     {
         HitResult hit = Minecraft.getInstance().hitResult;
         if (hit instanceof BlockHitResult blockHit)

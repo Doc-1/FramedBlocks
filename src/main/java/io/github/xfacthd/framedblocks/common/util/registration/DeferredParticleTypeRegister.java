@@ -10,7 +10,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -24,7 +24,7 @@ public final class DeferredParticleTypeRegister extends DeferredRegister<Particl
     @Override
     @SuppressWarnings("unchecked")
     protected <I extends ParticleType<?>> DeferredHolder<ParticleType<?>, I> createHolder(
-            ResourceKey<? extends Registry<ParticleType<?>>> registryKey, ResourceLocation key
+            ResourceKey<? extends Registry<ParticleType<?>>> registryKey, Identifier key
     )
     {
         return (DeferredHolder<ParticleType<?>, I>) DeferredParticleType.createParticleType(ResourceKey.create(registryKey, key));

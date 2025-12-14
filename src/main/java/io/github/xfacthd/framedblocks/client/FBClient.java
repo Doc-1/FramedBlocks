@@ -222,22 +222,22 @@ public final class FBClient
 
     private static void onRegisterBlockItemModelProviders(RegisterBlockItemModelProvidersEvent event)
     {
-        event.register(Utils.rl("default"), BlockItemModelProvider.DEFAULT);
-        event.register(Utils.rl("fence"), FenceBlockItemModelProvider.INSTANCE);
+        event.register(Utils.id("default"), BlockItemModelProvider.DEFAULT);
+        event.register(Utils.id("fence"), FenceBlockItemModelProvider.INSTANCE);
     }
 
     private static void onRegisterItemTintProviders(RegisterItemTintProvidersEvent event)
     {
-        event.register(Utils.rl("single"), FramedBlockItemTintProvider.INSTANCE_SINGLE);
-        event.register(Utils.rl("double"), FramedBlockItemTintProvider.INSTANCE_DOUBLE);
-        event.register(Utils.rl("target"), FramedTargetItemTintProvider.INSTANCE);
+        event.register(Utils.id("single"), FramedBlockItemTintProvider.INSTANCE_SINGLE);
+        event.register(Utils.id("double"), FramedBlockItemTintProvider.INSTANCE_DOUBLE);
+        event.register(Utils.id("target"), FramedTargetItemTintProvider.INSTANCE);
     }
 
     private static void onRegisterGuiLayers(RegisterGuiLayersEvent event)
     {
         BlockInteractOverlayLayer.init();
 
-        event.registerAboveAll(Utils.rl("block_interact"), new BlockInteractOverlayLayer());
+        event.registerAboveAll(Utils.id("block_interact"), new BlockInteractOverlayLayer());
     }
 
     private static void onRegisterBlockInteractOverlays(RegisterBlockInteractOverlaysEvent event)
@@ -505,7 +505,7 @@ public final class FBClient
 
     private static void onBlockStateModelRegister(RegisterBlockStateModels event)
     {
-        event.registerDefinition(Utils.rl("wrapper"), FramedBlockModelDefinition.CODEC);
+        event.registerDefinition(Utils.id("wrapper"), FramedBlockModelDefinition.CODEC);
     }
 
     private static void onModelsLoaded(ModelEvent.BakingCompleted event)
@@ -534,7 +534,7 @@ public final class FBClient
 
     private static void onRegisterSpriteSources(RegisterSpriteSourcesEvent event)
     {
-        event.register(Utils.rl("anim_splitter"), AnimationSplitterSource.CODEC);
+        event.register(Utils.id("anim_splitter"), AnimationSplitterSource.CODEC);
     }
 
     private static void onTexturesStitched(TextureAtlasStitchedEvent event)

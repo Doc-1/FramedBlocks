@@ -1,20 +1,20 @@
 package io.github.xfacthd.framedblocks.api.model.geometry;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @FunctionalInterface
 public interface PartConsumer
 {
     /**
      * @param part            The {@link BlockModelPart} to add
-     * @param state           The {@link BlockState} the part is from (required for {@link RenderType} lookup)
+     * @param state           The {@link BlockState} the part is from (required for {@link ChunkSectionLayer} lookup)
      * @param includeNull     Whether faces returned for {@code null} face should be included
      * @param reclaimFromNull Whether cullable faces should be recovered from uncullable quads
      * @param cullNonNull     Whether cullable faces should be culled according to the occlusion settings this {@code PartConsumer} was constructed with
@@ -38,7 +38,7 @@ public interface PartConsumer
      * @param level           The {@link BlockAndTintGetter} to provide to the model for part collection
      * @param pos             The {@link BlockPos} to provide to the model for part collection
      * @param random          The {@link RandomSource} to provide to the model for part collection
-     * @param state           The {@link BlockState} the part is from (required for part and {@link RenderType} lookup)
+     * @param state           The {@link BlockState} the part is from (required for part and {@link ChunkSectionLayer} lookup)
      * @param includeNull     Whether faces returned for {@code null} face should be included
      * @param reclaimFromNull Whether cullable faces should be recovered from uncullable quads
      * @param cullNonNull     Whether cullable faces should be culled according to the occlusion settings this {@code PartConsumer} was constructed with

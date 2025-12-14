@@ -1,9 +1,8 @@
 package io.github.xfacthd.framedblocks.api.model.quad;
 
-import com.google.common.base.Preconditions;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -25,7 +24,7 @@ public final class QuadModifier
      */
     public static QuadModifier of(BakedQuad quad)
     {
-        return new QuadModifier(new QuadData(quad), -1, quad.shade(), quad.lightEmission(), quad.hasAmbientOcclusion(), false, false);
+        return new QuadModifier(new QuadData(quad), quad.tintIndex(), quad.shade(), quad.lightEmission(), quad.hasAmbientOcclusion(), false, false);
     }
 
     private QuadModifier(@UnknownNullability QuadData data, int tintIndex, boolean shade, int lightEmission, boolean ao, boolean modified, boolean failed)
@@ -70,8 +69,6 @@ public final class QuadModifier
 
     public QuadModifier tintIndex(int tintIndex)
     {
-        Preconditions.checkState(this.tintIndex == -1, "TintIndex has already been set");
-
         this.tintIndex = tintIndex;
         modified = true;
         return this;
@@ -85,6 +82,11 @@ public final class QuadModifier
             modified = true;
         }
         return this;
+    }
+
+    public QuadModifier increaseLightEmission(int lightEmission)
+    {
+        return lightEmission(Math.max(this.lightEmission, lightEmission));
     }
 
     public QuadModifier lightEmission(int lightEmission)
@@ -130,38 +132,9 @@ public final class QuadModifier
             return data.quad;
         }
 
-        BakedQuad newQuad = new BakedQuad(
-                data.vertexData,
-                tintIndex == -1 ? data.quad.tintIndex() : tintIndex,
-                data.recomputeNormals(),
-                data.quad.sprite(),
-                shade,
-                lightEmission,
-                ao
-        );
+        BakedQuad newQuad = data.toQuad(tintIndex, shade, lightEmission, ao);
         exported = true;
         return newQuad;
-    }
-
-    /**
-     * Re-assemble the quad, modifying the vertex data of the input quad directly. If any modifiers failed,
-     * the quad will not be modified
-     */
-    public void modifyInPlace()
-    {
-        Preconditions.checkState(tintIndex == -1, "In-place modification can't change tintIndex but a tintIndex has been set");
-        Preconditions.checkState(shade == data.quad.shade(), "In-place modification can't change shading but shade has been modified");
-        Preconditions.checkState(lightEmission == data.quad.lightEmission(), "In-place modification can't change light emission but light emission has been modified");
-        Preconditions.checkState(ao == data.quad.hasAmbientOcclusion(), "In-place modification can't change AO but AO has been modified");
-
-        if (failed)
-        {
-            return;
-        }
-
-        data.recomputeNormals();
-        System.arraycopy(data.vertexData, 0, data.quad.vertices(), 0, data.vertexData.length);
-        exported = true;
     }
 
     /**
@@ -183,8 +156,6 @@ public final class QuadModifier
     {
         return failed;
     }
-
-
 
     @FunctionalInterface
     public interface Modifier

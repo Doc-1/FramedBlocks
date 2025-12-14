@@ -1,7 +1,5 @@
 package io.github.xfacthd.framedblocks.client.render.special;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import io.github.xfacthd.framedblocks.api.render.OutlineRenderer;
 import io.github.xfacthd.framedblocks.api.render.Quaternions;
 import io.github.xfacthd.framedblocks.api.util.Utils;
@@ -13,6 +11,7 @@ import io.github.xfacthd.framedblocks.common.data.property.NullableDirection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -24,6 +23,7 @@ import net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent;
 public final class CollapsibleBlockIndicatorRenderer
 {
     private static final float[] VERTEX_NO_OFFSET = new float[] { 1F, 1F, 1F, 1F };
+    private static final int LINE_COLOR = ARGB.color(153, 255, 0, 0);
 
     public static void onRenderBlockHighlight(ExtractBlockOutlineRenderStateEvent event)
     {
@@ -50,7 +50,7 @@ public final class CollapsibleBlockIndicatorRenderer
             return;
         }
 
-        Vec3 offset = Vec3.atLowerCornerOf(hit.getBlockPos()).subtract(event.getCamera().getPosition());
+        Vec3 offset = Vec3.atLowerCornerOf(hit.getBlockPos()).subtract(event.getCamera().position());
         Vec3 hitLocation = hit.getLocation();
         float[] vY = getVertexHeights(level, hit.getBlockPos(), face);
 
@@ -58,8 +58,6 @@ public final class CollapsibleBlockIndicatorRenderer
         {
             if (translucentPass)
             {
-                VertexConsumer builder = buffer.getBuffer(FramedRenderTypes.LINES_NO_DEPTH);
-
                 poseStack.pushPose();
                 poseStack.translate(offset.x + .5, offset.y + .5, offset.z + .5);
                 if (faceDir == Direction.DOWN)
@@ -73,8 +71,11 @@ public final class CollapsibleBlockIndicatorRenderer
                 }
                 poseStack.translate(-.5, -.5, -.5);
 
-                drawSectionOverlay(builder, poseStack, vY);
-                drawCornerMarkers(builder, poseStack, faceDir, hitLocation, vY);
+                OutlineRenderer.LineDrawer drawer = new BlockOutlineRenderer.DefaultLineDrawer(
+                        poseStack.last(), buffer.getBuffer(FramedRenderTypes.LINES_NO_DEPTH), LINE_COLOR
+                );
+                drawSectionOverlay(drawer, vY);
+                drawCornerMarkers(drawer, faceDir, hitLocation, vY);
 
                 poseStack.popPose();
             }
@@ -96,7 +97,7 @@ public final class CollapsibleBlockIndicatorRenderer
         };
     }
 
-    private static void drawSectionOverlay(VertexConsumer builder, PoseStack poseStack, float[] vY)
+    private static void drawSectionOverlay(OutlineRenderer.LineDrawer drawer, float[] vY)
     {
         float cenx = Mth.lerp(.5F, vY[0], vY[1]); // center edge negative X
         float cepx = Mth.lerp(.5F, vY[3], vY[2]); // center edge positive X
@@ -108,41 +109,39 @@ public final class CollapsibleBlockIndicatorRenderer
         float cinz = Mth.lerp(.25F, cenz, cepz); // center inset negative Z
         float cipz = Mth.lerp(.75F, cenz, cepz); // center inset positive Z
 
-        drawLine(builder, poseStack,  .5F, cenz,   0F,  .5F, cinz, .25F);
-        drawLine(builder, poseStack,  .5F, cipz, .75F,  .5F, cepz,   1F);
-        drawLine(builder, poseStack,   0F, cenx,  .5F, .25F, cinx,  .5F);
-        drawLine(builder, poseStack, .75F, cipx,  .5F,   1F, cepx,  .5F);
+        drawer.drawLine( .5F, cenz,   0F,  .5F, cinz, .25F);
+        drawer.drawLine( .5F, cipz, .75F,  .5F, cepz,   1F);
+        drawer.drawLine(  0F, cenx,  .5F, .25F, cinx,  .5F);
+        drawer.drawLine(.75F, cipx,  .5F,   1F, cepx,  .5F);
 
-        drawLine(builder, poseStack, .5F, cinz, .25F, .25F, cinx, .5F);
-        drawLine(builder, poseStack, .5F, cinz, .25F, .75F, cipx, .5F);
-        drawLine(builder, poseStack, .5F, cipz, .75F, .25F, cinx, .5F);
-        drawLine(builder, poseStack, .5F, cipz, .75F, .75F, cipx, .5F);
+        drawer.drawLine(.5F, cinz, .25F, .25F, cinx, .5F);
+        drawer.drawLine(.5F, cinz, .25F, .75F, cipx, .5F);
+        drawer.drawLine(.5F, cipz, .75F, .25F, cinx, .5F);
+        drawer.drawLine(.5F, cipz, .75F, .75F, cipx, .5F);
     }
 
-    private static void drawCornerMarkers(
-            VertexConsumer builder, PoseStack poseStack, Direction faceDir, Vec3 hitLocation, float[] vY
-    )
+    private static void drawCornerMarkers(OutlineRenderer.LineDrawer drawer, Direction faceDir, Vec3 hitLocation, float[] vY)
     {
         int vert = FramedCollapsibleBlockEntity.vertexFromHit(faceDir, Utils.fraction(hitLocation));
         if (vert == 0 || vert == 4)
         {
-            drawCubeFrame(builder, poseStack,  0.25F/16F,  0.25F/16F, vY[0]);
+            drawCubeFrame(drawer,  0.25F/16F,  0.25F/16F, vY[0]);
         }
         if (vert == 1 || vert == 4)
         {
-            drawCubeFrame(builder, poseStack,  0.25F/16F, 15.75F/16F, vY[1]);
+            drawCubeFrame(drawer,  0.25F/16F, 15.75F/16F, vY[1]);
         }
         if (vert == 2 || vert == 4)
         {
-            drawCubeFrame(builder, poseStack, 15.75F/16F, 15.75F/16F, vY[2]);
+            drawCubeFrame(drawer, 15.75F/16F, 15.75F/16F, vY[2]);
         }
         if (vert == 3 || vert == 4)
         {
-            drawCubeFrame(builder, poseStack, 15.75F/16F,  0.25F/16F, vY[3]);
+            drawCubeFrame(drawer, 15.75F/16F,  0.25F/16F, vY[3]);
         }
     }
 
-    private static void drawCubeFrame(VertexConsumer builder, PoseStack poseStack, float x, float z, float vY)
+    private static void drawCubeFrame(OutlineRenderer.LineDrawer drawer, float x, float z, float vY)
     {
         float minX = x - .5F/16F;
         float maxX = x + .5F/16F;
@@ -153,43 +152,23 @@ public final class CollapsibleBlockIndicatorRenderer
         float maxY = vY + .25F/16F;
 
         // Bottom
-        drawLine(builder, poseStack, minX, minY, minZ, minX, minY, maxZ);
-        drawLine(builder, poseStack, minX, minY, minZ, maxX, minY, minZ);
-        drawLine(builder, poseStack, maxX, minY, minZ, maxX, minY, maxZ);
-        drawLine(builder, poseStack, minX, minY, maxZ, maxX, minY, maxZ);
+        drawer.drawLine(minX, minY, minZ, minX, minY, maxZ);
+        drawer.drawLine(minX, minY, minZ, maxX, minY, minZ);
+        drawer.drawLine(maxX, minY, minZ, maxX, minY, maxZ);
+        drawer.drawLine(minX, minY, maxZ, maxX, minY, maxZ);
 
         // Top
-        drawLine(builder, poseStack, minX, maxY, minZ, minX, maxY, maxZ);
-        drawLine(builder, poseStack, minX, maxY, minZ, maxX, maxY, minZ);
-        drawLine(builder, poseStack, maxX, maxY, minZ, maxX, maxY, maxZ);
-        drawLine(builder, poseStack, minX, maxY, maxZ, maxX, maxY, maxZ);
+        drawer.drawLine(minX, maxY, minZ, minX, maxY, maxZ);
+        drawer.drawLine(minX, maxY, minZ, maxX, maxY, minZ);
+        drawer.drawLine(maxX, maxY, minZ, maxX, maxY, maxZ);
+        drawer.drawLine(minX, maxY, maxZ, maxX, maxY, maxZ);
 
         // Vertical
-        drawLine(builder, poseStack, minX, minY, minZ, minX, maxY, minZ);
-        drawLine(builder, poseStack, minX, minY, maxZ, minX, maxY, maxZ);
-        drawLine(builder, poseStack, maxX, minY, minZ, maxX, maxY, minZ);
-        drawLine(builder, poseStack, maxX, minY, maxZ, maxX, maxY, maxZ);
+        drawer.drawLine(minX, minY, minZ, minX, maxY, minZ);
+        drawer.drawLine(minX, minY, maxZ, minX, maxY, maxZ);
+        drawer.drawLine(maxX, minY, minZ, maxX, maxY, minZ);
+        drawer.drawLine(maxX, minY, maxZ, maxX, maxY, maxZ);
     }
-
-    private static void drawLine(
-            VertexConsumer builder, PoseStack poseStack, float x1, float y1, float z1, float x2, float y2, float z2
-    )
-    {
-        float nX = x2 - x1;
-        float nY = y2 - y1;
-        float nZ = z2 - z1;
-        float nLen = Mth.sqrt(nX * nX + nY * nY + nZ * nZ);
-
-        nX = nX / nLen;
-        nY = nY / nLen;
-        nZ = nZ / nLen;
-
-        PoseStack.Pose pose = poseStack.last();
-        builder.addVertex(pose, x1, y1, z1).setColor(255, 0, 0, 153).setNormal(pose, nX, nY, nZ);
-        builder.addVertex(pose, x2, y2, z2).setColor(255, 0, 0, 153).setNormal(pose, nX, nY, nZ);
-    }
-
-
 
     private CollapsibleBlockIndicatorRenderer() { }
 }

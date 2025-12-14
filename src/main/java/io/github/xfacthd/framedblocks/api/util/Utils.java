@@ -17,7 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -46,7 +46,7 @@ import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,14 +61,14 @@ import java.util.stream.Collectors;
 
 public final class Utils
 {
-    private static final ResourceLocation RL_TEMPLATE = Utils.rl(FramedConstants.MOD_ID, "");
+    private static final Identifier RL_TEMPLATE = Utils.id(FramedConstants.MOD_ID, "");
     public static final boolean PRODUCTION = FMLEnvironment.isProduction();
     public static final boolean CLIENT_DIST = FMLEnvironment.getDist().isClient();
     private static final Direction[] DIRECTIONS = Direction.values();
     private static final Direction[] HORIZONTAL_DIRECTIONS = Direction.Plane.HORIZONTAL.stream().toArray(Direction[]::new);
     public static final TagKey<Block> FRAMEABLE = blockTag("frameable");
     public static final TagKey<Block> BLOCK_BLACKLIST = blockTag("blacklisted");
-    public static final TagKey<Fluid> FLUID_BLACKLIST = TagKey.create(Registries.FLUID, rl("blacklisted"));
+    public static final TagKey<Fluid> FLUID_BLACKLIST = TagKey.create(Registries.FLUID, id("blacklisted"));
     /** Allow other mods to whitelist their BEs, circumventing the config setting */
     public static final TagKey<Block> BE_WHITELIST = blockTag("blockentity_whitelisted");
     /** Blocks tagged with this will not be occluded by framed blocks using them as camo, both as camo and directly placed */
@@ -95,21 +95,21 @@ public final class Utils
      */
     public static final ItemAbility ACTION_WRENCH_CONFIGURE = ItemAbility.get("wrench_configure");
 
-    public static final Holder<Block> FRAMED_CUBE = DeferredBlock.createBlock(Utils.rl("framed_cube"));
+    public static final Holder<Block> FRAMED_CUBE = DeferredBlock.createBlock(Utils.id("framed_cube"));
 
-    public static final Holder<Item> FRAMED_HAMMER = DeferredItem.createItem(Utils.rl("framed_hammer"));
-    public static final Holder<Item> FRAMED_WRENCH = DeferredItem.createItem(Utils.rl("framed_wrench"));
-    public static final Holder<Item> FRAMED_KEY = DeferredItem.createItem(Utils.rl("framed_key"));
-    public static final Holder<Item> FRAMED_SCREWDRIVER = DeferredItem.createItem(Utils.rl("framed_screwdriver"));
-    public static final Holder<Item> FRAMED_REINFORCEMENT = DeferredItem.createItem(Utils.rl("framed_reinforcement"));
-    public static final Holder<Item> PHANTOM_PASTE = DeferredItem.createItem(Utils.rl("phantom_paste"));
-    public static final Holder<Item> GLOW_PASTE = DeferredItem.createItem(Utils.rl("glow_paste"));
+    public static final Holder<Item> FRAMED_HAMMER = DeferredItem.createItem(Utils.id("framed_hammer"));
+    public static final Holder<Item> FRAMED_WRENCH = DeferredItem.createItem(Utils.id("framed_wrench"));
+    public static final Holder<Item> FRAMED_KEY = DeferredItem.createItem(Utils.id("framed_key"));
+    public static final Holder<Item> FRAMED_SCREWDRIVER = DeferredItem.createItem(Utils.id("framed_screwdriver"));
+    public static final Holder<Item> FRAMED_REINFORCEMENT = DeferredItem.createItem(Utils.id("framed_reinforcement"));
+    public static final Holder<Item> PHANTOM_PASTE = DeferredItem.createItem(Utils.id("phantom_paste"));
+    public static final Holder<Item> GLOW_PASTE = DeferredItem.createItem(Utils.id("glow_paste"));
 
     public static final DeferredDataComponentType<CamoList> DC_TYPE_CAMO_LIST = DeferredDataComponentType.createDataComponent(
-            Utils.rl("camo_list")
+            Utils.id("camo_list")
     );
     public static final DeferredDataComponentType<FrameConfig> DC_TYPE_FRAME_CONFIG = DeferredDataComponentType.createDataComponent(
-            Utils.rl("frame_config")
+            Utils.id("frame_config")
     );
 
     private static final Long2ObjectMap<Direction> DIRECTION_BY_NORMAL = Arrays.stream(Direction.values())
@@ -372,7 +372,7 @@ public final class Utils
 
     public static TagKey<Block> blockTag(String modid, String name)
     {
-        return BlockTags.create(Utils.rl(modid, name));
+        return BlockTags.create(Utils.id(modid, name));
     }
 
     public static TagKey<Item> itemTag(String name)
@@ -382,7 +382,7 @@ public final class Utils
 
     public static TagKey<Item> itemTag(String modid, String name)
     {
-        return ItemTags.create(Utils.rl(modid, name));
+        return ItemTags.create(Utils.id(modid, name));
     }
 
     public static void forAllDirections(Consumer<Direction> consumer)
@@ -415,19 +415,19 @@ public final class Utils
         return dir == null ? DIRECTIONS.length : dir.ordinal();
     }
 
-    public static ResourceLocation rl(String path)
+    public static Identifier id(String path)
     {
         return RL_TEMPLATE.withPath(path);
     }
 
-    public static ResourceLocation rl(String namespace, String path)
+    public static Identifier id(String namespace, String path)
     {
-        return ResourceLocation.fromNamespaceAndPath(namespace, path);
+        return Identifier.fromNamespaceAndPath(namespace, path);
     }
 
     public static <T extends CustomPacketPayload> CustomPacketPayload.Type<T> payloadType(String path)
     {
-        return new CustomPacketPayload.Type<>(rl(path));
+        return new CustomPacketPayload.Type<>(id(path));
     }
 
     public static <T> ResourceKey<T> getKeyOrThrow(Holder<T> holder)

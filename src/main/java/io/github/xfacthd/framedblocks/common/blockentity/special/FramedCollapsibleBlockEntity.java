@@ -24,7 +24,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.model.data.ModelData;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements ICollapsibleBlockEntity
 {

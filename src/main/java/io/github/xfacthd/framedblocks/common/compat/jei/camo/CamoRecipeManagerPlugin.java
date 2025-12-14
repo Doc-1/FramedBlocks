@@ -9,7 +9,7 @@ import mezz.jei.api.recipe.advanced.ISimpleRecipeManagerPlugin;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -160,16 +160,16 @@ public final class CamoRecipeManagerPlugin implements ISimpleRecipeManagerPlugin
         Ingredient secondInputStacks = camoTwo.map(stack -> Ingredient.of(stack.getItem()), CamoCraftingHelper::makeDummyIngredient);
         JeiCamoApplicationRecipe recipe = new JeiCamoApplicationRecipe(frameIngredient, copyTool, camoOneIngredient, secondInputStacks, result);
 
-        ResourceLocation resourceLocation = generateId(frame, camoOne, camoTwo);
-        return new RecipeHolder<>(ResourceKey.create(Registries.RECIPE, resourceLocation), recipe);
+        Identifier Identifier = generateId(frame, camoOne, camoTwo);
+        return new RecipeHolder<>(ResourceKey.create(Registries.RECIPE, Identifier), recipe);
     }
 
-    private static ResourceLocation generateId(StackOrDummy frame, StackOrDummy camoOne, StackOrDummy camoTwo)
+    private static Identifier generateId(StackOrDummy frame, StackOrDummy camoOne, StackOrDummy camoTwo)
     {
         String frameId = mapStackOrDummyType(frame);
         String camoOneId = mapStackOrDummyType(camoOne);
         String camoTwoId = mapStackOrDummyType(camoTwo);
-        return Utils.rl("camo_application/jei_generated/" + frameId + "/" + camoOneId + "/" + camoTwoId);
+        return Utils.id("camo_application/jei_generated/" + frameId + "/" + camoOneId + "/" + camoTwoId);
     }
 
     private static String mapStackOrDummyType(StackOrDummy value)

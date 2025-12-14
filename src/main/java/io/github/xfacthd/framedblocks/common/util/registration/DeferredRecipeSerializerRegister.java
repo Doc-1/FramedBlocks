@@ -9,7 +9,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -25,7 +25,7 @@ public final class DeferredRecipeSerializerRegister extends DeferredRegister<Rec
     @Override
     @SuppressWarnings("unchecked")
     protected <I extends RecipeSerializer<?>> DeferredHolder<RecipeSerializer<?>, I> createHolder(
-            ResourceKey<? extends Registry<RecipeSerializer<?>>> registryKey, ResourceLocation key
+            ResourceKey<? extends Registry<RecipeSerializer<?>>> registryKey, Identifier key
     )
     {
         return (DeferredHolder<RecipeSerializer<?>, I>) DeferredRecipeSerializer.createRecipeSerializer(ResourceKey.create(registryKey, key));

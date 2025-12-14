@@ -5,11 +5,11 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelDebugName;
 import net.minecraft.client.resources.model.SpriteGetter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface TextureLookup
 {
-    TextureAtlasSprite get(ResourceLocation id);
+    TextureAtlasSprite get(Identifier id);
 
 
 

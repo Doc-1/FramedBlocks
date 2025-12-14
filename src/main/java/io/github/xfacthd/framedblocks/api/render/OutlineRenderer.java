@@ -9,9 +9,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Unit;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Quaternionfc;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provide custom outline rendering for blocks with non-axis-aligned edges such as slopes.

@@ -3,7 +3,7 @@ package io.github.xfacthd.framedblocks.common.data.conpreds.slab;
 import io.github.xfacthd.framedblocks.api.predicate.contex.ConnectionPredicate;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class CheckeredCubeSegmentConnectionPredicate implements ConnectionPredicate
 {

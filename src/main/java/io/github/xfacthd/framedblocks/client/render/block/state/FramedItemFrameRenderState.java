@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.state.MapRenderState;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.saveddata.maps.MapId;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class FramedItemFrameRenderState extends BlockEntityRenderState
 {

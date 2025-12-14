@@ -17,7 +17,7 @@ public final class NonTrivialCamoLootCondition implements LootItemCondition
     public static final MapCodec<NonTrivialCamoLootCondition> MAP_CODEC = MapCodec.unit(INSTANCE);
     public static final LootItemCondition.Builder BUILDER = () -> INSTANCE;
     private static final Holder<LootItemConditionType> TYPE = DeferredHolder.create(
-            Registries.LOOT_CONDITION_TYPE, Utils.rl("non_trivial_camo")
+            Registries.LOOT_CONDITION_TYPE, Utils.id("non_trivial_camo")
     );
 
     private NonTrivialCamoLootCondition() { }

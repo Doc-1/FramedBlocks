@@ -18,7 +18,7 @@ import org.lwjgl.glfw.GLFW;
 
 public final class KeyMappings
 {
-    public static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(Utils.rl("main"));
+    public static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(Utils.id("main"));
     public static final Lazy<KeyMapping> KEYMAPPING_UPDATE_CULLING = makeKeyMapping("update_cull", GLFW.GLFW_KEY_F9);
     public static final Lazy<KeyMapping> KEYMAPPING_WIPE_CACHE = makeKeyMapping("wipe_cache", -1);
 

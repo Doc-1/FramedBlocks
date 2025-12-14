@@ -21,7 +21,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.extensions.BlockModelPartExtension;
 import net.neoforged.neoforge.model.data.ModelData;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @SuppressWarnings("MethodMayBeStatic")
 public abstract class Geometry

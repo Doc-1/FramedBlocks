@@ -23,8 +23,8 @@ import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -69,7 +69,7 @@ public class FramedSignRenderer implements BlockEntityRenderer<FramedSignBlockEn
             FramedSignRenderState renderState,
             float partialTick,
             Vec3 cameraPos,
-            @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay
+            ModelFeatureRenderer.@Nullable CrumblingOverlay crumblingOverlay
     )
     {
         BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPos, crumblingOverlay);

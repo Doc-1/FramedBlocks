@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.api.camo.block;
 
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class SimpleBlockCamoContainer extends AbstractBlockCamoContainer<SimpleBlockCamoContainer>
 {

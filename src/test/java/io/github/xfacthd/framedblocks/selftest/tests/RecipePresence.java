@@ -40,7 +40,7 @@ public final class RecipePresence
         RecipeManager recipeManager = ((ServerLevel) level).recipeAccess();
         List<? extends Recipe<?>> fbRecipes = recipeManager.getRecipes()
                 .stream()
-                .filter(holder -> holder.id().location().getNamespace().equals(FramedConstants.MOD_ID))
+                .filter(holder -> holder.id().identifier().getNamespace().equals(FramedConstants.MOD_ID))
                 .map(RecipeHolder::value)
                 .toList();
 

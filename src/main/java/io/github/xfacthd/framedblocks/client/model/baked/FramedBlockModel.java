@@ -18,6 +18,7 @@ import io.github.xfacthd.framedblocks.api.model.geometry.Geometry;
 import io.github.xfacthd.framedblocks.api.model.geometry.PartConsumer;
 import io.github.xfacthd.framedblocks.api.model.geometry.QuadListModifier;
 import io.github.xfacthd.framedblocks.api.model.util.ModelUtils;
+import io.github.xfacthd.framedblocks.api.model.util.QuadUtils;
 import io.github.xfacthd.framedblocks.api.model.wrapping.DelegateBlockModelPart;
 import io.github.xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import io.github.xfacthd.framedblocks.api.predicate.contex.ConTexMode;
@@ -40,7 +41,7 @@ import net.minecraft.util.TriState;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,17 +55,15 @@ public final class FramedBlockModel extends AbstractFramedBlockModel
 {
     private static final FramedBlockData DEFAULT_DATA = new FramedBlockData(EmptyCamoContainer.EMPTY, false);
     private static final Direction[] DIRECTIONS = Direction.values();
-    private static final Direction[] DIRECTIONS_WITH_NULL = Arrays.copyOfRange(DIRECTIONS, 0, 7);
+    private static final @Nullable Direction[] DIRECTIONS_WITH_NULL = Arrays.copyOfRange(DIRECTIONS, 0, 7);
     private static final int FLAG_NO_CAMO_ATL_MODEL = 0b001;
     private static final int FLAG_NO_CAMO_REINFORCED = 0b010;
     private static final int FLAG_NO_CAMO_SOLID_BG = 0b100;
     private static final BlockCamoContent[] NO_CAMO_CONTENTS = makeNoCamoContents();
     private static final BlockStateModel[] NO_CAMO_MODELS = new BlockStateModel[NO_CAMO_CONTENTS.length];
-    private static final UnaryOperator<BakedQuad> EMISSIVE_PROCESSOR = quad ->
-            new BakedQuad(quad.vertices(), quad.tintIndex(), quad.direction(), quad.sprite(), quad.shade(), 15, quad.hasAmbientOcclusion());
-    private static final UnaryOperator<BakedQuad> FULL_EMISSIVE_PROCESSOR = quad ->
-            new BakedQuad(quad.vertices(), quad.tintIndex(), quad.direction(), quad.sprite(), false, 15, false);
-    private static final UnaryOperator<BakedQuad> TINT_INDEX_INVERTER = ModelUtils::invertTintIndex;
+    private static final UnaryOperator<BakedQuad> EMISSIVE_PROCESSOR = quad -> QuadUtils.setLightEmission(quad, 15);
+    private static final UnaryOperator<BakedQuad> FULL_EMISSIVE_PROCESSOR = quad -> QuadUtils.setLightEmission(quad, 15, false, false);
+    private static final UnaryOperator<BakedQuad> TINT_INDEX_INVERTER = QuadUtils::invertTintIndex;
 
     private final Map<QuadCacheKey, List<ExtendedBlockModelPart>> partCache = new ConcurrentHashMap<>();
     private final BlockState state;

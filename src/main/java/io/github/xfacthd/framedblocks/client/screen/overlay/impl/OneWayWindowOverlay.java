@@ -13,7 +13,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -23,8 +23,8 @@ import java.util.List;
 
 public final class OneWayWindowOverlay extends BlockInteractOverlay
 {
-    private static final ResourceLocation SYMBOL_TEXTURE = Utils.rl("textures/overlay/one_way_window_symbols.png");
-    private static final ResourceLocation EYE_TEXTURE = Utils.rl("minecraft", "textures/item/ender_eye.png");
+    private static final Identifier SYMBOL_TEXTURE = Utils.id("textures/overlay/one_way_window_symbols.png");
+    private static final Identifier EYE_TEXTURE = Utils.id("minecraft", "textures/item/ender_eye.png");
     private static final Texture TEXTURE_BG = new Texture(SYMBOL_TEXTURE, 0, 0, 22, 38, 37, 38);
     private static final Texture TEXTURE_CROSS = new Texture(SYMBOL_TEXTURE, 22, 0, 15, 15, 37, 38);
     private static final Texture TEXTURE_EYE = new Texture(EYE_TEXTURE, 0, 0, 16, 16, 16, 16);

@@ -27,9 +27,9 @@ import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.state.LevelRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -52,6 +52,7 @@ import net.neoforged.neoforge.client.event.ExtractLevelRenderStateEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.model.data.ModelData;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 import org.joml.Vector4f;
@@ -73,7 +74,7 @@ public final class GhostBlockRenderer
     private static final float SCALE = 1.0001F;
     private static final List<BlockModelPart> PART_SCRATCH_LIST = new ObjectArrayList<>();
     private static final ByteBufferBuilder BUFFER_BUILDER = new ByteBufferBuilder(RenderType.TRANSIENT_BUFFER_SIZE);
-    private static final ContextKey<List<GhostRenderState>> DATA_KEY = new ContextKey<>(Utils.rl("placement_preview"));
+    private static final ContextKey<List<GhostRenderState>> DATA_KEY = new ContextKey<>(Utils.id("placement_preview"));
 
     private static void onExtractRenderState(ExtractLevelRenderStateEvent event)
     {
@@ -257,7 +258,7 @@ public final class GhostBlockRenderer
         profiler.push("prepare");
         BlockPos pos = renderState.pos;
         BlockState state = renderState.state;
-        Vec3 offset = Vec3.atLowerCornerOf(pos).subtract(mc().gameRenderer.getMainCamera().getPosition());
+        Vec3 offset = Vec3.atLowerCornerOf(pos).subtract(mc().gameRenderer.getMainCamera().position());
         BlockAndTintGetter level = new SingleBlockFakeLevel(mc().level, pos, pos, state, null, renderState.modelData);
         profiler.pop(); //prepare
 
@@ -279,8 +280,6 @@ public final class GhostBlockRenderer
     private static void uploadAndDraw(GhostBlockRenderConfig config, MeshData meshData)
     {
         meshData.sortQuads(BUFFER_BUILDER, RenderSystem.getProjectionType().vertexSorting());
-
-        config.setupRenderState();
 
         RenderPipeline pipeline = config.getPipeline();
         VertexFormat vertexFormat = pipeline.getVertexFormat();
@@ -304,8 +303,7 @@ public final class GhostBlockRenderer
                         RenderSystem.getModelViewMatrix(),
                         new Vector4f(1.0F, 1.0F, 1.0F, 1.0F),
                         new Vector3f(),
-                        RenderSystem.getTextureMatrix(),
-                        RenderSystem.getShaderLineWidth()
+                        new Matrix4f()
                 );
 
         RenderTarget target = config.getRenderTarget();
@@ -327,8 +325,6 @@ public final class GhostBlockRenderer
 
             renderPass.drawIndexed(0, 0, meshData.drawState().indexCount(), 1);
         }
-
-        config.clearRenderState();
     }
 
     public static void init()

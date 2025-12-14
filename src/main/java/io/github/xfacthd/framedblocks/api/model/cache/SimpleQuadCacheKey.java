@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.api.model.cache;
 
 import io.github.xfacthd.framedblocks.api.camo.CamoContent;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @param camo       The {@link CamoContent} of the camo applied to the block

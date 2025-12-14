@@ -77,33 +77,33 @@ public final class FramedBlockTagProvider extends BlockTagsProvider
         );
 
         getOrCreateRawBuilder(Utils.FRAMEABLE)
-                .addOptionalElement(Utils.rl("create", "oak_window"))
-                .addOptionalElement(Utils.rl("create", "spruce_window"))
-                .addOptionalElement(Utils.rl("create", "birch_window"))
-                .addOptionalElement(Utils.rl("create", "jungle_window"))
-                .addOptionalElement(Utils.rl("create", "acacia_window"))
-                .addOptionalElement(Utils.rl("create", "dark_oak_window"))
-                .addOptionalElement(Utils.rl("create", "crimson_window"))
-                .addOptionalElement(Utils.rl("create", "warped_window"))
-                .addOptionalElement(Utils.rl("create", "ornate_iron_window"))
-                .addOptionalTag(Utils.rl("chipped", "glass"))
-                .addOptionalTag(Utils.rl("chipped", "white_stained_glass"))
-                .addOptionalTag(Utils.rl("chipped", "orange_stained_glass"))
-                .addOptionalTag(Utils.rl("chipped", "magenta_stained_glass"))
-                .addOptionalTag(Utils.rl("chipped", "light_blue_stained_glass"))
-                .addOptionalTag(Utils.rl("chipped", "yellow_stained_glass"))
-                .addOptionalTag(Utils.rl("chipped", "lime_stained_glass"))
-                .addOptionalTag(Utils.rl("chipped", "pink_stained_glass"))
-                .addOptionalTag(Utils.rl("chipped", "gray_stained_glass"))
-                .addOptionalTag(Utils.rl("chipped", "light_gray_stained_glass"))
-                .addOptionalTag(Utils.rl("chipped", "cyan_stained_glass"))
-                .addOptionalTag(Utils.rl("chipped", "purple_stained_glass"))
-                .addOptionalTag(Utils.rl("chipped", "blue_stained_glass"))
-                .addOptionalTag(Utils.rl("chipped", "brown_stained_glass"))
-                .addOptionalTag(Utils.rl("chipped", "green_stained_glass"))
-                .addOptionalTag(Utils.rl("chipped", "red_stained_glass"))
-                .addOptionalTag(Utils.rl("chipped", "black_stained_glass"))
-                .addOptionalTag(Utils.rl("c", "hardened_glass"));
+                .addOptionalElement(Utils.id("create", "oak_window"))
+                .addOptionalElement(Utils.id("create", "spruce_window"))
+                .addOptionalElement(Utils.id("create", "birch_window"))
+                .addOptionalElement(Utils.id("create", "jungle_window"))
+                .addOptionalElement(Utils.id("create", "acacia_window"))
+                .addOptionalElement(Utils.id("create", "dark_oak_window"))
+                .addOptionalElement(Utils.id("create", "crimson_window"))
+                .addOptionalElement(Utils.id("create", "warped_window"))
+                .addOptionalElement(Utils.id("create", "ornate_iron_window"))
+                .addOptionalTag(Utils.id("chipped", "glass"))
+                .addOptionalTag(Utils.id("chipped", "white_stained_glass"))
+                .addOptionalTag(Utils.id("chipped", "orange_stained_glass"))
+                .addOptionalTag(Utils.id("chipped", "magenta_stained_glass"))
+                .addOptionalTag(Utils.id("chipped", "light_blue_stained_glass"))
+                .addOptionalTag(Utils.id("chipped", "yellow_stained_glass"))
+                .addOptionalTag(Utils.id("chipped", "lime_stained_glass"))
+                .addOptionalTag(Utils.id("chipped", "pink_stained_glass"))
+                .addOptionalTag(Utils.id("chipped", "gray_stained_glass"))
+                .addOptionalTag(Utils.id("chipped", "light_gray_stained_glass"))
+                .addOptionalTag(Utils.id("chipped", "cyan_stained_glass"))
+                .addOptionalTag(Utils.id("chipped", "purple_stained_glass"))
+                .addOptionalTag(Utils.id("chipped", "blue_stained_glass"))
+                .addOptionalTag(Utils.id("chipped", "brown_stained_glass"))
+                .addOptionalTag(Utils.id("chipped", "green_stained_glass"))
+                .addOptionalTag(Utils.id("chipped", "red_stained_glass"))
+                .addOptionalTag(Utils.id("chipped", "black_stained_glass"))
+                .addOptionalTag(Utils.id("c", "hardened_glass"));
 
         tag(Utils.BLOCK_BLACKLIST).add(
                 Blocks.PISTON,
@@ -155,7 +155,7 @@ public final class FramedBlockTagProvider extends BlockTagsProvider
 
         tag(BlockTags.MINEABLE_WITH_PICKAXE).add(pickaxeBlocks.toArray(Block[]::new));
 
-        tag(BlockTags.create(Utils.rl("diagonalwindows", "non_diagonal_panes"))).add(FBContent.BLOCK_FRAMED_BARS.value());
+        tag(BlockTags.create(Utils.id("diagonalwindows", "non_diagonal_panes"))).add(FBContent.BLOCK_FRAMED_BARS.value());
     }
 
     @Override

@@ -6,7 +6,7 @@ import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
 import io.github.xfacthd.framedblocks.api.block.cache.StateCache;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.level.block.Block;
@@ -71,12 +71,10 @@ public final class StateCacheBuilder
         FramedBlocks.LOGGER.debug("Initialized {} unique caches for {} states in {}", counts[1], counts[0], watch);
     }
 
-
-
     public static final class CacheReloader implements ResourceManagerReloadListener
     {
         public static final CacheReloader INSTANCE = new CacheReloader();
-        public static final ResourceLocation LISTENER_ID = Utils.rl("state_caches");
+        public static final Identifier LISTENER_ID = Utils.id("state_caches");
 
         private CacheReloader() { }
 
@@ -86,8 +84,6 @@ public final class StateCacheBuilder
             initializeStateCaches();
         }
     }
-
-
 
     private StateCacheBuilder() { }
 }

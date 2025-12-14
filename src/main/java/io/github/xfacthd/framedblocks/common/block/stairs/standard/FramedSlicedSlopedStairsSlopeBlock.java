@@ -15,7 +15,7 @@ import io.github.xfacthd.framedblocks.common.data.property.SlopeType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class FramedSlicedSlopedStairsSlopeBlock extends FramedSlopedStairsBlock implements IFramedDoubleBlockInternal
 {

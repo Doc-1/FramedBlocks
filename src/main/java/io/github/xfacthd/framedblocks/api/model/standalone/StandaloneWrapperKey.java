@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.api.model.standalone;
 
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 
@@ -10,10 +10,10 @@ public final class StandaloneWrapperKey<T extends CachingModel>
     public static final String STANDALONE_DEFINITION_FOLDER = "specialstates";
 
     private final Holder<Block> block;
-    private final ResourceLocation definitionFile;
+    private final Identifier definitionFile;
     private final StandaloneModelKey<T> modelKey;
 
-    public StandaloneWrapperKey(Holder<Block> block, ResourceLocation definitionFile)
+    public StandaloneWrapperKey(Holder<Block> block, Identifier definitionFile)
     {
         this.block = block;
         this.definitionFile = definitionFile;
@@ -25,7 +25,7 @@ public final class StandaloneWrapperKey<T extends CachingModel>
         return block;
     }
 
-    public ResourceLocation definitionFile()
+    public Identifier definitionFile()
     {
         return definitionFile;
     }

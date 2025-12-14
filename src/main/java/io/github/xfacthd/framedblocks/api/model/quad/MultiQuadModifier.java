@@ -69,16 +69,6 @@ public final class MultiQuadModifier
     }
 
     /**
-     * Re-assemble the quads of both wrapped {@link QuadModifier}s, modifying the vertex data of the input quad directly.
-     * @see QuadModifier#modifyInPlace()
-     */
-    public void modifyInPlace()
-    {
-        modOne.modifyInPlace();
-        modTwo.modifyInPlace();
-    }
-
-    /**
      * Clone the wrapped {@link QuadModifier}s to continue modifying their source quads in multiple different ways without
      * having to repeat the equivalent modification steps
      * @return a new {@code MultiQuadModifier} with a deep-copy of the current data or an empty,

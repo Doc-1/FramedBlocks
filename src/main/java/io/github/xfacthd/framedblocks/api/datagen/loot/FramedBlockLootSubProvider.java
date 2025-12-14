@@ -4,7 +4,7 @@ import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
 import io.github.xfacthd.framedblocks.api.datagen.loot.objects.NonTrivialCamoLootCondition;
 import io.github.xfacthd.framedblocks.api.datagen.loot.objects.SplitCamoLootFunction;
 import io.github.xfacthd.framedblocks.api.util.Utils;
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;

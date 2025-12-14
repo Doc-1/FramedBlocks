@@ -10,7 +10,7 @@ import io.github.xfacthd.framedblocks.api.util.ConfigView;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

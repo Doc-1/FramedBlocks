@@ -13,12 +13,12 @@ import net.minecraft.client.renderer.item.ItemModels;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderers;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class TankItemModel<T> implements ItemModel
 {
@@ -63,11 +63,9 @@ public final class TankItemModel<T> implements ItemModel
         }
     }
 
-
-
     public record Unbaked(FramedBlockItemModel.Unbaked base, SpecialModelRenderer.Unbaked specialModel) implements ItemModel.Unbaked
     {
-        public static final ResourceLocation ID = Utils.rl("tank");
+        public static final Identifier ID = Utils.id("tank");
         public static final MapCodec<TankItemModel.Unbaked> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
                 ItemModels.CODEC.fieldOf("base").flatXmap(TankItemModel.Unbaked::validateBaseModel, DataResult::success).forGetter(TankItemModel.Unbaked::base),
                 SpecialModelRenderers.CODEC.fieldOf("renderer").forGetter(TankItemModel.Unbaked::specialModel)

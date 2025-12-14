@@ -30,7 +30,7 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
@@ -44,9 +44,8 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
-import org.lwjgl.glfw.GLFW;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +69,8 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
     public static final String TOOLTIP_USE_INTERMEDIATE = Utils.translationKey("tooltip", "framing_saw.use_intermediate");
     public static final Component MSG_HINT_SEARCH = Utils.translate("msg", "framing_saw.search")
             .withStyle(style -> style.withShadowColor(ARGB.scaleRGB(0xFFFFFFFF, .25F)));
-    private static final ResourceLocation BACKGROUND = Utils.rl("textures/gui/framing_saw.png");
-    public static final ResourceLocation WARNING_ICON = Utils.rl("neoforge", "textures/gui/experimental_warning.png");
+    private static final Identifier BACKGROUND = Utils.id("textures/gui/framing_saw.png");
+    public static final Identifier WARNING_ICON = Utils.id("neoforge", "textures/gui/experimental_warning.png");
     private static final int IMAGE_WIDTH = 256;
     private static final int IMAGE_HEIGHT = 233;
     private static final int RECIPES_X = 48;
@@ -114,7 +113,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
         this.imageWidth = IMAGE_WIDTH;
         this.imageHeight = IMAGE_HEIGHT;
         this.filteredRecipes.addAll(menu.getRecipes());
-        Level level = Objects.requireNonNull(Minecraft.getInstance().level);
+        Level level = Objects.requireNonNull(minecraft.level);
         this.additiveResolver = new CachingIngredientResolver.Multi(level, FramingSawRecipe.MAX_ADDITIVE_COUNT);
     }
 
@@ -181,7 +180,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
         }
     }
 
-    protected ResourceLocation getBackground()
+    protected Identifier getBackground()
     {
         return BACKGROUND;
     }
@@ -292,7 +291,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
         }
     }
 
-    protected void renderItemTooltip(GuiGraphics graphics, int mouseX, int mouseY, ItemStack stack, @Nullable FramingSawMenu.FramedRecipeHolder recipeHolder)
+    protected void renderItemTooltip(GuiGraphics graphics, int mouseX, int mouseY, ItemStack stack, FramingSawMenu.@Nullable FramedRecipeHolder recipeHolder)
     {
         //noinspection ConstantConditions
         List<Component> components = new ArrayList<>(getTooltipFromItem(minecraft, stack));
@@ -455,7 +454,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
         }
         else
         {
-            Component keyName = InputConstants.getKey(new KeyEvent(GLFW.GLFW_KEY_LEFT_SHIFT, -1, 0)).getDisplayName();
+            Component keyName = InputConstants.getKey(new KeyEvent(InputConstants.KEY_LSHIFT, -1, 0)).getDisplayName();
             components.add(Component.translatable(
                     TOOLTIP_PRESS_TO_SHOW,
                     Component.literal("").append(keyName).withStyle(ChatFormatting.GOLD)
@@ -581,7 +580,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
             //noinspection ConstantConditions
             if (menu.clickMenuButton(minecraft.player, idx))
             {
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0F));
+                minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0F));
                 ClientPacketDistributor.sendToServer(new ServerboundSelectFramingSawRecipePayload(menu.containerId, idx));
                 return true;
             }

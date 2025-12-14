@@ -2,48 +2,34 @@ package io.github.xfacthd.framedblocks.client.model.overlaygen;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import net.neoforged.neoforge.client.model.quad.BakedNormals;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
-import java.util.Arrays;
-
-record OverlayCacheKey(Direction face, int[] keyData, TextureAtlasSprite sprite)
+record OverlayCacheKey(
+        Direction face,
+        Vector3fc pos0,
+        Vector3fc pos1,
+        Vector3fc pos2,
+        Vector3fc pos3,
+        BakedNormals normals,
+        TextureAtlasSprite sprite
+)
 {
     public void pos(int vert, Vector3f out)
     {
-        int offset = vert * 4;
-        out.set(
-                Float.intBitsToFloat(keyData[offset]),
-                Float.intBitsToFloat(keyData[offset + 1]),
-                Float.intBitsToFloat(keyData[offset + 2])
-        );
+        out.set(switch (vert)
+        {
+            case 0 -> pos0;
+            case 1 -> pos1;
+            case 2 -> pos2;
+            case 3 -> pos3;
+            default -> throw new IndexOutOfBoundsException(vert);
+        });
     }
 
     public void normal(int vert, Vector3f out)
     {
-        int offset = vert * 4 + 3;
-        int packedNormal = keyData[offset];
-        out.set(
-                ((byte) (packedNormal & 0xFF)) / 127F,
-                ((byte) ((packedNormal >> 8) & 0xFF)) / 127F,
-                ((byte) ((packedNormal >> 16) & 0xFF)) / 127F
-        );
-    }
-
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
-        OverlayCacheKey key = (OverlayCacheKey) o;
-        return face == key.face && Arrays.equals(keyData, key.keyData) && sprite == key.sprite;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int result = face.hashCode();
-        result = 31 * result + Arrays.hashCode(keyData);
-        result = 31 * result + sprite.hashCode();
-        return result;
+        BakedNormals.unpack(normals.normal(vert), out);
     }
 }

@@ -16,7 +16,7 @@ import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 
@@ -45,7 +45,7 @@ public final class FramedItemModelProvider extends AbstractFramedItemModelProvid
         itemModels.generateFlatItem(FBContent.ITEM_PHANTOM_PASTE.value(), FLAT_CUTOUT);
         itemModels.generateFlatItem(FBContent.ITEM_GLOW_PASTE.value(), FLAT_CUTOUT);
 
-        ResourceLocation patternTexture = Utils.rl(AppliedEnergisticsCompat.MOD_ID, "item/crafting_pattern");
+        Identifier patternTexture = Utils.id(AppliedEnergisticsCompat.MOD_ID, "item/crafting_pattern");
         Item patternItem = Objects.requireNonNull(GeneratorHandler.framingSawPattern).asItem();
         itemModels.itemModelOutput.accept(patternItem, ItemModelUtils.plainModel(
                 ModelTemplates.FLAT_ITEM

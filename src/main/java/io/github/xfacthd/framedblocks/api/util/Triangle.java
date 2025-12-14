@@ -2,7 +2,7 @@ package io.github.xfacthd.framedblocks.api.util;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public record Triangle(Vec3 vertex0, Vec3 vertex1, Vec3 vertex2, Vec3 edge1, Vec3 edge2)
 {

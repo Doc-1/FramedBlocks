@@ -252,8 +252,6 @@
   "config.framedblocks.client.copycatStyleMode.tooltip": "Controls the visibility of the Copycat Style overlay\n- If set to HIDDEN, the Copycat Style overlay will be completely hidden.\n- If set to ICON, the Copycat Style overlay will only show an icon.\n- If set to DETAILED_TOGGLE, the Copycat Style overlay will show detailed info while crouching.\n- If set to DETAILED_ALWAYS, the Copycat Style overlay will always show detailed info.\nAllowed Values: HIDDEN, ICON, DETAILED_TOGGLE, DETAILED_ALWAYS",
   "config.framedblocks.client.detailedCulling": "Detailed culling",
   "config.framedblocks.client.detailedCulling.tooltip": "If false only full block faces of framed blocks will be culled, if true all outer faces of framed blocks can be culled",
-  "config.framedblocks.client.discreteUVSteps": "Use discrete UV steps",
-  "config.framedblocks.client.discreteUVSteps.tooltip": "If true, the UV remapping will use discrete steps to avoid floating point errors",
   "config.framedblocks.client.fancyHitboxes": "Fancy hitboxes",
   "config.framedblocks.client.fancyHitboxes.tooltip": "Whether certain framed blocks should show fancy hitboxes",
   "config.framedblocks.client.forceAoOnGlowingBlocks": "Force ambient occlusion on glowing framed blocks",

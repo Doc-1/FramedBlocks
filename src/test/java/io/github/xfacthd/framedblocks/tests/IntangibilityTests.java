@@ -5,7 +5,7 @@ import io.github.xfacthd.framedblocks.api.block.IBlockType;
 import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
 import io.github.xfacthd.framedblocks.api.util.FramedConstants;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -58,7 +58,7 @@ public final class IntangibilityTests
 
     private static String getTestName(BlockState state)
     {
-        ResourceLocation regName = BuiltInRegistries.BLOCK.getKey(state.getBlock());
+        Identifier regName = BuiltInRegistries.BLOCK.getKey(state.getBlock());
         return String.format("intangibilitytests.test_%s", regName.getPath());
     }
 

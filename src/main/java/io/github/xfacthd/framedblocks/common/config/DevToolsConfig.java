@@ -7,7 +7,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -26,18 +26,12 @@ public final class DevToolsConfig
     private static final String KEY_STATE_MERGER_DEBUG_FILTER = "stateMergerDebugFilter";
     private static final String KEY_OCCLUSION_SHAPE_DEBUG = "occlusionShapeDebug";
 
-    @Nullable
-    public static final ModConfigSpec.BooleanValue DOUBLE_BLOCK_PART_DEBUG_VALUE;
-    @Nullable
-    public static final ModConfigSpec.BooleanValue CONNECTION_DEBUG_VALUE;
-    @Nullable
-    public static final ModConfigSpec.BooleanValue QUAD_WINDING_DEBUG_VALUE;
-    @Nullable
-    public static final ModConfigSpec.BooleanValue STATE_MERGER_DEBUG_VALUE;
-    @Nullable
-    public static final ModConfigSpec.ConfigValue<String> STATE_MERGER_DEBUG_FILTER_VALUE;
-    @Nullable
-    public static final ModConfigSpec.BooleanValue OCCLUSION_SHAPE_DEBUG_VALUE;
+    public static final ModConfigSpec.@Nullable BooleanValue DOUBLE_BLOCK_PART_DEBUG_VALUE;
+    public static final ModConfigSpec.@Nullable BooleanValue CONNECTION_DEBUG_VALUE;
+    public static final ModConfigSpec.@Nullable BooleanValue QUAD_WINDING_DEBUG_VALUE;
+    public static final ModConfigSpec.@Nullable BooleanValue STATE_MERGER_DEBUG_VALUE;
+    public static final ModConfigSpec.@Nullable ConfigValue<String> STATE_MERGER_DEBUG_FILTER_VALUE;
+    public static final ModConfigSpec.@Nullable BooleanValue OCCLUSION_SHAPE_DEBUG_VALUE;
 
     private static boolean doubleBlockPartDebug = false;
     private static boolean connectionDebug = false;

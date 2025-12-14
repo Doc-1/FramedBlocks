@@ -22,7 +22,6 @@ public final class ClientConfig
     private static final String KEY_GHOST_RENDER_OPACITY = "ghostRenderOpacity";
     private static final String KEY_FANCY_HITBOXES = "fancyHitboxes";
     private static final String KEY_DETAILED_CULLING = "detailedCulling";
-    private static final String KEY_USE_DISCRETE_UV_STEPS = "discreteUVSteps";
     private static final String KEY_CON_TEX_MODE = "conTexMode";
     private static final String KEY_CAMO_MESSAGE_VERBOSITY = "camoMessageVerbosity";
     private static final String KEY_FORCE_AO_ON_GLOWING_BLOCKS = "forceAoOnGlowingBlocks";
@@ -61,7 +60,6 @@ public final class ClientConfig
     public static final ModConfigSpec.IntValue GHOST_RENDER_OPACITY_VALUE;
     public static final ModConfigSpec.BooleanValue FANCY_HITBOXES_VALUE;
     public static final ModConfigSpec.BooleanValue DETAILED_CULLING_VALUE;
-    public static final ModConfigSpec.BooleanValue USE_DISCRETE_UV_STEPS_VALUE;
     public static final ModConfigSpec.EnumValue<ConTexMode> CON_TEX_MODE_VALUE;
     public static final ModConfigSpec.EnumValue<CamoMessageVerbosity> CAMO_MESSAGE_VERBOSITY_VALUE;
     public static final ModConfigSpec.BooleanValue FORCE_AO_ON_GLOWING_BLOCKS_VALUE;
@@ -92,7 +90,6 @@ public final class ClientConfig
     private static int ghostRenderOpacity = 0;
     private static boolean fancyHitboxes = false;
     private static boolean detailedCulling = false;
-    private static boolean useDiscreteUVSteps = false;
     private static ConTexMode conTexMode = ConTexMode.DETAILED;
     private static CamoMessageVerbosity camoMessageVerbosity = CamoMessageVerbosity.DEFAULT;
     private static boolean forceAoOnGlowingBlocks = false;
@@ -151,10 +148,6 @@ public final class ClientConfig
                 .translation(translate(KEY_DETAILED_CULLING))
                 .worldRestart()
                 .define(KEY_DETAILED_CULLING, true);
-        USE_DISCRETE_UV_STEPS_VALUE = builder
-                .comment("If true, the UV remapping will use discrete steps to avoid floating point errors")
-                .translation(translate(KEY_USE_DISCRETE_UV_STEPS))
-                .define(KEY_USE_DISCRETE_UV_STEPS, true);
         CON_TEX_MODE_VALUE = builder
                 .comment(
                         "Configures how detailed connected textures are supported.",
@@ -319,7 +312,6 @@ public final class ClientConfig
             ghostRenderOpacity = GHOST_RENDER_OPACITY_VALUE.get();
             fancyHitboxes = FANCY_HITBOXES_VALUE.get();
             detailedCulling = DETAILED_CULLING_VALUE.get();
-            useDiscreteUVSteps = USE_DISCRETE_UV_STEPS_VALUE.get();
             conTexMode = CON_TEX_MODE_VALUE.get();
             camoMessageVerbosity = CAMO_MESSAGE_VERBOSITY_VALUE.get();
             forceAoOnGlowingBlocks = FORCE_AO_ON_GLOWING_BLOCKS_VALUE.get();
@@ -381,12 +373,6 @@ public final class ClientConfig
         public boolean detailedCullingEnabled()
         {
             return detailedCulling;
-        }
-
-        @Override
-        public boolean useDiscreteUVSteps()
-        {
-            return useDiscreteUVSteps;
         }
 
         @Override

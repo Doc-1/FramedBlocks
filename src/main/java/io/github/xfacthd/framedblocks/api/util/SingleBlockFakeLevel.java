@@ -13,7 +13,7 @@ import net.minecraft.world.level.lighting.LevelLightEngine;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.model.data.ModelData;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @SuppressWarnings("ConstantConditions")
 public record SingleBlockFakeLevel(Level realLevel, BlockPos realPos, BlockPos fakePos, BlockState state, @Nullable BlockEntity blockEntity, ModelData modelData) implements BlockAndTintGetter

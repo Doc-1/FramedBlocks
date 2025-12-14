@@ -4,14 +4,14 @@ import io.github.xfacthd.framedblocks.FramedBlocks;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.mehvahdjukaar.amendments.Amendments;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.LevelReader;
 import net.neoforged.fml.ModList;
 
 public final class AmendmentsCompat
 {
     public static final String MOD_ID = "amendments";
-    public static final ResourceLocation HANGING_MODEL_LOCATION = Utils.rl(MOD_ID, "block/hanging_flower_pot_rope");
+    public static final Identifier HANGING_MODEL_LOCATION = Utils.id(MOD_ID, "block/hanging_flower_pot_rope");
     private static boolean loaded = false;
 
     public static void init()

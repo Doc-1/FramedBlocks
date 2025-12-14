@@ -1,4 +1,5 @@
-package io.github.xfacthd.framedblocks.common.compat.jei;
+// FIXME: RL->ID
+/*package io.github.xfacthd.framedblocks.common.compat.jei;
 
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.client.screen.FramingSawScreen;
@@ -25,21 +26,21 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
 import mezz.jei.api.runtime.IIngredientManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.client.event.RecipesReceivedEvent;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
 @JeiPlugin
 public final class FramedJeiPlugin implements IModPlugin
 {
-    private static final ResourceLocation ID = Utils.rl("jei_plugin");
+    private static final Identifier ID = Utils.id("jei_plugin");
     static final IRecipeType<FramingSawRecipe> FRAMING_SAW_RECIPE_TYPE = IRecipeType.create(
-            Utils.rl("framing_saw"), FramingSawRecipe.class
+            Utils.id("framing_saw"), FramingSawRecipe.class
     );
     @Nullable
     private static Boolean enableCamoCraftingDisplay;
@@ -166,7 +167,7 @@ public final class FramedJeiPlugin implements IModPlugin
     }
 
     @Override
-    public ResourceLocation getPluginUid()
+    public Identifier getPluginUid()
     {
         return ID;
     }
@@ -185,3 +186,4 @@ public final class FramedJeiPlugin implements IModPlugin
         getCamoCraftingHelper().captureRecipe(camoRecipe);
     }
 }
+*/

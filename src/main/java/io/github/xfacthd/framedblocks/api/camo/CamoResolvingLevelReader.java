@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.attribute.EnvironmentAttributeReader;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.level.LevelReader;
@@ -25,7 +26,7 @@ import net.minecraft.world.level.lighting.LevelLightEngine;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -170,5 +171,11 @@ final class CamoResolvingLevelReader implements LevelReader
     public List<VoxelShape> getEntityCollisions(@Nullable Entity entity, AABB box)
     {
         return wrapped.getEntityCollisions(entity, box);
+    }
+
+    @Override
+    public EnvironmentAttributeReader environmentAttributes()
+    {
+        return wrapped.environmentAttributes();
     }
 }

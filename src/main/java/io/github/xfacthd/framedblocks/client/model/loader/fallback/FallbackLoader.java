@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.MissingBlockModel;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.FileToIdConverter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.util.GsonHelper;
 import net.neoforged.neoforge.client.model.UnbakedModelLoader;
@@ -25,7 +25,7 @@ import java.util.List;
 
 public final class FallbackLoader implements UnbakedModelLoader<UnbakedModel>
 {
-    public static final ResourceLocation ID = Utils.rl("fallback");
+    public static final Identifier ID = Utils.id("fallback");
     private static final FileToIdConverter MODEL_LISTER = FileToIdConverter.json("models");
 
     @Override
@@ -42,7 +42,7 @@ public final class FallbackLoader implements UnbakedModelLoader<UnbakedModel>
             return ctx.deserialize(json, BlockModel.class);
         }
 
-        ResourceLocation fallback = ResourceLocation.parse(GsonHelper.getAsString(json, "fallback"));
+        Identifier fallback = Identifier.parse(GsonHelper.getAsString(json, "fallback"));
         // Missing model must be special-cased as it's a "synthetic" model and cannot be loaded from a file
         if (fallback.equals(MissingBlockModel.LOCATION))
         {

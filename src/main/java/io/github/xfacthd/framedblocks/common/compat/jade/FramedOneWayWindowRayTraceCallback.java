@@ -6,7 +6,7 @@ import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import snownee.jade.api.Accessor;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IWailaClientRegistration;

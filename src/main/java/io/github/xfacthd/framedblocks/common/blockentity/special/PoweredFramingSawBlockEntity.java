@@ -16,7 +16,7 @@ import io.github.xfacthd.framedblocks.common.menu.FramingSawMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -31,8 +31,8 @@ import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -377,7 +377,7 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
         Optional<String> optRecipe = valueInput.getString("recipe");
         if (optRecipe.isPresent())
         {
-            ResourceLocation recipe = ResourceLocation.tryParse(optRecipe.get());
+            Identifier recipe = Identifier.tryParse(optRecipe.get());
             selectedRecipeId = recipe != null ? ResourceKey.create(Registries.RECIPE, recipe) : null;
         }
         itemHandler.deserialize(valueInput.childOrEmpty("inventory"));

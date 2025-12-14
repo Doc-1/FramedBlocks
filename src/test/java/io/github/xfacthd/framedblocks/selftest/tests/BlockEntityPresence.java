@@ -7,7 +7,7 @@ import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.selftest.SelfTestReporter;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
@@ -40,8 +40,8 @@ public final class BlockEntityPresence
             {
                 String typesString = types.stream()
                         .map(Utils::getKeyOrThrow)
-                        .map(ResourceKey::location)
-                        .map(ResourceLocation::toString)
+                        .map(ResourceKey::identifier)
+                        .map(Identifier::toString)
                         .collect(Collectors.joining(", "));
                 reporter.warn(
                         "Block '{}' is valid for multiple BE types: [{}] (double: {}, special: {})",

@@ -2,7 +2,7 @@ package io.github.xfacthd.framedblocks.api.util.registration;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -16,7 +16,7 @@ public final class DeferredRecipeSerializer<T extends Recipe<?>> extends Deferre
 
 
 
-    public static <T extends Recipe<?>> DeferredRecipeSerializer<T> createRecipeSerializer(ResourceLocation name)
+    public static <T extends Recipe<?>> DeferredRecipeSerializer<T> createRecipeSerializer(Identifier name)
     {
         return createRecipeSerializer(ResourceKey.create(Registries.RECIPE_SERIALIZER, name));
     }

@@ -6,7 +6,7 @@ import io.github.xfacthd.framedblocks.common.blockentity.special.FramedDoorBlock
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class FramedDoorBlockItemRequirement implements SchematicRequirementRegistries.BlockRequirement
 {

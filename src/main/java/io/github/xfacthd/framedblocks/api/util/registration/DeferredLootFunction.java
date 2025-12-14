@@ -2,7 +2,7 @@ package io.github.xfacthd.framedblocks.api.util.registration;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -14,7 +14,7 @@ public final class DeferredLootFunction<T extends LootItemFunction> extends Defe
         super(key);
     }
 
-    public static <T extends LootItemFunction> DeferredLootFunction<T> createLootFunction(ResourceLocation name)
+    public static <T extends LootItemFunction> DeferredLootFunction<T> createLootFunction(Identifier name)
     {
         return createLootFunction(ResourceKey.create(Registries.LOOT_FUNCTION_TYPE, name));
     }

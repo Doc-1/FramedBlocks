@@ -9,7 +9,7 @@ import io.github.xfacthd.framedblocks.common.config.ClientConfig;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,8 +17,8 @@ import net.neoforged.neoforge.model.data.ModelData;
 
 public class FramedLargeStoneButtonGeometry extends FramedLargeButtonGeometry
 {
-    private static final ResourceLocation FRAME_LOCATION_FRONT = Utils.rl("block/large_stone_button_frame_front");
-    private static final ResourceLocation FRAME_LOCATION_SIDE = Utils.rl("block/large_stone_button_frame_side");
+    private static final Identifier FRAME_LOCATION_FRONT = Utils.id("block/large_stone_button_frame_front");
+    private static final Identifier FRAME_LOCATION_SIDE = Utils.id("block/large_stone_button_frame_side");
 
     private final BlockState state;
     private final TextureAtlasSprite frameSpriteFront;

@@ -1,11 +1,11 @@
 package io.github.xfacthd.framedblocks.codegen.impl.skippreds;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
 import io.github.xfacthd.framedblocks.codegen.impl.skippreds.SkipPredicateGeneratorData.Property;
 import io.github.xfacthd.framedblocks.codegen.impl.skippreds.SkipPredicateGeneratorData.SpecialPropLookup;
 import io.github.xfacthd.framedblocks.codegen.impl.skippreds.SkipPredicateGeneratorData.TestDir;
 import io.github.xfacthd.framedblocks.codegen.impl.skippreds.SkipPredicateGeneratorData.Type;
+import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -131,7 +131,7 @@ public final class SkipPredicateGeneratorImpl
 
         Path rootPath = Path.of("./").resolve(TARGET_PATH);
 
-        Map<String, String> predicateClazzes = new HashMap<>();
+        Map<String, @Nullable String> predicateClazzes = new HashMap<>();
         Map<String, Path> dirPaths = new HashMap<>();
 
         if (sourceType != null)

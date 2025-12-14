@@ -10,9 +10,9 @@ import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @SuppressWarnings({ "unused", "UnusedReturnValue" })
 public final class FramedItemModelBuilder
@@ -21,7 +21,7 @@ public final class FramedItemModelBuilder
     private BlockItemModelProvider modelProvider = BlockItemModelProvider.DEFAULT;
     @Nullable
     private DynamicItemTintProvider tintProvider = null;
-    private ResourceLocation itemBaseModel = AbstractFramedBlockModelProvider.FRAMED_CUBE_MODEL;
+    private Identifier itemBaseModel = AbstractFramedBlockModelProvider.FRAMED_CUBE_MODEL;
 
     FramedItemModelBuilder(Holder<Block> block)
     {
@@ -61,7 +61,7 @@ public final class FramedItemModelBuilder
     /**
      * Specify the model from which the {@link ItemTransforms} should be pulled
      */
-    public FramedItemModelBuilder itemBaseModel(ResourceLocation itemBaseModel)
+    public FramedItemModelBuilder itemBaseModel(Identifier itemBaseModel)
     {
         this.itemBaseModel = itemBaseModel;
         return this;

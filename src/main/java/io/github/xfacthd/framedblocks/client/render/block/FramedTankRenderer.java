@@ -2,30 +2,30 @@ package io.github.xfacthd.framedblocks.client.render.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
+import io.github.xfacthd.framedblocks.api.render.RenderUtils;
 import io.github.xfacthd.framedblocks.client.render.block.state.FramedTankRenderState;
 import io.github.xfacthd.framedblocks.common.blockentity.special.FramedTankBlockEntity;
 import io.github.xfacthd.framedblocks.common.capability.fluid.TankFluidResourceHandler;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.RenderTypeHelper;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.textures.FluidSpriteCache;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class FramedTankRenderer implements BlockEntityRenderer<FramedTankBlockEntity, FramedTankRenderState>
 {
@@ -43,8 +43,8 @@ public class FramedTankRenderer implements BlockEntityRenderer<FramedTankBlockEn
 
         ChunkSectionLayer chunkLayer = renderState.chunkLayer;
         int light = renderState.lightCoords;
-        ResourceLocation stillTex = renderState.stillTex;
-        ResourceLocation flowTex = renderState.flowTex;
+        Identifier stillTex = renderState.stillTex;
+        Identifier flowTex = renderState.flowTex;
         int tint = renderState.tint;
         renderContents(poseStack, submitNodeCollector, chunkLayer, light, fluidAmount, stillTex, flowTex, tint);
     }
@@ -61,7 +61,7 @@ public class FramedTankRenderer implements BlockEntityRenderer<FramedTankBlockEn
             FramedTankRenderState renderState,
             float partialTick,
             Vec3 cameraPos,
-            @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay
+            ModelFeatureRenderer.@Nullable CrumblingOverlay crumblingOverlay
     )
     {
         BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPos, crumblingOverlay);
@@ -86,15 +86,15 @@ public class FramedTankRenderer implements BlockEntityRenderer<FramedTankBlockEn
             ChunkSectionLayer chunkLayer,
             int light,
             int fluidAmount,
-            ResourceLocation stillTex,
-            ResourceLocation flowTex,
+            Identifier stillTex,
+            Identifier flowTex,
             int tint
     )
     {
         float height = Mth.clamp(fluidAmount / (float) TankFluidResourceHandler.CAPACITY, OFFSET, 1F - OFFSET);
         boolean sameTex = stillTex.equals(flowTex);
 
-        RenderType bufferType = RenderTypeHelper.getEntityRenderType(chunkLayer);
+        RenderType bufferType = RenderUtils.getEntityRenderType(chunkLayer);
         submitNodeCollector.submitCustomGeometry(poseStack, bufferType, (pose, consumer) ->
         {
             TextureAtlasSprite sprite = FluidSpriteCache.getSprite(flowTex);

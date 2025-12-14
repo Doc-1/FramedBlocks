@@ -1,4 +1,5 @@
-package io.github.xfacthd.framedblocks.common.compat.emi;
+// FIXME: RL->ID
+/*package io.github.xfacthd.framedblocks.common.compat.emi;
 
 import com.google.common.base.Stopwatch;
 import dev.emi.emi.api.EmiEntrypoint;
@@ -18,7 +19,7 @@ import io.github.xfacthd.framedblocks.common.config.ClientConfig;
 import io.github.xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
 import io.github.xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCache;
 import io.github.xfacthd.framedblocks.common.crafting.saw.FramingSawRecipeCalculation;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -31,7 +32,7 @@ import java.util.Set;
 @EmiEntrypoint
 public final class FramedEmiPlugin implements EmiPlugin
 {
-    public static final ResourceLocation SAW_ID = Utils.rl("framing_saw");
+    public static final Identifier SAW_ID = Utils.id("framing_saw");
     private static final Lazy<EmiStack> SAW_WORKSTATION = Lazy.of(() -> EmiStack.of(FBContent.BLOCK_FRAMING_SAW.value()));
     public static final Lazy<EmiRecipeCategory> SAW_CATEGORY = Lazy.of(() -> new FramingSawRecipeCategory(SAW_WORKSTATION.get(), SAW_WORKSTATION.get()));
 
@@ -109,3 +110,4 @@ public final class FramedEmiPlugin implements EmiPlugin
         return FramingSawRecipeCache.sortRecipes(resultOne, resultTwo, sawRecipeOne.getResultType(), sawRecipeTwo.getResultType());
     }
 }
+*/

@@ -8,7 +8,7 @@ import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.config.ClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
@@ -21,7 +21,7 @@ public final class CamoRotationOverlay extends BlockInteractOverlay
     public static final Component ROTATEABLE_FALSE = Utils.translate("tooltip", "camo_rotation.false");
     public static final Component ROTATEABLE_TRUE = Utils.translate("tooltip", "camo_rotation.true");
 
-    private static final ResourceLocation SYMBOL_TEXTURE = Utils.rl("textures/overlay/camo_rotation_symbols.png");
+    private static final Identifier SYMBOL_TEXTURE = Utils.id("textures/overlay/camo_rotation_symbols.png");
     private static final Texture TEXTURE_FALSE = new Texture(SYMBOL_TEXTURE, 0, 0, 22, 22, 44, 22);
     private static final Texture TEXTURE_TRUE = new Texture(SYMBOL_TEXTURE, 22, 0, 22, 22, 44, 22);
 

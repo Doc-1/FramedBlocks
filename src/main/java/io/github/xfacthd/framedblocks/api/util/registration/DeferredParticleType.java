@@ -4,7 +4,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 public final class DeferredParticleType<T extends ParticleOptions> extends DeferredHolder<ParticleType<?>, ParticleType<T>>
@@ -14,7 +14,7 @@ public final class DeferredParticleType<T extends ParticleOptions> extends Defer
         super(key);
     }
 
-    public static <T extends ParticleOptions> DeferredParticleType<T> createParticleType(ResourceLocation name)
+    public static <T extends ParticleOptions> DeferredParticleType<T> createParticleType(Identifier name)
     {
         return createParticleType(ResourceKey.create(Registries.PARTICLE_TYPE, name));
     }

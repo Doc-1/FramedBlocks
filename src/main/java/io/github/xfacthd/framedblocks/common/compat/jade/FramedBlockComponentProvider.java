@@ -4,8 +4,8 @@ import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.Nullable;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
@@ -20,7 +20,7 @@ final class FramedBlockComponentProvider implements IBlockComponentProvider
 
     @Override
     @Nullable
-    public Element getIcon(BlockAccessor accessor, IPluginConfig config, Element currentIcon)
+    public Element getIcon(BlockAccessor accessor, IPluginConfig config, @Nullable Element currentIcon)
     {
         if (!(accessor.getBlockState().getBlock() instanceof IFramedBlock block)) return null;
         if (!block.shouldRenderAsBlockInJadeTooltip()) return null;
@@ -47,7 +47,7 @@ final class FramedBlockComponentProvider implements IBlockComponentProvider
     }
 
     @Override
-    public ResourceLocation getUid()
+    public Identifier getUid()
     {
         return JadeCompat.ID_FRAMED_BLOCK;
     }

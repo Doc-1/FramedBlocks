@@ -3,7 +3,7 @@ package io.github.xfacthd.framedblocks.api.predicate.contex;
 import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 final class FullFaceConnectionPredicate extends NonDetailedConnectionPredicate
 {

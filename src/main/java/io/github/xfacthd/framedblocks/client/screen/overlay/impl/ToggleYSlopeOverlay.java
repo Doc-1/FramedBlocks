@@ -7,7 +7,7 @@ import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.block.IComplexSlopeSource;
 import io.github.xfacthd.framedblocks.common.config.ClientConfig;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.util.ConcatenatedListView;
@@ -43,7 +43,7 @@ public final class ToggleYSlopeOverlay extends BlockInteractOverlay
     private static final List<Component> LINES_FALSE_ALL = ConcatenatedListView.of(LINES_FALSE, LINES_FALSE_ALT);
     private static final List<Component> LINES_TRUE_ALL = ConcatenatedListView.of(LINES_TRUE, LINES_TRUE_ALT);
 
-    private static final ResourceLocation SYMBOL_TEXTURE = Utils.rl("textures/overlay/yslope_symbols.png");
+    private static final Identifier SYMBOL_TEXTURE = Utils.id("textures/overlay/yslope_symbols.png");
     private static final Texture TEXTURE_FALSE = new Texture(SYMBOL_TEXTURE, 0, 0, 20, 40, 80, 40);
     private static final Texture TEXTURE_TRUE = new Texture(SYMBOL_TEXTURE, 20, 0, 20, 40, 80, 40);
     private static final Texture TEXTURE_ALT_FALSE = new Texture(SYMBOL_TEXTURE, 40, 0, 20, 40, 80, 40);

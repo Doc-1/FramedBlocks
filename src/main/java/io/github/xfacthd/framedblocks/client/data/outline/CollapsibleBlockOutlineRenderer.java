@@ -11,8 +11,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
+import org.jspecify.annotations.Nullable;
 
 public final class CollapsibleBlockOutlineRenderer implements OutlineRenderer<CollapsibleBlockOutlineRenderer.OutlineData>
 {

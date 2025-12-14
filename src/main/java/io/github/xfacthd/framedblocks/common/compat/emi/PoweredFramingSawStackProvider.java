@@ -1,4 +1,5 @@
-package io.github.xfacthd.framedblocks.common.compat.emi;
+// FIXME: RL->ID
+/*package io.github.xfacthd.framedblocks.common.compat.emi;
 
 import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.EmiStackProvider;
@@ -18,10 +19,11 @@ public final class PoweredFramingSawStackProvider implements EmiStackProvider<Po
         {
             return new EmiStackInteraction(
                     EmiStack.of(recipe.value().getResult()),
-                    EmiApi.getRecipeManager().getRecipe(recipe.id().location()),
+                    EmiApi.getRecipeManager().getRecipe(recipe.id().identifier()),
                     false
             );
         }
         return EmiStackInteraction.EMPTY;
     }
 }
+*/

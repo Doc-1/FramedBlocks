@@ -7,7 +7,7 @@ import io.github.xfacthd.framedblocks.common.FBContent;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
@@ -18,7 +18,7 @@ import net.minecraft.world.item.crafting.RecipeMap;
 import net.neoforged.neoforge.client.event.RecipesReceivedEvent;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +31,7 @@ public final class FramingSawRecipeCache
 {
     private static final FramingSawRecipeCache SERVER_INSTANCE = new FramingSawRecipeCache();
     private static final FramingSawRecipeCache CLIENT_INSTANCE = new FramingSawRecipeCache();
-    private static final ResourceLocation LISTENER_ID = Utils.rl("framing_saw_recipes");
+    private static final Identifier LISTENER_ID = Utils.id("framing_saw_recipes");
 
     private final List<RecipeHolder<FramingSawRecipe>> recipes = new ArrayList<>();
     private final List<RecipeHolder<FramingSawRecipe>> recipesView = Collections.unmodifiableList(recipes);

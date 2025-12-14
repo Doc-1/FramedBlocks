@@ -6,7 +6,7 @@ import io.github.xfacthd.framedblocks.api.model.data.FramedBlockData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ItemModelInfo
 {

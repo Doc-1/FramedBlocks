@@ -4,7 +4,7 @@ import io.github.xfacthd.framedblocks.api.model.data.QuadMap;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;

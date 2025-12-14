@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.api.util;
 
 import io.github.xfacthd.framedblocks.api.predicate.contex.ConTexMode;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import org.jetbrains.annotations.ApiStatus;
 
 @SuppressWarnings("unused")
@@ -73,11 +73,6 @@ public final class ConfigView
          * else only full faces should be checked against neighboring blocks
          */
         boolean detailedCullingEnabled();
-
-        /**
-         * Returns true if the UV remapping should use discrete steps instead of using the interpolated value directly
-         */
-        boolean useDiscreteUVSteps();
 
         /**
          * Returns the currently configured {@link ConTexMode}

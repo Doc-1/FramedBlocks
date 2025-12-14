@@ -2,7 +2,7 @@ package io.github.xfacthd.framedblocks.common.data;
 
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.neoforged.neoforge.common.ItemAbility;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 

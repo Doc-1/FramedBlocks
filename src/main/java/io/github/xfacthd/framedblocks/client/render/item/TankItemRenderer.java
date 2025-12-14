@@ -9,15 +9,15 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
-import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
+import org.joml.Vector3fc;
+import org.jspecify.annotations.Nullable;
 
-import java.util.Set;
+import java.util.function.Consumer;
 
 public final class TankItemRenderer implements SpecialModelRenderer<SimpleFluidContent>
 {
@@ -40,8 +40,8 @@ public final class TankItemRenderer implements SpecialModelRenderer<SimpleFluidC
         if (content == null || content.isEmpty()) return;
 
         IClientFluidTypeExtensions fluidExt = IClientFluidTypeExtensions.of(content.getFluid());
-        ResourceLocation stillTex = fluidExt.getStillTexture();
-        ResourceLocation flowTex = fluidExt.getFlowingTexture();
+        Identifier stillTex = fluidExt.getStillTexture();
+        Identifier flowTex = fluidExt.getFlowingTexture();
         int tint = fluidExt.getTintColor();
         ChunkSectionLayer chunkLayer = ItemBlockRenderTypes.getRenderLayer(content.getFluid().defaultFluidState());
 
@@ -55,16 +55,14 @@ public final class TankItemRenderer implements SpecialModelRenderer<SimpleFluidC
     }
 
     @Override
-    public void getExtents(Set<Vector3f> extents)
+    public void getExtents(Consumer<Vector3fc> extents)
     {
         // NO-OP: this is always combined with another model which already provides correct extents
     }
 
-
-
     public static final class Unbaked implements SpecialModelRenderer.Unbaked
     {
-        public static final ResourceLocation ID = Utils.rl("tank");
+        public static final Identifier ID = Utils.id("tank");
         public static final TankItemRenderer.Unbaked INSTANCE = new TankItemRenderer.Unbaked();
         public static final MapCodec<TankItemRenderer.Unbaked> CODEC = MapCodec.unit(INSTANCE);
 

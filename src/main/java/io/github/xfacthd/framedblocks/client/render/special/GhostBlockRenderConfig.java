@@ -4,11 +4,12 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.FilterMode;
 import io.github.xfacthd.framedblocks.api.util.ClientUtils;
 import io.github.xfacthd.framedblocks.common.config.ClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 abstract sealed class GhostBlockRenderConfig
 {
@@ -20,27 +21,18 @@ abstract sealed class GhostBlockRenderConfig
         return ClientConfig.VIEW.useAltGhostRenderer() ? FALLBACK : DEFAULT;
     }
 
-    void setupRenderState()
-    {
-        AbstractTexture texture = Minecraft.getInstance()
-                .getTextureManager()
-                .getTexture(ClientUtils.BLOCK_ATLAS);
-        texture.setUseMipmaps(true);
-        RenderSystem.setShaderTexture(0, texture.getTextureView());
-
-        Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer();
-    }
-
-    void clearRenderState()
-    {
-        Minecraft.getInstance().gameRenderer.lightTexture().turnOffLightLayer();
-    }
-
     void setupSamplers(RenderPass renderPass)
     {
-        renderPass.bindSampler("Sampler0", RenderSystem.getShaderTexture(0));
-        renderPass.bindSampler("Sampler1", RenderSystem.getShaderTexture(1));
-        renderPass.bindSampler("Sampler2", RenderSystem.getShaderTexture(2));
+        renderPass.bindTexture(
+                "Sampler0",
+                Minecraft.getInstance().getTextureManager().getTexture(ClientUtils.BLOCK_ATLAS).getTextureView(),
+                RenderTypes.MOVING_BLOCK_SAMPLER.get()
+        );
+        renderPass.bindTexture(
+                "Sampler2",
+                Minecraft.getInstance().gameRenderer.lightTexture().getTextureView(),
+                RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR)
+        );
     }
 
     abstract RenderPipeline getPipeline();
@@ -50,9 +42,16 @@ abstract sealed class GhostBlockRenderConfig
     private static final class Default extends GhostBlockRenderConfig
     {
         @Override
+        void setupSamplers(RenderPass renderPass)
+        {
+            super.setupSamplers(renderPass);
+            renderPass.bindTexture("Sampler1", null, null);
+        }
+
+        @Override
         RenderPipeline getPipeline()
         {
-            return RenderPipelines.TRANSLUCENT;
+            return RenderPipelines.TRANSLUCENT_MOVING_BLOCK;
         }
 
         @Override
@@ -66,17 +65,14 @@ abstract sealed class GhostBlockRenderConfig
     private static final class Fallback extends GhostBlockRenderConfig
     {
         @Override
-        void setupRenderState()
+        void setupSamplers(RenderPass renderPass)
         {
-            super.setupRenderState();
-            Minecraft.getInstance().gameRenderer.overlayTexture().setupOverlayColor();
-        }
-
-        @Override
-        void clearRenderState()
-        {
-            super.clearRenderState();
-            Minecraft.getInstance().gameRenderer.overlayTexture().teardownOverlayColor();
+            super.setupSamplers(renderPass);
+            renderPass.bindTexture(
+                    "Sampler1",
+                    Minecraft.getInstance().gameRenderer.overlayTexture().getTextureView(),
+                    RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR)
+            );
         }
 
         @Override

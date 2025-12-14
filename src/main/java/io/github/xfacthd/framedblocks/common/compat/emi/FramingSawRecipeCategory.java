@@ -1,4 +1,5 @@
-package io.github.xfacthd.framedblocks.common.compat.emi;
+// FIXME: RL->ID
+/*package io.github.xfacthd.framedblocks.common.compat.emi;
 
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiRenderable;
@@ -18,3 +19,4 @@ public final class FramingSawRecipeCategory extends EmiRecipeCategory
         return FramingSawBlock.SAW_MENU_TITLE;
     }
 }
+*/

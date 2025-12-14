@@ -33,7 +33,7 @@ public final class FramedBlockDebugRenderer
 {
     private static final Map<BlockEntityType<? extends FramedBlockEntity>, Set<BlockDebugRenderer<? extends FramedBlockEntity>>> RENDERERS_BY_TYPE = new IdentityHashMap<>();
     private static final Set<BlockDebugRenderer<?>> RENDERERS = new ReferenceOpenHashSet<>();
-    private static final ContextKey<DebugRenderState> DATA_KEY = new ContextKey<>(Utils.rl("debug_renderers"));
+    private static final ContextKey<DebugRenderState> DATA_KEY = new ContextKey<>(Utils.id("debug_renderers"));
 
     @SuppressWarnings("unchecked")
     private static void onExtractRenderState(ExtractLevelRenderStateEvent event)

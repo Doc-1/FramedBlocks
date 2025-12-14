@@ -3,11 +3,11 @@ package io.github.xfacthd.framedblocks.client.model.loader.fallback;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.model.generators.template.CustomLoaderBuilder;
 import net.neoforged.neoforge.common.conditions.ConditionalOps;
 import net.neoforged.neoforge.common.conditions.ICondition;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public final class FallbackLoaderBuilder extends CustomLoaderBuilder
 {
     private final List<ICondition> conditions = new ArrayList<>();
     @Nullable
-    private ResourceLocation fallback;
+    private Identifier fallback;
 
     public FallbackLoaderBuilder()
     {
@@ -30,7 +30,7 @@ public final class FallbackLoaderBuilder extends CustomLoaderBuilder
         return this;
     }
 
-    public FallbackLoaderBuilder setFallback(ResourceLocation fallback)
+    public FallbackLoaderBuilder setFallback(Identifier fallback)
     {
         Preconditions.checkNotNull(fallback, "Fallback must not be null");
         this.fallback = fallback;

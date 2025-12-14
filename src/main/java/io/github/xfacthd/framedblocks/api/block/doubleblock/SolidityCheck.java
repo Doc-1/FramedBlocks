@@ -8,7 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.TriState;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Predicate;
 

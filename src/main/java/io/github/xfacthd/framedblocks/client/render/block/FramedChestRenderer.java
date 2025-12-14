@@ -23,7 +23,7 @@ import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
@@ -32,13 +32,13 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
 public final class FramedChestRenderer implements BlockEntityRenderer<FramedChestBlockEntity, FramedChestRenderState>
 {
-    private static final ResourceLocation BLOCKSTATE_LOC = Utils.rl("framed_chest_lid");
+    private static final Identifier BLOCKSTATE_LOC = Utils.id("framed_chest_lid");
     public static final StandaloneWrapperKey<FramedChestLidModel> WRAPPER_KEY = new StandaloneWrapperKey<>(FBContent.BLOCK_FRAMED_CHEST, BLOCKSTATE_LOC);
     private static final RandomSource RANDOM = RandomSource.create();
 
@@ -94,7 +94,7 @@ public final class FramedChestRenderer implements BlockEntityRenderer<FramedChes
             FramedChestRenderState renderState,
             float partialTick,
             Vec3 cameraPos,
-            @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay
+            ModelFeatureRenderer.@Nullable CrumblingOverlay crumblingOverlay
     )
     {
         BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPos, crumblingOverlay);

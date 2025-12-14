@@ -1,4 +1,5 @@
-package io.github.xfacthd.framedblocks.common.compat.emi;
+// FIXME: RL->ID
+/*package io.github.xfacthd.framedblocks.common.compat.emi;
 
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.handler.EmiCraftContext;
@@ -77,3 +78,4 @@ public final class FramedEmiRecipeHandler<T extends AbstractContainerMenu & IFra
         return true;
     }
 }
+*/

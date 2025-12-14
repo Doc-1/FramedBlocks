@@ -1,8 +1,8 @@
 package io.github.xfacthd.framedblocks.common.compat.jade;
 
 import io.github.xfacthd.framedblocks.common.blockentity.special.FramedItemFrameBlockEntity;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.Nullable;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
@@ -19,7 +19,7 @@ final class FramedItemFrameComponentProvider implements IBlockComponentProvider
 
     @Override
     @Nullable
-    public Element getIcon(BlockAccessor accessor, IPluginConfig config, Element currentIcon)
+    public Element getIcon(BlockAccessor accessor, IPluginConfig config, @Nullable Element currentIcon)
     {
         if (accessor.getBlockEntity() instanceof FramedItemFrameBlockEntity be && be.hasItem())
         {
@@ -38,7 +38,7 @@ final class FramedItemFrameComponentProvider implements IBlockComponentProvider
     }
 
     @Override
-    public ResourceLocation getUid()
+    public Identifier getUid()
     {
         return JadeCompat.ID_ITEM_FRAME;
     }

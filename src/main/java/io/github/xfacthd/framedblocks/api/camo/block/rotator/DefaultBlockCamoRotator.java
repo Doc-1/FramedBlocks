@@ -3,7 +3,7 @@ package io.github.xfacthd.framedblocks.api.camo.block.rotator;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 final class DefaultBlockCamoRotator implements BlockCamoRotator
 {

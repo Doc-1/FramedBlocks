@@ -6,7 +6,7 @@ import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.config.ClientConfig;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -21,7 +21,7 @@ public final class CopycatStyleOverlay extends BlockInteractOverlay
     private static final List<Component> LINES_FALSE = List.of(LINE_USE_STANDARD, LINE_SET_COPYCAT);
     private static final List<Component> LINES_TRUE = List.of(LINE_USE_COPYCAT, LINE_SET_STANDARD);
 
-    private static final ResourceLocation SYMBOL_TEXTURE = Utils.rl("textures/overlay/copycat_style_symbols.png");
+    private static final Identifier SYMBOL_TEXTURE = Utils.id("textures/overlay/copycat_style_symbols.png");
     private static final Texture TEXTURE_FALSE = new Texture(SYMBOL_TEXTURE, 0, 0, 22, 22, 44, 22);
     private static final Texture TEXTURE_TRUE = new Texture(SYMBOL_TEXTURE, 22, 0, 22, 22, 44, 22);
 

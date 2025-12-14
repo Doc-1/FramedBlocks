@@ -4,7 +4,7 @@ import io.github.xfacthd.framedblocks.api.camo.CamoCraftingHandler;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 

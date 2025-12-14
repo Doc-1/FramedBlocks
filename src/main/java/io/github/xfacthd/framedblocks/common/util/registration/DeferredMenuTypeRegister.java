@@ -4,7 +4,7 @@ import io.github.xfacthd.framedblocks.api.util.registration.DeferredMenuType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -22,7 +22,7 @@ public final class DeferredMenuTypeRegister extends DeferredRegister<MenuType<?>
     @Override
     @SuppressWarnings("unchecked")
     protected <I extends MenuType<?>> DeferredHolder<MenuType<?>, I> createHolder(
-            ResourceKey<? extends Registry<MenuType<?>>> registryKey, ResourceLocation key
+            ResourceKey<? extends Registry<MenuType<?>>> registryKey, Identifier key
     )
     {
         return (DeferredHolder<MenuType<?>, I>) DeferredMenuType.createMenuType(ResourceKey.create(registryKey, key));

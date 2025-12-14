@@ -18,9 +18,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.OutlineBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.LevelRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
@@ -40,7 +40,7 @@ public class DoubleBlockPartDebugRenderer implements BlockDebugRenderer<FramedDo
     private static final FramedBlockData MODEL_DATA = new FramedBlockData(new SimpleBlockCamoContainer(
             Blocks.STONE.defaultBlockState(), FBContent.FACTORY_BLOCK.get()
     ), false);
-    private static final ContextKey<BlockPartRenderState> DATA_KEY = new ContextKey<>(Utils.rl("double_block_part_debug_renderer"));
+    private static final ContextKey<BlockPartRenderState> DATA_KEY = new ContextKey<>(Utils.id("double_block_part_debug_renderer"));
     private static final int COLOR_PRIMARY = 0xFFFF0000;
     private static final int COLOR_SECONDARY = 0xFF00FF00;
 
@@ -75,7 +75,7 @@ public class DoubleBlockPartDebugRenderer implements BlockDebugRenderer<FramedDo
         OutlineBufferSource outlineBuffer = Minecraft.getInstance().renderBuffers().outlineBufferSource();
         outlineBuffer.setColor(data.color);
 
-        VertexConsumer consumer = outlineBuffer.getBuffer(RenderType.outline(ClientUtils.BLOCK_ATLAS));
+        VertexConsumer consumer = outlineBuffer.getBuffer(RenderTypes.outline(ClientUtils.BLOCK_ATLAS));
         ModelBlockRenderer.renderModel(
                 poseStack.last(),
                 type -> consumer,

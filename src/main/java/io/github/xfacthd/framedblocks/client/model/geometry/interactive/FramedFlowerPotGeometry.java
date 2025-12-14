@@ -21,22 +21,22 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class FramedFlowerPotGeometry extends Geometry
 {
-    public static final ResourceLocation HANGING_MODEL_LOCATION = Utils.rl("block/hanging_pot_rope");
+    public static final Identifier HANGING_MODEL_LOCATION = Utils.id("block/hanging_pot_rope");
     public static final String HANGING_MODEL_KEY = "flower_pot_rope";
     private static final BlockState DIRT_STATE = Blocks.DIRT.defaultBlockState();
-    private static final ResourceLocation POT_TEXTURE = Utils.rl("minecraft", "block/flower_pot");
-    private static final ResourceLocation DIRT_TEXTURE = Utils.rl("minecraft", "block/dirt");
+    private static final Identifier POT_TEXTURE = Utils.id("minecraft", "block/flower_pot");
+    private static final Identifier DIRT_TEXTURE = Utils.id("minecraft", "block/dirt");
     private static final QuadListModifier DIRT_UP_MODIFIER = QuadListModifier.replacing(quad ->
             QuadModifier.of(quad)
                     .apply(Modifiers.cutTopBottom(6F/16F, 6F/16F, 10F/16F, 10F/16F))

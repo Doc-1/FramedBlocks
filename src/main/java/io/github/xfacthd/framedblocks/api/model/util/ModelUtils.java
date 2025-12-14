@@ -5,18 +5,14 @@ import io.github.xfacthd.framedblocks.api.model.ExtendedBlockModelPart;
 import io.github.xfacthd.framedblocks.api.model.data.QuadMap;
 import io.github.xfacthd.framedblocks.api.model.geometry.DefaultAO;
 import io.github.xfacthd.framedblocks.api.model.quad.QuadData;
-import io.github.xfacthd.framedblocks.api.util.ConfigView;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
 import net.minecraft.client.renderer.block.model.SingleVariant;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BlockModelRotation;
-import net.minecraft.client.resources.model.MissingBlockModel;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,9 +22,9 @@ import net.minecraft.util.TriState;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.EmptyBlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.IQuadTransformer;
 import net.neoforged.neoforge.common.util.Lazy;
-import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3fc;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,10 +34,8 @@ import java.util.function.Supplier;
 
 public final class ModelUtils
 {
-    // Factor 16 is required because the relative UV of a TextureAtlasSprite is not 0-16 anymore since 1.20.2
-    public static final float UV_SUBSTEP_COUNT = 16F * 8F;
     public static final ModelBaker.SharedOperationKey<BlockStateModel> MISSING_MODEL_KEY = makeSharedOpsKey(
-            baker -> new SingleVariant(SimpleModelWrapper.bake(baker, MissingBlockModel.LOCATION, BlockModelRotation.X0_Y0))
+            baker -> new SingleVariant(baker.missingBlockModelPart())
     );
 
     /**
@@ -49,7 +43,6 @@ public final class ModelUtils
      * onto the UV range they occupy as given by the values at 'uv1' and 'uv2' in the 'uv'
      * array, calculates the target UV coordinate corresponding to the value of 'coordTo'
      * and places it at 'uvTo' in the 'uv' array
-     * @param sprite The quad's texture
      * @param data The {@link QuadData} being operated on
      * @param coord1 The first coordinate
      * @param coord2 The second coordinate
@@ -61,7 +54,6 @@ public final class ModelUtils
      * @param rotated Whether the UVs are rotated
      */
     public static void remapUV(
-            TextureAtlasSprite sprite,
             QuadData data,
             float coord1,
             float coord2,
@@ -86,32 +78,17 @@ public final class ModelUtils
 
         if (coordTo == coordMin)
         {
-            data.uv(uvTo, uvIdx,  (invert) ? uvAbsMax : uvAbsMin);
+            data.uv(uvTo, uvIdx, (invert) ? uvAbsMax : uvAbsMin);
         }
         else if (coordTo == coordMax)
         {
-            data.uv(uvTo, uvIdx,  (invert) ? uvAbsMin : uvAbsMax);
+            data.uv(uvTo, uvIdx, (invert) ? uvAbsMin : uvAbsMax);
         }
         else
         {
-            if (ConfigView.Client.INSTANCE.useDiscreteUVSteps())
-            {
-                float uvRelMin = uvIdx == 0 ? sprite.getUOffset(uvAbsMin) : sprite.getVOffset(uvAbsMin);
-                float uvRelMax = uvIdx == 0 ? sprite.getUOffset(uvAbsMax) : sprite.getVOffset(uvAbsMax);
-
-                float mult = (coordTo - coordMin) / (coordMax - coordMin);
-                if (invert) { mult = 1F - mult; }
-
-                float uvRelTo = Mth.lerp(mult, uvRelMin, uvRelMax);
-                uvRelTo = Math.round(uvRelTo * UV_SUBSTEP_COUNT) / UV_SUBSTEP_COUNT;
-                data.uv(uvTo, uvIdx, uvIdx == 0 ? sprite.getU(uvRelTo) : sprite.getV(uvRelTo));
-            }
-            else
-            {
-                float mult = (coordTo - coordMin) / (coordMax - coordMin);
-                if (invert) { mult = 1F - mult; }
-                data.uv(uvTo, uvIdx, Mth.lerp(mult, uvAbsMin, uvAbsMax));
-            }
+            float mult = (coordTo - coordMin) / (coordMax - coordMin);
+            if (invert) mult = 1F - mult;
+            data.uv(uvTo, uvIdx, Mth.lerp(mult, uvAbsMin, uvAbsMax));
         }
     }
 
@@ -119,27 +96,6 @@ public final class ModelUtils
     {
         return (Mth.equal(data.uv(0, 1), data.uv(1, 1)) || Mth.equal(data.uv(3, 1), data.uv(2, 1))) &&
                (Mth.equal(data.uv(1, 0), data.uv(2, 0)) || Mth.equal(data.uv(0, 0), data.uv(3, 0)));
-    }
-
-    /**
-     * Creates a shallow copy of the given BakedQuad in order to invert the tint index for BakedQuads
-     * used by the second model of a double block
-     * @apiNote The vertex data of the returned BakedQuad is not a copy, it must not be modified later!
-     */
-    public static BakedQuad invertTintIndex(BakedQuad quad)
-    {
-        // Avoid the unnecessary copy if the quad isn't tinted at all
-        if (quad.tintIndex() == -1) return quad;
-
-        return new BakedQuad(
-                quad.vertices(), //Don't need to copy the vertex data, it won't be modified by the caller
-                encodeSecondaryTintIndex(quad.tintIndex()),
-                quad.direction(),
-                quad.sprite(),
-                quad.shade(),
-                quad.lightEmission(),
-                quad.hasAmbientOcclusion()
-        );
     }
 
     public static int encodeSecondaryTintIndex(int tintIndex)
@@ -214,21 +170,16 @@ public final class ModelUtils
             float maxY = -32F;
             float maxZ = -32F;
 
-            int[] vertexData = quad.vertices();
             for (int vert = 0; vert < 4; ++vert)
             {
-                int offset = vert * IQuadTransformer.STRIDE + IQuadTransformer.POSITION;
+                Vector3fc pos = quad.position(vert);
 
-                float x = Float.intBitsToFloat(vertexData[offset]);
-                float y = Float.intBitsToFloat(vertexData[offset + 1]);
-                float z = Float.intBitsToFloat(vertexData[offset + 2]);
-
-                minX = Math.min(minX, x);
-                minY = Math.min(minY, y);
-                minZ = Math.min(minZ, z);
-                maxX = Math.max(maxX, x);
-                maxY = Math.max(maxY, y);
-                maxZ = Math.max(maxZ, z);
+                minX = Math.min(minX, pos.x());
+                minY = Math.min(minY, pos.y());
+                minZ = Math.min(minZ, pos.z());
+                maxX = Math.max(maxX, pos.x());
+                maxY = Math.max(maxY, pos.y());
+                maxZ = Math.max(maxZ, pos.z());
             }
 
             boolean positive = Utils.isPositive(side);
@@ -263,8 +214,6 @@ public final class ModelUtils
             }
         };
     }
-
-
 
     private ModelUtils() { }
 }

@@ -12,7 +12,6 @@ import io.github.xfacthd.framedblocks.common.menu.PoweredFramingSawMenu;
 import io.github.xfacthd.framedblocks.common.net.payload.serverbound.ServerboundSelectFramingSawRecipePayload;
 import io.github.xfacthd.framedblocks.common.util.CachingIngredientResolver;
 import net.minecraft.Optionull;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -21,7 +20,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -30,7 +29,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,7 @@ import java.util.Optional;
 
 public class PoweredFramingSawScreen extends AbstractContainerScreen<PoweredFramingSawMenu> implements IFramingSawScreen
 {
-    private static final ResourceLocation BACKGROUND = Utils.rl("textures/gui/powered_framing_saw.png");
+    private static final Identifier BACKGROUND = Utils.id("textures/gui/powered_framing_saw.png");
     public static final Component TITLE_TARGETBLOCK = Utils.translate("title", "powered_saw.target_block");
     public static final MutableComponent MSG_STATUS = Utils.translate("msg", "powered_saw.status");
     public static final Component MSG_STATUS_NO_RECIPE = Utils.translate("msg", "powered_saw.status.no_recipe")
@@ -86,7 +85,7 @@ public class PoweredFramingSawScreen extends AbstractContainerScreen<PoweredFram
         super(menu, inv, title);
         this.imageHeight = 182;
         this.inventoryLabelY = imageHeight - 94;
-        Level level = Objects.requireNonNull(Minecraft.getInstance().level);
+        Level level = Objects.requireNonNull(minecraft.level);
         this.additiveResolver = new CachingIngredientResolver.Multi(level, FramingSawRecipe.MAX_ADDITIVE_COUNT);
     }
 
@@ -176,19 +175,19 @@ public class PoweredFramingSawScreen extends AbstractContainerScreen<PoweredFram
         int width = -1;
         if (recipe == null)
         {
-            status = status.append(MSG_STATUS_NO_RECIPE);
+            status.append(MSG_STATUS_NO_RECIPE);
             statusTooltip = List.of(TOOLTIP_STATUS_NO_RECIPE);
             width = font.width(MSG_STATUS_NO_RECIPE);
         }
         else if (match != null && !match.success())
         {
-            status = status.append(MSG_STATUS_NO_MATCH);
+            status.append(MSG_STATUS_NO_MATCH);
             statusTooltip = FramingSawScreen.appendRecipeFailure(new ArrayList<>(), cache, additiveResolver, recipe, match, this);
             width = font.width(MSG_STATUS_NO_MATCH);
         }
         else
         {
-            status = status.append(MSG_STATUS_READY);
+            status.append(MSG_STATUS_READY);
         }
         int sx = leftPos + STATUS_X;
         int sy = topPos + STATUS_Y + font.lineHeight;

@@ -15,31 +15,33 @@ import io.github.xfacthd.framedblocks.api.model.item.block.BlockItemModelProvide
 import io.github.xfacthd.framedblocks.api.model.item.tint.DynamicItemTintProvider;
 import io.github.xfacthd.framedblocks.api.model.item.tint.FramedBlockItemTintProvider;
 import io.github.xfacthd.framedblocks.api.model.util.ModelUtils;
+import io.github.xfacthd.framedblocks.api.model.util.QuadUtils;
+import io.github.xfacthd.framedblocks.api.render.RenderUtils;
 import io.github.xfacthd.framedblocks.api.util.ConfigView;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
+import net.minecraft.client.renderer.block.model.TextureSlots;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.item.BlockModelWrapper;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.resources.model.BlockModelRotation;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ResolvedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ItemOwner;
@@ -49,12 +51,11 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.EmptyBlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.RenderTypeHelper;
-import net.neoforged.neoforge.client.model.IQuadTransformer;
+import net.neoforged.neoforge.client.model.quad.BakedColors;
 import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.model.data.ModelData;
-import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
+import org.joml.Vector3fc;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,7 +68,7 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
 {
     private static final RandomSource RANDOM = RandomSource.create();
     private static final Direction[] DIRECTIONS = Arrays.copyOf(Direction.values(), 7);
-    private static final ResourceLocation ERROR_MODEL_LOCATION = Utils.rl("item/error");
+    private static final Identifier ERROR_MODEL_LOCATION = Utils.id("item/error");
 
     private final Map<Object, ModelSet> itemModelCache = new Object2ObjectOpenHashMap<>();
     private final BlockState state;
@@ -76,7 +77,7 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
     private final DynamicItemTintProvider tintProvider;
     private final ItemTransforms itemTransforms;
     private final ItemModel errorModel;
-    private final Supplier<Vector3f[]> extents;
+    private final Supplier<Vector3fc[]> extents;
 
     private FramedBlockItemModel(
             BlockState state,
@@ -206,7 +207,7 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
                     }
                 }
                 ChunkSectionLayer chunkLayer = modelPart.getRenderType(state);
-                models.add(new ModelEntry(allQuads, RenderTypeHelper.getEntityRenderType(chunkLayer)));
+                models.add(new ModelEntry(allQuads, RenderUtils.getEntityRenderType(chunkLayer)));
             }
 
             ModelRenderProperties renderProps = new ModelRenderProperties(true, model.particleIcon(EmptyBlockAndTintGetter.INSTANCE, BlockPos.ZERO, state), itemTransforms);
@@ -224,25 +225,7 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
             tintValues.put(index, ARGB.toABGR(tintProvider.getColor(stack, camos, index)));
         }
         int tint = tintValues.get(index);
-        if (tint == -1) return quad;
-
-        int[] originalVerts = quad.vertices();
-        int[] vertices = Arrays.copyOf(originalVerts, originalVerts.length);
-        BakedQuad newQuad = new BakedQuad(
-                vertices,
-                -1,
-                quad.direction(),
-                quad.sprite(),
-                quad.shade(),
-                quad.lightEmission(),
-                quad.hasAmbientOcclusion()
-        );
-        for (int vert = 0; vert < 4; vert++)
-        {
-            int offset = vert * IQuadTransformer.STRIDE + IQuadTransformer.COLOR;
-            vertices[offset] = ARGB.multiply(vertices[offset], tint);
-        }
-        return newQuad;
+        return tint == -1 ? quad : QuadUtils.setBakedColors(quad, BakedColors.of(tint), true);
     }
 
     public ItemTransforms getItemTransforms()
@@ -268,21 +251,22 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
 
     private record ModelEntry(List<BakedQuad> quads, RenderType renderType) { }
 
-    public record Unbaked(Block block, BlockItemModelProvider modelProvider, DynamicItemTintProvider tintProvider, ResourceLocation baseModel) implements ItemModel.Unbaked
+    public record Unbaked(Block block, BlockItemModelProvider modelProvider, DynamicItemTintProvider tintProvider, Identifier baseModel) implements ItemModel.Unbaked
     {
-        public static final ResourceLocation ID = Utils.rl("block");
+        public static final Identifier ID = Utils.id("block");
         public static final MapCodec<FramedBlockItemModel.Unbaked> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
                 BuiltInRegistries.BLOCK.byNameCodec().fieldOf("block").validate(FramedBlockItemModel.Unbaked::validateBlock).forGetter(FramedBlockItemModel.Unbaked::block),
                 BlockItemModelProviders.CODEC.optionalFieldOf("model_provider", BlockItemModelProvider.DEFAULT).forGetter(FramedBlockItemModel.Unbaked::modelProvider),
                 DynamicItemTintProviders.CODEC.optionalFieldOf("tint_provider", FramedBlockItemTintProvider.INSTANCE_SINGLE).forGetter(FramedBlockItemModel.Unbaked::tintProvider),
-                ResourceLocation.CODEC.fieldOf("base_model").forGetter(FramedBlockItemModel.Unbaked::baseModel)
+                Identifier.CODEC.fieldOf("base_model").forGetter(FramedBlockItemModel.Unbaked::baseModel)
         ).apply(inst, FramedBlockItemModel.Unbaked::new));
         private static final ModelBaker.SharedOperationKey<ItemModel> ERROR_MODEL_KEY = ModelUtils.makeSharedOpsKey(baker ->
         {
             ResolvedModel model = baker.getModel(ERROR_MODEL_LOCATION);
-            SimpleModelWrapper bakedModel = SimpleModelWrapper.bake(baker, ERROR_MODEL_LOCATION, BlockModelRotation.X0_Y0);
+            TextureSlots textureslots = model.getTopTextureSlots();
+            List<BakedQuad> quads = model.bakeTopGeometry(textureslots, baker, BlockModelRotation.IDENTITY).getAll();
             ModelRenderProperties renderProps = ModelRenderProperties.fromResolvedModel(baker, model, model.getTopTextureSlots());
-            return new BlockModelWrapper(List.of(), bakedModel.quads().getAll(), renderProps);
+            return new BlockModelWrapper(List.of(), quads, renderProps, BlockModelWrapper.ITEM_RENDER_TYPE_GETTER);
         });
 
         public Unbaked

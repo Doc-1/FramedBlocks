@@ -7,7 +7,7 @@ import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.config.ClientConfig;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Blocks;
@@ -16,8 +16,8 @@ import net.neoforged.neoforge.model.data.ModelData;
 
 public class FramedMarkedCubeGeometry extends FramedCubeGeometry
 {
-    public static final ResourceLocation SLIME_FRAME_LOCATION = Utils.rl("block/slime_frame");
-    public static final ResourceLocation REDSTONE_FRAME_LOCATION = Utils.rl("block/redstone_frame");
+    public static final Identifier SLIME_FRAME_LOCATION = Utils.id("block/slime_frame");
+    public static final Identifier REDSTONE_FRAME_LOCATION = Utils.id("block/redstone_frame");
     public static final String FRAME_KEY = "frame";
 
     private final BlockState state;

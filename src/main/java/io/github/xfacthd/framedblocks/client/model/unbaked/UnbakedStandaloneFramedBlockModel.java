@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.block.model.BlockModelDefinition;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.resources.FileToIdConverter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.StrictJsonParser;
@@ -79,7 +79,7 @@ public final class UnbakedStandaloneFramedBlockModel<T extends CachingModel> imp
     private static Map<BlockState, BlockStateModel.UnbakedRoot> loadModelDefinition(StandaloneWrapperKey<?> wrapperKey)
     {
         ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-        ResourceLocation file = wrapperKey.definitionFile();
+        Identifier file = wrapperKey.definitionFile();
         List<Resource> resources = resourceManager.getResourceStack(BLOCKSTATE_LISTER.idToFile(file));
         if (resources.isEmpty())
         {

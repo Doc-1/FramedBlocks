@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -168,7 +168,7 @@ public final class BlockUtils
             BlockEntityType<A> type, BlockEntityType<E> actualType, BlockEntityTicker<? super E> ticker
     )
     {
-        return actualType == type ? (BlockEntityTicker<A>)ticker : null;
+        return actualType == type ? (BlockEntityTicker<A>) ticker : null;
     }
 
     /**

@@ -2,8 +2,8 @@ package io.github.xfacthd.framedblocks.api.shapes;
 
 import com.mojang.math.OctahedralGroup;
 import io.github.xfacthd.framedblocks.api.util.Utils;
-import net.minecraft.Util;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Util;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.shapes.ArrayVoxelShape;
 import net.minecraft.world.phys.shapes.BooleanOp;

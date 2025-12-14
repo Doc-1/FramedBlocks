@@ -1,4 +1,5 @@
-package io.github.xfacthd.framedblocks.common.compat.jei;
+// FIXME: RL->ID
+/*package io.github.xfacthd.framedblocks.common.compat.jei;
 
 import com.google.common.collect.Lists;
 import io.github.xfacthd.framedblocks.api.util.Utils;
@@ -22,14 +23,14 @@ import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplayContext;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ import java.util.Objects;
 
 public final class FramingSawRecipeCategory implements IRecipeCategory<FramingSawRecipe>
 {
-    private static final ResourceLocation BACKGROUND = Utils.rl("textures/gui/framing_saw_jei.png");
+    private static final Identifier BACKGROUND = Utils.id("textures/gui/framing_saw_jei.png");
     private static final int WIDTH = 118;
     private static final int HEIGHT = 41;
     private static final int WARNING_X = 38;
@@ -237,3 +238,4 @@ public final class FramingSawRecipeCategory implements IRecipeCategory<FramingSa
         return List.of();
     }
 }
+*/

@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -110,7 +110,7 @@ public final class FramingSawRecipeBuilder implements RecipeBuilder
         Preconditions.checkState(material > 0, "Material value not set");
         Preconditions.checkState(material / count * count == material, "Material value not divisible by result size");
 
-        recipeId = ResourceKey.create(Registries.RECIPE, recipeId.location().withPrefix("framing_saw/"));
+        recipeId = ResourceKey.create(Registries.RECIPE, recipeId.identifier().withPrefix("framing_saw/"));
         Recipe<?> recipe = InternalAPI.INSTANCE.makeFramingSawRecipe(material, additives, new ItemStack(result, count), disabled);
         output.accept(recipeId, recipe, null);
     }

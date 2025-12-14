@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.api.util;
 
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.BinaryOperator;

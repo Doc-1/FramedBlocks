@@ -5,7 +5,7 @@ import io.github.xfacthd.framedblocks.api.util.registration.DeferredLootFunction
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -21,7 +21,7 @@ public final class DeferredLootFunctionRegister extends DeferredRegister<LootIte
     @Override
     @SuppressWarnings("unchecked")
     protected <I extends LootItemFunctionType<?>> DeferredHolder<LootItemFunctionType<?>, I> createHolder(
-            ResourceKey<? extends Registry<LootItemFunctionType<?>>> registryKey, ResourceLocation key
+            ResourceKey<? extends Registry<LootItemFunctionType<?>>> registryKey, Identifier key
     )
     {
         return (DeferredHolder<LootItemFunctionType<?>, I>) DeferredLootFunction.createLootFunction(ResourceKey.create(registryKey, key));

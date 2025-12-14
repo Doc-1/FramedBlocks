@@ -4,12 +4,12 @@ import io.github.xfacthd.framedblocks.api.block.IBlockType;
 import io.github.xfacthd.framedblocks.api.predicate.contex.ConnectionPredicate;
 import io.github.xfacthd.framedblocks.api.predicate.fullface.FullFacePredicate;
 import io.github.xfacthd.framedblocks.api.util.Utils;
-import net.minecraft.Util;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Util;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Cache for constant metadata related to a specific {@link BlockState}.

@@ -8,19 +8,19 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.data.AtlasIds;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class ClientUtils
 {
     @SuppressWarnings("deprecation")
-    public static final ResourceLocation BLOCK_ATLAS = TextureAtlas.LOCATION_BLOCKS;
-    public static final ResourceLocation DUMMY_TEXTURE = Utils.rl("neoforge", "white");
+    public static final Identifier BLOCK_ATLAS = TextureAtlas.LOCATION_BLOCKS;
+    public static final Identifier DUMMY_TEXTURE = Utils.id("neoforge", "white");
 
     public static void enqueueClientTask(Runnable task)
     {
@@ -53,7 +53,7 @@ public final class ClientUtils
         return isTexture(quad, DUMMY_TEXTURE);
     }
 
-    public static boolean isTexture(BakedQuad quad, ResourceLocation texture)
+    public static boolean isTexture(BakedQuad quad, Identifier texture)
     {
         return quad.sprite().contents().name().equals(texture);
     }
@@ -64,7 +64,7 @@ public final class ClientUtils
         graphics.fill(x, y, x + 16, y + 16, 0x80888888);
     }
 
-    public static TextureAtlasSprite getBlockSprite(ResourceLocation id)
+    public static TextureAtlasSprite getBlockSprite(Identifier id)
     {
         return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(id);
     }

@@ -10,17 +10,17 @@ import io.github.xfacthd.framedblocks.common.FBContent;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class FramedTargetGeometry extends Geometry
 {
-    public static final ResourceLocation OVERLAY_LOCATION = Utils.rl("block/target_overlay");
+    public static final Identifier OVERLAY_LOCATION = Utils.id("block/target_overlay");
     public static final String OVERLAY_KEY = "overlay";
     public static final int OVERLAY_TINT_IDX = 1024;
     private static final ItemModelInfo ITEM_MODEL_INFO = new TargetItemModelInfo();

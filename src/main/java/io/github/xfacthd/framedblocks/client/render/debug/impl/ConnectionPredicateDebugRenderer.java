@@ -26,7 +26,7 @@ import net.minecraft.world.phys.BlockHitResult;
 public class ConnectionPredicateDebugRenderer implements BlockDebugRenderer<FramedBlockEntity>
 {
     public static final ConnectionPredicateDebugRenderer INSTANCE = new ConnectionPredicateDebugRenderer();
-    private static final ContextKey<ConnectionPredicateRenderState> DATA_KEY = new ContextKey<>(Utils.rl("con_pred_debug_renderer"));
+    private static final ContextKey<ConnectionPredicateRenderState> DATA_KEY = new ContextKey<>(Utils.id("con_pred_debug_renderer"));
 
     private static float dummyU0 = 0F;
     private static float dummyU1 = 1F;

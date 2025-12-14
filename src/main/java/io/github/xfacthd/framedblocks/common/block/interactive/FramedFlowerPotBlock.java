@@ -10,7 +10,7 @@ import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -178,7 +178,7 @@ public class FramedFlowerPotBlock extends FramedBlock
 
     public static BlockState getFlowerPotState(Block flower)
     {
-        Map<ResourceLocation, Supplier<? extends Block>> fullPots = ((FlowerPotBlock) Blocks.FLOWER_POT).getFullPotsView();
+        Map<Identifier, Supplier<? extends Block>> fullPots = ((FlowerPotBlock) Blocks.FLOWER_POT).getFullPotsView();
         return fullPots.getOrDefault(
                 BuiltInRegistries.BLOCK.getKey(flower),
                 () -> Blocks.AIR

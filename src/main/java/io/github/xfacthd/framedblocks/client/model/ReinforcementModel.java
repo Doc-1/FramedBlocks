@@ -9,28 +9,29 @@ import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.resources.model.BlockModelRotation;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.TriState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jspecify.annotations.Nullable;
 
 public final class ReinforcementModel
 {
     public static final BlockState SHADER_STATE = Blocks.OBSIDIAN.defaultBlockState();
-    public static final ResourceLocation MODEL_ID = Utils.rl("block/framed_reinforcement");
+    public static final Identifier MODEL_ID = Utils.id("block/framed_reinforcement");
     private static final ModelBaker.SharedOperationKey<ReinforcementModel> REINFORCEMENT_KEY = ModelUtils.makeSharedOpsKey(
-            baker -> new ReinforcementModel(SimpleModelWrapper.bake(baker, ReinforcementModel.MODEL_ID, BlockModelRotation.X0_Y0))
+            baker -> new ReinforcementModel(SimpleModelWrapper.bake(baker, ReinforcementModel.MODEL_ID, BlockModelRotation.IDENTITY))
     );
     private static final Direction[] DIRECTIONS = Direction.values();
-    private final SimpleModelWrapper baseModel;
-    private final BlockModelPart[] cachedFilteredParts = new BlockModelPart[256];
+    private final BlockModelPart baseModel;
+    private final @Nullable BlockModelPart[] cachedFilteredParts = new BlockModelPart[256];
 
     public static ReinforcementModel getOrCreate(ModelBaker baker)
     {
         return baker.compute(REINFORCEMENT_KEY);
     }
 
-    private ReinforcementModel(SimpleModelWrapper baseModel)
+    private ReinforcementModel(BlockModelPart baseModel)
     {
         this.baseModel = baseModel;
     }

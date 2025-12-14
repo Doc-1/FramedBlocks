@@ -1,15 +1,11 @@
 package io.github.xfacthd.framedblocks.client.model.overlaygen;
 
-import io.github.xfacthd.framedblocks.api.model.util.ModelUtils;
 import io.github.xfacthd.framedblocks.api.util.Utils;
-import io.github.xfacthd.framedblocks.common.config.ClientConfig;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.Mth;
-import net.neoforged.neoforge.client.model.IQuadTransformer;
 import net.neoforged.neoforge.client.model.pipeline.QuadBakingVertexConsumer;
 import org.joml.Vector3f;
 
@@ -24,7 +20,7 @@ import java.util.function.Predicate;
 
 public final class OverlayQuadGenerator
 {
-    public static final ResourceLocation LISTENER_ID = Utils.rl("overlay_quad_gen");
+    public static final Identifier LISTENER_ID = Utils.id("overlay_quad_gen");
     private static final Map<OverlayCacheKey, BakedQuad> OVERLAY_CACHE = new ConcurrentHashMap<>();
 
     public static void generate(
@@ -54,7 +50,6 @@ public final class OverlayQuadGenerator
         QuadBakingVertexConsumer baker = new QuadBakingVertexConsumer();
 
         TextureAtlasSprite sprite = key.sprite();
-        float shrinkRatio = sprite.uvShrinkRatio();
         UVInfo uvInfo = UVInfo.get(key.face());
         Vector3f scratch = new Vector3f();
 
@@ -70,19 +65,8 @@ public final class OverlayQuadGenerator
 
             float uSrc = scratch.get(uvInfo.uIdx());
             float vSrc = scratch.get(uvInfo.vIdx());
-            float u = Mth.lerp(shrinkRatio, uvInfo.uInv() ? (1F - uSrc) : uSrc, .5F);
-            float v = Mth.lerp(shrinkRatio, uvInfo.vInv() ? (1F - vSrc) : vSrc, .5F);
-            if (ClientConfig.VIEW.useDiscreteUVSteps())
-            {
-                if (!Mth.equal(uSrc, 0F) && !Mth.equal(uSrc, 1F))
-                {
-                    u = Math.round(u * ModelUtils.UV_SUBSTEP_COUNT) / ModelUtils.UV_SUBSTEP_COUNT;
-                }
-                if (!Mth.equal(vSrc, 0F) && !Mth.equal(vSrc, 1F))
-                {
-                    v = Math.round(v * ModelUtils.UV_SUBSTEP_COUNT) / ModelUtils.UV_SUBSTEP_COUNT;
-                }
-            }
+            float u = uvInfo.uInv() ? (1F - uSrc) : uSrc;
+            float v = uvInfo.vInv() ? (1F - vSrc) : vSrc;
             baker.setUv(sprite.getU(u), sprite.getV(v));
 
             key.normal(i, scratch);
@@ -94,16 +78,7 @@ public final class OverlayQuadGenerator
 
     private static OverlayCacheKey buildCacheKey(BakedQuad quad, TextureAtlasSprite sprite)
     {
-        int[] vertexData = quad.vertices();
-        int[] keyData = new int[(3 + 1) * 4];
-        for (int i = 0; i < 4; i++)
-        {
-            int srcPos = i * IQuadTransformer.STRIDE;
-            int destPos = i * 4;
-            System.arraycopy(vertexData, srcPos + IQuadTransformer.POSITION, keyData, destPos, 3);
-            keyData[destPos + 3] = vertexData[srcPos + IQuadTransformer.NORMAL];
-        }
-        return new OverlayCacheKey(quad.direction(), keyData, sprite);
+        return new OverlayCacheKey(quad.direction(), quad.position0(), quad.position1(), quad.position2(), quad.position3(), quad.bakedNormals(), sprite);
     }
 
     public static void onResourceReload(@SuppressWarnings("unused") ResourceManager resourceManager)

@@ -5,7 +5,7 @@ import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.CompoundDirection;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class SlopedPrismConnectionPredicate implements ConnectionPredicate
 {

@@ -13,8 +13,8 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
 import net.minecraft.client.renderer.item.TrackingItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
+import org.jspecify.annotations.Nullable;
 
 public final class SpinningItemPictureInPictureRenderer extends PictureInPictureRenderer<SpinningItemPictureInPictureRenderer.RenderState>
 {

@@ -1,6 +1,7 @@
 package io.github.xfacthd.framedblocks.client.screen;
 
 import com.google.common.base.Preconditions;
+import com.mojang.blaze3d.platform.InputConstants;
 import io.github.xfacthd.framedblocks.api.util.ClientUtils;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.compat.ae2.AppliedEnergisticsCompat;
@@ -13,7 +14,6 @@ import io.github.xfacthd.framedblocks.common.menu.FramingSawWithEncoderMenu;
 import io.github.xfacthd.framedblocks.common.net.payload.serverbound.ServerboundEncodeFramingSawPatternPayload;
 import io.github.xfacthd.framedblocks.common.util.ArrayBackedRecipeInput;
 import net.minecraft.Optionull;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
@@ -22,7 +22,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
@@ -30,9 +30,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
-import org.lwjgl.glfw.GLFW;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,13 +42,13 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
 {
     public static final Component TOOLTIP_TAB_CRAFTING = Utils.translate("tooltip", "framing_saw.mode.crafting");
     public static final Component TOOLTIP_TAB_PATTERN = Utils.translate("tooltip", "framing_saw.mode.pattern_encode");
-    private static final ResourceLocation BACKGROUND_ENCODER = Utils.rl("textures/gui/framing_saw_encoder.png");
-    private static final ResourceLocation TAB_ICON = Utils.rl("minecraft", "advancements/tab_left_middle");
-    private static final ResourceLocation TAB_SELECTED_ICON = Utils.rl("minecraft", "advancements/tab_left_middle_selected");
+    private static final Identifier BACKGROUND_ENCODER = Utils.id("textures/gui/framing_saw_encoder.png");
+    private static final Identifier TAB_ICON = Utils.id("minecraft", "advancements/tab_left_middle");
+    private static final Identifier TAB_SELECTED_ICON = Utils.id("minecraft", "advancements/tab_left_middle_selected");
     private static final WidgetSprites ENCODE_BTN_SPRITES = new WidgetSprites(
-            Utils.rl("button_encode"),
-            Utils.rl("button_encode_disabled"),
-            Utils.rl("button_encode_focused")
+            Utils.id("button_encode"),
+            Utils.id("button_encode_disabled"),
+            Utils.id("button_encode_focused")
     );
     public static final int TAB_WIDTH = 32;
     public static final int TAB_HEIGHT = 28;
@@ -110,11 +109,11 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
     {
         super.renderBg(graphics, partialTick, mouseX, mouseY);
 
-        ResourceLocation rlTop = encoding ? TAB_ICON : TAB_SELECTED_ICON;
+        Identifier rlTop = encoding ? TAB_ICON : TAB_SELECTED_ICON;
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, rlTop, leftPos + TAB_X, topPos + TAB_TOP_Y, TAB_WIDTH, TAB_HEIGHT);
         graphics.renderFakeItem(tableStack, leftPos + TAB_ICON_X, topPos + TAB_ICON_TOP_Y);
 
-        ResourceLocation rlBot = encoding ? TAB_SELECTED_ICON : TAB_ICON;
+        Identifier rlBot = encoding ? TAB_SELECTED_ICON : TAB_ICON;
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, rlBot, leftPos + TAB_X, topPos + TAB_BOT_Y, TAB_WIDTH, TAB_HEIGHT);
         graphics.renderFakeItem(sawPatternStack, leftPos + TAB_ICON_X, topPos + TAB_ICON_BOT_Y);
 
@@ -138,7 +137,7 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
     }
 
     @Override
-    protected ResourceLocation getBackground()
+    protected Identifier getBackground()
     {
         return encoding ? BACKGROUND_ENCODER : super.getBackground();
     }
@@ -269,7 +268,7 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick)
     {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_1)
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT)
         {
             if (event.x() >= leftPos + TAB_X && event.x() <= leftPos)
             {
@@ -287,8 +286,7 @@ public class FramingSawWithEncoderScreen extends FramingSawScreen
                 }
                 if (hit)
                 {
-                    Minecraft.getInstance().getSoundManager()
-                            .play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
+                    minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
                     //noinspection ConstantConditions
                     minecraft.gameMode.handleInventoryButtonClick(menu.containerId, value);
                     return true;

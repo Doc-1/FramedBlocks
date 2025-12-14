@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.FilteredText;
+import net.minecraft.server.permissions.LevelBasedPermissionSet;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -26,7 +27,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
@@ -163,8 +164,7 @@ public class FramedSignBlockEntity extends FramedBlockEntity
         Component name = player == null ? Component.literal("Sign") : player.getDisplayName();
         Vec3 posVec = Vec3.atCenterOf(pos);
 
-        //noinspection ConstantConditions
-        return new CommandSourceStack(CommandSource.NULL, posVec, Vec2.ZERO, level, 2, nameString, name, level.getServer(), player);
+        return new CommandSourceStack(CommandSource.NULL, posVec, Vec2.ZERO, level, LevelBasedPermissionSet.GAMEMASTER, nameString, name, level.getServer(), player);
     }
 
     @Nullable

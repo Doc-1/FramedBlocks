@@ -19,31 +19,28 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.model.data.ModelData;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 public class FramedItemFrameGeometry extends Geometry
 {
     private static final int GLOWING_BRIGHTNESS = 5;
     private static final QuadListModifier GLOWING_LEATHER_MODIFIER = (quadMap, quads, side) ->
-    {
-        for (BakedQuad quad : quads)
-        {
-            QuadModifier.of(quad).apply(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0)).modifyInPlace();
-        }
-    };
+            quads.replaceAll(quad -> Objects.requireNonNull(QuadModifier.of(quad).lightEmission(GLOWING_BRIGHTNESS).exportDirect()));
 
     private final BlockState state;
     private final BlockStateModel baseModel;
     private final Direction facing;
     private final boolean leather;
     private final boolean mapFrame;
-    private final boolean glowing;
     private final float innerLength;
     private final float innerPos;
     private final float innerMin;
     private final float innerMax;
     private final float outerMin;
     private final float outerMax;
+    private final int lightEmission;
     @Nullable
     private final QuadListModifier leatherModifier;
 
@@ -54,7 +51,6 @@ public class FramedItemFrameGeometry extends Geometry
         this.facing = ctx.state().getValue(BlockStateProperties.FACING);
         this.leather = ctx.state().getValue(PropertyHolder.LEATHER);
         this.mapFrame = ctx.state().getValue(PropertyHolder.MAP_FRAME);
-        this.glowing = glowing;
 
         this.innerLength = mapFrame ? 15F/16F : 13F/16F;
         this.innerPos = mapFrame ? 1F/16F : 3F/16F;
@@ -62,6 +58,7 @@ public class FramedItemFrameGeometry extends Geometry
         this.innerMax = mapFrame ? 15F/16F : 13F/16F;
         this.outerMin = mapFrame ? 0F : 2F/16F;
         this.outerMax = mapFrame ? 1F : 14F/16F;
+        this.lightEmission = glowing ? GLOWING_BRIGHTNESS : 0;
         this.leatherModifier = glowing && leather ? GLOWING_LEATHER_MODIFIER : null;
     }
 
@@ -85,7 +82,7 @@ public class FramedItemFrameGeometry extends Geometry
         {
             QuadModifier.of(quad)
                     .applyIf(Modifiers.cutTopBottom(outerMin, outerMin, outerMax, outerMax), !mapFrame)
-                    .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                    .increaseLightEmission(lightEmission)
                     .export(quadMap.get(quadFace));
         }
         else if (quadFace == facing.getOpposite())
@@ -94,7 +91,7 @@ public class FramedItemFrameGeometry extends Geometry
             {
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutTopBottom(innerMin, innerMin, innerMax, innerMax))
-                        .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                        .increaseLightEmission(lightEmission)
                         .apply(Modifiers.setPosition(.5F/16F))
                         .export(quadMap.get(null));
             }
@@ -103,25 +100,25 @@ public class FramedItemFrameGeometry extends Geometry
             {
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutTopBottom(outerMin, outerMin, innerMin, outerMax))
-                        .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                        .increaseLightEmission(lightEmission)
                         .apply(Modifiers.setPosition(1F / 16F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutTopBottom(innerMax, outerMin, outerMax, outerMax))
-                        .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                        .increaseLightEmission(lightEmission)
                         .apply(Modifiers.setPosition(1F / 16F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutTopBottom(innerMin, outerMin, innerMax, innerMin))
-                        .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                        .increaseLightEmission(lightEmission)
                         .apply(Modifiers.setPosition(1F / 16F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutTopBottom(innerMin, innerMax, innerMax, outerMax))
-                        .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                        .increaseLightEmission(lightEmission)
                         .apply(Modifiers.setPosition(1F / 16F))
                         .export(quadMap.get(null));
             }
@@ -129,7 +126,7 @@ public class FramedItemFrameGeometry extends Geometry
             if (mapFrame && !leather)
             {
                 QuadModifier.of(quad)
-                        .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                        .increaseLightEmission(lightEmission)
                         .apply(Modifiers.setPosition(1F/16F))
                         .export(quadMap.get(quadFace));
             }
@@ -139,7 +136,7 @@ public class FramedItemFrameGeometry extends Geometry
             QuadModifier.of(quad)
                     .apply(Modifiers.cut(facing.getOpposite(), 1F/16F))
                     .applyIf(Modifiers.cut(quadFace.getClockWise().getAxis(), outerMax), !mapFrame)
-                    .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                    .increaseLightEmission(lightEmission)
                     .applyIf(Modifiers.setPosition(outerMax), !mapFrame)
                     .export(quadMap.get(null));
 
@@ -149,7 +146,7 @@ public class FramedItemFrameGeometry extends Geometry
                         .apply(Modifiers.cut(facing, 15.5F / 16F))
                         .apply(Modifiers.cut(facing.getOpposite(), 1F / 16F))
                         .apply(Modifiers.cut(quadFace.getClockWise().getAxis(), innerLength))
-                        .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                        .increaseLightEmission(lightEmission)
                         .apply(Modifiers.setPosition(innerPos))
                         .export(quadMap.get(null));
             }
@@ -162,7 +159,7 @@ public class FramedItemFrameGeometry extends Geometry
         {
             QuadModifier.of(quad)
                     .applyIf(Modifiers.cutSide(outerMin, outerMin, outerMax, outerMax), !mapFrame)
-                    .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                    .increaseLightEmission(lightEmission)
                     .export(quadMap.get(quadFace));
         }
         else if (quadFace == facing.getOpposite())
@@ -171,7 +168,7 @@ public class FramedItemFrameGeometry extends Geometry
             {
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutSide(innerMin, innerMin, innerMax, innerMax))
-                        .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                        .increaseLightEmission(lightEmission)
                         .apply(Modifiers.setPosition(.5F/16F))
                         .export(quadMap.get(null));
             }
@@ -180,25 +177,25 @@ public class FramedItemFrameGeometry extends Geometry
             {
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutSide(outerMin, outerMin, innerMin, outerMax))
-                        .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                        .increaseLightEmission(lightEmission)
                         .apply(Modifiers.setPosition(1F/16F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutSide(innerMax, outerMin, outerMax, outerMax))
-                        .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                        .increaseLightEmission(lightEmission)
                         .apply(Modifiers.setPosition(1F/16F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutSide(innerMin, outerMin, innerMax, innerMin))
-                        .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                        .increaseLightEmission(lightEmission)
                         .apply(Modifiers.setPosition(1F/16F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutSide(innerMin, innerMax, innerMax, outerMax))
-                        .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                        .increaseLightEmission(lightEmission)
                         .apply(Modifiers.setPosition(1F/16F))
                         .export(quadMap.get(null));
             }
@@ -206,7 +203,7 @@ public class FramedItemFrameGeometry extends Geometry
             if (mapFrame && !leather)
             {
                 QuadModifier.of(quad)
-                        .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                        .increaseLightEmission(lightEmission)
                         .apply(Modifiers.setPosition(1F/16F))
                         .export(quadMap.get(quadFace));
             }
@@ -216,7 +213,7 @@ public class FramedItemFrameGeometry extends Geometry
             QuadModifier.of(quad)
                     .apply(Modifiers.cut(facing.getOpposite(), 1F/16F))
                     .applyIf(Modifiers.cut(facing.getClockWise().getAxis(), outerMax), !mapFrame)
-                    .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                    .increaseLightEmission(lightEmission)
                     .applyIf(Modifiers.setPosition(outerMax), !mapFrame)
                     .export(quadMap.get(null));
 
@@ -226,7 +223,7 @@ public class FramedItemFrameGeometry extends Geometry
                         .apply(Modifiers.cut(facing, 15.5F/16F))
                         .apply(Modifiers.cut(facing.getOpposite(), 1F/16F))
                         .apply(Modifiers.cut(facing.getClockWise().getAxis(), innerLength))
-                        .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                        .increaseLightEmission(lightEmission)
                         .apply(Modifiers.setPosition(innerPos))
                         .export(quadMap.get(null));
             }
@@ -236,7 +233,7 @@ public class FramedItemFrameGeometry extends Geometry
             QuadModifier.of(quad)
                     .apply(Modifiers.cut(facing.getOpposite(), 1F/16F))
                     .applyIf(Modifiers.cut(Direction.Axis.Y, outerMax), !mapFrame)
-                    .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                    .increaseLightEmission(lightEmission)
                     .applyIf(Modifiers.setPosition(outerMax), !mapFrame)
                     .export(quadMap.get(null));
 
@@ -246,7 +243,7 @@ public class FramedItemFrameGeometry extends Geometry
                         .apply(Modifiers.cut(facing, 15.5F/16F))
                         .apply(Modifiers.cut(facing.getOpposite(), 1F/16F))
                         .apply(Modifiers.cut(Direction.Axis.Y, innerLength))
-                        .applyIf(Modifiers.applyLightmap(GLOWING_BRIGHTNESS, 0), glowing)
+                        .increaseLightEmission(lightEmission)
                         .apply(Modifiers.setPosition(innerPos))
                         .export(quadMap.get(null));
             }
@@ -261,8 +258,6 @@ public class FramedItemFrameGeometry extends Geometry
             consumer.acceptAll(baseModel, level, pos, random, state, true, false, false, false, null, leatherModifier);
         }
     }
-
-
 
     public static FramedItemFrameGeometry normal(GeometryFactory.Context ctx)
     {

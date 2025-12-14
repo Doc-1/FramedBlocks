@@ -12,7 +12,7 @@ import io.github.xfacthd.framedblocks.common.data.property.DirectionAxis;
 import io.github.xfacthd.framedblocks.common.data.property.HorizontalRotation;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
@@ -149,7 +149,7 @@ public final class BeaconTintTests
 
     private static String getTestName(BlockState state)
     {
-        ResourceLocation regName = BuiltInRegistries.BLOCK.getKey(state.getBlock());
+        Identifier regName = BuiltInRegistries.BLOCK.getKey(state.getBlock());
         return String.format("beacontinttests.test_%s", regName.getPath());
     }
 

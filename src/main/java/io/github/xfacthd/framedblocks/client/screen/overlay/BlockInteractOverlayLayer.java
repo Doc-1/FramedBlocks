@@ -8,7 +8,7 @@ import io.github.xfacthd.framedblocks.common.config.ClientConfig;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.ModLoader;
@@ -23,7 +23,7 @@ import java.util.Objects;
 
 public final class BlockInteractOverlayLayer implements GuiLayer
 {
-    public static final ResourceLocation LISTENER_ID = Utils.rl("block_interact_overlay");
+    public static final Identifier LISTENER_ID = Utils.id("block_interact_overlay");
     private static final List<BlockInteractOverlayWrapper> OVERLAYS = new ArrayList<>();
 
     @Override

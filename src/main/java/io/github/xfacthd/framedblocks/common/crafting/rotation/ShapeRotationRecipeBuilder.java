@@ -4,7 +4,7 @@ import io.github.xfacthd.framedblocks.api.datagen.recipes.builders.ExtShapelessR
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -15,7 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -83,7 +83,9 @@ public final class ShapeRotationRecipeBuilder extends ExtShapelessRecipeBuilder
         criteria.forEach(advancement::addCriterion);
 
         String recipeGroup = Objects.requireNonNullElse(group, "");
+        Objects.requireNonNull(tool, "No tool specified");
+        Objects.requireNonNull(block, "No block specified");
         ShapeRotationRecipe recipe = new ShapeRotationRecipe(recipeGroup, result, tool, block);
-        output.accept(key, recipe, advancement.build(key.location().withPrefix("recipes/" + category.getFolderName() + "/")));
+        output.accept(key, recipe, advancement.build(key.identifier().withPrefix("recipes/" + category.getFolderName() + "/")));
     }
 }

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.ApiStatus;
 
 public interface CamoApplicator
 {
-    ItemCapability<CamoApplicator, Void> CAPABILITY = ItemCapability.createVoid(Utils.rl("camo_applicator"), CamoApplicator.class);
+    ItemCapability<CamoApplicator, Void> CAPABILITY = ItemCapability.createVoid(Utils.id("camo_applicator"), CamoApplicator.class);
 
     boolean apply(FramedBlockEntity be, Player player, InteractionHand hand, CamoHandler camoHandler, ModifierHandler modHandler);
 

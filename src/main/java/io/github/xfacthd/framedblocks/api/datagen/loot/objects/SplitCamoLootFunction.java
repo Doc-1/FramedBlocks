@@ -24,7 +24,7 @@ public final class SplitCamoLootFunction extends LootItemConditionalFunction
             Codec.intRange(0, Integer.MAX_VALUE).fieldOf("camo_index").forGetter(func -> func.camoIndex)
     ).apply(inst, SplitCamoLootFunction::new));
     private static final DeferredHolder<LootItemFunctionType<?>, LootItemFunctionType<SplitCamoLootFunction>> TYPE =
-            DeferredHolder.create(Registries.LOOT_FUNCTION_TYPE, Utils.rl("split_camo"));
+            DeferredHolder.create(Registries.LOOT_FUNCTION_TYPE, Utils.id("split_camo"));
 
     private final int camoIndex;
 

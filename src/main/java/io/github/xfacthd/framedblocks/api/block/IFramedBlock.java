@@ -22,7 +22,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionHand;
@@ -61,7 +61,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.extensions.IBlockExtension;
 import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -72,7 +72,7 @@ public interface IFramedBlock extends EntityBlock, IBlockExtension
     Component STATE_UNLOCKED = Utils.translate("msg", "lock_state.unlocked").withStyle(ChatFormatting.GREEN);
     String CAMO_LABEL = Utils.translationKey("desc", "block.stored_camo");
     String CAMO_LABEL_MULTI = Utils.translationKey("desc", "block.stored_camo_multi");
-    ResourceLocation DYNAMIC_DROPS = Utils.rl("dynamic_drops");
+    Identifier DYNAMIC_DROPS = Utils.id("dynamic_drops");
 
     IBlockType getBlockType();
 

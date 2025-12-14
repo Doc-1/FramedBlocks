@@ -5,7 +5,7 @@ import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class FlatDoubleSlopeSlabCornerConnectionPredicate extends NonDetailedConnectionPredicate
 {

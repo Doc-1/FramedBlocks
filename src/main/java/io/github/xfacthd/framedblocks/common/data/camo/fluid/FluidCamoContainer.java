@@ -4,7 +4,7 @@ import io.github.xfacthd.framedblocks.api.camo.CamoContainer;
 import io.github.xfacthd.framedblocks.api.camo.CamoContainerFactory;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import net.minecraft.world.level.material.Fluid;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class FluidCamoContainer extends CamoContainer<FluidCamoContent, FluidCamoContainer>
 {

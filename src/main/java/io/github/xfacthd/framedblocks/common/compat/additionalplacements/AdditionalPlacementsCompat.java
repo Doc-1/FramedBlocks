@@ -33,11 +33,12 @@ public final class AdditionalPlacementsCompat
         {
             Registration.addRegistration(new RegistrationInitializer()
             {
-                @Override
-                public void addGlobalBlacklisters(Consumer<IBlockBlacklister<Block>> register)
-                {
-                    register.accept((block, blockId) -> block instanceof IFramedBlock);
-                }
+                // FIXME: RL->ID
+                //@Override
+                //public void addGlobalBlacklisters(Consumer<IBlockBlacklister<Block>> register)
+                //{
+                //    register.accept((block, blockId) -> block instanceof IFramedBlock);
+                //}
             });
         }
     }

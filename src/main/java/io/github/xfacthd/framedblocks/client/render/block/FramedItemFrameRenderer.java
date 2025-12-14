@@ -27,7 +27,7 @@ import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class FramedItemFrameRenderer implements BlockEntityRenderer<FramedItemFrameBlockEntity, FramedItemFrameRenderState>
 {
@@ -110,7 +110,7 @@ public class FramedItemFrameRenderer implements BlockEntityRenderer<FramedItemFr
             FramedItemFrameRenderState renderState,
             float partialTick,
             Vec3 cameraPos,
-            @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay
+            ModelFeatureRenderer.@Nullable CrumblingOverlay crumblingOverlay
     )
     {
         BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPos, crumblingOverlay);
@@ -147,7 +147,7 @@ public class FramedItemFrameRenderer implements BlockEntityRenderer<FramedItemFr
         if (!blockEntity.getBlockPos().equals(hitResult.getBlockPos())) return;
 
         Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
-        double dist = camera.getPosition().distanceToSqr(hitResult.getLocation());
+        double dist = camera.position().distanceToSqr(hitResult.getLocation());
         if (dist <= MAX_NAMETAG_DIST_SQR)
         {
             renderState.nameTag = stack.getHoverName();

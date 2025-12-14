@@ -38,7 +38,7 @@ public class QuadWindingDebugRenderer implements BlockDebugRenderer<FramedBlockE
     private static final Direction[] DIRECTIONS = Arrays.copyOf(Direction.values(), 7);
     private static final int[] VERT_INDEX_COLORS = { 0xFFFFFFFF, 0xFFFF0000, 0xFF00FF00, 0xFF0000FF };
     private static final RandomSource RANDOM = RandomSource.create();
-    private static final ContextKey<QuadWindingRenderState> DATA_KEY = new ContextKey<>(Utils.rl("quad_winding_debug_renderer"));
+    private static final ContextKey<QuadWindingRenderState> DATA_KEY = new ContextKey<>(Utils.id("quad_winding_debug_renderer"));
 
     @Override
     public void extract(FramedBlockEntity be, BlockHitResult blockHit, float partialTick, LevelRenderState renderState)

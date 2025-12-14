@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.IndexModifier;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class StorageBlockItemResourceHandler extends ItemStacksResourceHandler implements IStorageBlockItemResourceHandler
 {

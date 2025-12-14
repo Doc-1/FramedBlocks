@@ -15,7 +15,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.IEventBus;
@@ -64,16 +64,17 @@ public final class DiagonalBlocksCompat
     {
         public static void init(IEventBus modBus)
         {
-            DiagonalBlockTypes.FENCE.registerBlockFactory(
-                    Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_FENCE).location(),
-                    block -> FramedDiagonalFenceBlock::new
-            );
-            DiagonalBlockTypes.WINDOW.registerBlockFactory(
-                    Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_PANE).location(),
-                    block -> FramedDiagonalGlassPaneBlock::new
-            );
-            DiagonalBlockTypes.WINDOW.disableBlockFactory(Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_BARS).location());
-            DiagonalBlockTypes.WALL.disableBlockFactory(Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_WALL).location());
+            // FIXME: RL->ID
+            //DiagonalBlockTypes.FENCE.registerBlockFactory(
+            //        Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_FENCE).identifier(),
+            //        block -> FramedDiagonalFenceBlock::new
+            //);
+            //DiagonalBlockTypes.WINDOW.registerBlockFactory(
+            //        Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_PANE).identifier(),
+            //        block -> FramedDiagonalGlassPaneBlock::new
+            //);
+            //DiagonalBlockTypes.WINDOW.disableBlockFactory(Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_BARS).identifier());
+            //DiagonalBlockTypes.WALL.disableBlockFactory(Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_WALL).identifier());
 
             modBus.addListener(GuardedAccess::onBlockEntityTypeAddBlocks);
         }
@@ -100,9 +101,11 @@ public final class DiagonalBlocksCompat
 
         private static Optional<Holder.Reference<Block>> getBlock(DiagonalBlockType type, Holder<Block> srcBlock)
         {
-            ResourceLocation srcName = Utils.getKeyOrThrow(srcBlock).location();
-            ResourceLocation destName = type.id(srcName.getNamespace() + "/" + srcName.getPath());
-            return BuiltInRegistries.BLOCK.get(ResourceKey.create(Registries.BLOCK, destName));
+            // FIXME: RL->ID
+            //Identifier srcName = Utils.getKeyOrThrow(srcBlock).identifier();
+            //Identifier destName = type.id(srcName.getNamespace() + "/" + srcName.getPath());
+            //return BuiltInRegistries.BLOCK.get(ResourceKey.create(Registries.BLOCK, destName));
+            throw new UnsupportedOperationException();
         }
 
         private GuardedAccess() { }

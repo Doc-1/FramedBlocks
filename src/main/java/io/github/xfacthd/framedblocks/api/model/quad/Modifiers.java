@@ -3,7 +3,6 @@ package io.github.xfacthd.framedblocks.api.model.quad;
 import com.google.common.base.Preconditions;
 import io.github.xfacthd.framedblocks.api.model.util.ModelUtils;
 import io.github.xfacthd.framedblocks.api.util.Utils;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -34,6 +33,11 @@ public final class Modifiers
             new Vector3f(0F, 1F, 0F), //West,  top left corner
             new Vector3f(1F, 1F, 1F)  //East,  top left corner
     };
+
+    public static QuadModifier.Modifier noop()
+    {
+        return NOOP_MODIFIER;
+    }
 
     /**
      * Cut the quad such that the provided cut edge is {@code length} away from the opposite edge's block bound.
@@ -146,7 +150,6 @@ public final class Modifiers
 
         CuttingConfig.UvSrcVertSet uvVertsOne = config.uvVertsOne();
         ModelUtils.remapUV(
-                sprite,
                 data,
                 data.pos(uvVertsOne.posOne(), coordForward),
                 data.pos(uvVertsOne.posTwo(), coordForward),
@@ -159,7 +162,6 @@ public final class Modifiers
         );
         CuttingConfig.UvSrcVertSet uvVertsTwo = config.uvVertsTwo();
         ModelUtils.remapUV(
-                sprite,
                 data,
                 data.pos(uvVertsTwo.posOne(), coordForward),
                 data.pos(uvVertsTwo.posTwo(), coordForward),
@@ -176,8 +178,6 @@ public final class Modifiers
 
         return true;
     }
-
-
 
     /**
      * Cuts a vertical facing quad to the dimensions given by the min and max coordinates
@@ -466,8 +466,6 @@ public final class Modifiers
         };
     }
 
-
-
     /**
      * Offsets the quad by the given amount in the given direction
      * @param dir The direction to offset the quad in
@@ -558,8 +556,6 @@ public final class Modifiers
             return true;
         };
     }
-
-
 
     /**
      * Rotates the quad on the given axis around the block center
@@ -712,32 +708,6 @@ public final class Modifiers
             return true;
         };
     }
-
-    public static QuadModifier.Modifier applyFullbright()
-    {
-        return applyLightmap(15, 15);
-    }
-
-    public static QuadModifier.Modifier applyLightmap(int light)
-    {
-        return applyLightmap(light, light);
-    }
-
-    public static QuadModifier.Modifier applyLightmap(int blockLight, int skyLight)
-    {
-        Preconditions.checkArgument(blockLight >= 0 && blockLight < 16, "Invalid block light value");
-        Preconditions.checkArgument(skyLight >= 0 && skyLight < 16, "Invalid sky light value");
-        return data ->
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                data.light(i, LightTexture.pack(blockLight, skyLight));
-            }
-            return true;
-        };
-    }
-
-
 
     private Modifiers() {}
 }

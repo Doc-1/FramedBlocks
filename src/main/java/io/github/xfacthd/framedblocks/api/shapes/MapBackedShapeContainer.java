@@ -2,7 +2,7 @@ package io.github.xfacthd.framedblocks.api.shapes;
 
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.IdentityHashMap;
 import java.util.Map;

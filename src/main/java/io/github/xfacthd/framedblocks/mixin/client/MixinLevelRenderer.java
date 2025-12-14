@@ -1,7 +1,6 @@
 package io.github.xfacthd.framedblocks.mixin.client;
 
 import io.github.xfacthd.framedblocks.client.util.FramedClientUtils;
-import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderBuffers;
@@ -25,10 +24,10 @@ public class MixinLevelRenderer
     private Minecraft minecraft;
 
     @Unique
-    private GraphicsStatus framedblocks$lastGraphicsMode = GraphicsStatus.FANCY;
+    private boolean framedblocks$lastCutoutLeaves;
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void framedblocks$captureInitialGraphicsMode(
+    private void framedblocks$captureInitialCutoutLeaves(
             Minecraft mc,
             EntityRenderDispatcher entityRenderDispatcher,
             BlockEntityRenderDispatcher blockEntityRenderDispatcher,
@@ -38,16 +37,16 @@ public class MixinLevelRenderer
             CallbackInfo ci
     )
     {
-        framedblocks$lastGraphicsMode = mc.options.graphicsMode().get();
+        framedblocks$lastCutoutLeaves = mc.options.cutoutLeaves().get();
     }
 
     @Inject(method = "allChanged", at = @At("HEAD"))
-    private void framedblocks$handleRedrawOnGraphicsModeChange(CallbackInfo ci)
+    private void framedblocks$handleRedrawOnCutoutLeavesChange(CallbackInfo ci)
     {
-        GraphicsStatus graphicsMode = minecraft.options.graphicsMode().get();
-        if (graphicsMode != framedblocks$lastGraphicsMode)
+        boolean cutoutLeaves = minecraft.options.cutoutLeaves().get();
+        if (cutoutLeaves != framedblocks$lastCutoutLeaves)
         {
-            framedblocks$lastGraphicsMode = graphicsMode;
+            framedblocks$lastCutoutLeaves = cutoutLeaves;
             FramedClientUtils.clearModelCaches();
         }
     }

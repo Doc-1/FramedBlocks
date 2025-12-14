@@ -28,7 +28,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -50,7 +50,7 @@ import java.util.stream.Stream;
 @SuppressWarnings({ "SameParameterValue", "unused", "UnusedReturnValue" })
 public abstract class AbstractFramedBlockModelProvider extends ModelProvider
 {
-    protected static final ResourceLocation FRAMED_CUBE_MODEL = ModelLocationUtils.getModelLocation(Utils.FRAMED_CUBE.value());
+    protected static final Identifier FRAMED_CUBE_MODEL = ModelLocationUtils.getModelLocation(Utils.FRAMED_CUBE.value());
     protected static final TextureSlot SLOT_FRAME = TextureSlot.create("frame");
     protected static final TextureSlot SLOT_UNDERLAY = TextureSlot.create("underlay");
     protected static final PropertyDispatch<VariantMutator> ROTATION_FACING_ALT = PropertyDispatch.modify(BlockStateProperties.FACING)
@@ -116,21 +116,21 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
         return simpleFramedBlock(blockModels, block, ModelLocationUtils.getModelLocation(block.value()));
     }
 
-    protected static FramedBlockModelDefinitionGenerator simpleFramedBlock(BlockModelGenerators blockModels, Holder<Block> block, ResourceLocation model)
+    protected static FramedBlockModelDefinitionGenerator simpleFramedBlock(BlockModelGenerators blockModels, Holder<Block> block, Identifier model)
     {
         FramedBlockModelDefinitionGenerator framedDefinition = new FramedBlockModelDefinitionGenerator(block.value(), singleVariant(model), Optional.empty());
         blockModels.blockStateOutput.accept(framedDefinition);
         return framedDefinition;
     }
 
-    protected static FramedBlockModelDefinitionGenerator simpleFramedBlockWithItem(BlockModelGenerators blockModels, Holder<Block> block, ResourceLocation model)
+    protected static FramedBlockModelDefinitionGenerator simpleFramedBlockWithItem(BlockModelGenerators blockModels, Holder<Block> block, Identifier model)
     {
         FramedBlockModelDefinitionGenerator framedDefinition = simpleFramedBlock(blockModels, block, model);
         framedBlockItemModel(blockModels, block);
         return framedDefinition;
     }
 
-    protected static FramedBlockModelDefinitionGenerator simpleFramedBlockWithItem(BlockModelGenerators blockModels, Holder<Block> block, ResourceLocation model, Consumer<FramedItemModelBuilder> builderConsumer)
+    protected static FramedBlockModelDefinitionGenerator simpleFramedBlockWithItem(BlockModelGenerators blockModels, Holder<Block> block, Identifier model, Consumer<FramedItemModelBuilder> builderConsumer)
     {
         FramedBlockModelDefinitionGenerator framedDefinition = simpleFramedBlock(blockModels, block, model);
         framedBlockItemModel(blockModels, block, builderConsumer);
@@ -175,13 +175,13 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
         simpleFramedBlock(blockModels, block, blockModelFromTemplate(blockModels, block, template, textures));
     }
 
-    protected static ResourceLocation blockModelFromTemplate(BlockModelGenerators blockModels, Holder<Block> block, ModelTemplate template, TextureMapping textures)
+    protected static Identifier blockModelFromTemplate(BlockModelGenerators blockModels, Holder<Block> block, ModelTemplate template, TextureMapping textures)
     {
-        ResourceLocation name = ModelLocationUtils.getModelLocation(block.value(), template.suffix.orElse(""));
+        Identifier name = ModelLocationUtils.getModelLocation(block.value(), template.suffix.orElse(""));
         return template.create(name, textures, blockModels.modelOutput);
     }
 
-    protected static SingleVariant.Unbaked singleVariant(ResourceLocation model)
+    protected static SingleVariant.Unbaked singleVariant(Identifier model)
     {
         return new SingleVariant.Unbaked(new Variant(model, Variant.SimpleModelState.DEFAULT));
     }
@@ -208,27 +208,27 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
 
     protected static void blockItemFromTemplate(BlockModelGenerators blockModels, Holder<Block> block, ModelTemplate template, TextureMapping textures)
     {
-        ResourceLocation name = ModelLocationUtils.getModelLocation(block.value().asItem(), template.suffix.orElse(""));
+        Identifier name = ModelLocationUtils.getModelLocation(block.value().asItem(), template.suffix.orElse(""));
         blockModels.registerSimpleItemModel(block.value(), template.create(name, textures, blockModels.modelOutput));
     }
 
-    protected static ResourceLocation makeUnderlayedCube(
-            BlockModelGenerators blockModels, Holder<Block> block, ResourceLocation frameTex, ResourceLocation underlayTex, Consumer<ExtendedModelTemplateBuilder> consumer
+    protected static Identifier makeUnderlayedCube(
+            BlockModelGenerators blockModels, Holder<Block> block, Identifier frameTex, Identifier underlayTex, Consumer<ExtendedModelTemplateBuilder> consumer
     )
     {
-        ResourceLocation name = ModelLocationUtils.getModelLocation(block.value());
+        Identifier name = ModelLocationUtils.getModelLocation(block.value());
         return makeUnderlayedCube(blockModels, name, frameTex, underlayTex, consumer);
     }
 
-    protected static ResourceLocation makeUnderlayedCube(
-            BlockModelGenerators blockModels, ResourceLocation name, ResourceLocation frameTex, ResourceLocation underlayTex, Consumer<ExtendedModelTemplateBuilder> consumer
+    protected static Identifier makeUnderlayedCube(
+            BlockModelGenerators blockModels, Identifier name, Identifier frameTex, Identifier underlayTex, Consumer<ExtendedModelTemplateBuilder> consumer
     )
     {
         ExtendedModelTemplateBuilder builder = ExtendedModelTemplateBuilder.builder()
                 .requiredTextureSlot(SLOT_FRAME)
                 .requiredTextureSlot(SLOT_UNDERLAY)
                 .requiredTextureSlot(TextureSlot.PARTICLE)
-                .parent(ResourceLocation.withDefaultNamespace("block/block"))
+                .parent(Identifier.withDefaultNamespace("block/block"))
                 .element(elem -> elem.cube(SLOT_UNDERLAY))
                 .element(elem -> elem.cube(SLOT_FRAME))
                 .renderType("cutout");
@@ -245,16 +245,16 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
         );
     }
 
-    protected static void makeOverlayCube(BlockModelGenerators blockModels, ResourceLocation name, ResourceLocation texture)
+    protected static void makeOverlayCube(BlockModelGenerators blockModels, Identifier name, Identifier texture)
     {
         makeOverlayCube(blockModels, name, texture, $ -> {});
     }
 
-    protected static void makeOverlayCube(BlockModelGenerators blockModels, ResourceLocation name, ResourceLocation texture, Consumer<ExtendedModelTemplateBuilder> consumer)
+    protected static void makeOverlayCube(BlockModelGenerators blockModels, Identifier name, Identifier texture, Consumer<ExtendedModelTemplateBuilder> consumer)
     {
         ExtendedModelTemplateBuilder builder = ExtendedModelTemplateBuilder.builder()
                 .requiredTextureSlot(TextureSlot.ALL)
-                .parent(ResourceLocation.withDefaultNamespace("block/cube_all"))
+                .parent(Identifier.withDefaultNamespace("block/cube_all"))
                 .rootTransforms(xforms -> xforms
                         .scale(1.002F)
                         .origin(TransformationHelper.TransformOrigin.CENTER)

@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -73,7 +73,7 @@ public abstract class BlockInteractOverlay
 
     public record Target(Level level, BlockPos pos, BlockState state, Direction side, Player player) { }
 
-    public record Texture(ResourceLocation location, int xOff, int yOff, int width, int height, int texWidth, int texHeight)
+    public record Texture(Identifier location, int xOff, int yOff, int width, int height, int texWidth, int texHeight)
     {
         public void draw(GuiGraphics graphics, int x, int y)
         {

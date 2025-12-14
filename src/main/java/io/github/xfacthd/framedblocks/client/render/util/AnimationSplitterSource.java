@@ -13,7 +13,8 @@ import net.minecraft.client.renderer.texture.atlas.sources.LazyLoadedImage;
 import net.minecraft.client.resources.metadata.animation.AnimationFrame;
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.resources.metadata.texture.TextureMetadataSection;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.metadata.MetadataSectionType;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -24,10 +25,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-public record AnimationSplitterSource(ResourceLocation resource, List<Frame> frames) implements SpriteSource
+public record AnimationSplitterSource(Identifier resource, List<Frame> frames) implements SpriteSource
 {
     public static final MapCodec<AnimationSplitterSource> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            ResourceLocation.CODEC.fieldOf("resource").forGetter(s -> s.resource),
+            Identifier.CODEC.fieldOf("resource").forGetter(s -> s.resource),
             ExtraCodecs.nonEmptyList(Frame.CODEC.listOf()).fieldOf("frames").forGetter(s -> s.frames)
     ).apply(inst, AnimationSplitterSource::new));
 
@@ -40,7 +41,7 @@ public record AnimationSplitterSource(ResourceLocation resource, List<Frame> fra
     @Override
     public void run(ResourceManager mgr, Output out, Set<MetadataSectionType<?>> additionalMetadata)
     {
-        ResourceLocation texPath = TEXTURE_ID_CONVERTER.idToFile(resource);
+        Identifier texPath = TEXTURE_ID_CONVERTER.idToFile(resource);
         Optional<Resource> optResource = mgr.getResource(texPath);
         if (optResource.isPresent())
         {
@@ -60,26 +61,24 @@ public record AnimationSplitterSource(ResourceLocation resource, List<Frame> fra
         return CODEC;
     }
 
-
-
-    public record Frame(int frameIdx, ResourceLocation outLoc)
+    public record Frame(int frameIdx, Identifier outLoc)
     {
         private static final Codec<Frame> CODEC = RecordCodecBuilder.create(inst -> inst.group(
                 Codec.intRange(0, Integer.MAX_VALUE).fieldOf("frame_idx").forGetter(Frame::frameIdx),
-                ResourceLocation.CODEC.fieldOf("sprite").forGetter(Frame::outLoc)
+                Identifier.CODEC.fieldOf("sprite").forGetter(Frame::outLoc)
         ).apply(inst, Frame::new));
     }
 
     public record FrameInstance(
             Resource resource,
-            ResourceLocation texPath,
+            Identifier texPath,
             LazyLoadedImage lazyImage,
             Frame frame,
             Set<MetadataSectionType<?>> additionalMetadata
-    ) implements SpriteSupplier
+    ) implements DiscardableLoader
     {
         @Override
-        public SpriteContents apply(SpriteResourceLoader loader)
+        public SpriteContents get(SpriteResourceLoader loader)
         {
             try
             {
@@ -107,7 +106,8 @@ public record AnimationSplitterSource(ResourceLocation resource, List<Frame> fra
                 NativeImage imageOut = new NativeImage(NativeImage.Format.RGBA, frameW, frameH, false);
                 image.copyRect(imageOut, srcX, srcY, 0, 0, frameW, frameH, false, false);
                 List<MetadataSectionType.WithValue<?>> metaSections = srcMeta.getTypedSections(additionalMetadata);
-                return new SpriteContents(frame.outLoc, new FrameSize(frameW, frameH), imageOut, Optional.empty(), metaSections);
+                Optional<TextureMetadataSection> textureMetadata = srcMeta.getSection(TextureMetadataSection.TYPE);
+                return new SpriteContents(frame.outLoc, new FrameSize(frameW, frameH), imageOut, Optional.empty(), metaSections, textureMetadata);
             }
             catch (Exception e)
             {
@@ -121,7 +121,7 @@ public record AnimationSplitterSource(ResourceLocation resource, List<Frame> fra
         }
 
         private static void checkFrameExists(
-                ResourceLocation texPath, AnimationMetadataSection anim, int frameIdx, int frameCount
+                Identifier texPath, AnimationMetadataSection anim, int frameIdx, int frameCount
         )
         {
             boolean frameFound = false;

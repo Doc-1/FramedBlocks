@@ -6,12 +6,12 @@ import com.mojang.brigadier.context.CommandContext;
 import io.github.xfacthd.framedblocks.FramedBlocks;
 import io.github.xfacthd.framedblocks.cmdtests.tests.*;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.blocks.BlockStateArgument;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Util;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 import java.io.IOException;
