@@ -42,7 +42,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.ARGB;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -222,7 +221,7 @@ public final class FramedBlockItemModel extends AbstractFramedBlockItemModel
         int index = quad.tintIndex();
         if (!tintValues.containsKey(index))
         {
-            tintValues.put(index, ARGB.toABGR(tintProvider.getColor(stack, camos, index)));
+            tintValues.put(index, tintProvider.getColor(stack, camos, index));
         }
         int tint = tintValues.get(index);
         return tint == -1 ? quad : QuadUtils.setBakedColors(quad, BakedColors.of(tint), true);
