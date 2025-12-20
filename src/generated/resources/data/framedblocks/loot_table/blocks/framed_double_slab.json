@@ -15,7 +15,7 @@
             {
               "conditions": [
                 {
-                  "condition": "framedblocks:non_trivial_camo"
+                  "condition": "framedblocks:retain_camo"
                 }
               ],
               "function": "minecraft:copy_components",
@@ -28,7 +28,7 @@
               "camo_index": 0,
               "conditions": [
                 {
-                  "condition": "framedblocks:non_trivial_camo"
+                  "condition": "framedblocks:retain_camo"
                 }
               ],
               "function": "framedblocks:split_camo"
@@ -56,7 +56,7 @@
             {
               "conditions": [
                 {
-                  "condition": "framedblocks:non_trivial_camo"
+                  "condition": "framedblocks:retain_camo"
                 }
               ],
               "function": "minecraft:copy_components",
@@ -69,7 +69,7 @@
               "camo_index": 1,
               "conditions": [
                 {
-                  "condition": "framedblocks:non_trivial_camo"
+                  "condition": "framedblocks:retain_camo"
                 }
               ],
               "function": "framedblocks:split_camo"

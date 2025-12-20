@@ -15,7 +15,7 @@
             {
               "conditions": [
                 {
-                  "condition": "framedblocks:non_trivial_camo"
+                  "condition": "framedblocks:retain_camo"
                 }
               ],
               "function": "minecraft:copy_components",

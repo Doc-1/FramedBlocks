@@ -11,7 +11,7 @@ import io.github.xfacthd.framedblocks.api.camo.CamoContainerFactory;
 import io.github.xfacthd.framedblocks.api.camo.CamoList;
 import io.github.xfacthd.framedblocks.api.camo.empty.EmptyCamoContainerFactory;
 import io.github.xfacthd.framedblocks.api.component.FrameConfig;
-import io.github.xfacthd.framedblocks.api.datagen.loot.objects.NonTrivialCamoLootCondition;
+import io.github.xfacthd.framedblocks.api.datagen.loot.objects.RetainCamoLootCondition;
 import io.github.xfacthd.framedblocks.api.datagen.loot.objects.SplitCamoLootFunction;
 import io.github.xfacthd.framedblocks.api.util.FramedConstants;
 import io.github.xfacthd.framedblocks.api.util.Utils;
@@ -723,7 +723,7 @@ public final class FBContent
 
     // region LootItemConditions
     public static final Holder<LootItemConditionType> NON_TRIVIAL_CAMO_LOOT_CONDITION = registerLootCondition(
-            "non_trivial_camo", NonTrivialCamoLootCondition.MAP_CODEC
+            "retain_camo", RetainCamoLootCondition.MAP_CODEC
     );
     // endregion
 

@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.api.datagen.loot;
 
 import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
-import io.github.xfacthd.framedblocks.api.datagen.loot.objects.NonTrivialCamoLootCondition;
+import io.github.xfacthd.framedblocks.api.datagen.loot.objects.RetainCamoLootCondition;
 import io.github.xfacthd.framedblocks.api.datagen.loot.objects.SplitCamoLootFunction;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.minecraft.advancements.criterion.StatePropertiesPredicate;
@@ -56,7 +56,7 @@ public abstract class FramedBlockLootSubProvider extends BlockLootSubProvider
             {
                 int index = i;
                 table.withPool(createDropWithCamoPool(block, drop, builder ->
-                        builder.apply(SplitCamoLootFunction.split(index).when(NonTrivialCamoLootCondition.BUILDER))
+                        builder.apply(SplitCamoLootFunction.split(index).when(RetainCamoLootCondition.BUILDER))
                 ));
             }
             return table.withPool(createDynamicDropPool(block));
@@ -98,7 +98,7 @@ public abstract class FramedBlockLootSubProvider extends BlockLootSubProvider
         LootPoolSingletonContainer.Builder<?> tableItem = LootItem.lootTableItem(drop)
                 .apply(CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY)
                         .include(Utils.DC_TYPE_CAMO_LIST.value())
-                        .when(NonTrivialCamoLootCondition.BUILDER)
+                        .when(RetainCamoLootCondition.BUILDER)
                 );
         itemModifier.accept(tableItem);
         return applyExplosionCondition(block, LootPool.lootPool()
