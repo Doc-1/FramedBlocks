@@ -3,6 +3,7 @@ package io.github.xfacthd.framedblocks.api.model.quad;
 import com.mojang.datafixers.util.Pair;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.minecraft.core.Direction;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 
@@ -10,7 +11,7 @@ final class ModifierConfigs
 {
     private static final boolean PRE_COMPUTE_CONFIGS = true;
     private static final Direction[] DIRECTIONS = Direction.values();
-    private static final CuttingConfig[] CUTTING_CONFIGS = computeCuttingConfigs();
+    private static final @Nullable CuttingConfig[] CUTTING_CONFIGS = computeCuttingConfigs();
 
     static CuttingConfig getCuttingConfig(Direction quadDir, Direction cutEdge)
     {

@@ -11,6 +11,9 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 public final class FramedClientDoubleBlockExtensions extends FramedClientBlockExtensions
 {
@@ -19,9 +22,9 @@ public final class FramedClientDoubleBlockExtensions extends FramedClientBlockEx
     private FramedClientDoubleBlockExtensions() { }
 
     @Override
-    public boolean addHitEffects(BlockState state, Level level, HitResult target, ParticleEngine engine)
+    public boolean addHitEffects(BlockState state, Level level, @Nullable HitResult target, ParticleEngine engine)
     {
-        BlockHitResult hit = (BlockHitResult) target;
+        BlockHitResult hit = (BlockHitResult) Objects.requireNonNull(target);
         boolean suppressed = suppressParticles(state, level, hit.getBlockPos());
         if (!suppressed && level.getBlockEntity(hit.getBlockPos()) instanceof FramedDoubleBlockEntity be)
         {

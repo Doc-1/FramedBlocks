@@ -14,6 +14,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
+import org.jspecify.annotations.Nullable;
 
 public class FramedLargeStoneButtonGeometry extends FramedLargeButtonGeometry
 {
@@ -23,7 +24,7 @@ public class FramedLargeStoneButtonGeometry extends FramedLargeButtonGeometry
     private final BlockState state;
     private final TextureAtlasSprite frameSpriteFront;
     private final TextureAtlasSprite frameSpriteSide;
-    private final Direction[] overlayCullFaces;
+    private final @Nullable Direction[] overlayCullFaces;
     private final OverlayPartGenerator.SpriteGetter overlaySpriteGetter;
 
     private FramedLargeStoneButtonGeometry(GeometryFactory.Context ctx)
@@ -32,7 +33,7 @@ public class FramedLargeStoneButtonGeometry extends FramedLargeButtonGeometry
         this.state = ctx.state();
         this.frameSpriteFront = ctx.textureLookup().get(FRAME_LOCATION_FRONT);
         this.frameSpriteSide = ctx.textureLookup().get(FRAME_LOCATION_SIDE);
-        this.overlayCullFaces = new Direction[] { facing.getOpposite(), null };
+        this.overlayCullFaces = new @Nullable Direction[] { facing.getOpposite(), null };
         this.overlaySpriteGetter = dir -> dir.getAxis() == facing.getAxis() ? frameSpriteFront : frameSpriteSide;
     }
 
@@ -45,8 +46,6 @@ public class FramedLargeStoneButtonGeometry extends FramedLargeButtonGeometry
             generator.generate(overlayCullFaces, overlaySpriteGetter, frameSpriteFront, ChunkSectionLayer.CUTOUT, Blocks.STONE.defaultBlockState());
         }
     }
-
-
 
     public static FramedLargeButtonGeometry create(GeometryFactory.Context ctx)
     {

@@ -13,11 +13,10 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
-import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
-public record FramingSawRecipeAdditive(Ingredient ingredient, int count, @Nullable TagKey<Item> srcTag)
+public record FramingSawRecipeAdditive(Ingredient ingredient, int count, Optional<TagKey<Item>> srcTag)
 {
     public static final Codec<FramingSawRecipeAdditive> CODEC = RecordCodecBuilder.create(inst -> inst.group(
             Ingredient.CODEC.fieldOf("ingredient").forGetter(FramingSawRecipeAdditive::ingredient),
@@ -29,8 +28,8 @@ public record FramingSawRecipeAdditive(Ingredient ingredient, int count, @Nullab
             ByteBufCodecs.VAR_INT,
             FramingSawRecipeAdditive::count,
             ByteBufCodecs.optional(Identifier.STREAM_CODEC).map(
-                    opt -> opt.map(ItemTags::create).orElse(null),
-                    key -> Optional.ofNullable(key).map(TagKey::location)
+                    opt -> opt.map(ItemTags::create),
+                    key -> key.map(TagKey::location)
             ),
             FramingSawRecipeAdditive::srcTag,
             FramingSawRecipeAdditive::new
@@ -45,7 +44,7 @@ public record FramingSawRecipeAdditive(Ingredient ingredient, int count, @Nullab
 
     public boolean isTagBased()
     {
-        return srcTag != null;
+        return srcTag.isPresent();
     }
 
     public FramingSawRecipeDisplay.AdditiveDisplay toDisplay()
@@ -60,7 +59,7 @@ public record FramingSawRecipeAdditive(Ingredient ingredient, int count, @Nullab
         {
             srcTag = named.key();
         }
-        return new FramingSawRecipeAdditive(ingredient, count, srcTag);
+        return new FramingSawRecipeAdditive(ingredient, count, Optional.ofNullable(srcTag));
     }
 
     public static FramingSawRecipeAdditive of(FramingSawRecipeBuilder.Additive additive)

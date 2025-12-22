@@ -775,6 +775,7 @@ public final class FBContent
         LOOT_NUMBER_PROVIDERS.register(modBus);
         CAMO_CONTAINER_FACTORIES.register(modBus);
 
+        //noinspection NullableProblems - IDEA's nullability analysis is broken on generics
         DOUBLE_BLOCK_ENTITIES.add((DeferredBlockEntity<? extends FramedDoubleBlockEntity>) BE_TYPE_FRAMED_DOUBLE_BLOCK);
     }
 

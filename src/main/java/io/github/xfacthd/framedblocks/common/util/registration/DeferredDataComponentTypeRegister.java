@@ -19,7 +19,7 @@ public final class DeferredDataComponentTypeRegister extends DeferredRegister.Da
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "NullableProblems" })
     protected <I extends DataComponentType<?>> DeferredHolder<DataComponentType<?>, I> createHolder(
             ResourceKey<? extends Registry<DataComponentType<?>>> registryKey, Identifier key
     )
@@ -32,8 +32,6 @@ public final class DeferredDataComponentTypeRegister extends DeferredRegister.Da
     {
         return (DeferredDataComponentType<D>) super.registerComponentType(name, builder);
     }
-
-
 
     public static DeferredDataComponentTypeRegister create(String namespace)
     {

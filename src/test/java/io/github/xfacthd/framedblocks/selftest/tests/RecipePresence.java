@@ -71,18 +71,18 @@ public final class RecipePresence
         {
             if (craftDiff.contains(item))
             {
-                reporter.warn("Block %s is uncraftable", item);
+                reporter.warn("Block {} is uncraftable", item);
             }
             else
             {
-                reporter.warn("Block %s has no saw recipe", item);
+                reporter.warn("Block {} has no saw recipe", item);
             }
         }
 
         Set<ItemLike> miscCraftDiff = Sets.difference(collectMiscItems(), craftResults);
         for (ItemLike item : miscCraftDiff)
         {
-            reporter.warn("Item %s is uncraftable", item);
+            reporter.warn("Item {} is uncraftable", item);
         }
 
         reporter.endTest();
@@ -116,8 +116,6 @@ public final class RecipePresence
                 .map(ItemLike.class::cast)
                 .collect(Collectors.toSet());
     }
-
-
 
     private RecipePresence() { }
 }

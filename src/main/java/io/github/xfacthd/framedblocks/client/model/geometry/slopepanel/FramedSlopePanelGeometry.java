@@ -45,18 +45,9 @@ public class FramedSlopePanelGeometry extends Geometry
         if (face == orientation.getOpposite())
         {
             Direction cutDir = front ? facing : facing.getOpposite();
-            if (Utils.isY(orientation))
-            {
-                QuadModifier.of(quad)
-                        .apply(Modifiers.cut(cutDir, .5F))
-                        .export(quadMap.get(face));
-            }
-            else
-            {
-                QuadModifier.of(quad)
-                        .apply(Modifiers.cut(cutDir, .5F))
-                        .export(quadMap.get(face));
-            }
+            QuadModifier.of(quad)
+                    .apply(Modifiers.cut(cutDir, .5F))
+                    .export(quadMap.get(face));
         }
         else if ((!rotation.isVertical() || !ySlope) && face == facing.getOpposite())
         {

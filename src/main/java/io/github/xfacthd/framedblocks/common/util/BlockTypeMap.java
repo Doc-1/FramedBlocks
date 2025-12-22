@@ -3,6 +3,7 @@ package io.github.xfacthd.framedblocks.common.util;
 import io.github.xfacthd.framedblocks.FramedBlocks;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.data.BlockType;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -13,7 +14,7 @@ public abstract class BlockTypeMap<T>
     private static final int TYPE_COUNT = TYPES.length;
 
     private final T defaultValue;
-    private final Object[] values = new Object[TYPE_COUNT];
+    private final @Nullable Object[] values = new Object[TYPE_COUNT];
 
     protected BlockTypeMap(T defaultValue)
     {

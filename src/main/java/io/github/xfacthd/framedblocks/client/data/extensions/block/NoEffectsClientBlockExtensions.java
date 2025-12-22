@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
+import org.jspecify.annotations.Nullable;
 
 public final class NoEffectsClientBlockExtensions extends FramedClientBlockExtensions
 {
@@ -16,7 +17,7 @@ public final class NoEffectsClientBlockExtensions extends FramedClientBlockExten
     private NoEffectsClientBlockExtensions() { }
 
     @Override
-    public boolean addHitEffects(BlockState state, Level level, HitResult target, ParticleEngine manager)
+    public boolean addHitEffects(BlockState state, Level level, @Nullable HitResult target, ParticleEngine manager)
     {
         return true;
     }

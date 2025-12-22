@@ -303,7 +303,6 @@ public abstract class AbstractFramedBlockModelProvider extends ModelProvider
     }
 
     @Override
-    @SuppressWarnings("DataFlowIssue") // BlockModelDefinitionGenerator#create() will never return null
     public CompletableFuture<?> run(CachedOutput output)
     {
         CompletableFuture<?> future = super.run(output);

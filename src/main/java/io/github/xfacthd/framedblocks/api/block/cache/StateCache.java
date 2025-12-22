@@ -19,7 +19,7 @@ import org.jspecify.annotations.Nullable;
 public class StateCache
 {
     protected static final Direction[] DIRECTIONS = Direction.values();
-    protected static final Direction[] DIRECTIONS_WITH_NULL = Util.make(() ->
+    protected static final @Nullable Direction[] DIRECTIONS_WITH_NULL = Util.make(() ->
     {
         Direction[] directions = new Direction[DIRECTIONS.length + 1];
         System.arraycopy(DIRECTIONS, 0, directions, 1, DIRECTIONS.length);

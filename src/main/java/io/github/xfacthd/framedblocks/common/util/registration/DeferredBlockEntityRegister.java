@@ -22,7 +22,7 @@ public final class DeferredBlockEntityRegister extends DeferredRegister<BlockEnt
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "NullableProblems" })
     protected <I extends BlockEntityType<?>> DeferredHolder<BlockEntityType<?>, I> createHolder(
             ResourceKey<? extends Registry<BlockEntityType<?>>> registryKey, Identifier key
     )
@@ -36,8 +36,6 @@ public final class DeferredBlockEntityRegister extends DeferredRegister<BlockEnt
     {
         return (DeferredBlockEntity<T>) register(name, () -> new BlockEntityType<>(factory, blocks.get(), opOnlyNbt));
     }
-
-
 
     public static DeferredBlockEntityRegister create(String namespace)
     {

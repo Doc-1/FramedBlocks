@@ -6,11 +6,9 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.model.data.ModelProperty;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
-@ApiStatus.NonExtendable
 public abstract sealed class AbstractFramedBlockData permits FramedBlockData, FramedDoubleBlockData
 {
     public static final ModelProperty<AbstractFramedBlockData> PROPERTY = new ModelProperty<>();
@@ -24,8 +22,6 @@ public abstract sealed class AbstractFramedBlockData permits FramedBlockData, Fr
     public abstract float getCamoShadeBrightness(BlockGetter level, BlockPos pos, float frameShade);
 
     public abstract TriState isViewBlocking();
-
-
 
     @Nullable
     @Contract("_,_,!null -> !null")

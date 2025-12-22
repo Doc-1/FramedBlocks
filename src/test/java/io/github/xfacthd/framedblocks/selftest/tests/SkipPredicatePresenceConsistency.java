@@ -4,6 +4,7 @@ import io.github.xfacthd.framedblocks.common.data.BlockType;
 import io.github.xfacthd.framedblocks.common.data.skippreds.CullTest;
 import io.github.xfacthd.framedblocks.common.data.skippreds.SideSkipPredicates;
 import io.github.xfacthd.framedblocks.selftest.SelfTestReporter;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -108,16 +109,13 @@ public final class SkipPredicatePresenceConsistency
         }
     }
 
+    @Nullable
     public static Test getTestOf(BlockType type)
     {
         return TESTS.get(type);
     }
 
-
-
     public record Test(String clazzName, boolean noSelfTest, Set<BlockType> targets, Set<BlockType> oneWayTargets) { }
-
-
 
     private SkipPredicatePresenceConsistency() { }
 }

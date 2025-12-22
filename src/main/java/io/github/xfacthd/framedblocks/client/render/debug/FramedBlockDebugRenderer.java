@@ -65,6 +65,7 @@ public final class FramedBlockDebugRenderer
         float partialTick = event.getDeltaTracker().getGameTimeDeltaPartialTick(false);
         for (BlockDebugRenderer<? extends FramedBlockEntity> renderer : renderers)
         {
+            //noinspection NullableProblems - IDEA's nullability checks are broken
             ((BlockDebugRenderer<FramedBlockEntity>) renderer).extract(be, blockHit, partialTick, renderState);
         }
         renderState.setRenderData(DATA_KEY, new DebugRenderState(pos, renderers));

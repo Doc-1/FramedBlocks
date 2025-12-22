@@ -36,18 +36,9 @@ public class FramedVerticalSlopedStairsGeometry extends Geometry
         Direction quadDir = quad.direction();
         if (quadDir == rotDir || quadDir == rotDirTwo)
         {
-            if (Utils.isY(quadDir))
-            {
-                QuadModifier.of(quad)
-                        .apply(Modifiers.cut(facing.getOpposite(), .5F))
-                        .export(quadMap.get(quadDir));
-            }
-            else
-            {
-                QuadModifier.of(quad)
-                        .apply(Modifiers.cut(facing.getOpposite(), .5F))
-                        .export(quadMap.get(quadDir));
-            }
+            QuadModifier.of(quad)
+                    .apply(Modifiers.cut(facing.getOpposite(), .5F))
+                    .export(quadMap.get(quadDir));
         }
         else if (quadDir == facing.getOpposite())
         {

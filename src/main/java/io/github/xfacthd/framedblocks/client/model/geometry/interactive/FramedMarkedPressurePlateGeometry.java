@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.WeightedPressurePlateBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelData;
+import org.jspecify.annotations.Nullable;
 
 public class FramedMarkedPressurePlateGeometry extends FramedPressurePlateGeometry
 {
@@ -23,7 +24,7 @@ public class FramedMarkedPressurePlateGeometry extends FramedPressurePlateGeomet
     private static final Identifier OBSIDIAN_FRAME_LOCATION = Utils.id("block/obsidian_plate_frame");
     private static final Identifier GOLD_FRAME_LOCATION = Utils.id("block/gold_plate_frame");
     private static final Identifier IRON_FRAME_LOCATION = Utils.id("block/iron_plate_frame");
-    private static final Direction[] OVERLAY_CULL_FACES = new Direction[] { Direction.DOWN, null };
+    private static final @Nullable Direction[] OVERLAY_CULL_FACES = { Direction.DOWN, null };
 
     private final BlockState state;
     private final TextureAtlasSprite frameSprite;

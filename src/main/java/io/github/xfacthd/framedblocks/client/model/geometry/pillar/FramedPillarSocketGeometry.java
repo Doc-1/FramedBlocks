@@ -33,7 +33,7 @@ public class FramedPillarSocketGeometry extends Geometry
                     .apply(y ? Modifiers.cutTopBottom(.25F, .25F, .75F, .75F) : Modifiers.cutSide(.25F, .25F, .75F, .75F))
                     .export(quadMap.get(quadDir));
 
-            Utils.forAllDirections(false, dir ->
+            Utils.forAllDirections(dir ->
             {
                 if (dir.getAxis() == facing.getAxis()) return;
 

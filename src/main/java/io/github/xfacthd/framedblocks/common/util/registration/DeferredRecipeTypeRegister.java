@@ -19,7 +19,7 @@ public final class DeferredRecipeTypeRegister extends DeferredRegister<RecipeTyp
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "NullableProblems" })
     protected <I extends RecipeType<?>> DeferredHolder<RecipeType<?>, I> createHolder(
             ResourceKey<? extends Registry<RecipeType<?>>> registryKey, Identifier key
     )
@@ -33,8 +33,6 @@ public final class DeferredRecipeTypeRegister extends DeferredRegister<RecipeTyp
         Holder<RecipeType<?>> holder = register(name, () -> RecipeType.simple(location));
         return (DeferredRecipeType<R>) holder;
     }
-
-
 
     public static DeferredRecipeTypeRegister create(String namespace)
     {

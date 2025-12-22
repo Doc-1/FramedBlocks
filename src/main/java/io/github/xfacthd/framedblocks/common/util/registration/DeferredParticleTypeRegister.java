@@ -22,7 +22,7 @@ public final class DeferredParticleTypeRegister extends DeferredRegister<Particl
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "NullableProblems" })
     protected <I extends ParticleType<?>> DeferredHolder<ParticleType<?>, I> createHolder(
             ResourceKey<? extends Registry<ParticleType<?>>> registryKey, Identifier key
     )

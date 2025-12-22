@@ -16,7 +16,6 @@ import net.minecraft.world.level.ItemLike;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 
 public final class FramingSawRecipeBuilder implements RecipeBuilder
 {
@@ -75,7 +74,6 @@ public final class FramingSawRecipeBuilder implements RecipeBuilder
         Preconditions.checkNotNull(additives, "Additives must be non-null");
         Preconditions.checkArgument(!additives.isEmpty(), "At least one additive must be provided");
         Preconditions.checkArgument(additives.size() <= MAX_ADDITIVE_COUNT, "At most 3 additives may be provided");
-        Preconditions.checkArgument(additives.stream().noneMatch(Objects::isNull), "Additives must be non-null");
         this.additives = additives;
         return this;
     }

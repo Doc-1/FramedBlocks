@@ -19,7 +19,7 @@ public final class DeferredLootFunctionRegister extends DeferredRegister<LootIte
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "NullableProblems" })
     protected <I extends LootItemFunctionType<?>> DeferredHolder<LootItemFunctionType<?>, I> createHolder(
             ResourceKey<? extends Registry<LootItemFunctionType<?>>> registryKey, Identifier key
     )

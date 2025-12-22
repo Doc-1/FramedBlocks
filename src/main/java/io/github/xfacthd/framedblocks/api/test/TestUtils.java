@@ -39,6 +39,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.client.extensions.common.IClientBlockExtensions;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.List;
@@ -409,7 +410,7 @@ public final class TestUtils
         ));
     }
 
-    private static void assertBeaconTint(GameTestHelper helper, Block camo, Predicate<Integer> predicate, String expected)
+    private static void assertBeaconTint(GameTestHelper helper, Block camo, Predicate<@Nullable Integer> predicate, String expected)
     {
         BlockState state = helper.getBlockState(BEACON_TINT_BLOCK);
         helper.assertBlock(BEACON_TINT_BLOCK, IFramedBlock.class::isInstance, block -> Component.literal(String.format("Expected instance of IFramedBlock, got %s", block)));
@@ -424,8 +425,6 @@ public final class TestUtils
                 state.getBlock(), camo, expected, tint != null ? Integer.toHexString(0xFF000000 | tint) : "null"
         ));
     }
-
-
 
     private TestUtils() { }
 }

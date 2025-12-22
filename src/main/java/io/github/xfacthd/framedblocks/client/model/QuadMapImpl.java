@@ -67,6 +67,7 @@ public final class QuadMapImpl extends QuadMap
                 quads[i] = Collections.emptyList();
             }
         }
+        //noinspection NullableProblems - The null entries are replaced
         return quads;
     }
 }

@@ -23,7 +23,7 @@ public final class DeferredRecipeSerializerRegister extends DeferredRegister<Rec
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "NullableProblems" })
     protected <I extends RecipeSerializer<?>> DeferredHolder<RecipeSerializer<?>, I> createHolder(
             ResourceKey<? extends Registry<RecipeSerializer<?>>> registryKey, Identifier key
     )
@@ -38,8 +38,6 @@ public final class DeferredRecipeSerializerRegister extends DeferredRegister<Rec
         Holder<RecipeSerializer<?>> holder = register(name, () -> new SimpleRecipeSerializer<>(codec, streamCodec));
         return (DeferredRecipeSerializer<R>) holder;
     }
-
-
 
     public static DeferredRecipeSerializerRegister create(String namespace)
     {

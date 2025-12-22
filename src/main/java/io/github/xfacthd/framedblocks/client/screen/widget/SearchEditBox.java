@@ -1,12 +1,12 @@
 package io.github.xfacthd.framedblocks.client.screen.widget;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import io.github.xfacthd.framedblocks.common.compat.searchables.SearchablesCompat;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
 
@@ -31,7 +31,7 @@ public final class SearchEditBox extends EditBox
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick)
     {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT && isMouseOver(event.x(), event.y()))
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && isMouseOver(event.x(), event.y()))
         {
             setValue("");
             if (!NO_DELAY)

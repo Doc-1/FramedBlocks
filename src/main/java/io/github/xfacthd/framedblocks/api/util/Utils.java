@@ -385,17 +385,14 @@ public final class Utils
         return ItemTags.create(Utils.id(modid, name));
     }
 
-    public static void forAllDirections(Consumer<Direction> consumer)
+    public static void forAllDirectionsAndNull(Consumer<@Nullable Direction> consumer)
     {
-        forAllDirections(true, consumer);
+        consumer.accept(null);
+        forAllDirections(consumer);
     }
 
-    public static void forAllDirections(boolean includeNull, Consumer<Direction> consumer)
+    public static void forAllDirections(Consumer<Direction> consumer)
     {
-        if (includeNull)
-        {
-            consumer.accept(null);
-        }
         for (Direction dir : DIRECTIONS)
         {
             consumer.accept(dir);

@@ -47,18 +47,9 @@ public class FramedFlatExtendedSlopePanelCornerGeometry extends Geometry
         }
         else if (face == orientation || face == rotOrientation)
         {
-            if (Utils.isY(face))
-            {
-                QuadModifier.of(quad)
-                        .apply(Modifiers.cut(facing.getOpposite(), .5F))
-                        .export(quadMap.get(face));
-            }
-            else
-            {
-                QuadModifier.of(quad)
-                        .apply(Modifiers.cut(facing.getOpposite(), .5F))
-                        .export(quadMap.get(face));
-            }
+            QuadModifier.of(quad)
+                    .apply(Modifiers.cut(facing.getOpposite(), .5F))
+                    .export(quadMap.get(face));
 
             if (ySlope && Utils.isY(orientation) && face == orientation)
             {

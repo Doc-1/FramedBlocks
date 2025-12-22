@@ -474,7 +474,7 @@ public class FramingSawScreen extends AbstractContainerScreen<FramingSawMenu> im
             return Component.translatable(
                     TOOLTIP_HAVE_X_BUT_NEED_Y_TAG,
                     present,
-                    Utils.translateTag(Objects.requireNonNull(additive.srcTag())).withStyle(ChatFormatting.GOLD)
+                    Utils.translateTag(additive.srcTag().orElseThrow()).withStyle(ChatFormatting.GOLD)
             );
         }
 

@@ -27,7 +27,7 @@ public final class DoubleBlockSolidSideConsistency
                     if (!state.hasProperty(FramedProperties.SOLID) || !state.getValue(FramedProperties.SOLID)) return;
 
                     DoubleBlockStateCache cache = block.getCache(state);
-                    Utils.forAllDirections(false, side ->
+                    Utils.forAllDirections(side ->
                     {
                         VoxelShape faceShape = state.getFaceOcclusionShape(side);
                         boolean solidShape = !Shapes.joinIsNotEmpty(faceShape, Shapes.block(), BooleanOp.ONLY_SECOND);
@@ -45,8 +45,6 @@ public final class DoubleBlockSolidSideConsistency
 
         reporter.endTest();
     }
-
-
 
     private DoubleBlockSolidSideConsistency() { }
 }

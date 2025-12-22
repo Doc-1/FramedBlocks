@@ -125,9 +125,7 @@ public abstract class MixinMapItemSavedData implements FramedMap.MarkerRemover
     }
 
     @Unique
-    private void framedblocks$addMapMarker(
-            LevelAccessor level, String frameId, FramedMap framedMap
-    )
+    private void framedblocks$addMapMarker(@Nullable LevelAccessor level, String frameId, FramedMap framedMap)
     {
         BlockPos pos = framedMap.pos();
         int rot = framedMap.yRot();

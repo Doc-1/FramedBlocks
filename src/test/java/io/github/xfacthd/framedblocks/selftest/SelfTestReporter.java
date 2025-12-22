@@ -1,6 +1,7 @@
 package io.github.xfacthd.framedblocks.selftest;
 
 import com.google.common.base.Stopwatch;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.event.Level;
 
 import java.util.ArrayList;
@@ -35,22 +36,22 @@ public final class SelfTestReporter
         state = State.IDLE;
     }
 
-    public void info(String text, Object... params)
+    public void info(String text, @Nullable Object... params)
     {
         entry(Level.INFO, text, params);
     }
 
-    public void warn(String text, Object... params)
+    public void warn(String text, @Nullable Object... params)
     {
         entry(Level.WARN, text, params);
     }
 
-    public void error(String text, Object... params)
+    public void error(String text, @Nullable Object... params)
     {
         entry(Level.ERROR, text, params);
     }
 
-    public void entry(Level logLevel, String text, Object... params)
+    public void entry(Level logLevel, String text, @Nullable Object... params)
     {
         if (state != State.ROOT)
         {

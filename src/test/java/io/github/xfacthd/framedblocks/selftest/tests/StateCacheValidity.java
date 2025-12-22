@@ -16,6 +16,7 @@ public final class StateCacheValidity
 {
     private static final Direction[] DIRECTIONS = Direction.values();
 
+    @SuppressWarnings("ConstantValue") // Technically redundant null-checks are intentional
     public static void checkStateCacheValid(SelfTestReporter reporter, List<Block> blocks)
     {
         reporter.startTest("state caches validity");

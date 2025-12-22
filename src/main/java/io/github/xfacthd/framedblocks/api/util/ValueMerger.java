@@ -9,15 +9,15 @@ import java.util.function.Predicate;
 
 public final class ValueMerger<T>
 {
-    private final Predicate<T> defaultCheck;
-    private final BinaryOperator<T> merger;
+    private final Predicate<@Nullable T> defaultCheck;
+    private final BinaryOperator<@Nullable T> merger;
 
-    public ValueMerger(BinaryOperator<T> merger)
+    public ValueMerger(BinaryOperator<@Nullable T> merger)
     {
         this(Objects::isNull, merger);
     }
 
-    public ValueMerger(Predicate<T> defaultCheck, BinaryOperator<T> merger)
+    public ValueMerger(Predicate<@Nullable T> defaultCheck, BinaryOperator<@Nullable T> merger)
     {
         this.defaultCheck = defaultCheck;
         this.merger = merger;

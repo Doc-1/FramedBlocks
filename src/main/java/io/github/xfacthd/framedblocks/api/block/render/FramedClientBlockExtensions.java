@@ -12,6 +12,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.client.extensions.common.IClientBlockExtensions;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 
 public class FramedClientBlockExtensions implements IClientBlockExtensions
 {
@@ -20,9 +23,9 @@ public class FramedClientBlockExtensions implements IClientBlockExtensions
     protected FramedClientBlockExtensions() { }
 
     @Override
-    public boolean addHitEffects(BlockState state, Level level, HitResult target, ParticleEngine engine)
+    public boolean addHitEffects(BlockState state, Level level, @Nullable HitResult target, ParticleEngine engine)
     {
-        BlockHitResult hit = (BlockHitResult) target;
+        BlockHitResult hit = (BlockHitResult) Objects.requireNonNull(target);
         boolean suppressed = suppressParticles(state, level, hit.getBlockPos());
         if (!suppressed && level.getBlockEntity(hit.getBlockPos()) instanceof FramedBlockEntity be)
         {

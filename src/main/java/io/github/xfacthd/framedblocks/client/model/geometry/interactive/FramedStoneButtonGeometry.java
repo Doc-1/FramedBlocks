@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.neoforged.neoforge.model.data.ModelData;
+import org.jspecify.annotations.Nullable;
 
 public class FramedStoneButtonGeometry extends FramedButtonGeometry
 {
@@ -26,7 +27,7 @@ public class FramedStoneButtonGeometry extends FramedButtonGeometry
     private final TextureAtlasSprite frameSpriteFront;
     private final TextureAtlasSprite frameSpriteNarrow;
     private final TextureAtlasSprite frameSpriteWide;
-    private final Direction[] overlayCullFaces;
+    private final @Nullable Direction[] overlayCullFaces;
     private final OverlayPartGenerator.SpriteGetter overlaySpriteGetter;
 
     private FramedStoneButtonGeometry(GeometryFactory.Context ctx)
@@ -36,7 +37,7 @@ public class FramedStoneButtonGeometry extends FramedButtonGeometry
         this.frameSpriteFront = ctx.textureLookup().get(FRAME_LOCATION_FRONT);
         this.frameSpriteNarrow = ctx.textureLookup().get(FRAME_LOCATION_NARROW);
         this.frameSpriteWide = ctx.textureLookup().get(FRAME_LOCATION_WIDE);
-        this.overlayCullFaces = new Direction[] { facing.getOpposite(), null };
+        this.overlayCullFaces = new @Nullable Direction[] { facing.getOpposite(), null };
         Direction.Axis wideAxis = face == AttachFace.WALL ? Direction.Axis.Y : dir.getAxis();
         this.overlaySpriteGetter = dir ->
         {
@@ -61,8 +62,6 @@ public class FramedStoneButtonGeometry extends FramedButtonGeometry
     {
         return true;
     }
-
-
 
     public static FramedButtonGeometry create(GeometryFactory.Context ctx)
     {

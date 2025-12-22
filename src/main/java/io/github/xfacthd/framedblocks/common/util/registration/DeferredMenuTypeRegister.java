@@ -20,7 +20,7 @@ public final class DeferredMenuTypeRegister extends DeferredRegister<MenuType<?>
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "NullableProblems" })
     protected <I extends MenuType<?>> DeferredHolder<MenuType<?>, I> createHolder(
             ResourceKey<? extends Registry<MenuType<?>>> registryKey, Identifier key
     )

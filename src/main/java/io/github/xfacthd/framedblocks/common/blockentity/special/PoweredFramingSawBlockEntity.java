@@ -324,6 +324,7 @@ public class PoweredFramingSawBlockEntity extends BlockEntity
         cache = FramingSawRecipeCache.get(level().isClientSide());
         if (level() instanceof ServerLevel serverLevel && selectedRecipeId != null)
         {
+            //noinspection NullableProblems - IDEA's nullability analysis is broken
             RecipeHolder<FramingSawRecipe> recipe = (RecipeHolder<FramingSawRecipe>) serverLevel.recipeAccess()
                     .byKey(selectedRecipeId)
                     .filter(h -> h.value() instanceof FramingSawRecipe)

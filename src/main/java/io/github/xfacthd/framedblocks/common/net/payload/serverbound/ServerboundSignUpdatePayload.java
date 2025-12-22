@@ -39,6 +39,7 @@ public record ServerboundSignUpdatePayload(BlockPos pos, boolean front, String[]
     public void handle(IPayloadContext ctx)
     {
         ServerPlayer player = (ServerPlayer) ctx.player();
+        //noinspection NullableProblems - IDEA's nullability analysis is broken
         List<String> strippedLines = Stream.of(lines).map(ChatFormatting::stripFormatting).toList();
         player.connection.filterTextPacket(strippedLines).thenAccept(filteredText -> ctx.enqueueWork(() ->
         {

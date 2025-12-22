@@ -21,7 +21,7 @@ public final class DoubleBlockCamoConnectionConsistency
                 .forEach(block -> ((Block) block).getStateDefinition().getPossibleStates().forEach(state ->
                 {
                     DoubleBlockStateCache cache = block.getCache(state);
-                    Utils.forAllDirections(false, side -> Utils.forAllDirections(edge ->
+                    Utils.forAllDirections(side -> Utils.forAllDirectionsAndNull(edge ->
                     {
                         boolean connect = cache.canConnectFullEdge(side, edge);
                         boolean hasCamo = cache.getCamoGetter(side, edge) != CamoGetter.NONE;
@@ -38,8 +38,6 @@ public final class DoubleBlockCamoConnectionConsistency
 
         reporter.endTest();
     }
-
-
 
     private DoubleBlockCamoConnectionConsistency() { }
 }
