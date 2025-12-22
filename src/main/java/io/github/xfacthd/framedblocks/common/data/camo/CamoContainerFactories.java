@@ -16,7 +16,6 @@ import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -25,18 +24,16 @@ import java.util.function.Predicate;
 
 public final class CamoContainerFactories
 {
-    private static final Map<Item, CamoContainerFactory<?>> APPLICATION_ITEMS = new IdentityHashMap<>();
+    private static final Map<Item, CamoContainerFactory<?>> APPLICATION_ITEMS = new Reference2ObjectOpenHashMap<>();
     private static final List<FactoryPredicatePair> APPLICATION_PREDICATES = new ArrayList<>();
     private static final Map<Item, Set<CamoContainerFactory<?>>> REMOVAL_ITEMS = new Reference2ObjectOpenHashMap<>();
     private static final Map<CamoContainerFactory<?>, List<Predicate<ItemStack>>> REMOVAL_PREDICATES = new Reference2ObjectOpenHashMap<>();
 
     public static void registerCamoFactories()
     {
-        FramedRegistries.CAMO_CONTAINER_FACTORIES
-                .entrySet()
-                .stream()
-                .map(Map.Entry::getValue)
-                .forEach(factory -> factory.registerTriggerItems(new TriggerRegistrarImpl(factory)));
+        FramedRegistries.CAMO_CONTAINER_FACTORIES.forEach(factory ->
+                factory.registerTriggerItems(new TriggerRegistrarImpl(factory))
+        );
 
         // Register builtin handling last to make sure the predicates actually act as broad fallbacks after addon ones
 
@@ -47,6 +44,31 @@ public final class CamoContainerFactories
         TriggerRegistrar blockRegistrar = new TriggerRegistrarImpl(FBContent.FACTORY_BLOCK.value());
         blockRegistrar.registerApplicationPredicate(stack -> stack.getItem() instanceof BlockItem);
         blockRegistrar.registerRemovalPredicate(TriggerRegistrar.DEFAULT_REMOVAL);
+
+        Set<CamoContainerFactory<?>> applicable = new ReferenceOpenHashSet<>(APPLICATION_ITEMS.values());
+        APPLICATION_PREDICATES.stream().map(FactoryPredicatePair::factory).forEach(applicable::add);
+        Set<CamoContainerFactory<?>> removable = new ReferenceOpenHashSet<>(REMOVAL_PREDICATES.keySet());
+        REMOVAL_ITEMS.values().forEach(removable::addAll);
+        int registrySize = FramedRegistries.CAMO_CONTAINER_FACTORIES.size() - 1; // Subtract one to ignore empty container
+        if (applicable.size() != registrySize || removable.size() != registrySize)
+        {
+            StringBuilder builder = new StringBuilder("CamoContainerFactory trigger registration incomplete!\n");
+            if (applicable.size() != registrySize) printMissing(builder, "application", applicable);
+            if (removable.size() != registrySize) printMissing(builder, "removal", removable);
+            throw new IllegalStateException(builder.toString());
+        }
+    }
+
+    private static void printMissing(StringBuilder builder, String type, Set<CamoContainerFactory<?>> factories)
+    {
+        builder.append("\tFactories missing ").append(type).append(" items/predicates:\n");
+        FramedRegistries.CAMO_CONTAINER_FACTORIES.entrySet().forEach(entry ->
+        {
+            if (entry.getValue() != FBContent.FACTORY_EMPTY.value() && !factories.contains(entry.getValue()))
+            {
+                builder.append("\t- ").append(entry.getKey().identifier()).append("\n");
+            }
+        });
     }
 
     @Nullable
@@ -94,8 +116,6 @@ public final class CamoContainerFactories
         return false;
     }
 
-
-
     private record TriggerRegistrarImpl(CamoContainerFactory<?> factory) implements TriggerRegistrar
     {
         @Override
@@ -134,8 +154,6 @@ public final class CamoContainerFactories
     }
 
     private record FactoryPredicatePair(Predicate<ItemStack> predicate, CamoContainerFactory<?> factory) { }
-
-
 
     private CamoContainerFactories() { }
 }
