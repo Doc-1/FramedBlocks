@@ -1,5 +1,4 @@
-// FIXME: RL->ID
-/*package io.github.xfacthd.framedblocks.common.compat.jei;
+package io.github.xfacthd.framedblocks.common.compat.jei;
 
 import com.google.common.collect.Lists;
 import io.github.xfacthd.framedblocks.api.util.Utils;
@@ -214,14 +213,6 @@ public final class FramingSawRecipeCategory implements IRecipeCategory<FramingSa
     @Override
     public void getTooltip(ITooltipBuilder tooltip, FramingSawRecipe recipe, IRecipeSlotsView slots, double mouseX, double mouseY)
     {
-        List<Component> tooltipStrings = getTooltipStrings(recipe, slots, mouseX, mouseY);
-        tooltip.addAll(tooltipStrings);
-    }
-
-    @SuppressWarnings("removal")
-    @Override
-    public List<Component> getTooltipStrings(FramingSawRecipe recipe, IRecipeSlotsView slots, double mouseX, double mouseY)
-    {
         if (mouseX >= WARNING_X && mouseY >= WARNING_Y && mouseX <= (WARNING_X + WARNING_DRAW_SIZE) && mouseY <= (WARNING_Y + WARNING_DRAW_SIZE))
         {
             ItemStack input = slots.findSlotByName("input")
@@ -231,11 +222,8 @@ public final class FramingSawRecipeCategory implements IRecipeCategory<FramingSa
 
             if (FramingSawRecipeCache.get(true).containsAdditive(input.getItem()))
             {
-                return List.of(FramingSawScreen.TOOLTIP_LOOSE_ADDITIVE);
+                tooltip.add(FramingSawScreen.TOOLTIP_LOOSE_ADDITIVE);
             }
         }
-
-        return List.of();
     }
 }
-*/

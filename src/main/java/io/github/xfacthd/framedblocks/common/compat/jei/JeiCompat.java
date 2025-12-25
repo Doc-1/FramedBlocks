@@ -17,8 +17,7 @@ public final class JeiCompat
     {
         public static void init()
         {
-            // FIXME: RL->ID
-            //NeoForge.EVENT_BUS.addListener(FramedJeiPlugin::onRecipesReceived);
+            NeoForge.EVENT_BUS.addListener(FramedJeiPlugin::onRecipesReceived);
         }
     }
 

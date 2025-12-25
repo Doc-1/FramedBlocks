@@ -1,5 +1,4 @@
-// FIXME: RL->ID
-/*package io.github.xfacthd.framedblocks.common.compat.jei;
+package io.github.xfacthd.framedblocks.common.compat.jei;
 
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.crafting.saw.FramingSawRecipe;
@@ -116,4 +115,3 @@ public abstract sealed class FramingSawTransferHandler<C extends AbstractContain
         }
     }
 }
-*/

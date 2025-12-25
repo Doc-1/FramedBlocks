@@ -1,5 +1,4 @@
-// FIXME: RL->ID
-/*package io.github.xfacthd.framedblocks.common.compat.jei;
+package io.github.xfacthd.framedblocks.common.compat.jei;
 
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.client.screen.FramingSawScreen;
@@ -186,4 +185,3 @@ public final class FramedJeiPlugin implements IModPlugin
         getCamoCraftingHelper().captureRecipe(camoRecipe);
     }
 }
-*/
