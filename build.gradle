@@ -265,6 +265,11 @@ tasks.named('jar', Jar).configure {
     reproducibleFileOrder = true
 }
 
+test {
+    // The test sourceset is being (mis)used for non-standard tests
+    failOnNoDiscoveredTests = false
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
