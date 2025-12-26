@@ -287,6 +287,11 @@ jar {
     exclude("/.cache")
 }
 
+test {
+    // The test sourceset is being (mis)used for non-standard tests
+    failOnNoDiscoveredTests = false
+}
+
 publishing {
     publications {
         register ('mavenJava', MavenPublication) {
