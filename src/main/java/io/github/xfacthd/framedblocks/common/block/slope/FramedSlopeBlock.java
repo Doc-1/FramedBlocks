@@ -50,10 +50,7 @@ public class FramedSlopeBlock extends FramedBlock implements ISlopeBlock, ICompl
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         super.createBlockStateDefinition(builder);
-        builder.add(
-                FramedProperties.FACING_HOR, PropertyHolder.SLOPE_TYPE, BlockStateProperties.WATERLOGGED,
-                FramedProperties.SOLID, FramedProperties.Y_SLOPE
-        );
+        builder.add(FramedProperties.FACING_HOR, PropertyHolder.SLOPE_TYPE, FramedProperties.Y_SLOPE);
     }
 
     @Override
@@ -67,6 +64,7 @@ public class FramedSlopeBlock extends FramedBlock implements ISlopeBlock, ICompl
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     protected InteractionResult useItemOn(
             ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit
     )
@@ -101,7 +99,6 @@ public class FramedSlopeBlock extends FramedBlock implements ISlopeBlock, ICompl
                         be.setCamo(camo, true);
                     }
 
-                    //noinspection deprecation
                     SoundType sound = fancy ? camo.getContent().getSoundType() : Blocks.RAIL.defaultBlockState().getSoundType();
                     level.playSound(null, pos, sound.getPlaceSound(), SoundSource.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
                 }

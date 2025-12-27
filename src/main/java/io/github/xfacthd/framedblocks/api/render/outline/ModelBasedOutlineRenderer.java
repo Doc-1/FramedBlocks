@@ -103,7 +103,7 @@ public final class ModelBasedOutlineRenderer implements SimpleOutlineRenderer
         Int2ObjectMap<Object2IntMap<Line>> linesByNormal = new Int2ObjectOpenHashMap<>();
         for (Quad quad : uniqueQuads)
         {
-            Object2IntMap<Line> lines = linesByNormal.computeIfAbsent(quad.normal, $ -> new Object2IntOpenHashMap<>());
+            Object2IntMap<Line> lines = linesByNormal.computeIfAbsent(quad.normal, _ -> new Object2IntOpenHashMap<>());
             appendEdge(quad.v0, quad.v1, lines);
             appendEdge(quad.v2, quad.v3, lines);
             appendEdge(quad.v0, quad.v3, lines);

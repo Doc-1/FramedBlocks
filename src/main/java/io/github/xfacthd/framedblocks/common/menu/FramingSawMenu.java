@@ -243,7 +243,7 @@ public class FramingSawMenu extends AbstractContainerMenu implements IFramingSaw
     {
         super.removed(player);
         resultContainer.removeItemNoUpdate(1);
-        levelAccess.execute((level, pos) -> clearContainer(player, inputContainer));
+        levelAccess.execute((_, _) -> clearContainer(player, inputContainer));
     }
 
     @Override

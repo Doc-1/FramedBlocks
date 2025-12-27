@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
@@ -40,8 +39,8 @@ public class FramedFlatSlopePanelCornerBlock extends FramedBlock
     {
         super.createBlockStateDefinition(builder);
         builder.add(
-                FramedProperties.FACING_HOR, PropertyHolder.ROTATION, PropertyHolder.FRONT, FramedProperties.SOLID,
-                BlockStateProperties.WATERLOGGED, FramedProperties.Y_SLOPE
+                FramedProperties.FACING_HOR, PropertyHolder.ROTATION, PropertyHolder.FRONT,
+                FramedProperties.Y_SLOPE
         );
     }
 

@@ -19,7 +19,7 @@ public final class DeferredDataComponentTypeRegister extends DeferredRegister.Da
     }
 
     @Override
-    @SuppressWarnings({ "unchecked", "NullableProblems" })
+    @SuppressWarnings("unchecked")
     protected <I extends DataComponentType<?>> DeferredHolder<DataComponentType<?>, I> createHolder(
             ResourceKey<? extends Registry<DataComponentType<?>>> registryKey, Identifier key
     )

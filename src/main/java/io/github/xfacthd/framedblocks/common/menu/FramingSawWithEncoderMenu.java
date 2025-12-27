@@ -149,7 +149,7 @@ public class FramingSawWithEncoderMenu extends FramingSawMenu
     public void removed(Player player)
     {
         super.removed(player);
-        levelAccess.execute((level, pos) -> clearContainer(player, encoderContainer));
+        levelAccess.execute((_, _) -> clearContainer(player, encoderContainer));
     }
 
     @Override

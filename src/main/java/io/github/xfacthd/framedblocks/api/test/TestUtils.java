@@ -183,9 +183,9 @@ public final class TestUtils
 
     // == Light emission testing ==
 
+    @SuppressWarnings("deprecation")
     public static void testBlockLightEmission(GameTestHelper helper, BlockState state)
     {
-        //noinspection deprecation
         int glowstoneLight = Blocks.GLOWSTONE.defaultBlockState().getLightEmission();
 
         chainTasks(helper, List.of(

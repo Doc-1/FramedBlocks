@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jspecify.annotations.Nullable;
 
 public class FramedSlopeEdgeBlock extends FramedBlock implements IComplexSlopeSource
@@ -40,7 +39,7 @@ public class FramedSlopeEdgeBlock extends FramedBlock implements IComplexSlopeSo
         super.createBlockStateDefinition(builder);
         builder.add(
                 FramedProperties.FACING_HOR, PropertyHolder.SLOPE_TYPE, PropertyHolder.ALT_TYPE,
-                FramedProperties.Y_SLOPE, BlockStateProperties.WATERLOGGED
+                FramedProperties.Y_SLOPE
         );
     }
 

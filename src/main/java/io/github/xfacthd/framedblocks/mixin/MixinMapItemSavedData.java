@@ -59,7 +59,6 @@ public abstract class MixinMapItemSavedData implements FramedMap.MarkerRemover
     private void framedblocks$updateFramedItemFrameMarker(Player player, ItemStack mapStack, CallbackInfo ci)
     {
         FramedMap framedMap;
-        //noinspection ConstantConditions
         if (trackingPosition && (framedMap = mapStack.get(FBContent.DC_TYPE_FRAMED_MAP)) != null)
         {
             String frameId = FramedMap.makeFrameId(framedMap.pos());
@@ -98,19 +97,19 @@ public abstract class MixinMapItemSavedData implements FramedMap.MarkerRemover
     }
 
     @Unique
+    @SuppressWarnings("DataFlowIssue")
     private static List<FramedMap> framedblocks$getFramedMaps(MapItemSavedData mapData)
     {
-        //noinspection DataFlowIssue
         return List.copyOf(((MixinMapItemSavedData)(Object) mapData).framedblocks$frameMarkers.values());
     }
 
     @Unique
+    @SuppressWarnings("DataFlowIssue")
     private static MapItemSavedData framedblocks$applyFramedMaps(MapItemSavedData mapData, List<FramedMap> framedMaps)
     {
         for (FramedMap map : framedMaps)
         {
             String frameId = FramedMap.makeFrameId(map.pos());
-            //noinspection DataFlowIssue
             ((MixinMapItemSavedData)(Object) mapData).framedblocks$addMapMarker(null, frameId, map);
         }
         return mapData;

@@ -531,7 +531,7 @@ public final class FBClient
     {
         event.addListener(BlockInteractOverlayLayer.LISTENER_ID, (ResourceManagerReloadListener) BlockInteractOverlayLayer::onResourceReload);
         event.addListener(OverlayQuadGenerator.LISTENER_ID, (ResourceManagerReloadListener) OverlayQuadGenerator::onResourceReload);
-        event.addListener(ModelBasedOutlineRenderer.LISTENER_ID, (ResourceManagerReloadListener) (mgr -> ModelBasedOutlineRenderer.clearCaches()));
+        event.addListener(ModelBasedOutlineRenderer.LISTENER_ID, (ResourceManagerReloadListener) (_ -> ModelBasedOutlineRenderer.clearCaches()));
     }
 
     private static void onInitClientRegistries(InitializeClientRegistriesEvent event)
@@ -581,8 +581,6 @@ public final class FBClient
         event.register(SpinningItemPictureInPictureRenderer.RenderState.class, SpinningItemPictureInPictureRenderer::new);
         event.register(BlockPictureInPictureRenderer.RenderState.class, BlockPictureInPictureRenderer::new);
     }
-
-
 
     private static void wrapDoubleModel(Holder<Block> block, NullCullPredicate nullCullPredicate, Set<Property<?>> ignoredProps)
     {

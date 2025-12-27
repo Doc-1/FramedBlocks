@@ -40,7 +40,7 @@ public final class SkipPredicateErrors
         List<Error> errors = new ArrayList<>();
         AsyncTypeTest.Stats stats = AsyncTypeTest.execute(
                 SkipPredicateErrors::testTypeAgainstAll,
-                (result, error) -> errors.addAll(result.errors),
+                (result, _) -> errors.addAll(result.errors),
                 PROGRESS_MSG,
                 msgQueueAppender
         );

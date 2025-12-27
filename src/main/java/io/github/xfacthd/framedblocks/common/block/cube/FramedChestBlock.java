@@ -147,9 +147,8 @@ public class FramedChestBlock extends FramedStorageBlock
         super.createBlockStateDefinition(builder);
         builder.add(
                 FramedProperties.FACING_HOR, PropertyHolder.CHEST_STATE, PropertyHolder.LATCH_TYPE,
-                BlockStateProperties.CHEST_TYPE, BlockStateProperties.WATERLOGGED
+                BlockStateProperties.CHEST_TYPE
         );
-        BlockUtils.removeProperty(builder, FramedProperties.SOLID);
     }
 
     @Override
@@ -160,7 +159,7 @@ public class FramedChestBlock extends FramedStorageBlock
                 .withWater()
                 .withCustom((state, modCtx) ->
                 {
-                    Direction dir = ctx.getHorizontalDirection().getOpposite();
+                    Direction dir = modCtx.getHorizontalDirection().getOpposite();
                     ChestType type = ChestType.SINGLE;
                     boolean secondaryUse = modCtx.isSecondaryUseActive();
                     Direction face = modCtx.getClickedFace();
@@ -333,8 +332,6 @@ public class FramedChestBlock extends FramedStorageBlock
         return defaultBlockState().setValue(PropertyHolder.LATCH_TYPE, state.getValue(PropertyHolder.LATCH_TYPE));
     }
 
-
-
     public static DoubleBlockCombiner.NeighborCombineResult<? extends FramedChestBlockEntity> combine(FramedChestBlockEntity be, boolean override)
     {
         return combine(be.getBlockState(), Objects.requireNonNull(be.getLevel()), be.getBlockPos(), override);
@@ -352,7 +349,7 @@ public class FramedChestBlock extends FramedStorageBlock
                 state,
                 level,
                 pos,
-                override ? (l, p) -> false : ChestBlock::isChestBlockedAt
+                override ? (_, _) -> false : ChestBlock::isChestBlockedAt
         );
     }
 

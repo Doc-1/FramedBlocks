@@ -63,7 +63,7 @@ public final class ShapeRotationRecipe extends ShapelessRecipe
     }
 
     @Override
-    @SuppressWarnings({ "unchecked", "rawtypes", "NullableProblems" })
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public RecipeSerializer<ShapelessRecipe> getSerializer()
     {
         return (RecipeSerializer<ShapelessRecipe>)(RecipeSerializer) FBContent.RECIPE_SERIALIZER_SHAPE_ROTATION.value();

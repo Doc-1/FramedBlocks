@@ -286,7 +286,7 @@ public final class SkipPredicateGeneratorImpl
             if (!prop.hasSpecialLookup()) continue;
 
             SpecialPropLookup lookup = Objects.requireNonNull(prop.specialPropLookup());
-            SequencedSet<Property> varProps = specialLookupVars.computeIfAbsent(lookup.varName(), $ -> new LinkedHashSet<>());
+            SequencedSet<Property> varProps = specialLookupVars.computeIfAbsent(lookup.varName(), _ -> new LinkedHashSet<>());
             if (!varProps.isEmpty())
             {
                 specialLookupVarsFoundTwice.add(lookup.varName());
