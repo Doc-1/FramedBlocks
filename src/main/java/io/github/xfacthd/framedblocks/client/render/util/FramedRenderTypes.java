@@ -15,6 +15,12 @@ public final class FramedRenderTypes
                     .bufferSize(256)
                     .createRenderSetup()
     );
+    public static final RenderType DEBUG_QUADS_DEPTH = RenderType.create(
+            "debug_quads_depth",
+            RenderSetup.builder(FramedRenderPipelines.DEBUG_QUADS_DEPTH)
+                    .sortOnUpload()
+                    .createRenderSetup()
+    );
 
     private FramedRenderTypes() { }
 }

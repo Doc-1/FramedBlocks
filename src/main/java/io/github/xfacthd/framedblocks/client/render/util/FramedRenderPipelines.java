@@ -12,13 +12,17 @@ public final class FramedRenderPipelines
             .withLocation(Utils.id("pipeline/lines_no_depth"))
             .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
             .build();
+    public static final RenderPipeline DEBUG_QUADS_DEPTH = RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
+            .withLocation(Utils.id("pipeline/debug_quads_depth"))
+            .withCull(false)
+            .withDepthWrite(true)
+            .build();
 
     public static void onRegisterRenderPipelines(RegisterRenderPipelinesEvent event)
     {
         event.registerPipeline(LINES_NO_DEPTH);
+        event.registerPipeline(DEBUG_QUADS_DEPTH);
     }
-
-
 
     private FramedRenderPipelines() { }
 }

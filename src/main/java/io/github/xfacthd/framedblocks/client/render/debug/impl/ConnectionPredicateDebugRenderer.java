@@ -9,16 +9,11 @@ import io.github.xfacthd.framedblocks.api.block.cache.StateCache;
 import io.github.xfacthd.framedblocks.api.block.doubleblock.CamoGetter;
 import io.github.xfacthd.framedblocks.api.render.Quaternions;
 import io.github.xfacthd.framedblocks.api.render.debug.BlockDebugRenderer;
-import io.github.xfacthd.framedblocks.api.util.ClientUtils;
 import io.github.xfacthd.framedblocks.api.util.Utils;
+import io.github.xfacthd.framedblocks.client.render.util.FramedRenderTypes;
 import io.github.xfacthd.framedblocks.common.config.DevToolsConfig;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.state.LevelRenderState;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.phys.BlockHitResult;
@@ -27,11 +22,6 @@ public class ConnectionPredicateDebugRenderer implements BlockDebugRenderer<Fram
 {
     public static final ConnectionPredicateDebugRenderer INSTANCE = new ConnectionPredicateDebugRenderer();
     private static final ContextKey<ConnectionPredicateRenderState> DATA_KEY = new ContextKey<>(Utils.id("con_pred_debug_renderer"));
-
-    private static float dummyU0 = 0F;
-    private static float dummyU1 = 1F;
-    private static float dummyV0 = 0F;
-    private static float dummyV1 = 1F;
 
     private ConnectionPredicateDebugRenderer() { }
 
@@ -85,7 +75,7 @@ public class ConnectionPredicateDebugRenderer implements BlockDebugRenderer<Fram
     )
     {
         DoubleBlockStateCache doubleCache = cache instanceof DoubleBlockStateCache dbCache ? dbCache : null;
-        VertexConsumer buffer = bufferSource.getBuffer(Sheets.solidBlockSheet());
+        VertexConsumer buffer = bufferSource.getBuffer(FramedRenderTypes.DEBUG_QUADS_DEPTH);
 
         // Null / all edges
         int color = cache.canConnectFullEdge(face, null) ? 0xFF00FF00 : 0xFFFF0000;
@@ -142,29 +132,20 @@ public class ConnectionPredicateDebugRenderer implements BlockDebugRenderer<Fram
     {
         PoseStack.Pose pose = poseStack.last();
 
-        vertex(buffer, pose, minX, maxY, z + .0005F, 0xFF000000, dummyU0, dummyV0);
-        vertex(buffer, pose, minX, minY, z + .0005F, 0xFF000000, dummyU0, dummyV1);
-        vertex(buffer, pose, maxX, minY, z + .0005F, 0xFF000000, dummyU1, dummyV1);
-        vertex(buffer, pose, maxX, maxY, z + .0005F, 0xFF000000, dummyU1, dummyV0);
+        vertex(buffer, pose, minX, maxY, z + .0005F, 0xFF000000);
+        vertex(buffer, pose, minX, minY, z + .0005F, 0xFF000000);
+        vertex(buffer, pose, maxX, minY, z + .0005F, 0xFF000000);
+        vertex(buffer, pose, maxX, maxY, z + .0005F, 0xFF000000);
 
-        vertex(buffer, pose, minX + .01F, maxY - .01F, z + .001F, color, dummyU0, dummyV0);
-        vertex(buffer, pose, minX + .01F, minY + .01F, z + .001F, color, dummyU0, dummyV1);
-        vertex(buffer, pose, maxX - .01F, minY + .01F, z + .001F, color, dummyU1, dummyV1);
-        vertex(buffer, pose, maxX - .01F, maxY - .01F, z + .001F, color, dummyU1, dummyV0);
+        vertex(buffer, pose, minX + .01F, maxY - .01F, z + .001F, color);
+        vertex(buffer, pose, minX + .01F, minY + .01F, z + .001F, color);
+        vertex(buffer, pose, maxX - .01F, minY + .01F, z + .001F, color);
+        vertex(buffer, pose, maxX - .01F, maxY - .01F, z + .001F, color);
     }
 
-    private static void vertex(VertexConsumer buffer, PoseStack.Pose pose, float x, float y, float z, int color, float u, float v)
+    private static void vertex(VertexConsumer buffer, PoseStack.Pose pose, float x, float y, float z, int color)
     {
-        buffer.addVertex(pose, x, y, z).setColor(color).setUv(u, v).setOverlay(OverlayTexture.NO_OVERLAY).setLight(LightTexture.FULL_BRIGHT).setNormal(pose, 0F, 0F, 1F);
-    }
-
-    public static void captureDummySprite(TextureAtlas atlas)
-    {
-        TextureAtlasSprite sprite = atlas.getSprite(ClientUtils.DUMMY_TEXTURE);
-        dummyU0 = sprite.getU0();
-        dummyU1 = sprite.getU1();
-        dummyV0 = sprite.getV0();
-        dummyV1 = sprite.getV1();
+        buffer.addVertex(pose, x, y, z).setColor(color);
     }
 
     @Override

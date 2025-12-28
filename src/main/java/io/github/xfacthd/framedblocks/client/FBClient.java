@@ -20,7 +20,6 @@ import io.github.xfacthd.framedblocks.api.model.wrapping.WrapHelper;
 import io.github.xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import io.github.xfacthd.framedblocks.api.render.debug.AttachDebugRenderersEvent;
 import io.github.xfacthd.framedblocks.api.screen.overlay.RegisterBlockInteractOverlaysEvent;
-import io.github.xfacthd.framedblocks.api.util.ClientUtils;
 import io.github.xfacthd.framedblocks.api.util.FramedConstants;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.client.data.BlockOutlineRenderers;
@@ -145,7 +144,6 @@ public final class FBClient
         modBus.addListener(FBClient::onRegisterReloadListener);
         modBus.addListener(FBClient::onInitClientRegistries);
         modBus.addListener(FBClient::onRegisterSpriteSources);
-        modBus.addListener(FBClient::onTexturesStitched);
         modBus.addListener(FBClient::onRegisterParticleProviders);
         modBus.addListener(FBClient::onRegisterClientExtensions);
         modBus.addListener(FBClient::onRegisterClientTooltipComponentFactories);
@@ -544,14 +542,6 @@ public final class FBClient
     private static void onRegisterSpriteSources(RegisterSpriteSourcesEvent event)
     {
         event.register(Utils.id("anim_splitter"), AnimationSplitterSource.CODEC);
-    }
-
-    private static void onTexturesStitched(TextureAtlasStitchedEvent event)
-    {
-        if (event.getAtlas().location().equals(ClientUtils.BLOCK_ATLAS))
-        {
-            ConnectionPredicateDebugRenderer.captureDummySprite(event.getAtlas());
-        }
     }
 
     private static void onRegisterParticleProviders(RegisterParticleProvidersEvent event)
