@@ -3,7 +3,6 @@ package io.github.xfacthd.framedblocks.client.model.unbaked;
 import io.github.xfacthd.framedblocks.api.model.AbstractUnbakedFramedBlockModel;
 import io.github.xfacthd.framedblocks.api.model.wrapping.GeometryFactory;
 import io.github.xfacthd.framedblocks.api.model.wrapping.ModelFactory;
-import io.github.xfacthd.framedblocks.client.model.FluidModel;
 import io.github.xfacthd.framedblocks.client.model.ReinforcementModel;
 import io.github.xfacthd.framedblocks.client.model.baked.FramedBlockModel;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
@@ -30,7 +29,5 @@ public final class UnbakedFramedBlockModel extends AbstractUnbakedFramedBlockMod
     protected void resolveSpecialDependencies(Resolver resolver)
     {
         resolver.markDependency(ReinforcementModel.MODEL_ID);
-        resolver.markDependency(FluidModel.BARE_MODEL);
-        resolver.markDependency(FluidModel.BARE_MODEL_SINGLE);
     }
 }

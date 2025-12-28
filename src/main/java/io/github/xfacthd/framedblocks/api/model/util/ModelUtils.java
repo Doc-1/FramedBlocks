@@ -16,12 +16,17 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.TriState;
+import net.minecraft.util.Unit;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.EmptyBlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
+import net.neoforged.neoforge.client.model.standalone.UnbakedStandaloneModel;
 import net.neoforged.neoforge.common.util.Lazy;
 import org.joml.Vector3fc;
 import org.jspecify.annotations.Nullable;
@@ -213,6 +218,31 @@ public final class ModelUtils
                 return operation.apply(baker);
             }
         };
+    }
+
+    /**
+     * Register the provided model for loading without baking it. Useful for models whose unbaked representation is
+     * later retrieved and baked on-the-fly.
+     *
+     * @param event The registration event
+     * @param model The model to register
+     */
+    public static void registerStandaloneForLoading(ModelEvent.RegisterStandalone event, Identifier model)
+    {
+        event.register(new StandaloneModelKey<>(model::toString), new UnbakedStandaloneModel<Unit>()
+        {
+            @Override
+            public Unit bake(ModelBaker baker)
+            {
+                return Unit.INSTANCE;
+            }
+
+            @Override
+            public void resolveDependencies(Resolver resolver)
+            {
+                resolver.markDependency(model);
+            }
+        });
     }
 
     private ModelUtils() { }

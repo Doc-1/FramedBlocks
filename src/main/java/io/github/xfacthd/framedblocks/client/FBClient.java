@@ -14,6 +14,7 @@ import io.github.xfacthd.framedblocks.api.model.item.block.BlockItemModelProvide
 import io.github.xfacthd.framedblocks.api.model.item.block.RegisterBlockItemModelProvidersEvent;
 import io.github.xfacthd.framedblocks.api.model.item.tint.FramedBlockItemTintProvider;
 import io.github.xfacthd.framedblocks.api.model.item.tint.RegisterItemTintProvidersEvent;
+import io.github.xfacthd.framedblocks.api.model.util.ModelUtils;
 import io.github.xfacthd.framedblocks.api.model.wrapping.RegisterModelWrappersEvent;
 import io.github.xfacthd.framedblocks.api.model.wrapping.WrapHelper;
 import io.github.xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
@@ -25,6 +26,7 @@ import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.client.data.BlockOutlineRenderers;
 import io.github.xfacthd.framedblocks.client.data.GhostRenderBehaviours;
 import io.github.xfacthd.framedblocks.client.data.extensions.block.*;
+import io.github.xfacthd.framedblocks.client.model.FluidModel;
 import io.github.xfacthd.framedblocks.client.model.baked.FramedBlockModel;
 import io.github.xfacthd.framedblocks.client.model.geometry.cube.*;
 import io.github.xfacthd.framedblocks.client.model.geometry.door.*;
@@ -138,6 +140,7 @@ public final class FBClient
         modBus.addListener(FBClient::onGeometryLoaderRegister);
         modBus.addListener(FBClient::onRegisterModelWrappers);
         modBus.addListener(FBClient::onBlockStateModelRegister);
+        modBus.addListener(FBClient::onRegisterStandaloneModels);
         modBus.addListener(FBClient::onModelsLoaded);
         modBus.addListener(FBClient::onRegisterReloadListener);
         modBus.addListener(FBClient::onInitClientRegistries);
@@ -506,6 +509,12 @@ public final class FBClient
     private static void onBlockStateModelRegister(RegisterBlockStateModels event)
     {
         event.registerDefinition(Utils.id("wrapper"), FramedBlockModelDefinition.CODEC);
+    }
+
+    private static void onRegisterStandaloneModels(ModelEvent.RegisterStandalone event)
+    {
+        ModelUtils.registerStandaloneForLoading(event, FluidModel.BARE_MODEL);
+        ModelUtils.registerStandaloneForLoading(event, FluidModel.BARE_MODEL_SINGLE);
     }
 
     private static void onModelsLoaded(ModelEvent.BakingCompleted event)

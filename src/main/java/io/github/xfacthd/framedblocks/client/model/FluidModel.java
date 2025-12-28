@@ -53,7 +53,6 @@ public final class FluidModel
         ModelManager modelManager = Minecraft.getInstance().getModelManager();
         ModelBakery modelBakery = modelManager.getModelBakery();
 
-        // Use dummy extensions for empty fluid to prevent crashes due to null textures
         IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
         Identifier stillTexture = Preconditions.checkNotNull(
                 props.getStillTexture(),
