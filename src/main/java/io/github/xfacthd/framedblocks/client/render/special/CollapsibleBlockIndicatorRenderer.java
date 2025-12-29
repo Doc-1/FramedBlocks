@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.client.render.special;
 
-import io.github.xfacthd.framedblocks.api.render.OutlineRenderer;
 import io.github.xfacthd.framedblocks.api.render.Quaternions;
+import io.github.xfacthd.framedblocks.api.render.outline.OutlineRenderer;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.client.render.util.FramedRenderTypes;
 import io.github.xfacthd.framedblocks.common.FBContent;

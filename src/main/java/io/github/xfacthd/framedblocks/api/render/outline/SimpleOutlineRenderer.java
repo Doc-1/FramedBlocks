@@ -1,4 +1,4 @@
-package io.github.xfacthd.framedblocks.api.render;
+package io.github.xfacthd.framedblocks.api.render.outline;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Unit;

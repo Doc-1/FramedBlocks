@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.client.data;
 
-import io.github.xfacthd.framedblocks.api.render.OutlineRenderer;
-import io.github.xfacthd.framedblocks.api.render.RegisterOutlineRenderersEvent;
+import io.github.xfacthd.framedblocks.api.render.outline.OutlineRenderer;
+import io.github.xfacthd.framedblocks.api.render.outline.RegisterOutlineRenderersEvent;
 import io.github.xfacthd.framedblocks.client.data.outline.*;
 import io.github.xfacthd.framedblocks.common.data.BlockType;
 

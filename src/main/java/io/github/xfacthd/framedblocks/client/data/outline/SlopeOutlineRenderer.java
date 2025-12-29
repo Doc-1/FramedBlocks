@@ -1,8 +1,8 @@
 package io.github.xfacthd.framedblocks.client.data.outline;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import io.github.xfacthd.framedblocks.api.render.OutlineRenderer;
-import io.github.xfacthd.framedblocks.api.render.SimpleOutlineRenderer;
+import io.github.xfacthd.framedblocks.api.render.outline.OutlineRenderer;
+import io.github.xfacthd.framedblocks.api.render.outline.SimpleOutlineRenderer;
 import io.github.xfacthd.framedblocks.common.block.ISlopeBlock;
 import io.github.xfacthd.framedblocks.common.data.property.SlopeType;
 import net.minecraft.core.Direction;

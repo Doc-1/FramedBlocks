@@ -1,4 +1,4 @@
-package io.github.xfacthd.framedblocks.api.render;
+package io.github.xfacthd.framedblocks.api.render.outline;
 
 import io.github.xfacthd.framedblocks.api.block.IBlockType;
 import net.neoforged.bus.api.Event;

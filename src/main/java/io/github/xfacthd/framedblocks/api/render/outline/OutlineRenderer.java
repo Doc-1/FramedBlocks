@@ -1,9 +1,10 @@
-package io.github.xfacthd.framedblocks.api.render;
+package io.github.xfacthd.framedblocks.api.render.outline;
 
 import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
+import io.github.xfacthd.framedblocks.api.render.Quaternions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Unit;

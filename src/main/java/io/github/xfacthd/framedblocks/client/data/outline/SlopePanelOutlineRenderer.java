@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.client.data.outline;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import io.github.xfacthd.framedblocks.api.render.SimpleOutlineRenderer;
+import io.github.xfacthd.framedblocks.api.render.outline.SimpleOutlineRenderer;
 import io.github.xfacthd.framedblocks.api.render.Quaternions;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.HorizontalRotation;
