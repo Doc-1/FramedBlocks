@@ -564,6 +564,7 @@ public final class FramedLanguageProvider extends LanguageProvider
         addConfigValue(DevToolsConfig.STATE_MERGER_DEBUG_VALUE, "StateMerger debug");
         addConfigValue(DevToolsConfig.STATE_MERGER_DEBUG_FILTER_VALUE, "StateMerger debug filter");
         addConfigValue(DevToolsConfig.OCCLUSION_SHAPE_DEBUG_VALUE, "Occlusion shape debug");
+        addConfigValue(DevToolsConfig.COLLAPSIBLE_BLOCK_DEBUG_VALUE, "Collapsible block debug");
     }
 
     private void add(Component key, String value)

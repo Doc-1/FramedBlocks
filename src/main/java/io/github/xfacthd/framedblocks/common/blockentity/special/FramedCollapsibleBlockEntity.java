@@ -6,11 +6,14 @@ import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.blockentity.PackedCollapsibleBlockOffsets;
 import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
+import io.github.xfacthd.framedblocks.common.data.collapsible.HammerTarget;
+import io.github.xfacthd.framedblocks.common.data.collapsible.NeighborVertex;
+import io.github.xfacthd.framedblocks.common.data.collapsible.TargetCalculator;
+import io.github.xfacthd.framedblocks.common.data.collapsible.VertexMappings;
 import io.github.xfacthd.framedblocks.common.data.component.CollapsibleBlockData;
 import io.github.xfacthd.framedblocks.common.data.property.NullableDirection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.TypedDataComponent;
@@ -28,11 +31,10 @@ import org.jspecify.annotations.Nullable;
 
 public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements ICollapsibleBlockEntity
 {
-    private static final int DIRECTIONS = Direction.values().length;
-    private static final int VERTEX_COUNT = 4;
+    public static final int DIRECTIONS = Direction.values().length;
+    public static final int VERTEX_COUNT = 4;
     private static final int BIT_PER_VERTEX = 5;
     private static final int VERTEX_MASK = ~(-1 << BIT_PER_VERTEX);
-    private static final NeighborVertex[][] VERTEX_MAPPINGS = makeVertexMapping();
 
     @Nullable
     private Direction collapsedFace = null;
@@ -46,30 +48,22 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
     public void handleDeform(Player player)
     {
         HitResult hit = player.pick(10D, 1F, false);
-        if (!(hit instanceof BlockHitResult blockHit))
-        {
-            return;
-        }
+        if (!(hit instanceof BlockHitResult blockHit)) return;
 
-        Direction faceHit = blockHit.getDirection();
-        Vec3 hitLoc = Utils.fraction(hit.getLocation());
+        HammerTarget target = TargetCalculator.computeTarget(this, player, blockHit, true, 1F);
+        if (target == null) return;
 
-        if (collapsedFace != null && faceHit != collapsedFace)
-        {
-            return;
-        }
-
-        int vert = vertexFromHit(faceHit, hitLoc);
+        int vert = vertexFromHit(target.face(), target.pos());
         if (vert == 4)
         {
             for (int i = 0; i < 4; i++)
             {
-                handleDeformOfVertex(player, faceHit, i);
+                handleDeformOfVertex(player, target.face(), i);
             }
         }
         else
         {
-            handleDeformOfVertex(player, faceHit, vert);
+            handleDeformOfVertex(player, target.face(), vert);
         }
     }
 
@@ -141,16 +135,16 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
 
     private void deformNeighbors(Direction faceHit, int srcVert, int offset)
     {
-        NeighborVertex[] verts = VERTEX_MAPPINGS[getMappingIndex(faceHit, srcVert)];
+        NeighborVertex[] verts = VertexMappings.getNeighbors(faceHit, srcVert);
         for (int i = 0; i < 3; i++)
         {
             NeighborVertex vert = verts[i];
-            BlockPos pos = worldPosition.offset(vert.offset);
+            BlockPos pos = worldPosition.offset(vert.offset());
             if (level().getBlockEntity(pos) instanceof FramedCollapsibleBlockEntity be)
             {
                 if (be.collapsedFace == null || be.collapsedFace == faceHit)
                 {
-                    be.applyDeformation(vert.targetVert, offset, faceHit);
+                    be.applyDeformation(vert.targetVert(), offset, faceHit);
                 }
             }
         }
@@ -345,8 +339,6 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
         collapsedFace = face == -1 ? null : Direction.from3DDataValue(face);
     }
 
-
-
     public static byte[] unpackOffsets(int packed)
     {
         byte[] offsets = new byte[4];
@@ -358,60 +350,4 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
 
         return offsets;
     }
-
-    private static int getMappingIndex(Direction face, int srcVert)
-    {
-        return face.ordinal() * VERTEX_COUNT + srcVert;
-    }
-
-    private static NeighborVertex[][] makeVertexMapping()
-    {
-        NeighborVertex[][] mappings = new NeighborVertex[DIRECTIONS * VERTEX_COUNT][];
-
-        putMapping(mappings, Direction.UP, 0, new NeighborVertex(new Vec3i(-1, 0,  0), 3), new NeighborVertex(new Vec3i( 0, 0, -1), 1), new NeighborVertex(new Vec3i(-1, 0, -1), 2));
-        putMapping(mappings, Direction.UP, 1, new NeighborVertex(new Vec3i(-1, 0,  0), 2), new NeighborVertex(new Vec3i( 0, 0,  1), 0), new NeighborVertex(new Vec3i(-1, 0,  1), 3));
-        putMapping(mappings, Direction.UP, 2, new NeighborVertex(new Vec3i( 1, 0,  0), 1), new NeighborVertex(new Vec3i( 0, 0,  1), 3), new NeighborVertex(new Vec3i( 1, 0,  1), 0));
-        putMapping(mappings, Direction.UP, 3, new NeighborVertex(new Vec3i( 1, 0,  0), 0), new NeighborVertex(new Vec3i( 0, 0, -1), 2), new NeighborVertex(new Vec3i( 1, 0, -1), 1));
-
-        putMapping(mappings, Direction.DOWN, 0, new NeighborVertex(new Vec3i(-1, 0,  0), 3), new NeighborVertex(new Vec3i( 0, 0,  1), 1), new NeighborVertex(new Vec3i(-1, 0,  1), 2));
-        putMapping(mappings, Direction.DOWN, 1, new NeighborVertex(new Vec3i(-1, 0,  0), 2), new NeighborVertex(new Vec3i( 0, 0, -1), 0), new NeighborVertex(new Vec3i(-1, 0, -1), 3));
-        putMapping(mappings, Direction.DOWN, 2, new NeighborVertex(new Vec3i( 1, 0,  0), 1), new NeighborVertex(new Vec3i( 0, 0, -1), 3), new NeighborVertex(new Vec3i( 1, 0, -1), 0));
-        putMapping(mappings, Direction.DOWN, 3, new NeighborVertex(new Vec3i( 1, 0,  0), 0), new NeighborVertex(new Vec3i( 0, 0,  1), 2), new NeighborVertex(new Vec3i( 1, 0,  1), 1));
-
-        putMapping(mappings, Direction.NORTH, 0, new NeighborVertex(new Vec3i( 1,  0, 0), 3), new NeighborVertex(new Vec3i( 0,  1, 0), 1), new NeighborVertex(new Vec3i( 1,  1, 0), 2));
-        putMapping(mappings, Direction.NORTH, 1, new NeighborVertex(new Vec3i( 1,  0, 0), 2), new NeighborVertex(new Vec3i( 0, -1, 0), 0), new NeighborVertex(new Vec3i( 1, -1, 0), 3));
-        putMapping(mappings, Direction.NORTH, 2, new NeighborVertex(new Vec3i(-1,  0, 0), 1), new NeighborVertex(new Vec3i( 0, -1, 0), 3), new NeighborVertex(new Vec3i(-1, -1, 0), 0));
-        putMapping(mappings, Direction.NORTH, 3, new NeighborVertex(new Vec3i(-1,  0, 0), 0), new NeighborVertex(new Vec3i( 0,  1, 0), 2), new NeighborVertex(new Vec3i(-1,  1, 0), 1));
-
-        putMapping(mappings, Direction.SOUTH, 0, new NeighborVertex(new Vec3i(-1,  0, 0), 3), new NeighborVertex(new Vec3i( 0,  1, 0), 1), new NeighborVertex(new Vec3i(-1,  1, 0), 2));
-        putMapping(mappings, Direction.SOUTH, 1, new NeighborVertex(new Vec3i(-1,  0, 0), 2), new NeighborVertex(new Vec3i( 0, -1, 0), 0), new NeighborVertex(new Vec3i(-1, -1, 0), 3));
-        putMapping(mappings, Direction.SOUTH, 2, new NeighborVertex(new Vec3i( 1,  0, 0), 1), new NeighborVertex(new Vec3i( 0, -1, 0), 3), new NeighborVertex(new Vec3i( 1, -1, 0), 0));
-        putMapping(mappings, Direction.SOUTH, 3, new NeighborVertex(new Vec3i( 1,  0, 0), 0), new NeighborVertex(new Vec3i( 0,  1, 0), 2), new NeighborVertex(new Vec3i( 1,  1, 0), 1));
-
-        putMapping(mappings, Direction.EAST, 0, new NeighborVertex(new Vec3i(0,  0,  1), 3), new NeighborVertex(new Vec3i( 0,  1, 0), 1), new NeighborVertex(new Vec3i(0,  1,  1), 2));
-        putMapping(mappings, Direction.EAST, 1, new NeighborVertex(new Vec3i(0,  0,  1), 2), new NeighborVertex(new Vec3i( 0, -1, 0), 0), new NeighborVertex(new Vec3i(0, -1,  1), 3));
-        putMapping(mappings, Direction.EAST, 2, new NeighborVertex(new Vec3i(0,  0, -1), 1), new NeighborVertex(new Vec3i( 0, -1, 0), 3), new NeighborVertex(new Vec3i(0, -1, -1), 0));
-        putMapping(mappings, Direction.EAST, 3, new NeighborVertex(new Vec3i(0,  0, -1), 0), new NeighborVertex(new Vec3i( 0,  1, 0), 2), new NeighborVertex(new Vec3i(0,  1, -1), 1));
-
-        putMapping(mappings, Direction.WEST, 0, new NeighborVertex(new Vec3i(0,  0, -1), 3), new NeighborVertex(new Vec3i( 0,  1, 0), 1), new NeighborVertex(new Vec3i(0,  1, -1), 2));
-        putMapping(mappings, Direction.WEST, 1, new NeighborVertex(new Vec3i(0,  0, -1), 2), new NeighborVertex(new Vec3i( 0, -1, 0), 0), new NeighborVertex(new Vec3i(0, -1, -1), 3));
-        putMapping(mappings, Direction.WEST, 2, new NeighborVertex(new Vec3i(0,  0,  1), 1), new NeighborVertex(new Vec3i( 0, -1, 0), 3), new NeighborVertex(new Vec3i(0, -1,  1), 0));
-        putMapping(mappings, Direction.WEST, 3, new NeighborVertex(new Vec3i(0,  0,  1), 0), new NeighborVertex(new Vec3i( 0,  1, 0), 2), new NeighborVertex(new Vec3i(0,  1,  1), 1));
-
-        return mappings;
-    }
-
-    private static void putMapping(
-            NeighborVertex[][] mappings,
-            Direction face,
-            int srcVert,
-            NeighborVertex vertOne,
-            NeighborVertex vertTwo,
-            NeighborVertex vertBoth
-    )
-    {
-        mappings[getMappingIndex(face, srcVert)] = new NeighborVertex[] { vertOne, vertTwo, vertBoth };
-    }
-
-    private record NeighborVertex(Vec3i offset, int targetVert) { }
 }

@@ -25,6 +25,7 @@ public final class DevToolsConfig
     private static final String KEY_STATE_MERGER_DEBUG = "stateMergerDebug";
     private static final String KEY_STATE_MERGER_DEBUG_FILTER = "stateMergerDebugFilter";
     private static final String KEY_OCCLUSION_SHAPE_DEBUG = "occlusionShapeDebug";
+    private static final String KEY_COLLAPSIBLE_BLOCK_DEBUG = "collapsibleBlockDebug";
 
     public static final ModConfigSpec.@Nullable BooleanValue DOUBLE_BLOCK_PART_DEBUG_VALUE;
     public static final ModConfigSpec.@Nullable BooleanValue CONNECTION_DEBUG_VALUE;
@@ -32,6 +33,7 @@ public final class DevToolsConfig
     public static final ModConfigSpec.@Nullable BooleanValue STATE_MERGER_DEBUG_VALUE;
     public static final ModConfigSpec.@Nullable ConfigValue<String> STATE_MERGER_DEBUG_FILTER_VALUE;
     public static final ModConfigSpec.@Nullable BooleanValue OCCLUSION_SHAPE_DEBUG_VALUE;
+    public static final ModConfigSpec.@Nullable BooleanValue COLLAPSIBLE_BLOCK_DEBUG_VALUE;
 
     private static boolean doubleBlockPartDebug = false;
     private static boolean connectionDebug = false;
@@ -40,6 +42,7 @@ public final class DevToolsConfig
     @Nullable
     private static Pattern stateMergerDebugFilter = null;
     private static boolean occlusionShapeDebug = false;
+    private static boolean collapsibleBlockDebug = false;
 
     public static void init(IEventBus modBus, ModContainer modContainer)
     {
@@ -62,6 +65,7 @@ public final class DevToolsConfig
             STATE_MERGER_DEBUG_VALUE = null;
             STATE_MERGER_DEBUG_FILTER_VALUE = null;
             OCCLUSION_SHAPE_DEBUG_VALUE = null;
+            COLLAPSIBLE_BLOCK_DEBUG_VALUE = null;
         }
         else
         {
@@ -104,6 +108,10 @@ public final class DevToolsConfig
                     .comment("If enabled, switches block selection shape rendering to render the occlusion shape instead of the general shape")
                     .translation(translate(KEY_OCCLUSION_SHAPE_DEBUG))
                     .define(KEY_OCCLUSION_SHAPE_DEBUG, false);
+            COLLAPSIBLE_BLOCK_DEBUG_VALUE = builder
+                    .comment("Enable debug renderer for Collapsible Block target computation")
+                    .translation(translate(KEY_COLLAPSIBLE_BLOCK_DEBUG))
+                    .define(KEY_COLLAPSIBLE_BLOCK_DEBUG, false);
 
             SPEC = builder.build();
         }
@@ -144,12 +152,11 @@ public final class DevToolsConfig
             String filter = Objects.requireNonNull(STATE_MERGER_DEBUG_FILTER_VALUE).get();
             stateMergerDebugFilter = filter.isBlank() ? null : Pattern.compile(filter);
             occlusionShapeDebug = Objects.requireNonNull(OCCLUSION_SHAPE_DEBUG_VALUE).get();
+            collapsibleBlockDebug = Objects.requireNonNull(COLLAPSIBLE_BLOCK_DEBUG_VALUE).get();
         }
     }
 
     private DevToolsConfig() { }
-
-
 
     public static final class ViewImpl implements ExtConfigView.DevTools
     {
@@ -190,6 +197,12 @@ public final class DevToolsConfig
         public boolean isOcclusionShapeDebugRenderingEnabled()
         {
             return IN_DEV && occlusionShapeDebug;
+        }
+
+        @Override
+        public boolean isCollapsibleBlockDebugRendererEnabled()
+        {
+            return IN_DEV && collapsibleBlockDebug;
         }
     }
 }

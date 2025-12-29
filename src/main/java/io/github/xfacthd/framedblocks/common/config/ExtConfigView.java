@@ -80,9 +80,9 @@ public final class ExtConfigView
         Pattern getStateMergerDebugFilter();
 
         boolean isOcclusionShapeDebugRenderingEnabled();
+
+        boolean isCollapsibleBlockDebugRendererEnabled();
     }
-
-
 
     private ExtConfigView() { }
 }

@@ -546,7 +546,7 @@ public final class FBContent
             FramedFlowerPotBlockEntity::new,
             BlockType.FRAMED_FLOWER_POT
     );
-    public static final Holder<BlockEntityType<?>> BE_TYPE_FRAMED_COLLAPSIBLE_BLOCK = registerBlockEntity(
+    public static final DeferredBlockEntity<FramedCollapsibleBlockEntity> BE_TYPE_FRAMED_COLLAPSIBLE_BLOCK = registerBlockEntity(
             FramedCollapsibleBlockEntity::new,
             BlockType.FRAMED_COLLAPSIBLE_BLOCK
     );

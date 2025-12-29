@@ -63,6 +63,7 @@ import io.github.xfacthd.framedblocks.client.render.block.FramedTankRenderer;
 import io.github.xfacthd.framedblocks.client.render.color.FramedFlowerPotColor;
 import io.github.xfacthd.framedblocks.client.render.color.FramedTargetBlockColor;
 import io.github.xfacthd.framedblocks.client.render.debug.FramedBlockDebugRenderer;
+import io.github.xfacthd.framedblocks.client.render.debug.impl.CollapsibleBlockDebugRenderer;
 import io.github.xfacthd.framedblocks.client.render.debug.impl.ConnectionPredicateDebugRenderer;
 import io.github.xfacthd.framedblocks.client.render.debug.impl.DoubleBlockPartDebugRenderer;
 import io.github.xfacthd.framedblocks.client.render.debug.impl.QuadWindingDebugRenderer;
@@ -193,6 +194,8 @@ public final class FBClient
         FBContent.getBlockEntities().forEach(type -> event.attach(type.value(), ConnectionPredicateDebugRenderer.INSTANCE));
         FBContent.getBlockEntities().forEach(type -> event.attach(type.value(), QuadWindingDebugRenderer.INSTANCE));
         FBContent.getDoubleBlockEntities().forEach(type -> event.attach(type.value(), DoubleBlockPartDebugRenderer.INSTANCE));
+
+        event.attach(FBContent.BE_TYPE_FRAMED_COLLAPSIBLE_BLOCK.value(), CollapsibleBlockDebugRenderer.INSTANCE);
     }
 
     private static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event)

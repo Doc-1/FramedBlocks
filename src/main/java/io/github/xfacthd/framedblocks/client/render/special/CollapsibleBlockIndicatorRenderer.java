@@ -6,53 +6,43 @@ import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.client.render.util.FramedRenderTypes;
 import io.github.xfacthd.framedblocks.common.FBContent;
 import io.github.xfacthd.framedblocks.common.blockentity.special.FramedCollapsibleBlockEntity;
-import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
-import io.github.xfacthd.framedblocks.common.data.property.NullableDirection;
+import io.github.xfacthd.framedblocks.common.data.collapsible.HammerTarget;
+import io.github.xfacthd.framedblocks.common.data.collapsible.TargetCalculator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent;
 
+import java.util.Objects;
+
 public final class CollapsibleBlockIndicatorRenderer
 {
-    private static final float[] VERTEX_NO_OFFSET = new float[] { 1F, 1F, 1F, 1F };
     private static final int LINE_COLOR = ARGB.color(153, 255, 0, 0);
 
     public static void onRenderBlockHighlight(ExtractBlockOutlineRenderStateEvent event)
     {
-        //noinspection ConstantConditions
-        ItemStack heldItem = Minecraft.getInstance().player.getMainHandItem();
-        if (heldItem.getItem() != FBContent.ITEM_FRAMED_HAMMER.value())
-        {
-            return;
-        }
+        Player player = Objects.requireNonNull(Minecraft.getInstance().player);
+        if (!player.getMainHandItem().is(FBContent.ITEM_FRAMED_HAMMER)) return;
 
+        Level level = Objects.requireNonNull(Minecraft.getInstance().level);
         BlockHitResult hit = event.getHitResult();
-        Level level = Minecraft.getInstance().level;
-        //noinspection ConstantConditions
-        BlockState state = level.getBlockState(hit.getBlockPos());
-        if (state.getBlock() != FBContent.BLOCK_FRAMED_COLLAPSIBLE_BLOCK.value())
-        {
-            return;
-        }
+        BlockPos pos = hit.getBlockPos();
+        BlockState state = level.getBlockState(pos);
+        if (!state.is(FBContent.BLOCK_FRAMED_COLLAPSIBLE_BLOCK)) return;
+        if (!(level.getBlockEntity(pos) instanceof FramedCollapsibleBlockEntity be)) return;
 
-        NullableDirection face = state.getValue(PropertyHolder.NULLABLE_FACE);
-        Direction faceDir = hit.getDirection();
-        if (face != NullableDirection.NONE && face.toDirection() != faceDir)
-        {
-            return;
-        }
+        HammerTarget target = TargetCalculator.computeTarget(be, player, hit, true, 1F);
+        if (target == null) return;
 
-        Vec3 offset = Vec3.atLowerCornerOf(hit.getBlockPos()).subtract(event.getCamera().position());
-        Vec3 hitLocation = hit.getLocation();
-        float[] vY = getVertexHeights(level, hit.getBlockPos(), face);
+        Vec3 offset = Vec3.atLowerCornerOf(pos).subtract(event.getCamera().position());
+        float[] vY = TargetCalculator.getVertexHeights(be, be.getCollapsedFace());
 
         event.addCustomRenderer((renderState, buffer, poseStack, translucentPass, levelRenderState) ->
         {
@@ -60,13 +50,13 @@ public final class CollapsibleBlockIndicatorRenderer
             {
                 poseStack.pushPose();
                 poseStack.translate(offset.x + .5, offset.y + .5, offset.z + .5);
-                if (faceDir == Direction.DOWN)
+                if (target.face() == Direction.DOWN)
                 {
                     poseStack.mulPose(Quaternions.XP_180);
                 }
-                else if (faceDir != Direction.UP)
+                else if (target.face() != Direction.UP)
                 {
-                    poseStack.mulPose(OutlineRenderer.YN_DIR[faceDir.get2DDataValue()]);
+                    poseStack.mulPose(OutlineRenderer.YN_DIR[target.face().get2DDataValue()]);
                     poseStack.mulPose(Quaternions.XP_90);
                 }
                 poseStack.translate(-.5, -.5, -.5);
@@ -75,26 +65,12 @@ public final class CollapsibleBlockIndicatorRenderer
                         poseStack.last(), buffer.getBuffer(FramedRenderTypes.LINES_NO_DEPTH), LINE_COLOR
                 );
                 drawSectionOverlay(drawer, vY);
-                drawCornerMarkers(drawer, faceDir, hitLocation, vY);
+                drawCornerMarkers(drawer, target.face(), target.pos(), vY);
 
                 poseStack.popPose();
             }
             return false;
         });
-    }
-
-    private static float[] getVertexHeights(Level level, BlockPos pos, NullableDirection face)
-    {
-        if (face == NullableDirection.NONE || !(level.getBlockEntity(pos) instanceof FramedCollapsibleBlockEntity be))
-        {
-            return VERTEX_NO_OFFSET;
-        }
-        return new float[] {
-                1F - (be.getVertexOffset(0) / 16F),
-                1F - (be.getVertexOffset(1) / 16F),
-                1F - (be.getVertexOffset(2) / 16F),
-                1F - (be.getVertexOffset(3) / 16F)
-        };
     }
 
     private static void drawSectionOverlay(OutlineRenderer.LineDrawer drawer, float[] vY)
