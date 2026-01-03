@@ -14,22 +14,22 @@ import io.github.xfacthd.framedblocks.common.config.DevToolsConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.BlockOutlineRenderState;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -57,25 +57,14 @@ public final class BlockOutlineRenderer
 
         if (DevToolsConfig.VIEW.isOcclusionShapeDebugRenderingEnabled())
         {
-            VoxelShape shape = state.getOcclusionShape();
-            Vec3 offset = Vec3.atLowerCornerOf(result.getBlockPos()).subtract(event.getCamera().position());
-
-            event.addCustomRenderer((renderState, buffer, poseStack, translucentPass, levelRenderState) ->
-            {
-                if (translucentPass == renderState.isTranslucent())
-                {
-                    boolean highContrast = renderState.highContrast();
-                    if (highContrast)
-                    {
-                        VertexConsumer builder = buffer.getBuffer(RenderTypes.secondaryBlockOutline());
-                        ShapeRenderer.renderShape(poseStack, builder, shape, offset.x, offset.y, offset.z, 0xFF000000, 7F);
-                    }
-                    VertexConsumer builder = buffer.getBuffer(RenderTypes.lines());
-                    int lineColor = highContrast ? CommonColors.HIGH_CONTRAST_DIAMOND : DEFAULT_LINE_COLOR;
-                    ShapeRenderer.renderShape(poseStack, builder, shape, offset.x, offset.y, offset.z, lineColor, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
-                }
-                return true;
-            });
+            event.getLevelRenderState().blockOutlineRenderState = new BlockOutlineRenderState(
+                    result.getBlockPos(),
+                    event.isInTranslucentPass(),
+                    event.isHighContrast(),
+                    state.getOcclusionShape(),
+                    List.of()
+            );
+            event.setCanceled(true);
             return;
         }
 
@@ -96,6 +85,7 @@ public final class BlockOutlineRenderer
             if (data == null) return;
 
             Vec3 offset = Vec3.atLowerCornerOf(result.getBlockPos()).subtract(event.getCamera().position());
+            boolean highContrast = event.isHighContrast();
             event.addCustomRenderer((renderState, buffer, poseStack, translucentPass, levelRenderState) ->
             {
                 if (translucentPass == renderState.isTranslucent())
@@ -106,7 +96,7 @@ public final class BlockOutlineRenderer
                     renderer.rotateMatrix(poseStack, state);
                     poseStack.translate(-.5, -.5, -.5);
 
-                    AbstractLineDrawer drawer = createDrawer(poseStack.last(), buffer);
+                    AbstractLineDrawer drawer = createDrawer(poseStack.last(), buffer, highContrast);
                     renderer.draw(state, data, drawer);
                     drawer.finish();
 
@@ -125,9 +115,9 @@ public final class BlockOutlineRenderer
         return (OutlineRenderer<Object>) OUTLINE_RENDERERS.get(type);
     }
 
-    private static AbstractLineDrawer createDrawer(PoseStack.Pose pose, MultiBufferSource buffer)
+    private static AbstractLineDrawer createDrawer(PoseStack.Pose pose, MultiBufferSource buffer, boolean highContrast)
     {
-        if (Minecraft.getInstance().options.highContrastBlockOutline().get())
+        if (highContrast)
         {
             return new HighContrastLineDrawer(pose, buffer);
         }
