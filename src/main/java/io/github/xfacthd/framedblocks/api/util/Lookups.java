@@ -1,12 +1,27 @@
 package io.github.xfacthd.framedblocks.api.util;
 
 import net.minecraft.core.Direction;
+import org.jspecify.annotations.Nullable;
 
 final class Lookups
 {
-    static final Direction.Axis[] PERP_AXIS = buildPerpAxisMapping();
+    static final Direction.@Nullable Axis[] PERP_AXIS = buildPerpAxisMapping();
+    static final @Nullable Direction[] NORMALS = makeNormalMapping();
 
-    private static Direction.Axis[] buildPerpAxisMapping()
+    static int makePerpAxisIndex(Direction.Axis axis1, Direction.Axis axis2)
+    {
+        return axis1.ordinal() | (axis2.ordinal() << 2);
+    }
+
+    static int makeNormalIndex(int x, int y, int z)
+    {
+        x = Math.clamp(x, -1, 1);
+        y = Math.clamp(y, -1, 1);
+        z = Math.clamp(z, -1, 1);
+        return ((x & 0b11) | (y & 0b11) << 2 | (z & 0b11) << 4);
+    }
+
+    private static Direction.@Nullable Axis[] buildPerpAxisMapping()
     {
         Direction.Axis[] mapping = new Direction.Axis[11];
         mapping[makePerpAxisIndex(Direction.Axis.X, Direction.Axis.Y)] = mapping[makePerpAxisIndex(Direction.Axis.Y, Direction.Axis.X)] = Direction.Axis.Z;
@@ -15,9 +30,14 @@ final class Lookups
         return mapping;
     }
 
-    static int makePerpAxisIndex(Direction.Axis axis1, Direction.Axis axis2)
+    private static @Nullable Direction[] makeNormalMapping()
     {
-        return axis1.ordinal() | (axis2.ordinal() << 2);
+        Direction[] mapping = new Direction[64];
+        for (Direction dir : Direction.values())
+        {
+            mapping[makeNormalIndex(dir.getStepX(), dir.getStepY(), dir.getStepZ())] = dir;
+        }
+        return mapping;
     }
 
     private Lookups() { }
