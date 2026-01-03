@@ -76,7 +76,7 @@ public class FramedTubeGeometry extends Geometry
             else if (Utils.isY(quadDir))
             {
                 QuadModifier.of(quad)
-                        .apply(Modifiers.cut(Utils.nextAxisNotEqualTo(axis, Direction.Axis.Y), 1F - thickness))
+                        .apply(Modifiers.cut(Utils.getPerpendicularAxis(axis, Direction.Axis.Y), 1F - thickness))
                         .apply(Modifiers.setPosition(thickness))
                         .export(quadMap.get(null));
             }

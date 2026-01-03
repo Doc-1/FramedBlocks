@@ -32,14 +32,13 @@ public class FramedChainGeometry extends Geometry
     public void transformQuad(QuadMap quadMap, BakedQuad quad, ModelData modelData)
     {
         Direction quadDir = quad.direction();
-        Direction.Axis quadPerpAxis = Utils.nextAxisNotEqualTo(quadDir.getAxis(), axis);
+        if (quadDir.getAxis() == axis) return;
+
+        Direction.Axis quadPerpAxis = Utils.getPerpendicularAxis(quadDir.getAxis(), axis);
         if (axis == Direction.Axis.Y)
         {
-            if (!Utils.isY(quadDir))
-            {
-                createChainEdgeParts(quadMap, quad, quadDir, quadPerpAxis, Utils::isX, Modifiers::cut, Modifiers::cut);
-                createChainCenterParts(quadMap, quad, Modifiers::cut, length -> Modifiers.cut(quadPerpAxis, length));
-            }
+            createChainEdgeParts(quadMap, quad, quadDir, quadPerpAxis, Utils::isX, Modifiers::cut, Modifiers::cut);
+            createChainCenterParts(quadMap, quad, Modifiers::cut, length -> Modifiers.cut(quadPerpAxis, length));
         }
         else
         {
@@ -50,7 +49,7 @@ public class FramedChainGeometry extends Geometry
                 createChainEdgeParts(quadMap, quad, quadDir, quadPerpAxis, dir -> axis == Direction.Axis.Z, Modifiers::cut, Modifiers::cut);
                 createChainCenterParts(quadMap, quad, Modifiers::cut, len -> Modifiers.cut(perpAxis, len));
             }
-            else if (quadDir.getAxis() != axis)
+            else
             {
                 createChainEdgeParts(quadMap, quad, quadDir, quadPerpAxis, dir -> axis == Direction.Axis.X, Modifiers::cut, Modifiers::cut);
                 createChainCenterParts(quadMap, quad, Modifiers::cut, length -> Modifiers.cut(Direction.Axis.Y, length));

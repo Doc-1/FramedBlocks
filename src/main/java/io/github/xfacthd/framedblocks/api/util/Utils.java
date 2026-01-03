@@ -321,18 +321,6 @@ public final class Utils
         }
     }
 
-    public static Direction.Axis nextAxisNotEqualTo(Direction.Axis axis, Direction.Axis except)
-    {
-        Direction.Axis[] axes = Direction.Axis.VALUES;
-        do
-        {
-            axis = axes[(axis.ordinal() + 1) % axes.length];
-        }
-        while (axis == except);
-
-        return axis;
-    }
-
     /**
      * Returns the axis perpendicular to both provided axis which must themselves be perpendicular to each other
      */
