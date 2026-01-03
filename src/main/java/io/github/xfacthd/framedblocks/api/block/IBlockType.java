@@ -17,7 +17,7 @@ public interface IBlockType
 {
     boolean canOccludeWithSolidCamo();
 
-    boolean hasSpecialHitbox();
+    boolean hasSpecialOutline();
 
     @ApiStatus.OverrideOnly
     FullFacePredicate getFullFacePredicate();

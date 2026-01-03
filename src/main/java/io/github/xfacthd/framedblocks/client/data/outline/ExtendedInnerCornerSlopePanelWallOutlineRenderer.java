@@ -42,6 +42,6 @@ public final class ExtendedInnerCornerSlopePanelWallOutlineRenderer implements S
         SimpleOutlineRenderer.super.rotateMatrix(poseStack, state);
 
         HorizontalRotation rotation = state.getValue(PropertyHolder.ROTATION);
-        poseStack.mulPose(SlopePanelOutlineRenderer.ROTATIONS[rotation.ordinal()]);
+        poseStack.mulPose(rotation.getRotation());
     }
 }

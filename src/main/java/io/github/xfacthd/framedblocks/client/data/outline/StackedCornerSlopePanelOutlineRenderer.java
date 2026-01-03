@@ -6,25 +6,30 @@ import io.github.xfacthd.framedblocks.api.render.outline.OutlineRenderer;
 import io.github.xfacthd.framedblocks.api.render.outline.SimpleOutlineRenderer;
 import net.minecraft.world.level.block.state.BlockState;
 
-public final class ThreewayCornerOutlineRenderer implements SimpleOutlineRenderer
+public final class StackedCornerSlopePanelOutlineRenderer implements SimpleOutlineRenderer
 {
     @Override
     public void draw(BlockState state, LineDrawer drawer)
     {
-        //Back edges
-        drawer.drawLine(1, 0, 1, 1, 1, 1);
-        drawer.drawLine(1, 0, 0, 1, 0, 1);
+        // Base
+        drawer.drawLine(0, 0, 0, 1, 0, 0);
         drawer.drawLine(0, 0, 1, 1, 0, 1);
+        drawer.drawLine(0, 0, 0, 0, 0, 1);
+        drawer.drawLine(1, 0, 0, 1, 0, 1);
 
-        //Slope edges
-        drawer.drawLine(1, 0, 0, 1, 1, 1);
-        drawer.drawLine(1, 0, 0, 0, 0, 1);
-        drawer.drawLine(0, 0, 1, 1, 1, 1);
+        // Back vertical
+        drawer.drawLine(1, 0, 1, 1, 1, 1);
 
-        //Cross
-        drawer.drawLine(  1,   0,   0, .5F, .5F, .5F);
-        drawer.drawLine(.5F, .5F, .5F,   1,   1,   1);
-        drawer.drawLine(  0,   0,   1, .5F, .5F, .5F);
+        // Top
+        drawer.drawLine(.5F, 1, .5F,   1, 1, .5F);
+        drawer.drawLine(.5F, 1,  1F,   1, 1,   1);
+        drawer.drawLine(.5F, 1, .5F, .5F, 1,   1);
+        drawer.drawLine(  1, 1, .5F,   1, 1,   1);
+
+        // Slopes
+        drawer.drawLine(0, 0, 0, .5F, 1, .5F);
+        drawer.drawLine(1, 0, 0,   1, 1, .5F);
+        drawer.drawLine(0, 0, 1, .5F, 1,   1);
     }
 
     @Override

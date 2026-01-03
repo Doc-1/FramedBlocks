@@ -17,11 +17,11 @@ public final class SpecialShapeRendererPresence
         blocks.forEach(block ->
         {
             IBlockType type = ((IFramedBlock) block).getBlockType();
-            if (type.hasSpecialHitbox() && !BlockOutlineRenderer.hasOutlineRenderer(type))
+            if (type.hasSpecialOutline() && !BlockOutlineRenderer.hasOutlineRenderer(type))
             {
                 reporter.warn("Block '{}' requests custom outline rendering but no OutlineRender was registered", block);
             }
-            else if (!type.hasSpecialHitbox() && BlockOutlineRenderer.hasOutlineRenderer(type))
+            else if (!type.hasSpecialOutline() && BlockOutlineRenderer.hasOutlineRenderer(type))
             {
                 reporter.warn("Block '{}' requests standard outline rendering but an OutlineRender was registered", block);
             }
@@ -29,8 +29,6 @@ public final class SpecialShapeRendererPresence
 
         reporter.endTest();
     }
-
-
 
     private SpecialShapeRendererPresence() { }
 }

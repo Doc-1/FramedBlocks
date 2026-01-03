@@ -1,6 +1,7 @@
 package io.github.xfacthd.framedblocks.common.data.property;
 
 import com.google.common.base.Preconditions;
+import io.github.xfacthd.framedblocks.api.render.Quaternions;
 import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
@@ -8,27 +9,30 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.joml.Quaternionfc;
 
 import java.util.Locale;
 import java.util.function.Function;
 
 public enum HorizontalRotation implements StringRepresentable
 {
-    UP   (dir -> Direction.UP,   Shapes.box( 0, .5, 0,  1,  1, 1), Shapes.box( 0, .5, 0, .5,  1, 1)),
-    DOWN (dir -> Direction.DOWN, Shapes.box( 0,  0, 0,  1, .5, 1), Shapes.box(.5,  0, 0,  1, .5, 1)),
-    RIGHT(Direction::getClockWise,        Shapes.box(.5,  0, 0,  1,  1, 1), Shapes.box(.5, .5, 0,  1,  1, 1)),
-    LEFT (Direction::getCounterClockWise, Shapes.box( 0,  0, 0, .5,  1, 1), Shapes.box( 0,  0, 0, .5, .5, 1));
+    UP   (dir -> Direction.UP,   Shapes.box( 0, .5, 0,  1,  1, 1), Shapes.box( 0, .5, 0, .5,  1, 1), Quaternions.ONE),
+    DOWN (dir -> Direction.DOWN, Shapes.box( 0,  0, 0,  1, .5, 1), Shapes.box(.5,  0, 0,  1, .5, 1), Quaternions.ZP_180),
+    RIGHT(Direction::getClockWise,        Shapes.box(.5,  0, 0,  1,  1, 1), Shapes.box(.5, .5, 0,  1,  1, 1), Quaternions.ZP_90),
+    LEFT (Direction::getCounterClockWise, Shapes.box( 0,  0, 0, .5,  1, 1), Shapes.box( 0,  0, 0, .5, .5, 1), Quaternions.ZN_90);
 
     private final String name = toString().toLowerCase(Locale.ROOT);
     private final Function<Direction, Direction> facingMod;
     private final VoxelShape slabShape;
     private final VoxelShape cornerShape;
+    private final Quaternionfc rotation;
 
-    HorizontalRotation(Function<Direction, Direction> facingMod, VoxelShape slabShape, VoxelShape cornerShape)
+    HorizontalRotation(Function<Direction, Direction> facingMod, VoxelShape slabShape, VoxelShape cornerShape, Quaternionfc rotation)
     {
         this.facingMod = facingMod;
         this.slabShape = slabShape;
         this.cornerShape = cornerShape;
+        this.rotation = rotation;
     }
 
     public Direction withFacing(Direction dir)
@@ -103,13 +107,16 @@ public enum HorizontalRotation implements StringRepresentable
         return cornerShape;
     }
 
+    public Quaternionfc getRotation()
+    {
+        return rotation;
+    }
+
     @Override
     public String getSerializedName()
     {
         return name;
     }
-
-
 
     /**
      * @param facing The view direction from which the rotation is determined, must not be on the Y axis

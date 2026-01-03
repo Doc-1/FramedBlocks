@@ -19,7 +19,7 @@ public final class RegisterOutlineRenderersEvent extends Event implements IModBu
 
     /**
      * Register an {@link OutlineRenderer} for the given {@link IBlockType}
-     * @param type The {@link IBlockType}, must return true for {@link IBlockType#hasSpecialHitbox()}
+     * @param type The {@link IBlockType}, must return true for {@link IBlockType#hasSpecialOutline()}
      */
     public void register(IBlockType type, OutlineRenderer<?> renderer)
     {

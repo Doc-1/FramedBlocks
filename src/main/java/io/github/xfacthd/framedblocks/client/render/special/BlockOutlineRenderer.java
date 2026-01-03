@@ -80,7 +80,7 @@ public final class BlockOutlineRenderer
         }
 
         IBlockType type = block.getBlockType();
-        if (type.hasSpecialHitbox())
+        if (type.hasSpecialOutline())
         {
             OutlineRenderer<Object> renderer = getRenderer(type);
             if (renderer == null)
@@ -139,8 +139,8 @@ public final class BlockOutlineRenderer
         ModLoader.postEvent(new RegisterOutlineRenderersEvent((type, renderer) ->
         {
             Preconditions.checkArgument(
-                    type.hasSpecialHitbox(),
-                    "IBlockType %s doesn't return true from IBlockType#hasSpecialHitbox()",
+                    type.hasSpecialOutline(),
+                    "IBlockType %s doesn't return true from IBlockType#hasSpecialOutline()",
                     type
             );
             OUTLINE_RENDERERS.put(type, renderer);
@@ -165,7 +165,7 @@ public final class BlockOutlineRenderer
 
         abstract void finish();
 
-        void drawLine(VertexConsumer builder, float x1, float y1, float z1, float x2, float y2, float z2, int color, float lineWidth)
+        final void drawLine(VertexConsumer builder, float x1, float y1, float z1, float x2, float y2, float z2, int color, float lineWidth)
         {
             float nX = x2 - x1;
             float nY = y2 - y1;
@@ -200,13 +200,23 @@ public final class BlockOutlineRenderer
         }
 
         @Override
+        public void drawLines(float[] vertices)
+        {
+            for (int i = 0; i < vertices.length; i += 6)
+            {
+                drawLine(vertices[i], vertices[i + 1], vertices[i + 2], vertices[i + 3], vertices[i + 4], vertices[i + 5]);
+            }
+        }
+
+        @Override
         void finish() { }
     }
 
     private static final class HighContrastLineDrawer extends AbstractLineDrawer
     {
-        private static final int LINE_SIZE = 6;
+        private static final int LINE_STRIDE = 6;
         private static final int INITIAL_LINE_COUNT = 32;
+        private static final String STRIDE_ERROR = "Packed vertex array size must be multiple of " + LINE_STRIDE;
 
         private final MultiBufferSource buffer;
         private float[] lines;
@@ -216,18 +226,13 @@ public final class BlockOutlineRenderer
         {
             super(pose);
             this.buffer = buffer;
-            this.lines = new float[INITIAL_LINE_COUNT * LINE_SIZE];
+            this.lines = new float[INITIAL_LINE_COUNT * LINE_STRIDE];
         }
 
         @Override
         public void drawLine(float x1, float y1, float z1, float x2, float y2, float z2)
         {
-            if (pointer + LINE_SIZE > lines.length)
-            {
-                float[] newLines = new float[lines.length + (INITIAL_LINE_COUNT * LINE_SIZE)];
-                System.arraycopy(lines, 0, newLines, 0, lines.length);
-                lines = newLines;
-            }
+            ensureCapacity(pointer + LINE_STRIDE);
 
             lines[pointer] = x1;
             lines[pointer + 1] = y1;
@@ -236,7 +241,28 @@ public final class BlockOutlineRenderer
             lines[pointer + 4] = y2;
             lines[pointer + 5] = z2;
 
-            pointer += LINE_SIZE;
+            pointer += LINE_STRIDE;
+        }
+
+        @Override
+        public void drawLines(float[] vertices)
+        {
+            Preconditions.checkArgument(vertices.length % LINE_STRIDE == 0, STRIDE_ERROR);
+
+            ensureCapacity(pointer + vertices.length);
+            System.arraycopy(vertices, 0, lines, pointer, vertices.length);
+            pointer += vertices.length;
+        }
+
+        private void ensureCapacity(int size)
+        {
+            if (size > lines.length)
+            {
+                int newSize = Math.max(lines.length + (INITIAL_LINE_COUNT * LINE_STRIDE), size);
+                float[] newLines = new float[newSize];
+                System.arraycopy(lines, 0, newLines, 0, lines.length);
+                lines = newLines;
+            }
         }
 
         @Override
@@ -249,14 +275,12 @@ public final class BlockOutlineRenderer
         private void drawBufferedLines(RenderType renderType, int color, float lineWidth)
         {
             VertexConsumer builder = buffer.getBuffer(renderType);
-            for (int i = 0; i < pointer; i += LINE_SIZE)
+            for (int i = 0; i < pointer; i += LINE_STRIDE)
             {
                 drawLine(builder, lines[i], lines[i + 1], lines[i + 2], lines[i + 3], lines[i + 4], lines[i + 5], color, lineWidth);
             }
         }
     }
-
-
 
     private BlockOutlineRenderer() { }
 }

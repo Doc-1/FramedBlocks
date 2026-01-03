@@ -6,7 +6,7 @@ import io.github.xfacthd.framedblocks.common.data.PropertyHolder;
 import io.github.xfacthd.framedblocks.common.data.property.HorizontalRotation;
 import net.minecraft.world.level.block.state.BlockState;
 
-public final class ExtendedCornerSlopePanelWallOutlineRenderer implements SimpleOutlineRenderer
+public final class StackedCornerSlopePanelWallOutlineRenderer implements SimpleOutlineRenderer
 {
     @Override
     public void draw(BlockState state, LineDrawer drawer)
@@ -38,6 +38,6 @@ public final class ExtendedCornerSlopePanelWallOutlineRenderer implements Simple
         SimpleOutlineRenderer.super.rotateMatrix(poseStack, state);
 
         HorizontalRotation rotation = state.getValue(PropertyHolder.ROTATION);
-        poseStack.mulPose(SlopePanelOutlineRenderer.ROTATIONS[rotation.ordinal()]);
+        poseStack.mulPose(rotation.getRotation());
     }
 }

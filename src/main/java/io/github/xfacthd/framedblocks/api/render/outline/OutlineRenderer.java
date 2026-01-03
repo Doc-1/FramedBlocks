@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Unit;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.ApiStatus;
 import org.joml.Quaternionf;
 import org.joml.Quaternionfc;
 import org.jspecify.annotations.Nullable;
@@ -80,7 +81,7 @@ public interface OutlineRenderer<T>
         }
     }
 
-    static Quaternionf[] makeQuaternionArray()
+    private static Quaternionf[] makeQuaternionArray()
     {
         Quaternionf[] array = new Quaternionf[4];
         for (Direction dir : Direction.Plane.HORIZONTAL)
@@ -90,8 +91,11 @@ public interface OutlineRenderer<T>
         return array;
     }
 
+    @ApiStatus.NonExtendable
     interface LineDrawer
     {
         void drawLine(float x1, float y1, float z1, float x2, float y2, float z2);
+
+        void drawLines(float[] vertices);
     }
 }
