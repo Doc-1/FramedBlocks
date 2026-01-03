@@ -53,6 +53,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -332,6 +333,16 @@ public final class Utils
         return axis;
     }
 
+    /**
+     * Returns the axis perpendicular to both provided axis which must themselves be perpendicular to each other
+     */
+    public static Direction.Axis getPerpendicularAxis(Direction.Axis axisOne, Direction.Axis axisTwo)
+    {
+        Preconditions.checkArgument(axisOne != axisTwo, "Provided axis must be perpendicular");
+        int idx = Lookups.makePerpAxisIndex(axisOne, axisTwo);
+        return Objects.requireNonNull(Lookups.PERP_AXIS[idx]);
+    }
+
     public static <T> List<T> concat(List<T> listOne, List<T> listTwo)
     {
         List<T> list = new ArrayList<>(listOne.size() + listTwo.size());
@@ -559,8 +570,6 @@ public final class Utils
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException("Failed to load service for " + clazz.getName()));
     }
-
-
 
     private Utils() { }
 }
