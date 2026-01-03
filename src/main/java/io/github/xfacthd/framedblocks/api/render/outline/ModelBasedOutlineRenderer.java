@@ -3,6 +3,7 @@ package io.github.xfacthd.framedblocks.api.render.outline;
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.xfacthd.framedblocks.api.model.util.ModelUtils;
 import io.github.xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
+import io.github.xfacthd.framedblocks.api.util.Utils;
 import io.github.xfacthd.framedblocks.client.model.wrapping.ModelWrappingManager;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -15,14 +16,17 @@ import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.EmptyBlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.quad.BakedNormals;
+import org.jetbrains.annotations.ApiStatus;
 import org.joml.Vector3fc;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -36,6 +40,9 @@ import java.util.Set;
  */
 public final class ModelBasedOutlineRenderer implements SimpleOutlineRenderer
 {
+    @ApiStatus.Internal
+    public static final Identifier LISTENER_ID = Utils.id("model_based_outline_renderer");
+    private static final List<ModelBasedOutlineRenderer> RENDERERS = new ArrayList<>();
     private static final @Nullable Direction[] DIRECTIONS = Arrays.copyOf(Direction.values(), 7);
     private static final RandomSource RANDOM = RandomSource.createNewThreadLocalInstance();
     private static final List<BlockModelPart> SCRATCH_LIST = new ObjectArrayList<>();
@@ -46,6 +53,7 @@ public final class ModelBasedOutlineRenderer implements SimpleOutlineRenderer
     public ModelBasedOutlineRenderer(Block block)
     {
         this.stateMerger = ModelWrappingManager.getHandler(block).getStateMerger();
+        RENDERERS.add(this);
     }
 
     @Override
@@ -58,6 +66,12 @@ public final class ModelBasedOutlineRenderer implements SimpleOutlineRenderer
 
     @Override
     public void rotateMatrix(PoseStack poseStack, BlockState state) { }
+
+    @ApiStatus.Internal
+    public static void clearCaches()
+    {
+        RENDERERS.forEach(renderer -> renderer.cachedVertices.clear());
+    }
 
     private static float[] computeVertices(BlockState state)
     {

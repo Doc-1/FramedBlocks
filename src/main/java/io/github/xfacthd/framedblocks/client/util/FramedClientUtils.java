@@ -2,6 +2,7 @@ package io.github.xfacthd.framedblocks.client.util;
 
 import io.github.xfacthd.framedblocks.api.model.AbstractFramedBlockModel;
 import io.github.xfacthd.framedblocks.api.model.item.AbstractFramedBlockItemModel;
+import io.github.xfacthd.framedblocks.api.render.outline.ModelBasedOutlineRenderer;
 import io.github.xfacthd.framedblocks.client.model.unbaked.UnbakedStandaloneFramedBlockModel;
 import io.github.xfacthd.framedblocks.common.data.camo.fluid.FluidCamoClientHandler;
 import net.minecraft.client.Minecraft;
@@ -31,9 +32,9 @@ public final class FramedClientUtils
         UnbakedStandaloneFramedBlockModel.clearCaches();
 
         FluidCamoClientHandler.clearModelCache();
+
+        ModelBasedOutlineRenderer.clearCaches();
     }
-
-
 
     private FramedClientUtils() { }
 }

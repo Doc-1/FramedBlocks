@@ -19,6 +19,7 @@ import io.github.xfacthd.framedblocks.api.model.wrapping.RegisterModelWrappersEv
 import io.github.xfacthd.framedblocks.api.model.wrapping.WrapHelper;
 import io.github.xfacthd.framedblocks.api.model.wrapping.statemerger.StateMerger;
 import io.github.xfacthd.framedblocks.api.render.debug.AttachDebugRenderersEvent;
+import io.github.xfacthd.framedblocks.api.render.outline.ModelBasedOutlineRenderer;
 import io.github.xfacthd.framedblocks.api.screen.overlay.RegisterBlockInteractOverlaysEvent;
 import io.github.xfacthd.framedblocks.api.util.FramedConstants;
 import io.github.xfacthd.framedblocks.api.util.Utils;
@@ -530,6 +531,7 @@ public final class FBClient
     {
         event.addListener(BlockInteractOverlayLayer.LISTENER_ID, (ResourceManagerReloadListener) BlockInteractOverlayLayer::onResourceReload);
         event.addListener(OverlayQuadGenerator.LISTENER_ID, (ResourceManagerReloadListener) OverlayQuadGenerator::onResourceReload);
+        event.addListener(ModelBasedOutlineRenderer.LISTENER_ID, (ResourceManagerReloadListener) (mgr -> ModelBasedOutlineRenderer.clearCaches()));
     }
 
     private static void onInitClientRegistries(InitializeClientRegistriesEvent event)
