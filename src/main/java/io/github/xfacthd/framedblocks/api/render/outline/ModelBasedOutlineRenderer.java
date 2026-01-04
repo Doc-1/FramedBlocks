@@ -17,12 +17,14 @@ import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.EmptyBlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.quad.BakedNormals;
 import org.jetbrains.annotations.ApiStatus;
+import org.joml.Vector3f;
 import org.joml.Vector3fc;
 import org.jspecify.annotations.Nullable;
 
@@ -33,6 +35,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * An {@link OutlineRenderer} which derives the lines from the block's geometry instead of requiring them
@@ -77,6 +80,7 @@ public final class ModelBasedOutlineRenderer implements SimpleOutlineRenderer
     {
         BlockStateModel model = ModelUtils.getModel(state);
         model.collectParts(EmptyBlockAndTintGetter.INSTANCE, BlockPos.ZERO, state, RANDOM, SCRATCH_LIST);
+        // Collect all unique quads with their vertex positions and quad normal (assumes all quads are planar)
         Set<Quad> uniqueQuads = new HashSet<>();
         for (BlockModelPart part : SCRATCH_LIST)
         {
@@ -95,6 +99,7 @@ public final class ModelBasedOutlineRenderer implements SimpleOutlineRenderer
         }
         SCRATCH_LIST.clear();
 
+        // Collect all edges grouped by the quad normal they originate from
         Int2ObjectMap<Object2IntMap<Line>> linesByNormal = new Int2ObjectOpenHashMap<>();
         for (Quad quad : uniqueQuads)
         {
@@ -105,28 +110,44 @@ public final class ModelBasedOutlineRenderer implements SimpleOutlineRenderer
             appendEdge(quad.v1, quad.v2, lines);
         }
 
+        // Collect all unique lines, eliminating identical lines which originate from multiple quads of identical or opposing normals
         Set<Line> uniqueLines = new HashSet<>();
         for (Int2ObjectMap.Entry<Object2IntMap<Line>> entry : linesByNormal.int2ObjectEntrySet())
         {
             int normal = entry.getIntKey();
-            int oppNormal = BakedNormals.pack(
-                    -BakedNormals.unpackX(normal),
-                    -BakedNormals.unpackY(normal),
-                    -BakedNormals.unpackZ(normal)
-            );
-            // TODO: try to "XOR" partially overlapping lines originating from a specific normal to support blocks with "stair side" faces built of two quads
+            int oppNormal = BakedNormals.pack(-BakedNormals.unpackX(normal), -BakedNormals.unpackY(normal), -BakedNormals.unpackZ(normal));
             Object2IntMap<Line> oppEntry = linesByNormal.getOrDefault(oppNormal, Object2IntMaps.emptyMap());
-            for (Object2IntMap.Entry<Line> line : entry.getValue().object2IntEntrySet())
+
+            // Merge parallel line segments which share a point into one line
+            Object2IntMap<Line> lines = entry.getValue();
+            tryMergeSegments(
+                    lines.keySet(),
+                    line -> lines.computeInt(line, ModelBasedOutlineRenderer::increment),
+                    line -> lines.computeInt(line, ModelBasedOutlineRenderer::decrementAndEliminate),
+                    ModelBasedOutlineRenderer::checkNonOverlapping
+            );
+
+            // Collect lines which appear exactly once on this normal and the opposing normal
+            Set<Line> uniqueLinesOnNormal = new HashSet<>();
+            for (Object2IntMap.Entry<Line> line : lines.object2IntEntrySet())
             {
                 if (line.getIntValue() == 1 && !oppEntry.containsKey(line.getKey()))
                 {
-                    uniqueLines.add(line.getKey());
+                    uniqueLinesOnNormal.add(line.getKey());
                 }
             }
+            // "XOR" partially overlapping line segments
+            tryMergeSegments(uniqueLinesOnNormal, ModelBasedOutlineRenderer::checkOneContainsTwo);
+            uniqueLines.addAll(uniqueLinesOnNormal);
         }
 
-        // TODO: merge parallel lines with a shared point and eliminate partially overlapping lines
+        // Merge parallel line segments which share a point into one line
+        tryMergeSegments(uniqueLines, ModelBasedOutlineRenderer::checkNonOverlapping);
 
+        // Remove lines which overlap another longer line
+        removeOverlappingSegments(uniqueLines);
+
+        // Pack unique lines into float array
         float[] packedLines = new float[uniqueLines.size() * 6];
         int idx = 0;
         for (Line line : uniqueLines)
@@ -147,8 +168,88 @@ public final class ModelBasedOutlineRenderer implements SimpleOutlineRenderer
         Line line = new Line(v1.x(), v1.y(), v1.z(), v2.x(), v2.y(), v2.z());
         if (line.isNonZero())
         {
-            lines.computeInt(line, ($, count) -> count == null ? 1 : count + 1);
+            lines.computeInt(line, ModelBasedOutlineRenderer::increment);
         }
+    }
+
+    private static void tryMergeSegments(Set<Line> lines, OverlapCheck check)
+    {
+        tryMergeSegments(lines, lines::add, lines::remove, check);
+    }
+
+    private static void tryMergeSegments(Set<Line> lines, Consumer<Line> adder, Consumer<Line> remover, OverlapCheck check)
+    {
+        boolean merged;
+        do
+        {
+            merged = false;
+            outer: for (Line lineOne : lines)
+            {
+                for (Line lineTwo : lines)
+                {
+                    if (lineOne == lineTwo) continue;
+
+                    int shared = lineOne.getSharedPointWith(lineTwo);
+                    if (shared == -1) continue;
+
+                    if (!lineOne.isParallelTo(lineTwo)) continue;
+                    if (!check.test(lineOne, lineTwo, shared)) continue;
+
+                    remover.accept(lineOne);
+                    remover.accept(lineTwo);
+                    adder.accept(lineOne.merge(lineTwo, shared));
+                    merged = true;
+                    break outer;
+                }
+            }
+        } while (merged);
+    }
+
+    private static void removeOverlappingSegments(Set<Line> lines)
+    {
+        boolean removed;
+        do
+        {
+            removed = false;
+            outer: for (Line lineOne : lines)
+            {
+                for (Line lineTwo : lines)
+                {
+                    if (lineOne == lineTwo) continue;
+                    if (!lineOne.isParallelTo(lineTwo)) continue;
+                    if (!lineOne.contains(lineTwo.x1, lineTwo.y1, lineTwo.z1)) continue;
+                    if (!lineOne.contains(lineTwo.x2, lineOne.y2, lineTwo.z2)) continue;
+
+                    lines.remove(lineTwo);
+                    removed = true;
+                    break outer;
+                }
+            }
+        } while (removed);
+    }
+
+    private static boolean checkNonOverlapping(Line lineOne, Line lineTwo, int shared)
+    {
+        return !lineOne.containsPointOf(lineTwo, shared, false) && !lineTwo.containsPointOf(lineOne, shared, true);
+    }
+
+    private static boolean checkOneContainsTwo(Line lineOne, Line lineTwo, int shared)
+    {
+        return lineOne.containsPointOf(lineTwo, shared, false);
+    }
+
+    private static <T> Integer increment(T key, @Nullable Integer value)
+    {
+        return value == null ? 1 : value + 1;
+    }
+
+    @Nullable
+    private static <T> Integer decrementAndEliminate(T key, @Nullable Integer value)
+    {
+        if (value == null) return null;
+
+        value--;
+        return value > 0 ? value : null;
     }
 
     private record Quad(Vector3fc v0, Vector3fc v1, Vector3fc v2, Vector3fc v3, int normal)
@@ -201,9 +302,66 @@ public final class ModelBasedOutlineRenderer implements SimpleOutlineRenderer
             return Float.compare(z1, z2);
         }
 
-        public boolean isNonZero()
+        boolean isNonZero()
         {
             return x1 != x2 || y1 != y2 || z1 != z2;
         }
+
+        int getSharedPointWith(Line other)
+        {
+            if (other.x1 == x1 && other.y1 == y1 && other.z1 == z1) return 0x11;
+            if (other.x2 == x2 && other.y2 == y2 && other.z2 == z2) return 0x22;
+            if (other.x1 == x2 && other.y1 == y2 && other.z1 == z2) return 0x21;
+            if (other.x2 == x1 && other.y2 == y1 && other.z2 == z1) return 0x12;
+            return -1;
+        }
+
+        boolean contains(float x, float y, float z)
+        {
+            Vector3f tmp = new Vector3f();
+            float d1 = tmp.set(x1, y1, z1).distance(x, y, z);
+            float d2 = tmp.set(x2, y2, z2).distance(x, y, z);
+            float d3 = tmp.set(x1, y1, z1).distance(x2, y2, z2);
+            return Mth.equal(d1 + d2, d3);
+        }
+
+        boolean containsPointOf(Line other, int shared, boolean otherFirst)
+        {
+            if (otherFirst)
+            {
+                shared >>>= 4;
+            }
+            shared &= 0xF;
+            return switch (shared)
+            {
+                case 0x1 -> contains(other.x2, other.y2, other.z2);
+                case 0x2 -> contains(other.x1, other.y1, other.z1);
+                default -> throw new IllegalArgumentException("Invalid shared point: " + shared);
+            };
+        }
+
+        boolean isParallelTo(Line other)
+        {
+            Vector3f diffOne = new Vector3f(x2 - x1, y2 - y1, z2 - z1);
+            Vector3f diffTwo = new Vector3f(other.x2 - other.x1, other.y2 - other.y1, other.z2 - other.z1);
+            return Mth.equal(0F, diffOne.cross(diffTwo).lengthSquared());
+        }
+
+        Line merge(Line other, int shared)
+        {
+            return switch (shared)
+            {
+                case 0x11 -> new Line(x2, y2, z2, other.x2, other.y2, other.z2);
+                case 0x22 -> new Line(x1, y1, z1, other.x1, other.y1, other.z1);
+                case 0x21 -> new Line(x1, y1, z1, other.x2, other.y2, other.z2);
+                case 0x12 -> new Line(x2, y2, z2, other.x1, other.y1, other.z1);
+                default -> throw new IllegalArgumentException("Invalid shared point: " + shared);
+            };
+        }
+    }
+
+    private interface OverlapCheck
+    {
+        boolean test(Line lineOne, Line lineTwo, int shared);
     }
 }
