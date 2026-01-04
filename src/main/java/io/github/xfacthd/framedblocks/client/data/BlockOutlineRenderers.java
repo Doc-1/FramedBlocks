@@ -19,14 +19,14 @@ public final class BlockOutlineRenderers
             }
         }
 
-        event.register(BlockType.FRAMED_RAIL_SLOPE, SlopeOutlineRenderer.INSTANCE);
-        event.register(BlockType.FRAMED_POWERED_RAIL_SLOPE, SlopeOutlineRenderer.INSTANCE);
-        event.register(BlockType.FRAMED_DETECTOR_RAIL_SLOPE, SlopeOutlineRenderer.INSTANCE);
-        event.register(BlockType.FRAMED_ACTIVATOR_RAIL_SLOPE, SlopeOutlineRenderer.INSTANCE);
-        event.register(BlockType.FRAMED_FANCY_RAIL_SLOPE, SlopeOutlineRenderer.INSTANCE);
-        event.register(BlockType.FRAMED_FANCY_POWERED_RAIL_SLOPE, SlopeOutlineRenderer.INSTANCE);
-        event.register(BlockType.FRAMED_FANCY_DETECTOR_RAIL_SLOPE, SlopeOutlineRenderer.INSTANCE);
-        event.register(BlockType.FRAMED_FANCY_ACTIVATOR_RAIL_SLOPE, SlopeOutlineRenderer.INSTANCE);
+        event.register(BlockType.FRAMED_RAIL_SLOPE, RailSlopeOutlineRenderer.INSTANCE);
+        event.register(BlockType.FRAMED_POWERED_RAIL_SLOPE, RailSlopeOutlineRenderer.INSTANCE);
+        event.register(BlockType.FRAMED_DETECTOR_RAIL_SLOPE, RailSlopeOutlineRenderer.INSTANCE);
+        event.register(BlockType.FRAMED_ACTIVATOR_RAIL_SLOPE, RailSlopeOutlineRenderer.INSTANCE);
+        event.register(BlockType.FRAMED_FANCY_RAIL_SLOPE, RailSlopeOutlineRenderer.INSTANCE);
+        event.register(BlockType.FRAMED_FANCY_POWERED_RAIL_SLOPE, RailSlopeOutlineRenderer.INSTANCE);
+        event.register(BlockType.FRAMED_FANCY_DETECTOR_RAIL_SLOPE, RailSlopeOutlineRenderer.INSTANCE);
+        event.register(BlockType.FRAMED_FANCY_ACTIVATOR_RAIL_SLOPE, RailSlopeOutlineRenderer.INSTANCE);
         event.register(BlockType.FRAMED_COLLAPSIBLE_BLOCK, new CollapsibleBlockOutlineRenderer());
         event.register(BlockType.FRAMED_ITEM_FRAME, OutlineRenderer.NO_OP);
         event.register(BlockType.FRAMED_GLOWING_ITEM_FRAME, OutlineRenderer.NO_OP);
