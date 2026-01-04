@@ -1,7 +1,7 @@
 package io.github.xfacthd.framedblocks.common.compat.diagonalblocks;
 
-import fuzs.diagonalblocks.api.v2.DiagonalBlockType;
-import fuzs.diagonalblocks.api.v2.DiagonalBlockTypes;
+import fuzs.diagonalblocks.api.v2.block.type.DiagonalBlockType;
+import fuzs.diagonalblocks.api.v2.block.type.DiagonalBlockTypes;
 import io.github.xfacthd.framedblocks.FramedBlocks;
 import io.github.xfacthd.framedblocks.api.block.render.FramedBlockColor;
 import io.github.xfacthd.framedblocks.api.block.render.FramedClientBlockExtensions;
@@ -64,17 +64,16 @@ public final class DiagonalBlocksCompat
     {
         public static void init(IEventBus modBus)
         {
-            // FIXME: RL->ID
-            //DiagonalBlockTypes.FENCE.registerBlockFactory(
-            //        Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_FENCE).identifier(),
-            //        block -> FramedDiagonalFenceBlock::new
-            //);
-            //DiagonalBlockTypes.WINDOW.registerBlockFactory(
-            //        Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_PANE).identifier(),
-            //        block -> FramedDiagonalGlassPaneBlock::new
-            //);
-            //DiagonalBlockTypes.WINDOW.disableBlockFactory(Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_BARS).identifier());
-            //DiagonalBlockTypes.WALL.disableBlockFactory(Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_WALL).identifier());
+            DiagonalBlockTypes.FENCE.registerBlockFactory(
+                    Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_FENCE).identifier(),
+                    block -> FramedDiagonalFenceBlock::new
+            );
+            DiagonalBlockTypes.WINDOW.registerBlockFactory(
+                    Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_PANE).identifier(),
+                    block -> FramedDiagonalGlassPaneBlock::new
+            );
+            DiagonalBlockTypes.WINDOW.disableBlockFactory(Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_BARS).identifier());
+            DiagonalBlockTypes.WALL.disableBlockFactory(Utils.getKeyOrThrow(FBContent.BLOCK_FRAMED_WALL).identifier());
 
             modBus.addListener(GuardedAccess::onBlockEntityTypeAddBlocks);
         }
@@ -101,11 +100,9 @@ public final class DiagonalBlocksCompat
 
         private static Optional<Holder.Reference<Block>> getBlock(DiagonalBlockType type, Holder<Block> srcBlock)
         {
-            // FIXME: RL->ID
-            //Identifier srcName = Utils.getKeyOrThrow(srcBlock).identifier();
-            //Identifier destName = type.id(srcName.getNamespace() + "/" + srcName.getPath());
-            //return BuiltInRegistries.BLOCK.get(ResourceKey.create(Registries.BLOCK, destName));
-            throw new UnsupportedOperationException();
+            Identifier srcName = Utils.getKeyOrThrow(srcBlock).identifier();
+            Identifier destName = type.id(srcName.getNamespace() + "/" + srcName.getPath());
+            return BuiltInRegistries.BLOCK.get(ResourceKey.create(Registries.BLOCK, destName));
         }
 
         private GuardedAccess() { }

@@ -1,8 +1,8 @@
 package io.github.xfacthd.framedblocks.common.compat.diagonalblocks;
 
-import fuzs.diagonalblocks.api.v2.EightWayDirection;
-import fuzs.diagonalblocks.api.v2.impl.DiagonalGlassPaneBlock;
-import fuzs.diagonalblocks.api.v2.impl.StarCollisionBlock;
+import fuzs.diagonalblocks.api.v2.block.DiagonalGlassPaneBlock;
+import fuzs.diagonalblocks.api.v2.block.StarCollisionBlock;
+import fuzs.diagonalblocks.api.v2.util.EightWayDirection;
 import io.github.xfacthd.framedblocks.api.block.BlockUtils;
 import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.common.FBContent;
