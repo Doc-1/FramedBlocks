@@ -378,6 +378,7 @@
   "item.framedblocks.phantom_paste": "Phantom Paste",
   "itemGroup.framed_blocks": "FramedBlocks",
   "key.category.framedblocks.main": "FramedBlocks",
+  "label.framedblocks.jade.camo.details_prefix": "    %s",
   "label.framedblocks.jade.camo.double.one": "Camo one: %s",
   "label.framedblocks.jade.camo.double.two": "Camo two: %s",
   "label.framedblocks.jade.camo.single": "Camo: %s",

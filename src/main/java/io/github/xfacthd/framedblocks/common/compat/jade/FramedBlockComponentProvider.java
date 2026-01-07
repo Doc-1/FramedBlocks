@@ -3,8 +3,12 @@ package io.github.xfacthd.framedblocks.common.compat.jade;
 import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import io.github.xfacthd.framedblocks.api.block.blockentity.FramedDoubleBlockEntity;
+import io.github.xfacthd.framedblocks.api.camo.CamoContainer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.jspecify.annotations.Nullable;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
@@ -34,16 +38,25 @@ final class FramedBlockComponentProvider implements IBlockComponentProvider
     {
         if (accessor.getBlockEntity() instanceof FramedBlockEntity fbe)
         {
+            Level level = accessor.getLevel();
+            BlockPos pos = accessor.getPosition();
+            Player player = accessor.getPlayer();
             if (fbe.getBlockType().isDoubleBlock() && fbe instanceof FramedDoubleBlockEntity fdbe)
             {
-                tooltip.add(Component.translatable(JadeCompat.LABEL_CAMO_ONE, fbe.getCamo().getContent().getCamoName()));
-                tooltip.add(Component.translatable(JadeCompat.LABEL_CAMO_TWO, fdbe.getCamoTwo().getContent().getCamoName()));
+                appendCamo(tooltip, level, pos, player, JadeCompat.LABEL_CAMO_ONE, fbe.getCamo());
+                appendCamo(tooltip, level, pos, player, JadeCompat.LABEL_CAMO_TWO, fdbe.getCamoTwo());
             }
             else
             {
-                tooltip.add(Component.translatable(JadeCompat.LABEL_CAMO, fbe.getCamo().getContent().getCamoName()));
+                appendCamo(tooltip, level, pos, player, JadeCompat.LABEL_CAMO, fbe.getCamo());
             }
         }
+    }
+
+    private static void appendCamo(ITooltip tooltip, Level level, BlockPos pos, Player player, String prefix, CamoContainer<?, ?> camo)
+    {
+        tooltip.add(Component.translatable(prefix, camo.getContent().getCamoName()));
+        camo.appendJadeTooltip(level, pos, player, line -> tooltip.add(Component.translatable(JadeCompat.DETAIL_PREFIX, line)));
     }
 
     @Override
