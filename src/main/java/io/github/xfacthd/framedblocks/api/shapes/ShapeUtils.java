@@ -158,7 +158,7 @@ public final class ShapeUtils
         VoxelShape mirroredShape = Shapes.empty();
         for (AABB box : shape.toAabbs())
         {
-            VoxelShape boxShape = Shapes.create(box.minX, 1D - box.minY, box.minZ, box.maxX, 1D - box.maxY, box.maxZ);
+            VoxelShape boxShape = Shapes.create(box.minX, 1D - box.maxY, box.minZ, box.maxX, 1D - box.minY, box.maxZ);
             mirroredShape = orUnoptimized(mirroredShape, boxShape);
         }
         return mirroredShape;
