@@ -878,7 +878,7 @@ final class SkipPredicateGeneratorData
                 continue;
             }
             String params = line.substring(paramStart + 1, paramEnd);
-            boolean doubleBlock = params.split(",")[6].trim().equals("true");
+            boolean doubleBlock = params.split(",")[5].trim().equals("true");
 
             entries.add(new Entry(name, doubleBlock));
         }
