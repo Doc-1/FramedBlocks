@@ -17,8 +17,8 @@ final class MapBackedShapeLookup implements ShapeLookup
 
     MapBackedShapeLookup(MapBackedShapeContainer shapes, @Nullable MapBackedShapeContainer occlusionShapes)
     {
-        this.shapes = shapes.getShapes();
-        this.occlusionShapes = occlusionShapes != null ? occlusionShapes.getShapes() : this.shapes;
+        this.shapes = shapes.shapes();
+        this.occlusionShapes = occlusionShapes != null ? occlusionShapes.shapes() : this.shapes;
         this.occludesBeaconBeam = computeBeaconBeamOcclusion(shapes);
     }
 

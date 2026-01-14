@@ -5,6 +5,7 @@ import io.github.xfacthd.framedblocks.api.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Util;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.ArrayVoxelShape;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -145,6 +146,22 @@ public final class ShapeUtils
         if (from == to) return shape;
 
         return Shapes.rotate(shape, DIR_ROT_Z_OCTAHEDRAL[DIR_ROT_Z_2D_DATA[from.ordinal()] << 2 | DIR_ROT_Z_2D_DATA[to.ordinal()]]);
+    }
+
+    public static VoxelShape mirrorShapeAlongY(VoxelShape shape)
+    {
+        return optimize(mirrorShapeUnoptimizedAlongY(shape));
+    }
+
+    public static VoxelShape mirrorShapeUnoptimizedAlongY(VoxelShape shape)
+    {
+        VoxelShape mirroredShape = Shapes.empty();
+        for (AABB box : shape.toAabbs())
+        {
+            VoxelShape boxShape = Shapes.create(box.minX, 1D - box.minY, box.minZ, box.maxX, 1D - box.maxY, box.maxZ);
+            mirroredShape = orUnoptimized(mirroredShape, boxShape);
+        }
+        return mirroredShape;
     }
 
     public static void makeHorizontalRotations(VoxelShape shape, Direction srcDir, VoxelShape[] out, int baseOffset)

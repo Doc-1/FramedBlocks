@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import io.github.xfacthd.framedblocks.FramedBlocks;
+import io.github.xfacthd.framedblocks.api.block.FramedProperties;
 import io.github.xfacthd.framedblocks.api.block.IBlockType;
 import io.github.xfacthd.framedblocks.api.block.IFramedBlock;
 import io.github.xfacthd.framedblocks.api.render.outline.OutlineRenderer;
@@ -57,11 +58,16 @@ public final class BlockOutlineRenderer
 
         if (DevToolsConfig.VIEW.isOcclusionShapeDebugRenderingEnabled())
         {
+            BlockState newState = state;
+            if (newState.hasProperty(FramedProperties.SOLID))
+            {
+                newState = newState.setValue(FramedProperties.SOLID, true);
+            }
             event.getLevelRenderState().blockOutlineRenderState = new BlockOutlineRenderState(
                     result.getBlockPos(),
                     event.isInTranslucentPass(),
                     event.isHighContrast(),
-                    state.getOcclusionShape(),
+                    newState.getOcclusionShape(),
                     List.of()
             );
             event.setCanceled(true);

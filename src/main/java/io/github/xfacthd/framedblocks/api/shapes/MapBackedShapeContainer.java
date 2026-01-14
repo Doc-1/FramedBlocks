@@ -8,17 +8,14 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-final class MapBackedShapeContainer implements ShapeContainer
+record MapBackedShapeContainer(Map<BlockState, VoxelShape> shapes) implements ShapeContainer
 {
-    private final Map<BlockState, VoxelShape> shapes;
-
-    MapBackedShapeContainer(Map<BlockState, VoxelShape> shapes)
+    MapBackedShapeContainer
     {
         if (!(shapes instanceof IdentityHashMap<BlockState, VoxelShape>))
         {
             shapes = new IdentityHashMap<>(shapes);
         }
-        this.shapes = shapes;
     }
 
     @Override
@@ -37,11 +34,6 @@ final class MapBackedShapeContainer implements ShapeContainer
     public void forEach(BiConsumer<BlockState, VoxelShape> consumer)
     {
         shapes.forEach(consumer);
-    }
-
-    Map<BlockState, VoxelShape> getShapes()
-    {
-        return shapes;
     }
 
     @Nullable

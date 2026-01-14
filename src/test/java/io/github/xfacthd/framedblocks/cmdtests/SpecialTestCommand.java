@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.xfacthd.framedblocks.FramedBlocks;
 import io.github.xfacthd.framedblocks.cmdtests.tests.*;
+import io.github.xfacthd.framedblocks.common.data.shapes.ShapeReloader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -66,7 +67,22 @@ public final class SpecialTestCommand
                                 .executes(ModelBenchmarkCube::buildBenchmarkCube)
                         )
                 )
+                .then(Commands.literal("reload_shapes")
+                        .executes(SpecialTestCommand::reloadShapes)
+                )
         );
+    }
+
+    private static int reloadShapes(CommandContext<CommandSourceStack> ctx)
+    {
+        if (ShapeReloader.reload())
+        {
+            ctx.getSource().sendSuccess(() -> Component.literal("Shapes reloaded"), false);
+            return Command.SINGLE_SUCCESS;
+        }
+
+        ctx.getSource().sendFailure(Component.literal("Shape reload failed, see log for details"));
+        return 0;
     }
 
     private static Command<CommandSourceStack> async(String testName, AsyncCommand cmd)

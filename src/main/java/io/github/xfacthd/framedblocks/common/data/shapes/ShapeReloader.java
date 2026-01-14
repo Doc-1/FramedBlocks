@@ -38,6 +38,11 @@ public final class ShapeReloader implements ResourceManagerReloadListener
     @Override
     public void onResourceManagerReload(ResourceManager resourceManager)
     {
+        reload();
+    }
+
+    public static boolean reload()
+    {
         LOGGER.info("Reloading {} caches and {} reloadable shape lookups...", CACHES.size(), LOOKUPS.size());
         Stopwatch watch = Stopwatch.createStarted();
         try
@@ -48,6 +53,7 @@ public final class ShapeReloader implements ResourceManagerReloadListener
         catch (Throwable t)
         {
             LogUtils.getLogger().error("Encountered an error while reloading shapes", t);
+            return false;
         }
         watch.stop();
         LOGGER.info("{} caches and {} reloadable shape lookups reloaded, took {}", CACHES.size(), LOOKUPS.size(), watch);
@@ -62,5 +68,6 @@ public final class ShapeReloader implements ResourceManagerReloadListener
         states.forEach(BlockBehaviour.BlockStateBase::initCache);
         watch.stop();
         LOGGER.info("Rebuilt vanilla state caches for {} states, took {}", states.size(), watch);
+        return true;
     }
 }
