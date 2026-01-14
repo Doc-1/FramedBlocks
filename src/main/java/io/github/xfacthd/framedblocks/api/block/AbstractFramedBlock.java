@@ -43,7 +43,7 @@ public abstract class AbstractFramedBlock extends Block implements IFramedBlock,
     {
         super(props);
         this.blockType = blockType;
-        this.shapes = ShapeLookup.of(blockType.getShapeGenerator(), this);
+        this.shapes = ShapeLookup.of(this);
 
         BlockUtils.configureStandardProperties(this);
     }

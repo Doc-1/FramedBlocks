@@ -62,7 +62,7 @@ public class FramedPoweredRailSlopeBlock<BE extends FramedBlockEntity> extends P
     {
         super(IFramedBlock.applyDefaultProperties(props, type), isPoweredRail);
         this.type = type;
-        this.shapes = ShapeLookup.of(type.getShapeGenerator(), this);
+        this.shapes = ShapeLookup.of(this);
         this.beFactory = beFactory;
         BlockUtils.configureStandardProperties(this);
         registerDefaultState(defaultBlockState()

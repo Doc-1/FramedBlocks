@@ -44,7 +44,7 @@ public class FramedWallBlock extends WallBlock implements IFramedBlockInternal
     {
         super(IFramedBlock.applyDefaultProperties(props, BlockType.FRAMED_WALL));
         BlockUtils.configureStandardProperties(this);
-        this.shapes = ShapeLookup.of(BlockType.FRAMED_WALL.getShapeGenerator(), this);
+        this.shapes = ShapeLookup.of(this);
     }
 
     @Override

@@ -61,7 +61,7 @@ public class FramedDetectorRailSlopeBlock<BE extends FramedBlockEntity> extends 
     {
         super(IFramedBlock.applyDefaultProperties(props, type));
         this.type = type;
-        this.shapes = ShapeLookup.of(type.getShapeGenerator(), this);
+        this.shapes = ShapeLookup.of(this);
         this.beFactory = beFactory;
         BlockUtils.configureStandardProperties(this);
         registerDefaultState(defaultBlockState()

@@ -30,7 +30,7 @@ public class FramedLadderBlock extends FramedBlock
     public FramedLadderBlock(Properties props)
     {
         super(BlockType.FRAMED_LADDER, props);
-        this.shapes = ShapeLookup.of(BlockType.FRAMED_LADDER.getShapeGenerator(), this);
+        this.shapes = ShapeLookup.of(this);
     }
 
     @Override
