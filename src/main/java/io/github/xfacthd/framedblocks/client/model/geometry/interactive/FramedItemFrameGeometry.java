@@ -27,7 +27,7 @@ public class FramedItemFrameGeometry extends Geometry
 {
     private static final int GLOWING_BRIGHTNESS = 5;
     private static final QuadListModifier GLOWING_LEATHER_MODIFIER = (quadMap, quads, side) ->
-            quads.replaceAll(quad -> Objects.requireNonNull(QuadModifier.of(quad).lightEmission(GLOWING_BRIGHTNESS).exportDirect()));
+            quads.replaceAll(quad -> Objects.requireNonNull(QuadModifier.of(quad).apply(Modifiers.setLightEmission(GLOWING_BRIGHTNESS, false)).exportDirect()));
 
     private final BlockState state;
     private final BlockStateModel baseModel;
@@ -82,7 +82,7 @@ public class FramedItemFrameGeometry extends Geometry
         {
             QuadModifier.of(quad)
                     .applyIf(Modifiers.cutTopBottom(outerMin, outerMin, outerMax, outerMax), !mapFrame)
-                    .increaseLightEmission(lightEmission)
+                    .apply(Modifiers.setLightEmission(lightEmission, true))
                     .export(quadMap.get(quadFace));
         }
         else if (quadFace == facing.getOpposite())
@@ -91,7 +91,7 @@ public class FramedItemFrameGeometry extends Geometry
             {
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutTopBottom(innerMin, innerMin, innerMax, innerMax))
-                        .increaseLightEmission(lightEmission)
+                        .apply(Modifiers.setLightEmission(lightEmission, true))
                         .apply(Modifiers.setPosition(.5F/16F))
                         .export(quadMap.get(null));
             }
@@ -100,25 +100,25 @@ public class FramedItemFrameGeometry extends Geometry
             {
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutTopBottom(outerMin, outerMin, innerMin, outerMax))
-                        .increaseLightEmission(lightEmission)
+                        .apply(Modifiers.setLightEmission(lightEmission, true))
                         .apply(Modifiers.setPosition(1F / 16F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutTopBottom(innerMax, outerMin, outerMax, outerMax))
-                        .increaseLightEmission(lightEmission)
+                        .apply(Modifiers.setLightEmission(lightEmission, true))
                         .apply(Modifiers.setPosition(1F / 16F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutTopBottom(innerMin, outerMin, innerMax, innerMin))
-                        .increaseLightEmission(lightEmission)
+                        .apply(Modifiers.setLightEmission(lightEmission, true))
                         .apply(Modifiers.setPosition(1F / 16F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutTopBottom(innerMin, innerMax, innerMax, outerMax))
-                        .increaseLightEmission(lightEmission)
+                        .apply(Modifiers.setLightEmission(lightEmission, true))
                         .apply(Modifiers.setPosition(1F / 16F))
                         .export(quadMap.get(null));
             }
@@ -126,7 +126,7 @@ public class FramedItemFrameGeometry extends Geometry
             if (mapFrame && !leather)
             {
                 QuadModifier.of(quad)
-                        .increaseLightEmission(lightEmission)
+                        .apply(Modifiers.setLightEmission(lightEmission, true))
                         .apply(Modifiers.setPosition(1F/16F))
                         .export(quadMap.get(quadFace));
             }
@@ -136,7 +136,7 @@ public class FramedItemFrameGeometry extends Geometry
             QuadModifier.of(quad)
                     .apply(Modifiers.cut(facing.getOpposite(), 1F/16F))
                     .applyIf(Modifiers.cut(quadFace.getClockWise().getAxis(), outerMax), !mapFrame)
-                    .increaseLightEmission(lightEmission)
+                    .apply(Modifiers.setLightEmission(lightEmission, true))
                     .applyIf(Modifiers.setPosition(outerMax), !mapFrame)
                     .export(quadMap.get(null));
 
@@ -146,7 +146,7 @@ public class FramedItemFrameGeometry extends Geometry
                         .apply(Modifiers.cut(facing, 15.5F / 16F))
                         .apply(Modifiers.cut(facing.getOpposite(), 1F / 16F))
                         .apply(Modifiers.cut(quadFace.getClockWise().getAxis(), innerLength))
-                        .increaseLightEmission(lightEmission)
+                        .apply(Modifiers.setLightEmission(lightEmission, true))
                         .apply(Modifiers.setPosition(innerPos))
                         .export(quadMap.get(null));
             }
@@ -159,7 +159,7 @@ public class FramedItemFrameGeometry extends Geometry
         {
             QuadModifier.of(quad)
                     .applyIf(Modifiers.cutSide(outerMin, outerMin, outerMax, outerMax), !mapFrame)
-                    .increaseLightEmission(lightEmission)
+                    .apply(Modifiers.setLightEmission(lightEmission, true))
                     .export(quadMap.get(quadFace));
         }
         else if (quadFace == facing.getOpposite())
@@ -168,7 +168,7 @@ public class FramedItemFrameGeometry extends Geometry
             {
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutSide(innerMin, innerMin, innerMax, innerMax))
-                        .increaseLightEmission(lightEmission)
+                        .apply(Modifiers.setLightEmission(lightEmission, true))
                         .apply(Modifiers.setPosition(.5F/16F))
                         .export(quadMap.get(null));
             }
@@ -177,25 +177,25 @@ public class FramedItemFrameGeometry extends Geometry
             {
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutSide(outerMin, outerMin, innerMin, outerMax))
-                        .increaseLightEmission(lightEmission)
+                        .apply(Modifiers.setLightEmission(lightEmission, true))
                         .apply(Modifiers.setPosition(1F/16F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutSide(innerMax, outerMin, outerMax, outerMax))
-                        .increaseLightEmission(lightEmission)
+                        .apply(Modifiers.setLightEmission(lightEmission, true))
                         .apply(Modifiers.setPosition(1F/16F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutSide(innerMin, outerMin, innerMax, innerMin))
-                        .increaseLightEmission(lightEmission)
+                        .apply(Modifiers.setLightEmission(lightEmission, true))
                         .apply(Modifiers.setPosition(1F/16F))
                         .export(quadMap.get(null));
 
                 QuadModifier.of(quad)
                         .apply(Modifiers.cutSide(innerMin, innerMax, innerMax, outerMax))
-                        .increaseLightEmission(lightEmission)
+                        .apply(Modifiers.setLightEmission(lightEmission, true))
                         .apply(Modifiers.setPosition(1F/16F))
                         .export(quadMap.get(null));
             }
@@ -203,7 +203,7 @@ public class FramedItemFrameGeometry extends Geometry
             if (mapFrame && !leather)
             {
                 QuadModifier.of(quad)
-                        .increaseLightEmission(lightEmission)
+                        .apply(Modifiers.setLightEmission(lightEmission, true))
                         .apply(Modifiers.setPosition(1F/16F))
                         .export(quadMap.get(quadFace));
             }
@@ -213,7 +213,7 @@ public class FramedItemFrameGeometry extends Geometry
             QuadModifier.of(quad)
                     .apply(Modifiers.cut(facing.getOpposite(), 1F/16F))
                     .applyIf(Modifiers.cut(facing.getClockWise().getAxis(), outerMax), !mapFrame)
-                    .increaseLightEmission(lightEmission)
+                    .apply(Modifiers.setLightEmission(lightEmission, true))
                     .applyIf(Modifiers.setPosition(outerMax), !mapFrame)
                     .export(quadMap.get(null));
 
@@ -223,7 +223,7 @@ public class FramedItemFrameGeometry extends Geometry
                         .apply(Modifiers.cut(facing, 15.5F/16F))
                         .apply(Modifiers.cut(facing.getOpposite(), 1F/16F))
                         .apply(Modifiers.cut(facing.getClockWise().getAxis(), innerLength))
-                        .increaseLightEmission(lightEmission)
+                        .apply(Modifiers.setLightEmission(lightEmission, true))
                         .apply(Modifiers.setPosition(innerPos))
                         .export(quadMap.get(null));
             }
@@ -233,7 +233,7 @@ public class FramedItemFrameGeometry extends Geometry
             QuadModifier.of(quad)
                     .apply(Modifiers.cut(facing.getOpposite(), 1F/16F))
                     .applyIf(Modifiers.cut(Direction.Axis.Y, outerMax), !mapFrame)
-                    .increaseLightEmission(lightEmission)
+                    .apply(Modifiers.setLightEmission(lightEmission, true))
                     .applyIf(Modifiers.setPosition(outerMax), !mapFrame)
                     .export(quadMap.get(null));
 
@@ -243,7 +243,7 @@ public class FramedItemFrameGeometry extends Geometry
                         .apply(Modifiers.cut(facing, 15.5F/16F))
                         .apply(Modifiers.cut(facing.getOpposite(), 1F/16F))
                         .apply(Modifiers.cut(Direction.Axis.Y, innerLength))
-                        .increaseLightEmission(lightEmission)
+                        .apply(Modifiers.setLightEmission(lightEmission, true))
                         .apply(Modifiers.setPosition(innerPos))
                         .export(quadMap.get(null));
             }

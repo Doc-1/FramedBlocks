@@ -1,6 +1,8 @@
 package io.github.xfacthd.framedblocks.api.model.quad;
 
+import io.github.xfacthd.framedblocks.api.model.data.QuadMap;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.core.Direction;
 import org.jetbrains.annotations.UnknownNullability;
 import org.jspecify.annotations.Nullable;
 
@@ -8,14 +10,9 @@ import java.util.List;
 
 public final class QuadModifier
 {
-    private static final QuadModifier FAILED = new QuadModifier(null, -1, false, 0, false, false, true);
+    private static final QuadModifier FAILED = new QuadModifier(null, true);
 
     private final QuadData data;
-    private int tintIndex;
-    private boolean shade;
-    private int lightEmission;
-    private boolean ao;
-    private boolean modified;
     private boolean failed;
     private boolean exported;
 
@@ -24,17 +21,12 @@ public final class QuadModifier
      */
     public static QuadModifier of(BakedQuad quad)
     {
-        return new QuadModifier(new QuadData(quad), quad.tintIndex(), quad.shade(), quad.lightEmission(), quad.hasAmbientOcclusion(), false, false);
+        return new QuadModifier(new QuadData(quad), false);
     }
 
-    private QuadModifier(@UnknownNullability QuadData data, int tintIndex, boolean shade, int lightEmission, boolean ao, boolean modified, boolean failed)
+    private QuadModifier(@UnknownNullability QuadData data, boolean failed)
     {
         this.data = data;
-        this.tintIndex = tintIndex;
-        this.shade = shade;
-        this.lightEmission = lightEmission;
-        this.ao = ao;
-        this.modified = modified;
         this.failed = failed;
     }
 
@@ -62,53 +54,12 @@ public final class QuadModifier
                 );
             }
             failed = !modifier.accept(data);
-            modified = true;
-        }
-        return this;
-    }
-
-    public QuadModifier tintIndex(int tintIndex)
-    {
-        this.tintIndex = tintIndex;
-        modified = true;
-        return this;
-    }
-
-    public QuadModifier shade(boolean shade)
-    {
-        if (shade != data.quad.shade())
-        {
-            this.shade = shade;
-            modified = true;
-        }
-        return this;
-    }
-
-    public QuadModifier increaseLightEmission(int lightEmission)
-    {
-        return lightEmission(Math.max(this.lightEmission, lightEmission));
-    }
-
-    public QuadModifier lightEmission(int lightEmission)
-    {
-        this.lightEmission = lightEmission;
-        modified = true;
-        return this;
-    }
-
-    public QuadModifier ambientOcclusion(boolean ao)
-    {
-        if (ao != data.quad.hasAmbientOcclusion())
-        {
-            this.ao = ao;
-            modified = true;
         }
         return this;
     }
 
     /**
-     * Re-assemble the quad and add it to the given quad list. If any of modifier failed,
-     * the quad will not be exported
+     * Re-assemble the quad and add it to the given quad list. If any modifier failed, the quad will not be exported.
      */
     public void export(List<BakedQuad> quadList)
     {
@@ -116,6 +67,19 @@ public final class QuadModifier
         if (quad != null)
         {
             quadList.add(quad);
+        }
+    }
+
+    /**
+     * Re-assemble the quad and add it to the given quad map under the provided cull face.
+     * If any modifier failed, the quad will not be exported.
+     */
+    public void export(QuadMap quadMap, @Nullable Direction cullFace)
+    {
+        BakedQuad quad = exportDirect();
+        if (quad != null)
+        {
+            quadMap.get(cullFace).add(quad);
         }
     }
 
@@ -127,12 +91,7 @@ public final class QuadModifier
             return null;
         }
 
-        if (!modified)
-        {
-            return data.quad;
-        }
-
-        BakedQuad newQuad = data.toQuad(tintIndex, shade, lightEmission, ao);
+        BakedQuad newQuad = data.toQuad();
         exported = true;
         return newQuad;
     }
@@ -145,11 +104,7 @@ public final class QuadModifier
      */
     public QuadModifier derive()
     {
-        if (failed)
-        {
-            return FAILED;
-        }
-        return new QuadModifier(new QuadData(data), tintIndex, shade, lightEmission, ao, modified, false);
+        return failed ? FAILED : new QuadModifier(new QuadData(data), false);
     }
 
     public boolean hasFailed()

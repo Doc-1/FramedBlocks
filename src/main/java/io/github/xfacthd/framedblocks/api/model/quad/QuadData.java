@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public final class QuadData
 {
-    final BakedQuad quad;
+    private final BakedQuad quad;
     private final Vector3fc pos0;
     private final Vector3fc pos1;
     private final Vector3fc pos2;
@@ -32,6 +32,10 @@ public final class QuadData
     private long uv2;
     private long uv3;
     private BakedNormals normals;
+    private int tintIndex;
+    private boolean shade;
+    private int lightEmission;
+    private boolean ao;
     private final boolean uvRotated;
 
     public QuadData(BakedQuad quad)
@@ -46,6 +50,10 @@ public final class QuadData
         this.uv2 = quad.packedUV2();
         this.uv3 = quad.packedUV3();
         this.normals = quad.bakedNormals();
+        this.tintIndex = quad.tintIndex();
+        this.shade = quad.shade();
+        this.lightEmission = quad.lightEmission();
+        this.ao = quad.hasAmbientOcclusion();
         this.uvRotated = ModelUtils.isQuadRotated(this);
     }
 
@@ -65,12 +73,11 @@ public final class QuadData
         this.uv2 = data.uv2;
         this.uv3 = data.uv3;
         this.normals = data.normals;
+        this.tintIndex = data.tintIndex;
+        this.shade = data.shade;
+        this.lightEmission = data.lightEmission;
+        this.ao = data.ao;
         this.uvRotated = data.uvRotated;
-    }
-
-    public BakedQuad quad()
-    {
-        return quad;
     }
 
     public boolean uvRotated()
@@ -138,6 +145,51 @@ public final class QuadData
         return BakedNormals.unpackComponent(packedNormal, idx);
     }
 
+    public Direction direction()
+    {
+        return quad.direction();
+    }
+
+    public int tintIndex()
+    {
+        return tintIndex;
+    }
+
+    public void tintIndex(int tintIndex)
+    {
+        this.tintIndex = tintIndex;
+    }
+
+    public boolean shade()
+    {
+        return shade;
+    }
+
+    public void shade(boolean shade)
+    {
+        this.shade = shade;
+    }
+
+    public int lightEmission()
+    {
+        return lightEmission;
+    }
+
+    public void lightEmission(int lightEmission)
+    {
+        this.lightEmission = lightEmission;
+    }
+
+    public boolean ao()
+    {
+        return ao;
+    }
+
+    public void ao(boolean ao)
+    {
+        this.ao = ao;
+    }
+
     private Direction recomputeNormals()
     {
         int normal = BakedNormals.computeQuadNormal(pos(0), pos(1), pos(2), pos(3));
@@ -185,7 +237,7 @@ public final class QuadData
         };
     }
 
-    BakedQuad toQuad(int tintIndex, boolean shade, int lightEmission, boolean ao) {
+    BakedQuad toQuad() {
         Direction normalDir = recomputeNormals();
         return new BakedQuad(
                 pos(0),

@@ -37,27 +37,6 @@ public final class MultiQuadModifier
         return this;
     }
 
-    public MultiQuadModifier tintIndex(int tintIndex)
-    {
-        modOne.tintIndex(tintIndex);
-        modTwo.tintIndex(tintIndex);
-        return this;
-    }
-
-    public MultiQuadModifier shade(boolean shade)
-    {
-        modOne.shade(shade);
-        modTwo.shade(shade);
-        return this;
-    }
-
-    public MultiQuadModifier ambientOcclusion(boolean ao)
-    {
-        modOne.ambientOcclusion(ao);
-        modTwo.ambientOcclusion(ao);
-        return this;
-    }
-
     /**
      * Re-assemble the quads of both wrapped {@link QuadModifier}s and add them to the given quad list.
      * @see QuadModifier#export(List)
