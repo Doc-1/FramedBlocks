@@ -4,18 +4,24 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.api.shapes.ShapeUtils;
 import xfacthd.framedblocks.api.util.Utils;
@@ -41,6 +47,15 @@ public class FramedCollapsibleBlock extends FramedBlock
                 .setValue(PropertyHolder.ROTATE_SPLIT_LINE, false)
         );
     }
+    @Override
+    protected @NotNull BlockState rotate(BlockState state, Rotation rot)
+    {
+        Direction nullableDirection = state.getValue(PropertyHolder.NULLABLE_FACE).toDirection();
+        if(nullableDirection != null)
+            nullableDirection = nullableDirection.getClockWise();
+
+        return state.setValue(PropertyHolder.NULLABLE_FACE, NullableDirection.fromDirection(nullableDirection));
+    }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
@@ -53,6 +68,23 @@ public class FramedCollapsibleBlock extends FramedBlock
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return PlacementStateBuilder.of(this, ctx).withWater().build();
+    }
+
+    @Override
+    public ItemInteractionResult handleUse(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        ItemInteractionResult result = super.handleUse(state, level, pos, player, hand, hit);
+        ItemStack heldItem = player.getMainHandItem();
+        if (heldItem.getItem() == FBContent.ITEM_FRAMED_WRENCH.value())
+        {
+            if (level.getBlockEntity(pos) instanceof FramedCollapsibleBlockEntity be)
+            {
+                Direction nullableDirection = state.getValue(PropertyHolder.NULLABLE_FACE).toDirection().getClockWise();
+                System.out.println(nullableDirection);
+                be.setCollapsedFace(nullableDirection);
+                return super.handleUse(state,level,pos,player,hand,hit);
+            }
+        }
+        return result;
     }
 
     @Override

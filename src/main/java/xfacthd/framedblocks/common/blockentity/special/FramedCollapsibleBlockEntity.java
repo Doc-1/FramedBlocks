@@ -201,6 +201,10 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
         }
     }
 
+    public void setCollapsedFace(@Nullable Direction direction){
+        this.collapsedFace = direction;
+    }
+
     @Nullable
     public Direction getCollapsedFace()
     {
