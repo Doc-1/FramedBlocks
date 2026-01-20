@@ -343,10 +343,22 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
         super.loadAdditional(nbt, provider);
         packedOffsets = nbt.getInt("offsets");
         int face = nbt.getInt("face");
+
         collapsedFace = face == -1 ? null : Direction.from3DDataValue(face);
     }
 
-
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        NullableDirection nullableDirection = this.getBlockState().getValue(PropertyHolder.NULLABLE_FACE);
+        //Check if the block state and tile entity's collapsedFace are different.
+        //I wanted to use the FramedCollapsibleBlock#onPlace or onBlockStateChanged but for create compatibility due to create writing the tag data after the block was already placed
+        // this was the only other method I could think of that would be able to update collapsedFace without being overwritten with the old tag data.
+        if(!nullableDirection.equals(NullableDirection.fromDirection(this.getCollapsedFace())))
+        {
+            collapsedFace = nullableDirection.toDirection();
+        }
+    }
 
     public static byte[] unpackOffsets(int packed)
     {

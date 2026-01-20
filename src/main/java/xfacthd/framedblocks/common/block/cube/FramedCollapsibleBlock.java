@@ -1,8 +1,11 @@
 package xfacthd.framedblocks.common.block.cube;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -19,8 +22,10 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.*;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.FramedBlocks;
 import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.api.shapes.ShapeUtils;
@@ -47,13 +52,14 @@ public class FramedCollapsibleBlock extends FramedBlock
                 .setValue(PropertyHolder.ROTATE_SPLIT_LINE, false)
         );
     }
+
+
+
     @Override
-    protected @NotNull BlockState rotate(BlockState state, Rotation rot)
-    {
+    protected @NotNull BlockState rotate(@NotNull BlockState state, @NotNull Rotation rotation) {
         Direction nullableDirection = state.getValue(PropertyHolder.NULLABLE_FACE).toDirection();
         if(nullableDirection != null)
-            nullableDirection = nullableDirection.getClockWise();
-
+            nullableDirection = rotation.rotate(nullableDirection);
         return state.setValue(PropertyHolder.NULLABLE_FACE, NullableDirection.fromDirection(nullableDirection));
     }
 
@@ -79,7 +85,6 @@ public class FramedCollapsibleBlock extends FramedBlock
             if (level.getBlockEntity(pos) instanceof FramedCollapsibleBlockEntity be)
             {
                 Direction nullableDirection = state.getValue(PropertyHolder.NULLABLE_FACE).toDirection().getClockWise();
-                System.out.println(nullableDirection);
                 be.setCollapsedFace(nullableDirection);
                 return super.handleUse(state,level,pos,player,hand,hit);
             }
