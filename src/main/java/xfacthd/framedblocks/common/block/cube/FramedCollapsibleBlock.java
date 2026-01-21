@@ -53,14 +53,21 @@ public class FramedCollapsibleBlock extends FramedBlock
         );
     }
 
-
-
     @Override
     protected @NotNull BlockState rotate(@NotNull BlockState state, @NotNull Rotation rotation) {
         Direction nullableDirection = state.getValue(PropertyHolder.NULLABLE_FACE).toDirection();
         if(nullableDirection != null)
             nullableDirection = rotation.rotate(nullableDirection);
         return state.setValue(PropertyHolder.NULLABLE_FACE, NullableDirection.fromDirection(nullableDirection));
+    }
+
+    @Override
+    public void onBlockStateChange(LevelReader level, BlockPos pos, BlockState oldState, BlockState newState) {
+        super.onBlockStateChange(level, pos, oldState, newState);
+        if (level.getBlockEntity(pos) instanceof FramedCollapsibleBlockEntity be)
+        {
+            be.syncFacingWithBlockState();
+        }
     }
 
     @Override
@@ -76,21 +83,6 @@ public class FramedCollapsibleBlock extends FramedBlock
         return PlacementStateBuilder.of(this, ctx).withWater().build();
     }
 
-    @Override
-    public ItemInteractionResult handleUse(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        ItemInteractionResult result = super.handleUse(state, level, pos, player, hand, hit);
-        ItemStack heldItem = player.getMainHandItem();
-        if (heldItem.getItem() == FBContent.ITEM_FRAMED_WRENCH.value())
-        {
-            if (level.getBlockEntity(pos) instanceof FramedCollapsibleBlockEntity be)
-            {
-                Direction nullableDirection = state.getValue(PropertyHolder.NULLABLE_FACE).toDirection().getClockWise();
-                be.setCollapsedFace(nullableDirection);
-                return super.handleUse(state,level,pos,player,hand,hit);
-            }
-        }
-        return result;
-    }
 
     @Override
     public boolean handleBlockLeftClick(BlockState state, Level level, BlockPos pos, Player player)

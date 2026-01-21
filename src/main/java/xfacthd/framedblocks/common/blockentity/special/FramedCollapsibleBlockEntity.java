@@ -350,6 +350,10 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
     @Override
     public void onLoad() {
         super.onLoad();
+        syncFacingWithBlockState();
+    }
+
+    public void syncFacingWithBlockState(){
         NullableDirection nullableDirection = this.getBlockState().getValue(PropertyHolder.NULLABLE_FACE);
         //Check if the block state and tile entity's collapsedFace are different.
         //I wanted to use the FramedCollapsibleBlock#onPlace or onBlockStateChanged but for create compatibility due to create writing the tag data after the block was already placed
