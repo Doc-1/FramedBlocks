@@ -3,24 +3,30 @@ package xfacthd.framedblocks.common.block.cube;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.references.Blocks;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xfacthd.framedblocks.FramedBlocks;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.common.FBContent;
 import xfacthd.framedblocks.common.block.FramedBlock;
+import xfacthd.framedblocks.common.blockentity.special.FramedCollapsibleBlockEntity;
 import xfacthd.framedblocks.common.blockentity.special.FramedCollapsibleCopycatBlockEntity;
 import xfacthd.framedblocks.common.data.BlockType;
 import xfacthd.framedblocks.common.data.PropertyHolder;
+import xfacthd.framedblocks.common.data.property.NullableDirection;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,20 +45,38 @@ public class FramedCollapsibleCopycatBlock extends FramedBlock
     public FramedCollapsibleCopycatBlock()
     {
         super(BlockType.FRAMED_COLLAPSIBLE_COPYCAT_BLOCK, Properties::dynamicShape);
-        registerDefaultState(defaultBlockState().setValue(PropertyHolder.SOLID_FACES, ALL_SOLID));
+        registerDefaultState(defaultBlockState().setValue(PropertyHolder.SOLID_FACES, ALL_SOLID).setValue(PropertyHolder.ROTATE_MODEL, Rotation.NONE));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         super.createBlockStateDefinition(builder);
-        builder.add(PropertyHolder.SOLID_FACES, BlockStateProperties.WATERLOGGED);
+        builder.add(PropertyHolder.SOLID_FACES, BlockStateProperties.WATERLOGGED, PropertyHolder.ROTATE_MODEL);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return PlacementStateBuilder.of(this, ctx).withWater().build();
+    }
+
+    @Override
+    protected @NotNull BlockState rotate(@NotNull BlockState state, @NotNull Rotation rotation) {
+        FramedBlocks.LOGGER.debug("rotate {}, {}", rotation, state.getValue(PropertyHolder.ROTATE_MODEL));
+        return state.setValue(PropertyHolder.ROTATE_MODEL, rotation);
+    }
+
+    @Override
+    public void onBlockStateChange(LevelReader level, BlockPos pos, BlockState oldState, BlockState newState) {
+        if (!newState.getValue(PropertyHolder.ROTATE_MODEL).equals(Rotation.NONE) && level.getBlockEntity(pos) instanceof FramedCollapsibleCopycatBlockEntity be)
+        {
+            FramedBlocks.LOGGER.debug("onChange {} {}", be.getBlockState().getValue(PropertyHolder.ROTATE_MODEL), newState.getValue(PropertyHolder.ROTATE_MODEL));
+            be.syncRotationWithBlockState();
+            be.setBlockState(newState.setValue(PropertyHolder.ROTATE_MODEL, Rotation.NONE));
+            ((Level) level).setBlock(pos, be.getBlockState(), Block.UPDATE_ALL);
+        }
+        super.onBlockStateChange(level,pos,oldState,newState);
     }
 
     @Override

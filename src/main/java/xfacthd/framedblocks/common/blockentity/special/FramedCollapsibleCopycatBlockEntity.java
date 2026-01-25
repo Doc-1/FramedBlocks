@@ -7,17 +7,21 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
+import xfacthd.framedblocks.FramedBlocks;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
 import xfacthd.framedblocks.common.FBContent;
+import xfacthd.framedblocks.common.block.FramedBlock;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.component.CollapsibleCopycatBlockData;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 public class FramedCollapsibleCopycatBlockEntity extends FramedBlockEntity implements ICollapsibleCopycatBlockEntity
@@ -228,7 +232,29 @@ public class FramedCollapsibleCopycatBlockEntity extends FramedBlockEntity imple
         updateBeaconOcclusion();
     }
 
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        syncRotationWithBlockState();
+    }
 
+    public void syncRotationWithBlockState() {
+        Rotation rotation = this.getBlockState().getValue(PropertyHolder.ROTATE_MODEL);
+        byte[] newOffsets = new byte[HORIZONTAL_DIRECTIONS.length];
+
+        int i = 0;
+        for (Direction direction : HORIZONTAL_DIRECTIONS)
+        {
+            newOffsets[i] = (byte) getFaceOffset(rotation.rotate(direction));
+            i++;
+        }
+        int j = 0;
+        for(byte offset : newOffsets) {
+            setFaceOffset(Direction.from2DDataValue(j), offset);
+            j++;
+        }
+        FramedBlocks.LOGGER.debug("sync {}", getBlockState().getValue(PropertyHolder.ROTATE_MODEL));
+    }
 
     public static byte[] unpackOffsets(int packed)
     {
