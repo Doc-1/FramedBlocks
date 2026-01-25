@@ -1,14 +1,9 @@
 package xfacthd.framedblocks.common.block.cube;
 
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -20,13 +15,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.*;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xfacthd.framedblocks.FramedBlocks;
-import xfacthd.framedblocks.api.block.FramedProperties;
 import xfacthd.framedblocks.api.block.PlacementStateBuilder;
 import xfacthd.framedblocks.api.shapes.ShapeUtils;
 import xfacthd.framedblocks.api.util.Utils;
@@ -56,7 +47,7 @@ public class FramedCollapsibleBlock extends FramedBlock
     @Override
     protected @NotNull BlockState rotate(@NotNull BlockState state, @NotNull Rotation rotation) {
         Direction nullableDirection = state.getValue(PropertyHolder.NULLABLE_FACE).toDirection();
-        if(nullableDirection != null)
+        if (nullableDirection != null)
             nullableDirection = rotation.rotate(nullableDirection);
         return state.setValue(PropertyHolder.NULLABLE_FACE, NullableDirection.fromDirection(nullableDirection));
     }
@@ -64,7 +55,13 @@ public class FramedCollapsibleBlock extends FramedBlock
     @Override
     public void onBlockStateChange(LevelReader level, BlockPos pos, BlockState oldState, BlockState newState) {
         super.onBlockStateChange(level, pos, oldState, newState);
-        if (level.getBlockEntity(pos) instanceof FramedCollapsibleBlockEntity be)
+        //Whenever the oldState is air the block was just placed. This is both to reduce calling the sync function but,
+        // also compatibility with the Create mod.
+        if (oldState.isAir())
+            return;
+        //Checks to make sure rotation is the state that was changed.
+        boolean faceChanged = !oldState.getValue(PropertyHolder.NULLABLE_FACE).equals(newState.getValue(PropertyHolder.NULLABLE_FACE));
+        if (!level.isClientSide() && faceChanged && level.getBlockEntity(pos) instanceof FramedCollapsibleBlockEntity be)
         {
             be.syncFacingWithBlockState();
         }

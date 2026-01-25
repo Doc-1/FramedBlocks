@@ -350,18 +350,22 @@ public class FramedCollapsibleBlockEntity extends FramedBlockEntity implements I
     @Override
     public void onLoad() {
         super.onLoad();
-        syncFacingWithBlockState();
+        //Added for Create compatibility. When dissembling a Create structure it will place the block down
+        // before setting the Tag Compound data it has stored. Due to this we want the Block Entity class to handle the sync on onLoad()
+        // so it will be able to update the Tag Compound data.
+        if(!level().isClientSide)
+        {
+            syncFacingWithBlockState();
+        }
     }
 
     public void syncFacingWithBlockState(){
         NullableDirection nullableDirection = this.getBlockState().getValue(PropertyHolder.NULLABLE_FACE);
-        //Check if the block state and tile entity's collapsedFace are different.
-        //I wanted to use the FramedCollapsibleBlock#onPlace or onBlockStateChanged but for create compatibility due to create writing the tag data after the block was already placed
-        // this was the only other method I could think of that would be able to update collapsedFace without being overwritten with the old tag data.
-        if(!nullableDirection.equals(NullableDirection.fromDirection(this.getCollapsedFace())))
-        {
-            collapsedFace = nullableDirection.toDirection();
-        }
+        collapsedFace = nullableDirection.toDirection();
+        //Updating the block state.
+        level().setBlock(getBlockPos(), getBlockState(), Block.UPDATE_ALL);
+        //Update rendering
+        updateCulling(true, false);
     }
 
     public static byte[] unpackOffsets(int packed)

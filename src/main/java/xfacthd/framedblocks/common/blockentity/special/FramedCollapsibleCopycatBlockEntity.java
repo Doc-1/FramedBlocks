@@ -17,11 +17,9 @@ import xfacthd.framedblocks.FramedBlocks;
 import xfacthd.framedblocks.api.block.blockentity.FramedBlockEntity;
 import xfacthd.framedblocks.api.blueprint.AuxBlueprintData;
 import xfacthd.framedblocks.common.FBContent;
-import xfacthd.framedblocks.common.block.FramedBlock;
 import xfacthd.framedblocks.common.data.PropertyHolder;
 import xfacthd.framedblocks.common.data.component.CollapsibleCopycatBlockData;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 public class FramedCollapsibleCopycatBlockEntity extends FramedBlockEntity implements ICollapsibleCopycatBlockEntity
@@ -235,25 +233,32 @@ public class FramedCollapsibleCopycatBlockEntity extends FramedBlockEntity imple
     @Override
     public void onLoad() {
         super.onLoad();
-        syncRotationWithBlockState();
+        //Added for Create compatibility. When dissembling a Create structure it will place the block down
+        // before setting the Tag Compound data it has stored. Due to this we want the Block Entity class to handle the sync on onLoad()
+        // so it will be able to update the Tag Compound data.
+        if(!level().isClientSide)
+        {
+            syncRotationWithBlockState();
+        }
     }
 
     public void syncRotationWithBlockState() {
-        Rotation rotation = this.getBlockState().getValue(PropertyHolder.ROTATE_MODEL);
-        byte[] newOffsets = new byte[HORIZONTAL_DIRECTIONS.length];
-
-        int i = 0;
-        for (Direction direction : HORIZONTAL_DIRECTIONS)
+        Rotation rotation = getBlockState().getValue(PropertyHolder.ROTATE_MODEL);
+        byte[] offsets = unpackOffsets(packedOffsets);
+        for (int i = 0; i < offsets.length; i++)
         {
-            newOffsets[i] = (byte) getFaceOffset(rotation.rotate(direction));
-            i++;
+            Direction direction = Direction.from3DDataValue(i);
+            if (direction.getAxis().isHorizontal())
+            {
+                setFaceOffset(rotation.rotate(direction), offsets[i]);
+            }
         }
-        int j = 0;
-        for(byte offset : newOffsets) {
-            setFaceOffset(Direction.from2DDataValue(j), offset);
-            j++;
-        }
-        FramedBlocks.LOGGER.debug("sync {}", getBlockState().getValue(PropertyHolder.ROTATE_MODEL));
+        //Updating the block state.
+        setBlockState(getBlockState().setValue(PropertyHolder.ROTATE_MODEL, Rotation.NONE));
+        level().setBlock(getBlockPos(), getBlockState(), Block.UPDATE_ALL);
+        //Update rendering
+        updateCulling(true,false);
+        updateFaceSolidity();
     }
 
     public static byte[] unpackOffsets(int packed)
